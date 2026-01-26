@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galdi - Pastelería Artesanal | V1 Elegante</title>
+    <style>
+        :root {
+            /* Paleta Elegante: Rosa, Dorado, Blanco */
+            --rose: #d4756e;
+            --rose-light: #e8a9a4;
+            --gold: #c9a961;
+            --gold-light: #e8d5b7;
+            --cream: #faf6f1;
+            --text: #3a2f2a;
+            --text-light: #6b5d54;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            background-color: var(--cream);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: var(--white);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        nav {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--rose);
+            border-bottom-color: var(--rose);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            height: 600px;
+            background: linear-gradient(135deg, #f5e6e0 0%, #f0e8df 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        .hero-subtitle {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 0.95rem;
+            letter-spacing: 1.5px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: var(--rose);
+            margin: 1rem 0;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            font-family: 'Segoe UI', sans-serif;
+            max-width: 600px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--rose);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--text);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 117, 110, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--rose);
+            border: 2px solid var(--rose);
+        }
+
+        .btn-secondary:hover {
+            background: var(--rose);
+            color: white;
+        }
+
+        /* ===== GALERIA ===== */
+        .gallery {
+            padding: 5rem 2rem;
+            background: var(--white);
+        }
+
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            text-align: center;
+            color: var(--rose);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 1rem;
+            margin-bottom: 3rem;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .product-card {
+            background: var(--cream);
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(212, 117, 110, 0.2);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, #f5e6e0 0%, #e8d5b7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-img::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            transition: background 0.3s;
+        }
+
+        .product-card:hover .product-img::after {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .product-body {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            color: var(--rose);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .product-desc {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .product-price {
+            font-size: 1.4rem;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        /* ===== SERVICIOS ===== */
+        .services {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #faf6f1 0%, #f5e6e0 100%);
+        }
+
+        .services-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .service-card {
+            background: var(--white);
+            padding: 2.5rem;
+            border-left: 4px solid var(--rose);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(212, 117, 110, 0.15);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-title {
+            font-size: 1.4rem;
+            color: var(--rose);
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        .service-desc {
+            color: var(--text-light);
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.8;
+        }
+
+        /* ===== CONTACTO ===== */
+        .contact {
+            padding: 5rem 2rem;
+            background: var(--white);
+        }
+
+        .contact-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--rose);
+            font-size: 0.95rem;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 1px solid var(--gold-light);
+            background: var(--cream);
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--rose);
+            box-shadow: 0 0 0 3px rgba(212, 117, 110, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--rose);
+            color: white;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .submit-btn:hover {
+            background: var(--text);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--text);
+            color: var(--white);
+            padding: 3rem 2rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            margin: 0.5rem 0;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .footer-section a:hover {
+            color: var(--gold);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        /* ===== WHATSAPP BUTTON ===== */
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: #25d366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            z-index: 50;
+        }
+
+        .whatsapp-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav {
+                gap: 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo img {
+                height: 40px;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="logo">
+            <img src="logo-galdi.jpg" alt="Galdi Logo">
+        </div>
+        <nav>
+            <a href="#galeria">Productos</a>
+            <a href="#servicios">Servicios</a>
+            <a href="#contacto">Contacto</a>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <p class="hero-subtitle">✨ Pastelería Artesanal</p>
+            <h1>Momentos Dulces,<br>Sabores Inolvidables</h1>
+            <p>Creaciones personalizadas para tus eventos más especiales</p>
+            <div class="hero-cta">
+                <button class="btn btn-primary" onclick="document.getElementById('contacto').scrollIntoView({behavior: 'smooth'})">Solicitar Cotización</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('galeria').scrollIntoView({behavior: 'smooth'})">Ver Catálogo</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALERIA -->
+    <section class="gallery" id="galeria">
+        <div class="gallery-container">
+            <h2 class="section-title">Nuestros Productos</h2>
+            <p class="section-subtitle">Sabores artesanales elaborados con ingredientes premium</p>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-img">🎂</div>
+                    <div class="product-body">
+                        <div class="product-name">Torta Vainilla Clásica</div>
+                        <div class="product-desc">3 pisos, diseño personalizado, cobertura premium</div>
+                        <div class="product-price">$25.000</div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img">🍰</div>
+                    <div class="product-body">
+                        <div class="product-name">Torta Chocolate Premium</div>
+                        <div class="product-desc">Capas de chocolate belga, ganache artesanal</div>
+                        <div class="product-price">$30.000</div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img">🧁</div>
+                    <div class="product-body">
+                        <div class="product-name">Cupcakes Gourmet</div>
+                        <div class="product-desc">Caja de 12 unidades, sabores variados</div>
+                        <div class="product-price">$18.000</div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img">🎁</div>
+                    <div class="product-body">
+                        <div class="product-name">Caja Regalo Premium</div>
+                        <div class="product-desc">Embalaje elegante con tarjeta personalizada</div>
+                        <div class="product-price">$35.000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICIOS -->
+    <section class="services" id="servicios">
+        <div class="services-container">
+            <h2 class="section-title">Nuestros Servicios</h2>
+            <p class="section-subtitle">Soluciones personalizadas para cada ocasión</p>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🏪</div>
+                    <div class="service-title">Distribución B2B</div>
+                    <div class="service-desc">Abastecimiento mayorista para almacenes y locales. Precios especiales por volumen, entregas programadas y catálogo ampliado.</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🎉</div>
+                    <div class="service-title">Eventos Especiales</div>
+                    <div class="service-desc">Tortas personalizadas para cumpleaños, bodas, aniversarios y celebraciones corporativas. Diseño a medida garantizado.</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🚚</div>
+                    <div class="service-title">Delivery Rápido</div>
+                    <div class="service-desc">Entregas el mismo día en Santiago. Productos frescos, embalaje premium y presentación garantizada.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section class="contact" id="contacto">
+        <div class="contact-container">
+            <h2 class="section-title">Contáctanos</h2>
+            <p class="section-subtitle">Estamos listos para crear tu próxima celebración</p>
+            <form onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label">Nombre Completo</label>
+                    <input type="text" class="form-input" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Teléfono</label>
+                    <input type="tel" class="form-input" name="phone" required placeholder="+56 9 XXXX XXXX">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mensaje</label>
+                    <textarea class="form-textarea" name="message" required placeholder="Cuéntanos sobre tu evento..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Enviar Consulta</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- WHATSAPP -->
+    <a href="https://wa.me/56940211756?text=Hola%20Galdi%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20tus%20productos" class="whatsapp-btn" title="Contactar por WhatsApp">💬</a>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>GALDI</h4>
+                <p>Pastelería artesanal con los mejores sabores para tus momentos especiales.</p>
+            </div>
+            <div class="footer-section">
+                <h4>CONTACTO</h4>
+                <a href="tel:+56940211756">📱 +56 9 4021 1756</a>
+                <a href="mailto:contacto@galdi.cl">📧 contacto@galdi.cl</a>
+                <p>Santiago, Chile</p>
+            </div>
+            <div class="footer-section">
+                <h4>ENLACES</h4>
+                <a href="#galeria">Productos</a>
+                <a href="#servicios">Servicios</a>
+                <a href="#contacto">Contacto</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Galdi Pastelería. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            const message = `Hola Galdi 👋\n\nMi nombre es ${data.name}\n\n${data.message}\n\nMi email: ${data.email}\nMi teléfono: ${data.phone}`;
+            window.location.href = `https://wa.me/56940211756?text=${encodeURIComponent(message)}`;
+        }
+    </script>
+</body>
+</html>

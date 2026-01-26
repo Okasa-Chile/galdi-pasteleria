@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galdi - Pastelería Artesanal | HERO + SLIDER</title>
+    <style>
+        :root {
+            --primary: #ff6b9d;
+            --secondary: #feca57;
+            --accent: #48dbfb;
+            --accent-2: #1dd1a1;
+            --bg-gradient-1: #fff5e6;
+            --bg-gradient-2: #ffe8f0;
+            --text: #2d3436;
+            --text-light: #636e72;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Fredoka', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--white);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            padding: 0.5rem 0;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+
+        /* ===== HERO SECTION CON SLIDESHOW ===== */
+        .hero {
+            height: 600px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Fondo de imágenes rotativas */
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            z-index: 0;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        /* Overlay oscuro para mejorar legibilidad */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 1;
+        }
+
+        /* Contenido del hero */
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            animation: bounceIn 0.8s ease-out;
+            background: transparent;
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 700px;
+        }
+
+        .hero-emoji {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent-2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent-2) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(255, 107, 157, 0.5);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+        }
+
+        /* ===== GALERIA CON SLIDER ===== */
+        .gallery {
+            padding: 5rem 2rem;
+            background: white;
+        }
+
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            text-align: center;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent-2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Slider Styles */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .slider-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .slider-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slider-item {
+            min-width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slider-image {
+            width: 100%;
+            height: 400px;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            color: rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .slider-info {
+            padding: 2rem;
+            background: white;
+            text-align: center;
+        }
+
+        .slider-product-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .slider-product-desc {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .slider-product-price {
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent-2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+
+        /* Slider Controls */
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            align-items: center;
+        }
+
+        .slider-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent-2) 100%);
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slider-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.3);
+        }
+
+        .slider-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: var(--primary);
+            width: 30px;
+            border-radius: 10px;
+        }
+
+        /* ===== SERVICIOS ===== */
+        .services {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe8f0 100%);
+        }
+
+        .services-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            border-top: 4px solid var(--primary);
+        }
+
+        .service-card:nth-child(2) {
+            border-top-color: var(--secondary);
+        }
+
+        .service-card:nth-child(3) {
+            border-top-color: var(--accent-2);
+        }
+
+        .service-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-title {
+            font-size: 1.4rem;
+            color: var(--text);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .service-desc {
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        /* ===== CONTACTO ===== */
+        .contact {
+            padding: 5rem 2rem;
+            background: white;
+        }
+
+        .contact-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e0e0e0;
+            background: #f8f9fa;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            border-radius: 8px;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent-2) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 107, 157, 0.4);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 3rem 2rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            margin: 0.5rem 0;
+            font-size: 0.85rem;
+        }
+
+        .footer-section a:hover {
+            opacity: 0.7;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.8rem;
+        }
+
+        /* ===== WHATSAPP BUTTON ===== */
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: #25d366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            z-index: 50;
+        }
+
+        .whatsapp-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes bounceIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav {
+                gap: 1rem;
+            }
+
+            .hero {
+                height: 500px;
+            }
+
+            .hero-content {
+                padding: 2rem;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .slider-image {
+                height: 300px;
+                font-size: 4rem;
+            }
+
+            .slider-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .logo img {
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="logo">
+            <img src="logo-galdi.jpg" alt="Galdi Logo">
+        </div>
+        <nav>
+            <a href="#galeria">Productos</a>
+            <a href="#servicios">Servicios</a>
+            <a href="#contacto">Contacto</a>
+        </nav>
+    </header>
+
+    <!-- HERO CON SLIDESHOW DE IMÁGENES -->
+    <section class="hero" id="hero">
+        <div class="hero-slide active" style="background-image: url('hero-1-vainilla.png')"></div>
+        <div class="hero-slide" style="background-image: url('hero-2-chocolate.png')"></div>
+        <div class="hero-slide" style="background-image: url('hero-3-cupcakes.png')"></div>
+        <div class="hero-slide" style="background-image: url('hero-4-regalo.png')"></div>
+        <div class="hero-slide" style="background-image: url('hero-5-empanadas.png')"></div>
+
+        <div class="hero-content">
+            <div class="hero-emoji">✨🎂✨</div>
+            <h1>¡Celebra con Galdi!</h1>
+            <p>Pasteles artesanales que hacen cada momento especial</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="document.getElementById('contacto').scrollIntoView({behavior: 'smooth'})">🎉 Solicitar Cotización</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('galeria').scrollIntoView({behavior: 'smooth'})">👀 Ver Catálogo</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALERIA CON SLIDER DE PRODUCTOS -->
+    <section class="gallery" id="galeria">
+        <div class="gallery-container">
+            <h2 class="section-title">Nuestros Deliciosos Productos</h2>
+            <p class="section-subtitle">Desliza para ver cada creación</p>
+
+            <!-- SLIDER -->
+            <div class="slider-container">
+                <div class="slider-wrapper">
+                    <div class="slider-track" id="sliderTrack">
+                        <!-- Slide 1: Vainilla -->
+                        <div class="slider-item">
+                            <div class="slider-image" style="background-image: url('hero-1-vainilla.png')"></div>
+                            <div class="slider-info">
+                                <div class="slider-product-name">Torta Vainilla Clásica</div>
+                                <div class="slider-product-desc">3 pisos, diseño personalizado, cobertura premium</div>
+                                <div class="slider-product-price">$25.000</div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 2: Chocolate -->
+                        <div class="slider-item">
+                            <div class="slider-image" style="background-image: url('hero-2-chocolate.png')"></div>
+                            <div class="slider-info">
+                                <div class="slider-product-name">Torta Chocolate Premium</div>
+                                <div class="slider-product-desc">Capas de chocolate belga, ganache artesanal</div>
+                                <div class="slider-product-price">$30.000</div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 3: Cupcakes -->
+                        <div class="slider-item">
+                            <div class="slider-image" style="background-image: url('hero-3-cupcakes.png')"></div>
+                            <div class="slider-info">
+                                <div class="slider-product-name">Cupcakes Gourmet</div>
+                                <div class="slider-product-desc">Caja de 12 unidades, sabores variados</div>
+                                <div class="slider-product-price">$18.000</div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 4: Caja Regalo -->
+                        <div class="slider-item">
+                            <div class="slider-image" style="background-image: url('hero-4-regalo.png')"></div>
+                            <div class="slider-info">
+                                <div class="slider-product-name">Caja Regalo Premium</div>
+                                <div class="slider-product-desc">Embalaje elegante con tarjeta personalizada</div>
+                                <div class="slider-product-price">$35.000</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controles del Slider -->
+            <div class="slider-controls">
+                <button class="slider-btn" onclick="prevSlide()">❮</button>
+                <div class="slider-dots">
+                    <span class="dot active" onclick="goToSlide(0)"></span>
+                    <span class="dot" onclick="goToSlide(1)"></span>
+                    <span class="dot" onclick="goToSlide(2)"></span>
+                    <span class="dot" onclick="goToSlide(3)"></span>
+                </div>
+                <button class="slider-btn" onclick="nextSlide()">❯</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICIOS -->
+    <section class="services" id="servicios">
+        <div class="services-container">
+            <h2 class="section-title">¿Cómo Podemos Ayudarte?</h2>
+            <p class="section-subtitle">Soluciones creativas para cada ocasión</p>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🏪</div>
+                    <div class="service-title">Distribución B2B</div>
+                    <div class="service-desc">Abastecimiento mayorista para almacenes y negocios. Precios especiales, entregas programadas y catálogo completo.</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🎉</div>
+                    <div class="service-title">Eventos Especiales</div>
+                    <div class="service-desc">Tortas personalizadas para cumpleaños, bodas, bautizos y celebraciones. Diseño único garantizado.</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🚚</div>
+                    <div class="service-title">Delivery Rápido</div>
+                    <div class="service-desc">Entregas el mismo día en Santiago. Productos frescos con embalaje premium y presentación garantizada.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section class="contact" id="contacto">
+        <div class="contact-container">
+            <h2 class="section-title">¡Contáctanos!</h2>
+            <p class="section-subtitle">Estamos listos para hacer tu evento inolvidable</p>
+            <form onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label">Nombre Completo</label>
+                    <input type="text" class="form-input" name="name" required placeholder="Tu nombre">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" name="email" required placeholder="tu@email.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Teléfono</label>
+                    <input type="tel" class="form-input" name="phone" required placeholder="+56 9 XXXX XXXX">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Cuéntanos sobre tu evento</label>
+                    <textarea class="form-textarea" name="message" required placeholder="¿Qué tipo de pastel necesitas? ¿Para cuántas personas?"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">✨ Enviar Consulta ✨</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- WHATSAPP -->
+    <a href="https://wa.me/56940211756?text=Hola%20Galdi%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20tus%20productos" class="whatsapp-btn" title="Contactar por WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="32" height="32">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004c-1.125 0-2.235.356-3.156 1.031l-.227.153-2.36-.62.63 2.302-.161.26c-.694.883-1.062 1.908-1.062 3.057 0 3.107 2.533 5.628 5.637 5.628 1.5 0 2.923-.549 3.957-1.531 1.034-.985 1.6-2.353 1.6-3.785 0-3.104-2.533-5.628-5.637-5.628l.003-.002m5.634-4.286c-1.925-.898-4.066-1.37-6.347-1.37-6.344 0-11.5 5.12-11.5 11.412 0 2.007.523 3.954 1.518 5.675L2.213 21.064l6.032-1.578c1.64.89 3.496 1.36 5.454 1.36 6.344 0 11.5-5.119 11.5-11.412 0-3.02-1.173-5.854-3.304-7.987l.003.003z"/>
+        </svg>
+    </a>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>🎂 GALDI</h4>
+                <p>Pastelería artesanal con los mejores sabores para tus momentos especiales.</p>
+            </div>
+            <div class="footer-section">
+                <h4>📞 CONTACTO</h4>
+                <a href="tel:+56940211756">📱 +56 9 4021 1756</a>
+                <a href="mailto:contacto@galdi.cl">📧 contacto@galdi.cl</a>
+                <p>🌍 Santiago, Chile</p>
+            </div>
+            <div class="footer-section">
+                <h4>🔗 ENLACES</h4>
+                <a href="#galeria">Productos</a>
+                <a href="#servicios">Servicios</a>
+                <a href="#contacto">Contacto</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Galdi Pastelería. Todos los derechos reservados. 🍰</p>
+        </div>
+    </footer>
+
+    <script>
+        // ===== HERO SLIDESHOW =====
+        let heroSlide = 0;
+        const heroSlides = document.querySelectorAll('.hero-slide');
+        const totalHeroSlides = heroSlides.length;
+
+        function updateHeroSlide() {
+            heroSlides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === heroSlide) {
+                    slide.classList.add('active');
+                }
+            });
+        }
+
+        function nextHeroSlide() {
+            heroSlide = (heroSlide + 1) % totalHeroSlides;
+            updateHeroSlide();
+        }
+
+        // Auto-advance hero cada 4 segundos
+        setInterval(nextHeroSlide, 4000);
+
+        // ===== PRODUCTO SLIDER =====
+        let currentSlide = 0;
+        const totalSlides = 4;
+
+        function updateSlider() {
+            const track = document.getElementById('sliderTrack');
+            const offset = -currentSlide * 100;
+            track.style.transform = `translateX(${offset}%)`;
+
+            // Actualizar puntos
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSlider();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateSlider();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlider();
+        }
+
+        // Auto-advance slider cada 5 segundos
+        setInterval(nextSlide, 5000);
+
+        // ===== FORMULARIO WHATSAPP =====
+        function handleSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            const message = `¡Hola Galdi! 👋\n\nMi nombre es ${data.name}\n\n${data.message}\n\nMi email: ${data.email}\nMi teléfono: ${data.phone}`;
+            window.location.href = `https://wa.me/56940211756?text=${encodeURIComponent(message)}`;
+        }
+    </script>
+</body>
+</html>
