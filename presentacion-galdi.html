@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galdi - Plan de Negocios Maipú</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #05668D;
+            --secondary: #02C39A;
+            --accent: #FFD166;
+            --dark: #073B4C;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            height: 350px;
+        }
+        .info-card {
+            transition: all 0.3s ease;
+            border-top: 6px solid var(--primary);
+        }
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-[#073B4C] text-white py-20 px-6 text-center shadow-xl">
+        <h1 class="text-6xl font-extrabold tracking-tighter mb-4">GALDI</h1>
+        <p class="text-2xl font-light text-emerald-100 max-w-2xl mx-auto">
+            Pastelería, Banquetería y Distribución B2B.
+        </p>
+        <div class="mt-8 flex flex-wrap justify-center gap-4 text-xs font-bold uppercase tracking-widest">
+            <span class="bg-white/10 px-6 py-2 rounded-full backdrop-blur-md border border-white/20">📍 Maipú, Chile</span>
+            <span class="bg-emerald-500/20 px-6 py-2 rounded-full backdrop-blur-md border border-emerald-400/30">Microempresa Familiar</span>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-16 space-y-20">
+
+        <section id="equipo">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-extrabold text-[#05668D]">Estructura del Negocio</h2>
+                <p class="text-slate-500 text-lg mt-2">Equipo operativo familiar con soporte estratégico.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-sm text-center info-card">
+                    <div class="text-5xl mb-4">👩‍💼</div>
+                    <h3 class="text-xl font-bold text-slate-800">Jaqueline Gálvez Díaz</h3>
+                    <p class="text-emerald-600 font-bold text-xs uppercase tracking-widest mt-1">Jefa de Producción y Reparto</p>
+                    <p class="text-slate-600 text-sm mt-4 italic">Liderazgo operativo, estandarización de procesos y logística de entrega B2B.</p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-sm text-center info-card" style="border-top-color: #02C39A;">
+                    <div class="text-5xl mb-4">👩‍🍳</div>
+                    <h3 class="text-xl font-bold text-slate-800">Ingrid Gálvez Díaz</h3>
+                    <p class="text-emerald-600 font-bold text-xs uppercase tracking-widest mt-1">Producción y Reparto</p>
+                    <p class="text-slate-600 text-sm mt-4 italic">Excelencia artesanal y ejecución de la ruta de distribución en terreno.</p>
+                </div>
+                <div class="bg-[#073B4C] p-8 rounded-3xl shadow-sm text-center text-white info-card" style="border-top-color: #FFD166;">
+                    <div class="text-5xl mb-4">💻</div>
+                    <h3 class="text-xl font-bold">Claudio Ferrari Lazo</h3>
+                    <p class="text-emerald-400 font-bold text-xs uppercase tracking-widest mt-1">Asesoría Comercial y Web</p>
+                    <p class="text-slate-300 text-sm mt-4 italic">Estrategia de crecimiento, marketing digital y gestión de presencia online.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="space-y-8">
+                <h2 class="text-4xl font-extrabold text-[#05668D]">Estrategia Híbrida Galdi</h2>
+                <p class="text-slate-600 text-lg leading-relaxed">
+                    Maximizamos la rentabilidad operando sin costos fijos de local comercial, uniendo la venta directa (B2C) con la distribución masiva (B2B).
+                </p>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="p-6 bg-white rounded-2xl shadow-sm border-l-8 border-[#02C39A]">
+                        <h4 class="font-bold text-slate-800 italic">"Del hogar al almacén"</h4>
+                        <p class="text-sm text-slate-500 mt-1">Suministro B2B de pastelería para reventa en la red de almacenes de Maipú.</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-2xl shadow-sm border-l-8 border-[#05668D]">
+                        <h4 class="font-bold text-slate-800 italic">"Pedidos Galdi"</h4>
+                        <p class="text-sm text-slate-500 mt-1">Banquetería y repostería fina personalizada bajo pedido directo.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-[2.5rem] shadow-xl">
+                <h3 class="text-xl font-bold text-center mb-6">Foco Estratégico</h3>
+                <div class="chart-container">
+                    <canvas id="salesMixChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-[3rem] p-12 shadow-sm border border-slate-100 text-center">
+            <h2 class="text-4xl font-extrabold text-[#05668D] mb-4">Fase 2: Expansión de Portafolio</h2>
+            <p class="text-slate-500 mb-12">Aprovechamiento de la ruta logística para abarrotes estratégicos.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="chart-container">
+                    <canvas id="expansionChart"></canvas>
+                </div>
+                <div class="space-y-4 text-left">
+                    <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-4">
+                        <span class="text-4xl">🧀</span>
+                        <div>
+                            <p class="font-bold text-slate-800">Quesos y Cecinas</p>
+                            <p class="text-xs text-slate-500">Distribución de productos básicos de alta rotación para almacenes.</p>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-4">
+                        <span class="text-4xl">🥖</span>
+                        <div>
+                            <p class="font-bold text-slate-800">Bollería y Panadería</p>
+                            <p class="text-xs text-slate-500">Expansión natural de la marca hacia productos de consumo diario.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-[#05668D] rounded-[3.5rem] p-12 text-white shadow-2xl relative overflow-hidden">
+            <div class="relative z-10 max-w-3xl mx-auto">
+                <h2 class="text-4xl font-extrabold text-center mb-6">IA Sales Pitch Engine</h2>
+                <p class="text-center text-blue-100 mb-10 text-lg italic">Genera una propuesta comercial para nuevos almacenes en Maipú.</p>
+                <div class="bg-white/10 p-8 rounded-3xl backdrop-blur-md border border-white/20 space-y-6">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <input type="text" id="storeName" placeholder="Nombre del Almacén" class="flex-1 bg-white/10 border border-white/20 p-4 rounded-2xl text-white outline-none focus:ring-4 focus:ring-emerald-400 font-bold placeholder-slate-400">
+                        <button id="aiBtn" class="bg-emerald-500 hover:bg-emerald-400 text-white font-black py-4 px-10 rounded-2xl transition-all shadow-lg active:scale-95">GENERAR</button>
+                    </div>
+                    <div id="loader" class="hidden py-10 text-center">
+                        <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-emerald-500 border-t-transparent"></div>
+                    </div>
+                    <div id="output" class="bg-black/20 p-8 rounded-2xl text-slate-100 italic leading-relaxed min-h-[150px] border border-white/5">
+                        El discurso de venta aparecerá aquí...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-slate-100 py-16 text-center">
+        <p class="text-4xl font-black text-[#073B4C] mb-4 tracking-tighter">GALDI</p>
+        <p class="text-slate-400 text-sm font-bold uppercase tracking-widest">Maipú | Plan Estratégico 2026</p>
+        <div class="mt-8 flex justify-center gap-6 text-slate-400 font-bold">
+            <span>Jaqueline G.D.</span>
+            <span>Ingrid G.D.</span>
+            <span>Claudio F.L.</span>
+        </div>
+    </footer>
+
+    <script>
+        const apiKey = "";
+        const wrap = (l) => {
+            if (l.length <= 16) return l;
+            const w = l.split(' ');
+            const lines = []; let c = "";
+            w.forEach(word => {
+                if ((c + word).length > 16) { lines.push(c.trim()); c = word + " "; } else { c += word + " "; }
+            });
+            lines.push(c.trim()); return lines;
+        };
+        const ttc = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: (items) => {
+                            const l = items[0].chart.data.labels[items[0].dataIndex];
+                            return Array.isArray(l) ? l.join(' ') : l;
+                        }
+                    }
+                }
+            }
+        };
+        const ctxMix = document.getElementById('salesMixChart').getContext('2d');
+        new Chart(ctxMix, {
+            type: 'doughnut',
+            data: {
+                labels: [wrap('Venta B2B a Almacenes'), wrap('Pedidos Banquetería'), wrap('Pastelería Directa')],
+                datasets: [{
+                    data: [65, 20, 15],
+                    backgroundColor: ['#02C39A', '#05668D', '#FFD166'],
+                    borderWidth: 0
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 25 } }, ...ttc.plugins } }
+        });
+        const ctxExp = document.getElementById('expansionChart').getContext('2d');
+        new Chart(ctxExp, {
+            type: 'bar',
+            data: {
+                labels: ['Pastelería', 'Quesos/Cecinas', 'Bollería'],
+                datasets: [{
+                    label: 'Prioridad de Stock',
+                    data: [100, 95, 85],
+                    backgroundColor: '#05668D',
+                    borderRadius: 15
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100, grid: { display: false } } }, plugins: { legend: { display: false }, ...ttc.plugins } }
+        });
+        document.getElementById('aiBtn').onclick = async () => {
+            const store = document.getElementById('storeName').value || "el local";
+            const res = document.getElementById('output'); const lod = document.getElementById('loader');
+            res.innerText = ""; lod.classList.remove('hidden');
+            const p = `Eres un experto en ventas de pymes en Chile. Genera un discurso corto (120 palabras máx) para ofrecer los productos de 'Galdi'. Explica que Jaqueline (Jefa de Producción) e Ingrid fabrican y reparten personalmente en Maipú, garantizando calidad artesanal. Ofrece pastelería para el almacén "${store}" y menciona que pronto traerán quesos y cecinas de alta calidad. Tono formal chileno (Usted).`;
+            try {
+                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: p }] }] })
+                });
+                const d = await r.json();
+                res.innerText = d.candidates?.[0]?.content?.parts?.[0]?.text || "Error al generar el pitch.";
+            } catch (e) { res.innerText = "Error de conexión."; } finally { lod.classList.add('hidden'); }
+        };
+    </script>
+</body>
+</html>
