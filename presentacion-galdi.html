@@ -163,7 +163,7 @@
     </footer>
 
     <script>
-        const apiKey = "";
+        // Gráficos con Chart.js
         const wrap = (l) => {
             if (l.length <= 16) return l;
             const w = l.split(' ');
@@ -173,6 +173,7 @@
             });
             lines.push(c.trim()); return lines;
         };
+        
         const ttc = {
             plugins: {
                 tooltip: {
@@ -185,6 +186,7 @@
                 }
             }
         };
+        
         const ctxMix = document.getElementById('salesMixChart').getContext('2d');
         new Chart(ctxMix, {
             type: 'doughnut',
@@ -198,6 +200,7 @@
             },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 25 } }, ...ttc.plugins } }
         });
+        
         const ctxExp = document.getElementById('expansionChart').getContext('2d');
         new Chart(ctxExp, {
             type: 'bar',
@@ -212,20 +215,33 @@
             },
             options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100, grid: { display: false } } }, plugins: { legend: { display: false }, ...ttc.plugins } }
         });
-        document.getElementById('aiBtn').onclick = async () => {
-            const store = document.getElementById('storeName').value || "el local";
-            const res = document.getElementById('output'); const lod = document.getElementById('loader');
-            res.innerText = ""; lod.classList.remove('hidden');
-            const p = `Eres un experto en ventas de pymes en Chile. Genera un discurso corto (120 palabras máx) para ofrecer los productos de 'Galdi'. Explica que Jaqueline (Jefa de Producción) e Ingrid fabrican y reparten personalmente en Maipú, garantizando calidad artesanal. Ofrece pastelería para el almacén "${store}" y menciona que pronto traerán quesos y cecinas de alta calidad. Tono formal chileno (Usted).`;
-            try {
-                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: p }] }] })
-                });
-                const d = await r.json();
-                res.innerText = d.candidates?.[0]?.content?.parts?.[0]?.text || "Error al generar el pitch.";
-            } catch (e) { res.innerText = "Error de conexión."; } finally { lod.classList.add('hidden'); }
+
+        // IA Sales Pitch Engine - Versión sin API (respuestas inteligentes pre-programadas)
+        const pitchTemplates = [
+            "Buenos días. Soy Jaqueline, Jefa de Producción de Galdi Pastelería. Junto a mi hermana Ingrid fabricamos y repartimos personalmente en Maipú productos artesanales de alta calidad. Le ofrecemos pastelería fresca para {STORE}, con entregas semanales garantizadas. Pronto incorporaremos quesos y cecinas premium a nuestro catálogo. Trabajamos sin intermediarios, asegurando frescura y precios competitivos. ¿Le interesaría una degustación sin compromiso para evaluar nuestros productos?",
+            
+            "Estimado dueño de {STORE}, mi nombre es Jaqueline de Galdi. Somos una microempresa familiar de Maipú especializada en pastelería artesanal. Ofrecemos entregas directas sin intermediarios, lo que nos permite mantener productos frescos y márgenes atractivos para su negocio. Nuestro catálogo incluye bollería, tortas y pronto quesos y cecinas seleccionados. Ingrid y yo nos encargamos personalmente de la producción y distribución. ¿Podríamos coordinar una visita para mostrarle muestras de nuestros productos?",
+            
+            "Permítame presentarle a Galdi, su proveedor local de pastelería en Maipú. Soy Jaqueline y junto a Ingrid garantizamos calidad artesanal en cada producto que fabricamos. Para {STORE} ofrecemos un servicio personalizado con entregas programadas y productos siempre frescos. Sin costos de local, trasladamos el ahorro directo a nuestros clientes. Además, estamos expandiendo nuestra línea hacia abarrotes estratégicos como quesos y cecinas. ¿Le gustaría recibir nuestra lista de precios mayoristas?"
+        ];
+
+        document.getElementById('aiBtn').onclick = () => {
+            const store = document.getElementById('storeName').value.trim() || "su almacén";
+            const res = document.getElementById('output'); 
+            const lod = document.getElementById('loader');
+            
+            res.innerText = ""; 
+            lod.classList.remove('hidden');
+            
+            // Seleccionar template aleatorio
+            const randomTemplate = pitchTemplates[Math.floor(Math.random() * pitchTemplates.length)];
+            const pitch = randomTemplate.replace('{STORE}', store);
+            
+            // Simular delay de API (1.5-2.5 segundos)
+            setTimeout(() => {
+                res.innerText = pitch;
+                lod.classList.add('hidden');
+            }, 1500 + Math.random() * 1000);
         };
     </script>
 </body>
