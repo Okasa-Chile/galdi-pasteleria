@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Instagram } from 'lucide-react';
+import { Instagram, Mail } from 'lucide-react';
 
 export default function Contacto() {
   const [nombre, setNombre] = useState('');
   const [mensaje, setMensaje] = useState('');
   const [btnHovered, setBtnHovered] = useState(false);
   const [igHovered, setIgHovered] = useState(false);
+  const [mailHovered, setMailHovered] = useState(false);
 
   const handleEnviar = () => {
     const url = `https://wa.me/56990991011?text=Hola%20Galdi!%20Soy%20${encodeURIComponent(nombre)}%20y%20quisiera%20consultar:%20${encodeURIComponent(mensaje)}`;
@@ -158,7 +159,7 @@ export default function Contacto() {
           }}>
             {/* QR */}
             <Image
-              src="/images/frame.png"
+              src="/images/qr-whatsapp.png"
               alt="QR WhatsApp Galdi"
               width={200}
               height={200}
@@ -198,6 +199,29 @@ export default function Contacto() {
             >
               <Instagram size={16} />
               @galdi_banqueteria
+            </a>
+
+            {/* Email */}
+            <a
+              href="mailto:ventas@galdi.cl"
+              onMouseEnter={() => setMailHovered(true)}
+              onMouseLeave={() => setMailHovered(false)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontFamily: 'var(--font-sans)',
+                fontSize: '0.85rem',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: 'var(--gold)',
+                textDecoration: 'none',
+                opacity: mailHovered ? 0.75 : 1,
+                transition: 'opacity 0.4s ease',
+              }}
+            >
+              <Mail size={16} />
+              ventas@galdi.cl
             </a>
           </div>
 

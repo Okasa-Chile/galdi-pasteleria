@@ -17,14 +17,22 @@ const imagenes: Record<string, string> = {
   'Pan Frica':                 '/images/Pan Frica.webp',
   'Dobloditas':                '/images/Dobladitas.webp',
   'Marraqueta':                '/images/Marraquetas.webp',
-  // Pasteles & Tartas — imagen compartida
+  // Pasteles & Tartas — imágenes propias
   'Pie de Limón Merengado':    '/images/prod-pie.webp',
-  'Kuchen Sureño':             '/images/prod-pie.webp',
-  'Kuchen de Nuez':            '/images/prod-pie.webp',
-  'Banofee':                   '/images/prod-pie.webp',
-  'Tartaletas':                '/images/prod-pie.webp',
-  // Dulces & Alfajores — imagen compartida
-  'Alfajores de Maicena':      '/images/prod-dulces.webp',
+  'Kuchen Sureño':             '/images/Kuchen sureño.webp',
+  'Kuchen de Nuez':            '/images/Kuchen de Nueces.webp',
+  'Banofee':                   '/images/Banofee.webp',
+  'Tartaletas':                '/images/Tartaletas.webp',
+  // Tortas — imágenes propias
+  'Torta 3 Leches':            '/images/Torta 3 Leches.webp',
+  'Torta de Chocolate':        '/images/Torta de Chocolate.webp',
+  'Moca / Pralinée':           '/images/Torta Moka.webp',
+  'Selva Negra':               '/images/Torta Selva negra.webp',
+  'Torta de Piña':             '/images/Torta de Piña.webp',
+  'Torta de Hojarasca':        '/images/Torta de Hojarasca.webp',
+  // Dulces & Alfajores — imágenes propias + compartida
+  'Berlines':                  '/images/Berlines.webp',
+  'Alfajores de Manjar':       '/images/prod-dulces.webp',
   'Alfajores de Chocolate':    '/images/prod-dulces.webp',
   'Chilenitos':                '/images/prod-dulces.webp',
   // Empanadas — imagen compartida
@@ -32,7 +40,7 @@ const imagenes: Record<string, string> = {
   'Napolitana':                '/images/prod-empanada.webp',
   'Vegetariana':               '/images/prod-empanada.webp',
   'Queso Camarón':             '/images/prod-empanada.webp',
-  // Tortas y Queques → sin imagen (usan gradiente CSS)
+  // Queques → sin imagen (usan gradiente CSS)
 };
 
 const categorias = [
@@ -68,16 +76,19 @@ const categorias = [
       { nombre: 'Moca / Pralinée',     detalle: 'Café aromático y frutos secos caramelizados en una torta de elegancia incomparable.' },
       { nombre: 'Selva Negra',         detalle: 'Bizcocho de chocolate con cerezas y crema chantilly.' },
       { nombre: 'Panqueque',           detalle: 'Delicadas capas de panqueques con manjar entre cada una.' },
-      { nombre: 'Pavé',                detalle: 'Postre frío en capas de galleta, crema y frutas.' },
+      { nombre: 'Torta de Piña',       detalle: 'Bizcocho esponjoso con piña natural, crema batida y un toque dulce que refresca en cada bocado.' },
+      { nombre: 'Torta de Hojarasca', detalle: 'Delicadas capas de masa crocante unidas con manjar, un clásico chileno irresistible.' },
     ],
   },
   {
     id: 'dulces',
     label: 'Dulces & Alfajores',
     productos: [
-      { nombre: 'Alfajores de Maicena',     detalle: 'Suaves discos de maicena unidos con manjar y rebozados en coco rallado. 40 bocados por receta.' },
+      { nombre: 'Berlines',                 detalle: 'Suaves y esponjosos, rellenos de manjar o crema pastelera, espolvoreados con azúcar flor.' },
+      { nombre: 'Alfajores de Manjar',      detalle: 'Suaves discos unidos con manjar y rebozados en coco rallado. 40 bocados por receta.' },
       { nombre: 'Alfajores de Chocolate',   detalle: 'Rellenos de manjar y bañados en cobertura de chocolate semi amargo o blanco.' },
       { nombre: 'Chilenitos',               detalle: 'El dulce más chileno: masa crocante con manjar y bañados en merengue azucarado.' },
+      { nombre: 'Pasteles Rectangulares',   detalle: 'Torta en trozo, ideal para eventos y pedidos por unidad. Mismos sabores de nuestras tortas completas.' },
     ],
   },
   {
@@ -203,10 +214,10 @@ export default function Catalogo() {
         }
       `}</style>
 
-      <section id="productos" style={{ padding: '7rem 0', background: '#f5ede3' }}>
+      <section id="productos" style={{ padding: '2rem 0 3rem', background: '#f5ede3', scrollMarginTop: '90px' }}>
 
         {/* Header */}
-        <div style={{ textAlign: 'center', padding: '0 5%', marginBottom: '3.5rem' }}>
+        <div style={{ textAlign: 'center', padding: '0 5%', marginBottom: '1rem' }}>
           <p style={{
             fontFamily: 'var(--font-sans)',
             fontSize: '0.67rem',
@@ -226,7 +237,7 @@ export default function Catalogo() {
           }}>
             Elaborados con <em style={{ fontStyle: 'italic', color: 'var(--terracota)' }}>amor</em>
           </h2>
-          <div style={{ width: 48, height: 1, background: 'var(--terracota)', margin: '1.4rem auto 0' }} />
+          <div style={{ width: 48, height: 1, background: 'var(--terracota)', margin: '1rem auto 0' }} />
         </div>
 
         {/* Tabs */}
@@ -235,6 +246,10 @@ export default function Catalogo() {
           padding: '0 5%',
           borderBottom: '1px solid rgba(26,15,10,0.14)',
           scrollbarWidth: 'none',
+          position: 'sticky',
+          top: '90px',
+          zIndex: 100,
+          backgroundColor: 'var(--cream)',
         }}>
           <div style={{ display: 'inline-flex', minWidth: '100%' }}>
             {categorias.map((cat) => (
@@ -252,7 +267,7 @@ export default function Catalogo() {
         </div>
 
         {/* Panel activo */}
-        <div key={activeTab} style={{ padding: '3rem 5% 0' }}>
+        <div key={activeTab} style={{ padding: '1.5rem 5% 0' }}>
           {categoriaActiva.badge && (
             <p className="cat-badge-pill">{categoriaActiva.badge}</p>
           )}

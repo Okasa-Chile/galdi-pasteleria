@@ -7,7 +7,7 @@ const links = [
   { label: 'Productos',  href: '#productos' },
   { label: 'Servicios',  href: '#servicios' },
   { label: 'Nosotros',   href: '#nosotros' },
-  { label: 'WhatsApp',   href: 'https://wa.me/56940211756' },
+  { label: 'WhatsApp',   href: 'https://wa.me/56990991011' },
 ];
 
 export default function Footer() {
@@ -60,7 +60,7 @@ export default function Footer() {
         {/* Logo */}
         <a href="#inicio" style={{ display: 'inline-block', opacity: 0.65 }}>
           <Image
-            src="/images/logo-ancho.png"
+            src="/images/logo-ancho.webp"
             alt="Galdi"
             width={120}
             height={34}

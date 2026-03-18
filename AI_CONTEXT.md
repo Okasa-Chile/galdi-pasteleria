@@ -1,5 +1,5 @@
 # AI_CONTEXT — Proyecto Galdi Pastelería
-> Registro de trabajo asistido por IA · Actualizado: 18 marzo 2026
+> Registro de trabajo asistido por IA · Actualizado: 18 marzo 2026 (tarde)
 
 ---
 
@@ -32,8 +32,11 @@ galdi-nextjs/
   ├── components/
   │   ├── Header.tsx          ← header fijo, scroll detection, hamburguesa mobile
   │   ├── Hero.tsx            ← slideshow 6 slides, dots, CTA WhatsApp
-  │   ├── Catalogo.tsx        ← 6 tabs, 24 productos, next/image, animación catFadeUp
-  │   └── Servicios.tsx       ← 3 cards con hover overlay, links WhatsApp
+  │   ├── Catalogo.tsx        ← 6 tabs, productos con imágenes WebP, tabs sticky, animación catFadeUp
+  │   ├── Servicios.tsx       ← 3 cards con hover overlay, links WhatsApp
+  │   ├── Nosotras.tsx        ← grid 2 col: foto + textos + valores
+  │   ├── Contacto.tsx        ← botón WhatsApp + email ventas@galdi.cl + QR
+  │   └── Footer.tsx          ← logo + copyright + links
   ├── public/
   │   └── images/             ← todas las imágenes copiadas desde galdi-web/images/
   ├── firebase.json           ← public: "out", cleanUrls: true
@@ -41,6 +44,8 @@ galdi-nextjs/
   ├── next.config.ts          ← output: "export", images.unoptimized: true
   └── AI_CONTEXT.md
 ```
+
+> **Secciones activas en `page.tsx`**: Header · Hero · Catálogo · Servicios · Nosotras · Contacto · Footer
 
 ---
 
@@ -71,6 +76,17 @@ galdi-nextjs/
 - [x] `firebase deploy --only hosting` → sitio live en `galdi-web.web.app`
 - [x] `git push origin main`
 
+### Fase 7 — Imágenes WebP + catálogo + limpieza (18-03-2026, tarde)
+- [x] **QR WhatsApp** generado: `public/images/qr-whatsapp.png` (wa.me/56990991011)
+- [x] **Email** `ventas@galdi.cl` agregado en `Contacto.tsx`
+- [x] **Catálogo ampliado**: Tortas (Piña + Hojarasca), Dulces (Berlines, Alfajores de Manjar, Pasteles Rectangulares)
+- [x] **11 imágenes PNG → WebP** (56 MB → 1 MB), asignadas en `Catalogo.tsx`
+- [x] **Tabs sticky** con `scrollMarginTop` correcto
+- [x] **Limpieza**: logos duplicados, SVGs default Next.js, JPGs originales eliminados
+- [x] **Proyecto `galdi-web`** (HTML estático) eliminado
+- [x] Número WhatsApp `56990991011` verificado en todos los archivos
+- [x] `npm run build` exitoso · `firebase deploy` → `galdi-web.web.app` · `git push origin main`
+
 ---
 
 ## 🖼️ Imágenes en `public/images/`
@@ -93,6 +109,18 @@ galdi-nextjs/
 | `prod-pie.webp` | Catálogo — Pasteles (Pie de Limón) |
 | `prod-dulces.webp` | Catálogo — Dulces / Sección Nosotros |
 | `prod-empanada.webp` | Catálogo — Empanadas |
+| `Banofee.webp` | Catálogo — Banofee |
+| `Berlines.webp` | Catálogo — Berlines |
+| `Kuchen de Nueces.webp` | Catálogo — Kuchen de Nueces |
+| `Kuchen sureño.webp` | Catálogo — Kuchen Sureño |
+| `Tartaletas.webp` | Catálogo — Tartaletas |
+| `Torta 3 Leches.webp` | Catálogo — Torta 3 Leches |
+| `Torta Moka.webp` | Catálogo — Torta Moka |
+| `Torta Selva negra.webp` | Catálogo — Torta Selva Negra |
+| `Torta de Chocolate.webp` | Catálogo — Torta de Chocolate |
+| `Torta de Hojarasca.webp` | Catálogo — Torta de Hojarasca |
+| `Torta de Piña.webp` | Catálogo — Torta de Piña |
+| `qr-whatsapp.png` | Contacto — QR WhatsApp |
 | `svc-b2b.webp` | Servicios — Distribución B2B |
 | `svc-eventos.webp` | Servicios — Eventos Especiales |
 | `svc-delivery.webp` | Servicios — Delivery en Maipú |
@@ -108,10 +136,10 @@ Pan Amasado · Tortilla con Chicharrones · Pan Integral · Pan Frica · Doblodi
 Pie de Limón Merengado · Kuchen Sureño · Kuchen de Nuez · Banofee · Tartaletas
 
 ### 🍰 Tortas
-3 Leches · Chocolate · Moca/Pralinée · Selva Negra · Panqueque · Pavé
+3 Leches · Chocolate · Moka · Selva Negra · Piña · Hojarasca · Panqueque · Pavé
 
 ### 🍪 Dulces & Alfajores
-Alfajores de Maicena · Alfajores de Chocolate · Chilenitos
+Alfajores de Maicena · Alfajores de Manjar · Alfajores de Chocolate · Chilenitos · Berlines · Pasteles Rectangulares
 
 ### 🥐 Queques & Muffins
 Queque de Naranja · Queque Mármol · Queque de Yogurt · Muffins
@@ -159,16 +187,13 @@ images: { unoptimized: true }  // requerido para export estático
 
 ## 🔜 Pendiente / Próximos Pasos
 
-- [ ] **Componente `Nosotros`** — grid 2 col: foto `hero-socias-vintage.webp` + badge "+5 años", textos, 3 valores con barra terracota
-- [ ] **Componente `Contacto`** — fondo `#1a0f0a`, título serif, botón WhatsApp verde + botón ghost teléfono
-- [ ] **Componente `Footer`** — fondo `#0f0705`, línea degradada dorada, flex: logo + copyright + links
+- [ ] **Dominio `galdi.cl`**: compra el viernes con las socias → configurar Cloudflare + Firebase DNS
+- [ ] **SEO básico**: meta tags, Open Graph, sitemap.xml
+- [ ] **Revisar imágenes slideshow Hero.tsx** (calidad/pertinencia de los 6 slides actuales)
 - [ ] **Botón flotante WhatsApp** — visible en todas las secciones
-- [ ] **Scroll reveal** con IntersectionObserver (fiel al original)
+- [ ] **Scroll reveal** con IntersectionObserver
 - [ ] **Cursor personalizado** (punto + anillo flotante, solo desktop)
-- [ ] Dominio personalizado (ej. `galdi.cl`) — configurar DNS en Firebase
 - [ ] `.env.local` con credenciales Firebase si se agrega Firestore/Analytics
-- [ ] SEO: meta tags, Open Graph, sitemap.xml
-- [ ] Imágenes profesionales de tortas y pasteles
 
 ---
 
@@ -176,7 +201,8 @@ images: { unoptimized: true }  // requerido para export estático
 
 | Campo | Valor |
 |---|---|
-| **WhatsApp** | +56 9 9099 1011 |
+| **WhatsApp** | +56 9 9099 1011 (wa.me/56990991011) |
+| **Email** | ventas@galdi.cl |
 | **Ubicación** | Maipú, Región Metropolitana, Chile |
 | **Instagram** | (pendiente confirmar) |
 
@@ -186,5 +212,4 @@ images: { unoptimized: true }  // requerido para export estático
 
 - **Estilo de trabajo de Claudio**: confirmaciones breves ("ya", "listo", "ahora sí") → Claude pregunta si el contexto es ambiguo antes de actuar
 - **Paleta Galdi**: café oscuro `#1a0f0a`, crema `#f5e6d3`, dorado `#d4a853`, terracota `#c4704f`
-- **Secciones activas en `page.tsx`**: Header · Hero · Catalogo · Servicios
-- **Secciones pendientes**: Nosotros · Contacto · Footer
+- **Secciones activas en `page.tsx`**: Header · Hero · Catálogo · Servicios · Nosotras · Contacto · Footer
