@@ -1,5 +1,5 @@
 # AI_CONTEXT — Proyecto Galdi Pastelería
-> Registro de trabajo asistido por IA · Actualizado: marzo 2026
+> Registro de trabajo asistido por IA · Actualizado: 18 marzo 2026
 
 ---
 
@@ -12,158 +12,163 @@
 | **Ubicación** | Maipú, Chile |
 | **Tipo de negocio** | Pastelería artesanal y catering |
 | **Desarrollador** | Claudio (GitHub: `Okasa-Chile`) |
-| **Repositorio** | `Okasa-Chile/galdi-pasteleria` |
-| **Firebase Project** | `studio-3718566942-edde2` |
-| **Firebase Site** | `galdi-web` (multisite junto a `okasa-proyecto.web.app`) |
-| **URL Preview DEV** | `https://studio-3718566942-edde2--preview-adv9uv9u.web.app` (expira 23 mar 2026) |
-| **Stack** | HTML + CSS + JS puro, single file (`index.html`) |
+| **Repositorio** | `Okasa-Chile/galdi-pasteleria` (rama `main`) |
+| **Firebase Project** | `galdi-web` (proyecto independiente, plan Spark) |
+| **Firebase Site** | `galdi-web.web.app` |
+| **URL Producción** | `https://galdi-web.web.app` |
+| **Stack actual** | Next.js 16 · TypeScript · Tailwind CSS v4 · shadcn/ui v4 |
+| **Stack anterior** | HTML + CSS + JS puro, single file (`index.html`) en `galdi-web/` |
 
 ---
 
-## 🏗️ Estructura del Proyecto
+## 🏗️ Estructura del Proyecto (Next.js)
 
 ```
-galdi-web/
-  ├── index.html              ← sitio completo (single file)
-  ├── firebase.json           ← configuración Firebase Hosting multisite
-  ├── .firebaseignore
-  └── images/
-      ├── logo-ancho.png      ← logo horizontal Galdi
-      ├── frame.png           ← QR de contacto
-      ├── hero-final-freepik.jpeg
-      ├── hero-final-16-9.png
-      ├── hero-socias-vintage.jpg
-      ├── hero-premium-chefs.jpg
-      ├── hero-b2b.jpg
-      ├── prod-dulces.jpg
-      ├── prod-empanada.jpg
-      └── prod-pie.jpg
+galdi-nextjs/
+  ├── app/
+  │   ├── globals.css         ← variables CSS Galdi + Google Fonts
+  │   ├── layout.tsx          ← RootLayout, metadata, lang="es"
+  │   └── page.tsx            ← compone Header + Hero + Catalogo + Servicios
+  ├── components/
+  │   ├── Header.tsx          ← header fijo, scroll detection, hamburguesa mobile
+  │   ├── Hero.tsx            ← slideshow 6 slides, dots, CTA WhatsApp
+  │   ├── Catalogo.tsx        ← 6 tabs, 24 productos, next/image, animación catFadeUp
+  │   └── Servicios.tsx       ← 3 cards con hover overlay, links WhatsApp
+  ├── public/
+  │   └── images/             ← todas las imágenes copiadas desde galdi-web/images/
+  ├── firebase.json           ← public: "out", cleanUrls: true
+  ├── .firebaserc             ← default: "galdi-web"
+  ├── next.config.ts          ← output: "export", images.unoptimized: true
+  └── AI_CONTEXT.md
 ```
 
 ---
 
 ## ✅ Trabajo Completado
 
-### Fase 1 — Fundamentos (sesión inicial)
-- [x] Análisis del video de referencia (plugin `frontend-design` de Claude Code via Skill SKILL.md)
-- [x] Definición de stack: HTML + CSS + JS puro, sin frameworks
-- [x] Estrategia Firebase: multisite bajo proyecto existente (plan Spark gratuito)
-- [x] Inicialización del repositorio Git y push a GitHub
-- [x] Decisión de secciones del sitio:
-  - Hero slideshow · Productos · Servicios · Sobre Nosotras · Contacto + WhatsApp · Footer
+### Fase 1–5 — Sitio estático original (antes de 18-03-2026)
+- [x] Diseño y construcción del sitio en `galdi-web/index.html`
+- [x] Procesamiento del logo PNG (remoción de fondo rosa con Python PIL)
+- [x] Hero slideshow 4 slides, catálogo 6 categorías 28 productos
+- [x] Deploy a Firebase Hosting (multisite bajo proyecto Okasa — luego migrado)
+- [x] Incidente 17-03-2026: deploy pisó okasa.cl → decisión de migrar a proyecto independiente
 
-### Fase 2 — Diseño y contenido
-- [x] Generación de `index.html` base con el skill `/frontend-design` en Claude Code
-- [x] Procesamiento del logo: remoción de fondo rosa/salmón → PNG transparente (Python PIL + numpy)
-- [x] Integración de imágenes: hero (4 slides), productos (3 fotos), servicios, logo, QR
-- [x] Configuración del hero slideshow automático (intervalo 5s, overlay oscuro)
-- [x] Botón flotante WhatsApp siempre visible (+56940211756)
-- [x] Formulario de contacto que construye mensaje y abre WhatsApp
+### Fase 6 — Migración a Next.js (18-03-2026)
+- [x] Creación de proyecto Next.js 16 en `galdi-nextjs/` con TypeScript + Tailwind CSS v4
+- [x] shadcn/ui v4 inicializado con preset base-nova (`--defaults`)
+- [x] `next.config.ts`: `output: "export"`, `images.unoptimized: true`
+- [x] Firebase Hosting configurado para directorio `out/`
+- [x] Repositorio GitHub conectado: `Okasa-Chile/galdi-pasteleria`
+- [x] **`globals.css`**: variables CSS Galdi + Google Fonts (Cormorant Garamond + Jost)
+- [x] **`layout.tsx`**: metadata Galdi, lang="es", sin Geist fonts
+- [x] **`Header.tsx`**: fijo, scroll detection, logo cambia tamaño/filter, nav con `::after` dorado, hamburguesa mobile, botón Cotizar
+- [x] **`Hero.tsx`**: slideshow automático 6 slides (5s), dots clickeables con animación de ancho, CTA WhatsApp
+- [x] **`Catalogo.tsx`**: 6 tabs (Pan, Pasteles, Tortas, Dulces, Queques, Empanadas), 24 productos, `next/image fill`, animación `catFadeUp` con delays, `key={activeTab}` fix re-render, gradientes CSS para Tortas y Queques
+- [x] **`Servicios.tsx`**: 3 cards (B2B, Eventos, Delivery), `next/image fill`, hover con `useState`, overlay degradado, descripción/link aparecen en hover
+- [x] `page.tsx` compone: `<Header /> <Hero /> <Catalogo /> <Servicios />`
+- [x] Imágenes copiadas a `public/images/` (hero ×6, productos, servicios, logo)
+- [x] `npm run build` exitoso
+- [x] `firebase deploy --only hosting` → sitio live en `galdi-web.web.app`
+- [x] `git push origin main`
 
-### Fase 3 — Catálogo de productos
-- [x] Transcripción completa de recetas escritas a mano (6 categorías, 28+ productos)
-- [x] Integración del catálogo en la sección galería con tarjetas visuales por categoría
-- [x] Commit: `"feat: catálogo completo de productos Galdi — 6 categorías, 28 productos"`
+---
 
-### Fase 4 — Ajustes de diseño
-- [x] Aclarado del sitio: alternancia secciones oscuras/claras (fondo crema cálido para Productos y Nosotras)
-- [x] Reordenamiento de secciones: Productos ahora va **antes** de Servicios
-- [x] Decisión de reemplazar fotos de las hermanas en hero por fotos de productos (pendiente ejecución)
+## 🖼️ Imágenes en `public/images/`
 
-### Fase 5 — Deploy
-- [x] Instalación y configuración de Firebase CLI
-- [x] `firebase init hosting` → proyecto `studio-3718566942-edde2`
-- [x] Deploy a canal preview DEV: `firebase hosting:channel:deploy preview --expires 7d`
-- [x] URL preview activa y verificada
+| Archivo | Uso |
+|---|---|
+| `logo-ancho.png` | Header, Footer |
+| `hero-final-freepik.webp` | Hero slide 1 |
+| `hero-final-16-9.webp` | Hero slide 2 |
+| `hero-socias-vintage.webp` | Hero slide 3 |
+| `hero-premium-chefs.webp` | Hero slide 4 |
+| `hero-b2b.webp` | Hero slide 5 |
+| `hero-pasteleria.webp` | Hero slide 6 |
+| `Pan Amasado.webp` | Catálogo — Pan Amasado |
+| `Tortilla de Chicharrones.webp` | Catálogo — Tortilla |
+| `Pan integral.webp` | Catálogo — Pan Integral |
+| `Pan Frica.webp` | Catálogo — Pan Frica |
+| `Dobladitas.webp` | Catálogo — Dobladitas |
+| `Marraquetas.webp` | Catálogo — Marraqueta |
+| `prod-pie.webp` | Catálogo — Pasteles (Pie de Limón) |
+| `prod-dulces.webp` | Catálogo — Dulces / Sección Nosotros |
+| `prod-empanada.webp` | Catálogo — Empanadas |
+| `svc-b2b.webp` | Servicios — Distribución B2B |
+| `svc-eventos.webp` | Servicios — Eventos Especiales |
+| `svc-delivery.webp` | Servicios — Delivery en Maipú |
 
 ---
 
 ## 📦 Catálogo Completo de Productos
 
 ### 🍞 Pan Artesanal
-| Producto | Rendimiento |
-|---|---|
-| Pan Amasado | 16 u. de 100g |
-| Tortilla / Pan con Chicharrones | 350g por tortilla |
-| Pan Integral | — |
-| Pan Frica (semillas sésamo opcional) | — |
-| Dobloditas | 18 u. de 20cm |
+Pan Amasado · Tortilla con Chicharrones · Pan Integral · Pan Frica · Dobloditas · Marraqueta
 
-### 🎂 Pasteles y Tartas
-- Pie de Limón Merengado (molde 26–28cm)
-- Tartaletas / Kuchen (misma masa base del pie)
-- Banofee (manjar, plátano, crema, chocolate)
-- Kuchen Sureño (frutas: frambuesa, manzana, arándano, frutilla, durazno)
-- Kuchen de Nuez (con leche condensada)
+### 🎂 Pasteles & Tartas
+Pie de Limón Merengado · Kuchen Sureño · Kuchen de Nuez · Banofee · Tartaletas
 
 ### 🍰 Tortas
-- 3 Leches · Chocolate · Moca/Pralinée · Panqueque · Selva Negra · Pavé
+3 Leches · Chocolate · Moca/Pralinée · Selva Negra · Panqueque · Pavé
 
-### 🍪 Dulces y Alfajores
-| Producto | Rendimiento |
-|---|---|
-| Chilenitos | — |
-| Alfajores de Maicena (manjar + coco) | 40 bocados |
-| Alfajores de Chocolate (cobertura semi amargo y blanco) | 12 de cm7 |
+### 🍪 Dulces & Alfajores
+Alfajores de Maicena · Alfajores de Chocolate · Chilenitos
 
-### 🥐 Queques y Muffins
-- Queque de Naranja · Queque Mármol · Queque de Yogurt · Muffins varios sabores
+### 🥐 Queques & Muffins
+Queque de Naranja · Queque Mármol · Queque de Yogurt · Muffins
 
 ### 🥟 Empanadas (venta por docena)
-- Pino · Napolitana · Vegetariana · Queso Camarón
+Pino · Napolitana · Vegetariana · Queso Camarón
 
 ---
 
 ## 🛠️ Decisiones Técnicas y Aprendizajes
 
-### Firebase Multisite
-- El plan Spark (gratuito) permite múltiples sitios bajo un mismo proyecto
-- `firebase.json` usa targets por sitio para deploy selectivo
-- Deploy: `firebase deploy --only hosting:galdi`
-- Preview: `firebase hosting:channel:deploy preview --expires 7d`
-
-### Remoción de fondo del logo
-```python
-# Enfoque PIL + numpy — threshold por rango de color
-from PIL import Image
-import numpy as np
-
-img = Image.open("logo.png").convert("RGBA")
-data = np.array(img)
-# Detectar pixels rosa/salmón y setear alpha = 0
-mask = (data[:,:,0] > 200) & (data[:,:,1] < 150) & (data[:,:,2] < 150)
-data[mask, 3] = 0
-Image.fromarray(data).save("logo-transparent.png")
+### Next.js + Firebase Hosting (exportación estática)
+```ts
+// next.config.ts
+output: "export"          // genera carpeta /out/
+images: { unoptimized: true }  // requerido para export estático
+```
+```json
+// firebase.json
+{ "public": "out", "cleanUrls": true, "trailingSlash": false }
 ```
 
+### shadcn/ui v4
+- La CLI de v4 ya no ofrece opciones "Default/Slate" — usa presets: Nova, Vega, etc.
+- Instalar con `npx shadcn@latest init --defaults` para preset base-nova
+
+### CSS Pseudo-elementos en React
+- `::after` y `::before` no se pueden aplicar con inline styles
+- Solución: `<style>` tag interno dentro del componente con clases CSS
+
+### Catalogo — Bug de re-render al cambiar tabs
+- Síntoma: cards desaparecen al cambiar tab
+- Causa: React reconciliation con `key` en nodo incorrecto + `background-image` CSS no precarga imágenes dinámicas en Next.js
+- Fix: `key={activeTab}` en el `<div>` wrapper exterior del panel + `<Image fill>` de `next/image` en lugar de `background-image`
+
+### Imágenes con espacios en nombres
+- Archivos con espacios (`Pan Amasado.webp`) funcionan en `next/image` con `src="/images/Pan Amasado.webp"`
+- Next.js los encoda automáticamente en la URL
+
 ### Flujo de trabajo IA
-- Claude.ai (chat) → prepara prompts completos → Claudio los pega en Claude Code
-- Para prompts largos: generar `.txt` descargable → abrir en VS Code → copiar → pegar en Claude Code
-- Cambios múltiples siempre en un solo prompt a Claude Code (no en partes)
-- Skill `/frontend-design` en Claude Code maneja el diseño premium
-
-### Limitaciones conocidas
-- GitHub: autenticación manual (Claude Chrome MCP no puede autenticarse)
-- Visual del sitio: Claude no puede ver el resultado — Claudio debe compartir capturas
-- Firebase: el proyecto real es `studio-3718566942-edde2`, no `okasa-proyecto`
-
----
-
-## 🚨 PENDIENTE URGENTE
-
-- [ ] **Migrar Galdi a su propio proyecto Firebase independiente.** Actualmente comparte proyecto con Okasa (`studio-3718566942-edde2`) lo que causó un incidente el 17-03-2026 donde se pisó okasa.cl. URL de preview temporal hasta 24-03-2026: https://studio-3718566942-edde2--galdi-kvavezsf.web.app
+- Claude.ai (chat) → prepara prompts/archivos `.txt` → Claudio los abre en VS Code → copia → pega en Claude Code
+- Cambios múltiples siempre en un solo prompt a Claude Code
 
 ---
 
 ## 🔜 Pendiente / Próximos Pasos
 
-- [ ] Reemplazar `hero-socias-vintage.jpg` por foto de productos (sin las hermanas)
-- [ ] Deploy a producción: `firebase deploy --only hosting` (cuando DEV esté aprobado)
-- [ ] Dominio personalizado (ej. `galdi.cl`) — configuración DNS en Firebase
-- [ ] Sección **venta online** (fase futura)
-- [ ] Imágenes profesionales de productos para la galería
-- [ ] SEO básico: meta tags, Open Graph, sitemap
-- [ ] Formulario de pedidos con integración backend (Firebase Functions o similar)
+- [ ] **Componente `Nosotros`** — grid 2 col: foto `hero-socias-vintage.webp` + badge "+5 años", textos, 3 valores con barra terracota
+- [ ] **Componente `Contacto`** — fondo `#1a0f0a`, título serif, botón WhatsApp verde + botón ghost teléfono
+- [ ] **Componente `Footer`** — fondo `#0f0705`, línea degradada dorada, flex: logo + copyright + links
+- [ ] **Botón flotante WhatsApp** — visible en todas las secciones
+- [ ] **Scroll reveal** con IntersectionObserver (fiel al original)
+- [ ] **Cursor personalizado** (punto + anillo flotante, solo desktop)
+- [ ] Dominio personalizado (ej. `galdi.cl`) — configurar DNS en Firebase
+- [ ] `.env.local` con credenciales Firebase si se agrega Firestore/Analytics
+- [ ] SEO: meta tags, Open Graph, sitemap.xml
+- [ ] Imágenes profesionales de tortas y pasteles
 
 ---
 
@@ -171,7 +176,7 @@ Image.fromarray(data).save("logo-transparent.png")
 
 | Campo | Valor |
 |---|---|
-| **WhatsApp** | +56 9 4021 1756 |
+| **WhatsApp** | +56 9 9099 1011 |
 | **Ubicación** | Maipú, Región Metropolitana, Chile |
 | **Instagram** | (pendiente confirmar) |
 
@@ -179,6 +184,7 @@ Image.fromarray(data).save("logo-transparent.png")
 
 ## 📝 Notas de Sesión
 
-- **Estilo de trabajo de Claudio**: confirmaciones breves ("ya las pegué", "listo", "ahora sí mucho mejor") → Claude debe preguntar si el contexto es ambiguo antes de actuar
-- **Paleta Galdi**: tonos café oscuro, crema cálido, dorado — identidad artesanal familiar
-- **Audiencia**: clientes locales Maipú + B2B (distribución), eventos, delivery
+- **Estilo de trabajo de Claudio**: confirmaciones breves ("ya", "listo", "ahora sí") → Claude pregunta si el contexto es ambiguo antes de actuar
+- **Paleta Galdi**: café oscuro `#1a0f0a`, crema `#f5e6d3`, dorado `#d4a853`, terracota `#c4704f`
+- **Secciones activas en `page.tsx`**: Header · Hero · Catalogo · Servicios
+- **Secciones pendientes**: Nosotros · Contacto · Footer
