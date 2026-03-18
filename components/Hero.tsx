@@ -1,0 +1,147 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+
+const slides = [
+  { src: '/images/hero-final-16-9.webp', alt: 'Galdi — Pastelería artesanal' },
+  { src: '/images/SlideshowPanes.webp', alt: 'Pan artesanal Galdi' },
+  { src: '/images/prod-dulces.webp', alt: 'Dulces artesanales Galdi' },
+  { src: '/images/prod-pie.webp', alt: 'Pasteles y tartas Galdi' },
+  { src: '/images/prod-empanada.webp', alt: 'Empanadas artesanales Galdi' },
+  { src: '/images/Reparto.webp', alt: 'Reparto Galdi en Maipú' },
+];
+
+export default function Hero() {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <section id="inicio" style={{
+      position: 'relative',
+      height: '100vh',
+      overflow: 'hidden',
+    }}>
+      {slides.map((slide, i) => (
+        <div key={i} style={{
+          position: 'absolute',
+          inset: 0,
+          opacity: i === current ? 1 : 0,
+          transition: 'opacity 1s ease-in-out',
+        }}>
+          <Image
+            src={slide.src}
+            alt={slide.alt}
+            fill
+            style={{ objectFit: 'cover' }}
+            priority={i === 0}
+          />
+        </div>
+      ))}
+
+      {/* Overlay oscuro */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'linear-gradient(to bottom, rgba(26,15,10,0.4) 0%, rgba(26,15,10,0.6) 100%)',
+      }} />
+
+      {/* Contenido */}
+      <div style={{
+        position: 'relative',
+        zIndex: 2,
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        padding: '0 2rem',
+      }}>
+        <h1 style={{
+          fontFamily: 'var(--font-serif)',
+          fontSize: 'clamp(3rem, 8vw, 7rem)',
+          fontWeight: 300,
+          color: 'var(--cream)',
+          lineHeight: 1.1,
+          marginBottom: '1rem',
+          letterSpacing: '0.02em',
+        }}>
+          Gozo en cada bocado
+        </h1>
+        <p style={{
+          fontFamily: 'var(--font-sans)',
+          fontSize: 'clamp(1rem, 2vw, 1.3rem)',
+          fontWeight: 300,
+          color: 'var(--cream-light)',
+          marginBottom: '2.5rem',
+          letterSpacing: '0.05em',
+        }}>
+          Pastelería artesanal · Banquetería · Distribución B2B
+        </p>
+        <a
+          href="https://wa.me/56990991011?text=Hola%20Galdi%2C%20quiero%20hacer%20un%20pedido"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            background: 'var(--terracota)',
+            color: 'var(--cream)',
+            padding: '1rem 2.5rem',
+            fontFamily: 'var(--font-sans)',
+            fontWeight: 500,
+            fontSize: '0.9rem',
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            textDecoration: 'none',
+            transition: 'var(--transition)',
+            border: '1px solid var(--terracota)',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = 'transparent';
+            e.currentTarget.style.color = 'var(--cream)';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = 'var(--terracota)';
+            e.currentTarget.style.color = 'var(--cream)';
+          }}
+        >
+          Pedir por WhatsApp
+        </a>
+      </div>
+
+      {/* Dots */}
+      <div style={{
+        position: 'absolute',
+        bottom: '2rem',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        display: 'flex',
+        gap: '0.5rem',
+        zIndex: 2,
+      }}>
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrent(i)}
+            style={{
+              width: i === current ? '2rem' : '0.5rem',
+              height: '0.5rem',
+              borderRadius: '9999px',
+              background: i === current ? 'var(--gold)' : 'rgba(255,255,255,0.5)',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'var(--transition)',
+              padding: 0,
+            }}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
