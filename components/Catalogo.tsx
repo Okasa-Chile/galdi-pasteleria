@@ -274,7 +274,7 @@ export default function Catalogo() {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
             gap: '1.5rem',
             background: 'rgba(26,15,10,0.07)',
           }}>
