@@ -22,7 +22,7 @@ const imagenes: Record<string, string> = {
   'Pie de Limón Merengado':    '/images/prod-pie.webp',
   'Kuchen Sureño':             '/images/kuchen-sureno.webp',
   'Kuchen de Nuez':            '/images/kuchen-nueces.webp',
-  'Banofee':                   '/images/banofee.webp',
+  'Banofee':                   '/images/Banofee.webp',
   'Tartaletas':                '/images/tartaletas.webp',
   // Tortas
   'Torta 3 Leches':            '/images/torta-3-leches.webp',
