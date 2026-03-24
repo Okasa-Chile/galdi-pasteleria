@@ -23,7 +23,7 @@ const imagenes: Record<string, string> = {
   'Kuchen Sureño':             '/images/kuchen-sureno.webp',
   'Kuchen de Nuez':            '/images/kuchen-nueces.webp',
   'Banofee':                   '/images/Banofee.webp',
-  'Tartaletas':                '/images/tartaletas.webp',
+  'Tartaletas':                '/images/tartaleta.webp',
   // Tortas
   'Torta 3 Leches':            '/images/torta-3-leches.webp',
   'Torta de Chocolate':        '/images/torta-chocolate.webp',
