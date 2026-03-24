@@ -73,7 +73,7 @@ export default function Hero() {
           marginBottom: '1rem',
           letterSpacing: '0.02em',
         }}>
-          Gozo en cada bocado
+          El sabor de lo hecho con cariño
         </h1>
         <p style={{
           fontFamily: 'var(--font-sans)',

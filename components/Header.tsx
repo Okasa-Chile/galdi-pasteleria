@@ -102,7 +102,7 @@ export default function Header() {
         {/* Logo */}
         <a href="#inicio" style={{ lineHeight: 0 }}>
           <Image
-            src="/images/logo-ancho.webp"
+            src="/images/Nuevologo.webp"
             alt="Galdi — Pastelería Artesanal"
             width={250}
             height={90}

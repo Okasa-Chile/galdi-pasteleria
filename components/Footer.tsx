@@ -60,7 +60,7 @@ export default function Footer() {
         {/* Logo */}
         <a href="#inicio" style={{ display: 'inline-block', opacity: 0.65 }}>
           <Image
-            src="/images/logo-ancho.webp"
+            src="/images/Nuevologo.webp"
             alt="Galdi"
             width={120}
             height={34}
