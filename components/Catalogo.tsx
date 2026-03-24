@@ -10,37 +10,44 @@ const WA_SVG = (
 );
 
 const imagenes: Record<string, string> = {
-  // Pan Artesanal — imágenes propias
-  'Pan Amasado':               '/images/Pan Amasado.webp',
-  'Tortilla con Chicharrones': '/images/Tortilla de Chicharrones.webp',
+  // Pan Artesanal
+  'Pan Amasado':               '/images/pan-amasado-new.webp',
+  'Tortilla con Chicharrones': '/images/tortilla-chicharrones-new.webp',
   'Pan Integral':              '/images/Pan integral.webp',
   'Pan Frica':                 '/images/Pan Frica.webp',
   'Dobloditas':                '/images/Dobladitas.webp',
   'Marraqueta':                '/images/Marraquetas.webp',
-  // Pasteles & Tartas — imágenes propias
+  'Chicharrones':              '/images/chicharrones.webp',
+  // Pasteles & Tartas
   'Pie de Limón Merengado':    '/images/prod-pie.webp',
-  'Kuchen Sureño':             '/images/Kuchen sureño.webp',
-  'Kuchen de Nuez':            '/images/Kuchen de Nueces.webp',
-  'Banofee':                   '/images/Banofee.webp',
-  'Tartaletas':                '/images/Tartaletas.webp',
-  // Tortas — imágenes propias
-  'Torta 3 Leches':            '/images/Torta 3 Leches.webp',
-  'Torta de Chocolate':        '/images/Torta de Chocolate.webp',
-  'Moca / Pralinée':           '/images/Torta Moka.webp',
-  'Selva Negra':               '/images/Torta Selva negra.webp',
-  'Torta de Piña':             '/images/Torta de Piña.webp',
-  'Torta de Hojarasca':        '/images/Torta de Hojarasca.webp',
-  // Dulces & Alfajores — imágenes propias + compartida
+  'Kuchen Sureño':             '/images/kuchen-sureno.webp',
+  'Kuchen de Nuez':            '/images/kuchen-nueces.webp',
+  'Banofee':                   '/images/banofee.webp',
+  'Tartaletas':                '/images/tartaletas.webp',
+  // Tortas
+  'Torta 3 Leches':            '/images/torta-3-leches.webp',
+  'Torta de Chocolate':        '/images/torta-chocolate.webp',
+  'Moca / Pralinée':           '/images/torta-moka.webp',
+  'Selva Negra':               '/images/torta-selva-negra.webp',
+  'Panqueque':                 '/images/torta-panqueques.webp',
+  'Torta de Piña':             '/images/torta-pina-new.webp',
+  'Torta de Hojarasca':        '/images/torta-hojarasca-new.webp',
+  // Dulces & Alfajores
   'Berlines':                  '/images/Berlines.webp',
-  'Alfajores de Manjar':       '/images/prod-dulces.webp',
-  'Alfajores de Chocolate':    '/images/prod-dulces.webp',
-  'Chilenitos':                '/images/prod-dulces.webp',
-  // Empanadas — imagen compartida
-  'Pino':                      '/images/prod-empanada.webp',
-  'Napolitana':                '/images/prod-empanada.webp',
+  'Alfajores de Manjar':       '/images/alfajores-manjar.webp',
+  'Alfajores de Chocolate':    '/images/alfajores-chocolate.webp',
+  'Chilenitos':                '/images/alfajores-manjar.webp',
+  'Pasteles Rectangulares':    '/images/pasteles-rectangulares.webp',
+  // Empanadas
+  'Pino':                      '/images/empanada-pino.webp',
+  'Napolitana':                '/images/empanada-napolitana.webp',
   'Vegetariana':               '/images/prod-empanada.webp',
-  'Queso Camarón':             '/images/prod-empanada.webp',
-  // Queques → sin imagen (usan gradiente CSS)
+  'Queso Camarón':             '/images/empanada-camaron.webp',
+  // Queques
+  'Queque de Naranja':         '/images/queque-naranja.webp',
+  'Queque Mármol':             '/images/queque-marmol.webp',
+  'Queque de Yogurt':          '/images/prod-dulces.webp',
+  'Muffins':                   '/images/muffins.webp',
 };
 
 const categorias = [
@@ -85,8 +92,7 @@ const categorias = [
     label: 'Dulces & Alfajores',
     productos: [
       { nombre: 'Berlines',                 detalle: 'Suaves y esponjosos, rellenos de manjar o crema pastelera, espolvoreados con azúcar flor.' },
-      { nombre: 'Alfajores de Manjar',      detalle: 'Suaves discos unidos con manjar y rebozados en coco rallado. 40 bocados por receta.' },
-      { nombre: 'Alfajores de Chocolate',   detalle: 'Rellenos de manjar y bañados en cobertura de chocolate semi amargo o blanco.' },
+{ nombre: 'Alfajores de Chocolate',   detalle: 'Rellenos de manjar y bañados en cobertura de chocolate semi amargo o blanco.' },
       { nombre: 'Chilenitos',               detalle: 'El dulce más chileno: masa crocante con manjar y bañados en merengue azucarado.' },
       { nombre: 'Pasteles Rectangulares',   detalle: 'Torta en trozo, ideal para eventos y pedidos por unidad. Mismos sabores de nuestras tortas completas.' },
     ],
