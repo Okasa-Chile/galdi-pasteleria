@@ -9,7 +9,7 @@ const WA_SVG = (
   </svg>
 );
 
-const imagenes: Record<string, string> = {
+export const imagenes: Record<string, string> = {
   // Pan Artesanal
   'Pan Amasado':               '/images/pan-amasado-new.webp',
   'Tortilla con Chicharrones': '/images/tortilla-chicharrones-new.webp',

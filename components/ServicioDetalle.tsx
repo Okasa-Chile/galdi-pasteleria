@@ -2,40 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-
-// ─── Mapa de imágenes (mismo que Catalogo.tsx) ───────────────────────────────
-
-const imagenes: Record<string, string> = {
-  'Pan Amasado':               '/images/Pan Amasado.webp',
-  'Tortilla con Chicharrones': '/images/Tortilla de Chicharrones.webp',
-  'Pan Integral':              '/images/Pan integral.webp',
-  'Pan Frica':                 '/images/Pan Frica.webp',
-  'Dobloditas':                '/images/Dobladitas.webp',
-  'Marraqueta':                '/images/Marraquetas.webp',
-  'Pie de Limón Merengado':    '/images/prod-pie.webp',
-  'Kuchen Sureño':             '/images/Kuchen sureño.webp',
-  'Kuchen de Nuez':            '/images/Kuchen de Nueces.webp',
-  'Banofee':                   '/images/Banofee.webp',
-  'Tartaletas':                '/images/Tartaletas.webp',
-  'Torta 3 Leches':            '/images/Torta 3 Leches.webp',
-  'Torta de Chocolate':        '/images/Torta de Chocolate.webp',
-  'Moca / Pralinée':           '/images/Torta Moka.webp',
-  'Selva Negra':               '/images/Torta Selva negra.webp',
-  'Torta de Piña':             '/images/Torta de Piña.webp',
-  'Torta de Hojarasca':        '/images/Torta de Hojarasca.webp',
-  'Berlines':                  '/images/Berlines.webp',
-  'Alfajores de Manjar':       '/images/prod-dulces.webp',
-  'Alfajores de Chocolate':    '/images/prod-dulces.webp',
-  'Chilenitos':                '/images/prod-dulces.webp',
-  'Pino':                      '/images/prod-empanada.webp',
-  'Napolitana':                '/images/prod-empanada.webp',
-  'Vegetariana':               '/images/prod-empanada.webp',
-  'Queso Camarón':             '/images/prod-empanada.webp',
-  'Queque de Naranja':         '/images/queque-naranja.webp',
-  'Queque Mármol':             '/images/queque-marmol.webp',
-  'Queque Tradicional':        '/images/queque-tradicional.webp',
-  'Muffins':                   '/images/muffins.webp',
-};
+import { imagenes } from './Catalogo';
 
 // ─── Productos por servicio y tab ───────────────────────────────────────────
 
@@ -103,7 +70,7 @@ const eventosData: Record<string, { imagen: string; desc: string }> = {
   'Matrimonios':  { imagen: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&q=80', desc: 'Tortas de novios, mesa de dulces y banquetería completa para el día más especial. Coordinamos contigo cada detalle.' },
   'Cóctel':       { imagen: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=1200&q=80',   desc: 'Bocados dulces y salados para cócteles y recepciones. Presentación elegante lista para servir.' },
   'Cumpleaños':   { imagen: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=1200&q=80',   desc: 'Tortas personalizadas, cupcakes y mesa de dulces para celebrar como se merece. Pedidos con 48 hrs de anticipación.' },
-  'Corporativos': { imagen: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80', desc: 'Coffee breaks y celebraciones de empresa con productos artesanales. Factura disponible para empresas.' },
+  'Corporativos': { imagen: '/images/Corporativo.webp', desc: 'Coffee breaks y celebraciones de empresa con productos artesanales. Factura disponible para empresas.' },
 };
 
 const WA_NUMBER = '56990991011';
