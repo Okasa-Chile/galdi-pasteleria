@@ -118,6 +118,7 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [carrito, setCarrito]     = useState<Carrito>({});
   const [eventoImg, setEventoImg] = useState(eventosData[tabs[0]]?.imagen ?? imagen);
+  const [mostrarResumen, setMostrarResumen] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -165,7 +166,14 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
 
   function enviarWhatsApp() {
     const lineas = Object.entries(carrito)
-      .map(([nombre, cantidad]) => `• ${cantidad}x ${nombre}`)
+      .map(([nombre, cantidad]) => {
+        const todosLosProductos = [
+          ...Object.values(productosAlmacenes).flat(),
+          ...Object.values(productosDelivery).flat(),
+        ];
+        const unidad = todosLosProductos.find(p => p.nombre === nombre)?.unidad ?? 'un';
+        return `• ${cantidad} ${unidad} — ${nombre}`;
+      })
       .join('\n');
     const tipo = id === 'b2b' ? 'distribución a almacén' : 'delivery';
     const msg = `Hola Galdi, quiero hacer un pedido de ${tipo}:\n${lineas}\n¿Me pueden cotizar?`;
@@ -184,11 +192,15 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
         .svc-tab:hover { color: rgba(245,230,211,0.85); }
         .svc-prod-card { background: rgba(26,15,10,0.55); backdrop-filter: blur(4px); border: 1px solid rgba(212,168,83,0.15); display: flex; flex-direction: column; overflow: hidden; transition: border-color 0.25s; }
         .svc-prod-card:hover { border-color: rgba(212,168,83,0.4); }
-        .svc-btn-add { background: var(--gold); border: none; color: #1a0f0a; font-family: var(--font-sans); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.5rem; cursor: pointer; width: 100%; transition: background 0.2s; }
+        .svc-btn-add { background: #f0c040; border: none; color: #1a0f0a; font-weight: 600; font-family: var(--font-sans); font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.5rem; cursor: pointer; width: 100%; transition: background 0.2s; }
         .svc-btn-add:hover { background: var(--terracota); color: var(--cream); }
         .svc-counter { display: flex; align-items: center; justify-content: space-between; background: rgba(212,168,83,0.15); padding: 0.3rem 0.5rem; }
         .svc-counter button { background: none; border: 1px solid rgba(212,168,83,0.4); color: var(--gold); width: 1.4rem; height: 1.4rem; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; }
         .svc-whatsapp-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(26,15,10,0.95); backdrop-filter: blur(8px); border-top: 1px solid rgba(212,168,83,0.2); padding: 0.75rem 5%; display: flex; align-items: center; justify-content: space-between; z-index: 10001; }
+        .svc-resumen-overlay { position: fixed; inset: 0; background: rgba(26,15,10,0.7); backdrop-filter: blur(4px); z-index: 10002; display: flex; align-items: flex-start; padding-top: 4vh; justify-content: center; }
+        .svc-resumen-panel { background: #2a1205; border: 1px solid rgba(212,168,83,0.25); border-bottom: none; width: 100%; max-width: 560px; padding: 1.5rem; border-radius: 12px 12px 0 0; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .svc-resumen-item { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid rgba(212,168,83,0.1); font-family: var(--font-sans); font-size: 0.8rem; color: var(--cream); }
       `}</style>
 
       {/* ── Imagen de fondo ── */}
@@ -257,7 +269,7 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
                   </div>
                   {/* Botón agregar / contador */}
                   {enCarrito === 0 ? (
-                    <button className="svc-btn-add" onClick={() => agregar(prod.nombre, activeTab, prod.unidad)}>🛒 AGREGAR</button>
+                    <button className="svc-btn-add" onClick={() => agregar(prod.nombre, activeTab, prod.unidad)}><span style={{fontSize:'1rem'}}>🛒</span> AGREGAR</button>
                   ) : (
                     <div className="svc-counter">
                       <button onClick={() => quitar(prod.nombre, activeTab, prod.unidad)}>−</button>
@@ -274,14 +286,52 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
 
       {/* ── Barra carrito fija abajo ── */}
       {totalItems > 0 && (
-        <div className="svc-whatsapp-bar">
-          <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'var(--cream)', letterSpacing: '0.08em' }}>
-            {totalItems} producto{totalItems > 1 ? 's' : ''} en tu pedido
-          </span>
-          <button onClick={enviarWhatsApp} style={{ background: '#25D366', border: 'none', color: '#fff', fontFamily: 'var(--font-sans)', fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '0.65rem 1.4rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            Enviar pedido por WhatsApp
-          </button>
-        </div>
+        <>
+          {/* Resumen modal */}
+          {mostrarResumen && (
+            <div className="svc-resumen-overlay" onClick={() => setMostrarResumen(false)}>
+              <div className="svc-resumen-panel" onClick={e => e.stopPropagation()}>
+                {/* Header */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', color: 'var(--cream)', fontWeight: 300 }}>Tu pedido</span>
+                  <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                    <button onClick={() => { setCarrito({}); setMostrarResumen(false); }} style={{ background: 'none', border: '1px solid rgba(245,100,100,0.5)', color: 'rgba(245,150,150,0.9)', fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.3rem 0.6rem', cursor: 'pointer', fontFamily: 'var(--font-sans)' }}>Vaciar</button>
+                    <button onClick={() => setMostrarResumen(false)} style={{ background: 'none', border: 'none', color: 'rgba(245,230,211,0.6)', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
+                  </div>
+                </div>
+                {/* Lista de productos */}
+                <div style={{ marginBottom: '1.25rem', maxHeight: '55vh', overflowY: 'auto' }}>
+                  {Object.entries(carrito).map(([nombre, cantidad]) => (
+                    <div key={nombre} className="svc-resumen-item">
+                      <span>🛒 {nombre}</span>
+                      <span style={{ color: 'var(--gold)', fontWeight: 500 }}>{cantidad} {(() => {
+                        const todosLosProductos = [
+                          ...Object.values(productosAlmacenes).flat(),
+                          ...Object.values(productosDelivery).flat(),
+                        ];
+                        return todosLosProductos.find(p => p.nombre === nombre)?.unidad ?? 'un';
+                      })()}</span>
+                    </div>
+                  ))}
+                </div>
+                {/* Botón enviar */}
+                <button onClick={() => { enviarWhatsApp(); setMostrarResumen(false); }} style={{ width: '100%', background: '#25D366', border: 'none', color: '#fff', fontFamily: 'var(--font-sans)', fontSize: '0.78rem', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', borderRadius: '4px' }}>
+                  Enviar pedido por WhatsApp
+                </button>
+              </div>
+            </div>
+          )}
+          {/* Barra inferior */}
+          <div className="svc-whatsapp-bar" style={{ cursor: 'pointer' }}>
+            <span onClick={() => setMostrarResumen(true)} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'var(--cream)', letterSpacing: '0.08em', flex: 1 }}>
+              🛒 {totalItems} producto{totalItems > 1 ? 's' : ''} · Ver pedido
+            </span>
+            <button onClick={() => setCarrito({})} style={{ background: 'none', border: '1px solid rgba(245,100,100,0.4)', color: 'rgba(245,150,150,0.9)', fontFamily: 'var(--font-sans)', fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.3rem 0.6rem', cursor: 'pointer', marginRight: '0.75rem' }}>Vaciar</button>
+            <span onClick={() => setMostrarResumen(true)} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'var(--gold)', letterSpacing: '0.08em', cursor: 'pointer' }}>
+              Ver resumen →
+            </span>
+          </div>
+        </>
       )}
     </div>
   );

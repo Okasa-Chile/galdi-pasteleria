@@ -59,7 +59,7 @@ const categorias = [
       { nombre: 'Tortilla con Chicharrones', detalle: 'Masa tierna enriquecida con chicharrones dorados, perfecta para el desayuno o la once en familia.' },
       { nombre: 'Pan Integral',              detalle: 'Elaborado con cereales integrales seleccionados, nutritivo y auténticamente artesanal de principio a fin.' },
       { nombre: 'Pan Frica',                 detalle: 'Pan esponjoso y dorado, opcionalmente coronado con sésamo tostado para un toque crujiente especial.' },
-      { nombre: 'Dobloditas',                detalle: 'Rollitos de masa suave y tierna, ideales para el desayuno familiar. 18 unidades de 20cm.' },
+      { nombre: 'Dobloditas',                detalle: 'Rollitos de masa suave y tierna, ideales para el desayuno y once familiar.' },
       { nombre: 'Marraqueta',                detalle: 'El pan chileno por excelencia. Corteza crujiente, miga suave y aroma inconfundible, hecho a mano.' },
     ],
   },
@@ -313,7 +313,7 @@ export default function Catalogo() {
                 )}
 
                 {/* Body */}
-                <div style={{ padding: '1.35rem 1.55rem 1.55rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                <div style={{ padding: '0.75rem 1.25rem 1rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
                   <h3 style={{
                     fontFamily: 'var(--font-serif)',
                     fontSize: '1.18rem',
@@ -335,15 +335,6 @@ export default function Catalogo() {
                   }}>
                     {prod.detalle}
                   </p>
-                  <a
-                    href={`https://wa.me/56990991011?text=Hola%20Galdi!%20Me%20interesa%20pedir:%20${encodeURIComponent(prod.nombre)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="cat-card-wa-btn"
-                  >
-                    {WA_SVG}
-                    Pedir por WhatsApp
-                  </a>
                 </div>
               </article>
             ))}
