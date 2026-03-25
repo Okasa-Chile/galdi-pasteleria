@@ -92,6 +92,20 @@ galdi-nextjs/
 - [x] Imágenes de productos completadas en todas las categorías del catálogo
 - [x] `npm run build` exitoso · `firebase deploy` → `galdi-web.web.app` · `git push origin main`
 
+### Fase 9 — Sistema de Servicios con Carrito (25-03-2026)
+- [x] Nuevo componente ServicioDetalle.tsx — overlay full screen con animación
+- [x] Logo Galdi visible en overlay (Nuevologo.webp)
+- [x] Tabs de categorías arriba, imagen de fondo full screen con objectPosition top
+- [x] Distribución Almacenes: tabs Pan | Queques | Muffins | Dulces | Empanadas con grilla de productos
+- [x] Delivery Maipú: tabs Tortas | Pasteles | Queques | Empanadas con grilla de productos
+- [x] Eventos: tabs Matrimonios | Cóctel | Cumpleaños | Corporativos con imágenes Unsplash + CTA WhatsApp
+- [x] Carrito con mínimos por categoría (Pan: 10kg, Queques: 2un, Muffins/Dulces/Empanadas: 1 docena, Delivery: 1un)
+- [x] Barra fija inferior con contador y botón "Enviar pedido por WhatsApp"
+- [x] Mensaje WhatsApp formateado con detalle del pedido
+- [x] Servicios renombrados: B2B → Distribución Almacenes, Eventos Especiales → Eventos
+- [x] scrollMarginTop corregido en sección Servicios
+- [x] npm run build exitoso · firebase deploy · git push origin main
+
 ---
 
 ## 🖼️ Imágenes en `public/images/`
@@ -192,12 +206,12 @@ images: { unoptimized: true }  // requerido para export estático
 
 ## 🔜 Pendiente / Próximos Pasos
 
-- [ ] **Páginas de servicios**: cards pinchables → subpáginas con sub-tabs (Cóctel, Matrimonios, Eventos, etc.)
-- [ ] **B2B y Banquetería** como páginas internas
-- [ ] **Dominio `galdi.cl`**: pendiente compra con las socias → Cloudflare + Firebase DNS
-- [ ] **SEO básico**: meta tags, Open Graph, sitemap.xml
-- [ ] **Botón flotante WhatsApp**
-- [ ] **Scroll reveal** con IntersectionObserver
+- [ ] Ajuste de tamaño de textos en sección Servicios (título y descripción más pequeños)
+- [ ] Imágenes reales para tabs de Eventos (Matrimonios, Cóctel, Cumpleaños, Corporativos)
+- [ ] Dominio galdi.cl — pendiente compra con las socias → Cloudflare + Firebase DNS
+- [ ] SEO básico: meta tags, Open Graph, sitemap.xml
+- [ ] Botón flotante WhatsApp
+- [ ] Scroll reveal con IntersectionObserver
 
 ---
 

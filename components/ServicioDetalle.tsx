@@ -68,8 +68,8 @@ const productosDelivery: Record<string, { nombre: string; imagen: string; unidad
 const eventosData: Record<string, { imagen: string; desc: string }> = {
   'Matrimonios':  { imagen: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&q=80', desc: 'Tortas de novios, mesa de dulces y banquetería completa para el día más especial. Coordinamos contigo cada detalle.' },
   'Cóctel':       { imagen: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=1200&q=80',   desc: 'Bocados dulces y salados para cócteles y recepciones. Presentación elegante lista para servir.' },
-  'Cumpleaños':   { imagen: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80',   desc: 'Tortas personalizadas, cupcakes y mesa de dulces para celebrar como se merece. Pedidos con 48 hrs de anticipación.' },
-  'Corporativos': { imagen: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1200&q=80', desc: 'Coffee breaks y celebraciones de empresa con productos artesanales. Factura disponible para empresas.' },
+  'Cumpleaños':   { imagen: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=1200&q=80',   desc: 'Tortas personalizadas, cupcakes y mesa de dulces para celebrar como se merece. Pedidos con 48 hrs de anticipación.' },
+  'Corporativos': { imagen: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=80', desc: 'Coffee breaks y celebraciones de empresa con productos artesanales. Factura disponible para empresas.' },
 };
 
 const WA_NUMBER = '56990991011';
