@@ -2,8 +2,36 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Galdi — Gozo en cada bocado",
-  description: "Galdi — Pastelería artesanal, banquetería y distribución B2B en Maipú, Chile. Gozo en cada bocado.",
+  metadataBase: new URL('https://galdi.cl'),
+  title: 'Galdi — Pastelería Artesanal en Maipú',
+  description: 'Pastelería artesanal en Maipú. Tortas, pasteles, pan y empanadas hechos con cariño. Distribución a almacenes, eventos y delivery en toda la comuna.',
+  keywords: 'pastelería artesanal Maipú, panadería artesanal Maipú, panadería Maipú, tortas Maipú, pan amasado Maipú, empanadas Maipú, banquetería Maipú, matrimonios Maipú, cóctel Maipú, coffee break Maipú, eventos Maipú, eventos colegio Maipú, pan de pascua Maipú, cajas fiestas patrias, cajas navidad Maipú, delivery pasteles Maipú, distribución almacenes, queques artesanales, brunch Maipú',
+  openGraph: {
+    title: 'Galdi — Pastelería Artesanal en Maipú',
+    description: 'Pastelería artesanal en Maipú. Tortas, pasteles, pan y empanadas hechos con cariño. Distribución a almacenes, eventos y delivery.',
+    url: 'https://galdi.cl',
+    siteName: 'Galdi Pastelería',
+    images: [
+      {
+        url: '/images/hero-final-16-9.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Galdi — Pastelería Artesanal en Maipú',
+      },
+    ],
+    locale: 'es_CL',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Galdi — Pastelería Artesanal en Maipú',
+    description: 'Pastelería artesanal en Maipú. Tortas, pasteles, pan y empanadas hechos con cariño.',
+    images: ['/images/hero-final-16-9.webp'],
+  },
+  icons: {
+    icon: '/images/Nuevologo.webp',
+    apple: '/images/Nuevologo.webp',
+  },
 };
 
 export default function RootLayout({
