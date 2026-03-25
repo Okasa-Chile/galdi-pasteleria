@@ -92,6 +92,18 @@ galdi-nextjs/
 - [x] Imágenes de productos completadas en todas las categorías del catálogo
 - [x] `npm run build` exitoso · `firebase deploy` → `galdi-web.web.app` · `git push origin main`
 
+### Fase 11 — DNS Cloudflare + Dominio galdi.cl (25-03-2026)
+- [x] Dominio galdi.cl comprado en NIC Chile a nombre de COMERCIALIZADORA Y DISTRIBUIDORA GALDI SpA (RUT 78.378.827-6)
+- [x] galdi.cl agregado a Cloudflare (plan Free)
+- [x] Registros DNS configurados en Cloudflare:
+      - A @ → 199.36.158.100 (DNS only)
+      - A @ → 199.36.158.101 (DNS only)
+      - CNAME www → galdi-web.web.app (DNS only)
+- [x] Nameservers de Cloudflare ingresados en NIC Chile:
+      - brad.ns.cloudflare.com
+      - sydney.ns.cloudflare.com
+- [x] Cloudflare en espera de propagación (1–24 horas)
+
 ### Fase 10 — SEO, carrito y ajustes visuales (25-03-2026)
 - [x] Metadatos SEO completos en layout.tsx (title, description, keywords, Open Graph, Twitter)
 - [x] sitemap.xml y robots.txt creados en public/
@@ -219,12 +231,13 @@ images: { unoptimized: true }  // requerido para export estático
 
 ## 🔜 Pendiente / Próximos Pasos
 
-- [ ] **Dominio galdi.cl**: Comprado en NIC Chile a nombre de COMERCIALIZADORA Y DISTRIBUIDORA GALDI SpA (RUT 78.378.827-6). Pendiente configurar nameservers Cloudflare en NIC Chile → agregar galdi.cl en Cloudflare → configurar DNS apuntando a Firebase Hosting
-- [ ] **Imágenes reales para tabs de Eventos** (Matrimonios, Cóctel, Cumpleaños — Corporativo ya tiene imagen propia)
-- [ ] **SEO**: Subir sitio a Google Search Console una vez conectado galdi.cl
+- [ ] **Confirmar propagación DNS**: Esperar correo de Cloudflare confirmando activación de galdi.cl
+- [ ] **Conectar galdi.cl a Firebase Hosting**: Una vez activo Cloudflare, agregar dominio personalizado en Firebase Console
+- [ ] **Email ventas@galdi.cl**: Agregar galdi.cl como dominio adicional en cuenta Zoho existente (la misma de Okasa) + configurar registros MX en Cloudflare
+- [ ] **Google Search Console**: Subir sitio una vez que galdi.cl esté activo
+- [ ] **Imágenes reales para tabs de Eventos** (Matrimonios, Cóctel, Cumpleaños)
 - [ ] **Botón flotante WhatsApp**
 - [ ] **Scroll reveal** con IntersectionObserver
-- [ ] **Email ventas@galdi.cl** — pendiente configurar una vez que galdi.cl esté activo en Cloudflare
 
 ---
 
