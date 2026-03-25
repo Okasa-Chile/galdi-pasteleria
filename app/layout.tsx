@@ -29,8 +29,12 @@ export const metadata: Metadata = {
     images: ['/images/hero-final-16-9.webp'],
   },
   icons: {
-    icon: '/images/Nuevologo.webp',
-    apple: '/images/Nuevologo.webp',
+    icon: [
+      { url: '/images/Nuevologo.webp', type: 'image/webp' },
+    ],
+    apple: [
+      { url: '/images/Nuevologo.webp', type: 'image/webp' },
+    ],
   },
 };
 
