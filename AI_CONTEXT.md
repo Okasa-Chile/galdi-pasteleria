@@ -1,5 +1,5 @@
 # AI_CONTEXT — Proyecto Galdi Pastelería
-> Registro de trabajo asistido por IA · Actualizado: 18 marzo 2026 (tarde)
+> Registro de trabajo asistido por IA · Actualizado: 25 marzo 2026
 
 ---
 
@@ -87,23 +87,10 @@ galdi-nextjs/
 - [x] Número WhatsApp `56990991011` verificado en todos los archivos
 - [x] `npm run build` exitoso · `firebase deploy` → `galdi-web.web.app` · `git push origin main`
 
-### Sesión 24-03-2026 (tarde) — Galdi
-
-#### Completado
-- Imágenes nuevas convertidas a WebP (<80 KB) con script Python PIL
-- 26 imágenes renombradas a formato web limpio (sin espacios ni tildes) en `C:\Galdi\Imágenes_final\`
-- `Catalogo.tsx` actualizado con imágenes propias por producto (alfajores, empanadas, queques, tortas, pasteles)
-- `Muffins.webp` agregado al catálogo
-- Fix case sensitivity Firebase: `Banofee.webp` y `tartaleta.webp` corregidos
-- Texto Hero actualizado: "Gozo en cada bocado" → "El sabor de lo hecho con cariño"
-- Logo actualizado: `Nuevologo.webp` con eslogan y fondo transparente en Header y Footer
-- Alfajores de Manjar eliminado del catálogo; imagen reasignada a Chilenitos
-
-#### Pendiente próxima sesión
-- Subpáginas de servicios (B2B, Eventos, Delivery)
-- Botón flotante WhatsApp
-- Carro de compras versión media (con cierre por WhatsApp)
-- Dominio `galdi.cl` — compra y configuración Cloudflare + Firebase
+### Fase 8 — Eslogan + imágenes completas (24-03-2026)
+- [x] Eslogan actualizado a "El sabor de lo hecho con cariño" en Hero.tsx y logo
+- [x] Imágenes de productos completadas en todas las categorías del catálogo
+- [x] `npm run build` exitoso · `firebase deploy` → `galdi-web.web.app` · `git push origin main`
 
 ---
 
@@ -205,13 +192,12 @@ images: { unoptimized: true }  // requerido para export estático
 
 ## 🔜 Pendiente / Próximos Pasos
 
-- [ ] **Dominio `galdi.cl`**: compra el viernes con las socias → configurar Cloudflare + Firebase DNS
+- [ ] **Páginas de servicios**: cards pinchables → subpáginas con sub-tabs (Cóctel, Matrimonios, Eventos, etc.)
+- [ ] **B2B y Banquetería** como páginas internas
+- [ ] **Dominio `galdi.cl`**: pendiente compra con las socias → Cloudflare + Firebase DNS
 - [ ] **SEO básico**: meta tags, Open Graph, sitemap.xml
-- [ ] **Revisar imágenes slideshow Hero.tsx** (calidad/pertinencia de los 6 slides actuales)
-- [ ] **Botón flotante WhatsApp** — visible en todas las secciones
+- [ ] **Botón flotante WhatsApp**
 - [ ] **Scroll reveal** con IntersectionObserver
-- [ ] **Cursor personalizado** (punto + anillo flotante, solo desktop)
-- [ ] `.env.local` con credenciales Firebase si se agrega Firestore/Analytics
 
 ---
 

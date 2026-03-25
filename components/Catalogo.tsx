@@ -46,7 +46,7 @@ const imagenes: Record<string, string> = {
   // Queques
   'Queque de Naranja':         '/images/queque-naranja.webp',
   'Queque Mármol':             '/images/queque-marmol.webp',
-  'Queque de Yogurt':          '/images/prod-dulces.webp',
+  'Queque Tradicional':        '/images/queque-tradicional.webp',
   'Muffins':                   '/images/muffins.webp',
 };
 
@@ -103,7 +103,7 @@ const categorias = [
     productos: [
       { nombre: 'Queque de Naranja', detalle: 'Esponjoso y perfumado, con toda la frescura cítrica de naranjas naturales.' },
       { nombre: 'Queque Mármol',     detalle: 'Veteado de chocolate y vainilla, húmedo y esponjoso en cada corte.' },
-      { nombre: 'Queque de Yogurt',  detalle: 'Suave y húmedo gracias al yogurt artesanal.' },
+      { nombre: 'Queque Tradicional', detalle: 'Esponjoso y dorado, elaborado con la receta de siempre. Un clásico del horno artesanal que nunca falla.' },
       { nombre: 'Muffins',           detalle: 'Pequeños bizcochos individuales en distintos sabores de temporada.' },
     ],
   },
