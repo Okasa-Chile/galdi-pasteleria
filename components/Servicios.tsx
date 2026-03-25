@@ -42,10 +42,10 @@ export default function Servicios() {
       scrollMarginTop: '80px',
     }}>
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+      <div style={{ textAlign: 'center', marginBottom: '0.75rem' }}>
         <p style={{
           fontFamily: 'var(--font-sans)',
-          fontSize: '0.8rem',
+          fontSize: '0.7rem',
           letterSpacing: '0.2em',
           textTransform: 'uppercase',
           color: 'var(--gold)',
@@ -55,10 +55,11 @@ export default function Servicios() {
         </p>
         <h2 style={{
           fontFamily: 'var(--font-serif)',
-          fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+          fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
           fontWeight: 300,
           color: 'var(--cream)',
           lineHeight: 1.2,
+          letterSpacing: '0.06em',
         }}>
           Todo lo que <em>necesitas</em>
         </h2>
@@ -116,10 +117,11 @@ export default function Servicios() {
             {/* Contenido */}
             <div style={{
               position: 'absolute',
-              bottom: 0,
+              bottom: '2rem',
               left: 0,
               right: 0,
               padding: '2.5rem 2rem',
+              paddingBottom: '1.5rem',
             }}>
               <div style={{
                 fontSize: '1.8rem',
@@ -129,7 +131,7 @@ export default function Servicios() {
               </div>
               <h3 style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '1.55rem',
+                fontSize: '1.25rem',
                 fontWeight: 400,
                 color: 'var(--cream-light)',
                 marginBottom: '0.75rem',

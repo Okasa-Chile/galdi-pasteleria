@@ -3,65 +3,99 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
+// ─── Mapa de imágenes (mismo que Catalogo.tsx) ───────────────────────────────
+
+const imagenes: Record<string, string> = {
+  'Pan Amasado':               '/images/Pan Amasado.webp',
+  'Tortilla con Chicharrones': '/images/Tortilla de Chicharrones.webp',
+  'Pan Integral':              '/images/Pan integral.webp',
+  'Pan Frica':                 '/images/Pan Frica.webp',
+  'Dobloditas':                '/images/Dobladitas.webp',
+  'Marraqueta':                '/images/Marraquetas.webp',
+  'Pie de Limón Merengado':    '/images/prod-pie.webp',
+  'Kuchen Sureño':             '/images/Kuchen sureño.webp',
+  'Kuchen de Nuez':            '/images/Kuchen de Nueces.webp',
+  'Banofee':                   '/images/Banofee.webp',
+  'Tartaletas':                '/images/Tartaletas.webp',
+  'Torta 3 Leches':            '/images/Torta 3 Leches.webp',
+  'Torta de Chocolate':        '/images/Torta de Chocolate.webp',
+  'Moca / Pralinée':           '/images/Torta Moka.webp',
+  'Selva Negra':               '/images/Torta Selva negra.webp',
+  'Torta de Piña':             '/images/Torta de Piña.webp',
+  'Torta de Hojarasca':        '/images/Torta de Hojarasca.webp',
+  'Berlines':                  '/images/Berlines.webp',
+  'Alfajores de Manjar':       '/images/prod-dulces.webp',
+  'Alfajores de Chocolate':    '/images/prod-dulces.webp',
+  'Chilenitos':                '/images/prod-dulces.webp',
+  'Pino':                      '/images/prod-empanada.webp',
+  'Napolitana':                '/images/prod-empanada.webp',
+  'Vegetariana':               '/images/prod-empanada.webp',
+  'Queso Camarón':             '/images/prod-empanada.webp',
+  'Queque de Naranja':         '/images/queque-naranja.webp',
+  'Queque Mármol':             '/images/queque-marmol.webp',
+  'Queque Tradicional':        '/images/queque-tradicional.webp',
+  'Muffins':                   '/images/muffins.webp',
+};
+
 // ─── Productos por servicio y tab ───────────────────────────────────────────
 
 const productosAlmacenes: Record<string, { nombre: string; imagen: string; unidad: string }[]> = {
   'Pan': [
-    { nombre: 'Pan Amasado',               imagen: '/images/Pan Amasado.webp',                  unidad: 'kg' },
-    { nombre: 'Tortilla con Chicharrones', imagen: '/images/Tortilla de Chicharrones.webp',      unidad: 'kg' },
-    { nombre: 'Pan Integral',              imagen: '/images/Pan integral.webp',                  unidad: 'kg' },
-    { nombre: 'Pan Frica',                 imagen: '/images/Pan Frica.webp',                     unidad: 'kg' },
-    { nombre: 'Dobladitas',                imagen: '/images/Dobladitas.webp',                    unidad: 'kg' },
-    { nombre: 'Marraqueta',                imagen: '/images/Marraquetas.webp',                   unidad: 'kg' },
+    { nombre: 'Pan Amasado',               imagen: imagenes['Pan Amasado'],               unidad: 'kg' },
+    { nombre: 'Tortilla con Chicharrones', imagen: imagenes['Tortilla con Chicharrones'], unidad: 'kg' },
+    { nombre: 'Pan Integral',              imagen: imagenes['Pan Integral'],              unidad: 'kg' },
+    { nombre: 'Pan Frica',                 imagen: imagenes['Pan Frica'],                 unidad: 'kg' },
+    { nombre: 'Dobloditas',                imagen: imagenes['Dobloditas'],                unidad: 'kg' },
+    { nombre: 'Marraqueta',                imagen: imagenes['Marraqueta'],                unidad: 'kg' },
   ],
   'Queques': [
-    { nombre: 'Queque de Naranja', imagen: '/images/Queque de naranja.webp', unidad: 'un' },
-    { nombre: 'Queque Mármol',     imagen: '/images/Queque Mármol.webp',     unidad: 'un' },
-    { nombre: 'Queque Tradicional',imagen: '/images/queque-tradicional.webp',unidad: 'un' },
+    { nombre: 'Queque de Naranja',  imagen: imagenes['Queque de Naranja'],  unidad: 'un' },
+    { nombre: 'Queque Mármol',      imagen: imagenes['Queque Mármol'],      unidad: 'un' },
+    { nombre: 'Queque Tradicional', imagen: imagenes['Queque Tradicional'], unidad: 'un' },
   ],
   'Muffins': [
-    { nombre: 'Muffins', imagen: '/images/Muffins.webp', unidad: 'docena' },
+    { nombre: 'Muffins', imagen: imagenes['Muffins'], unidad: 'docena' },
   ],
   'Dulces': [
-    { nombre: 'Berlines',               imagen: '/images/Berlines.webp',    unidad: 'docena' },
-    { nombre: 'Alfajores de Manjar',    imagen: '/images/prod-dulces.webp', unidad: 'docena' },
-    { nombre: 'Alfajores de Chocolate', imagen: '/images/prod-dulces.webp', unidad: 'docena' },
-    { nombre: 'Chilenitos',             imagen: '/images/prod-dulces.webp', unidad: 'docena' },
+    { nombre: 'Berlines',               imagen: imagenes['Berlines'],               unidad: 'docena' },
+    { nombre: 'Alfajores de Manjar',    imagen: imagenes['Alfajores de Manjar'],    unidad: 'docena' },
+    { nombre: 'Alfajores de Chocolate', imagen: imagenes['Alfajores de Chocolate'], unidad: 'docena' },
+    { nombre: 'Chilenitos',             imagen: imagenes['Chilenitos'],             unidad: 'docena' },
   ],
   'Empanadas': [
-    { nombre: 'Pino',          imagen: '/images/prod-empanada.webp', unidad: 'docena' },
-    { nombre: 'Napolitana',    imagen: '/images/prod-empanada.webp', unidad: 'docena' },
-    { nombre: 'Vegetariana',   imagen: '/images/prod-empanada.webp', unidad: 'docena' },
-    { nombre: 'Queso Camarón', imagen: '/images/prod-empanada.webp', unidad: 'docena' },
+    { nombre: 'Pino',          imagen: imagenes['Pino'],          unidad: 'docena' },
+    { nombre: 'Napolitana',    imagen: imagenes['Napolitana'],    unidad: 'docena' },
+    { nombre: 'Vegetariana',   imagen: imagenes['Vegetariana'],   unidad: 'docena' },
+    { nombre: 'Queso Camarón', imagen: imagenes['Queso Camarón'], unidad: 'docena' },
   ],
 };
 
 const productosDelivery: Record<string, { nombre: string; imagen: string; unidad: string }[]> = {
   'Tortas': [
-    { nombre: 'Torta 3 Leches',     imagen: '/images/Torta 3 Leches.webp',     unidad: 'un' },
-    { nombre: 'Torta de Chocolate', imagen: '/images/Torta de Chocolate.webp', unidad: 'un' },
-    { nombre: 'Moca / Pralinée',    imagen: '/images/Torta Moka.webp',          unidad: 'un' },
-    { nombre: 'Selva Negra',        imagen: '/images/Torta Selva negra.webp',   unidad: 'un' },
-    { nombre: 'Torta de Piña',      imagen: '/images/Torta de Piña.webp',       unidad: 'un' },
-    { nombre: 'Torta de Hojarasca', imagen: '/images/Torta de Hojarasca.webp', unidad: 'un' },
+    { nombre: 'Torta 3 Leches',     imagen: imagenes['Torta 3 Leches'],     unidad: 'un' },
+    { nombre: 'Torta de Chocolate', imagen: imagenes['Torta de Chocolate'], unidad: 'un' },
+    { nombre: 'Moca / Pralinée',    imagen: imagenes['Moca / Pralinée'],    unidad: 'un' },
+    { nombre: 'Selva Negra',        imagen: imagenes['Selva Negra'],        unidad: 'un' },
+    { nombre: 'Torta de Piña',      imagen: imagenes['Torta de Piña'],      unidad: 'un' },
+    { nombre: 'Torta de Hojarasca', imagen: imagenes['Torta de Hojarasca'], unidad: 'un' },
   ],
   'Pasteles': [
-    { nombre: 'Pie de Limón Merengado', imagen: '/images/prod-pie.webp',          unidad: 'un' },
-    { nombre: 'Kuchen Sureño',          imagen: '/images/Kuchen sureño.webp',      unidad: 'un' },
-    { nombre: 'Kuchen de Nuez',         imagen: '/images/Kuchen de Nueces.webp',   unidad: 'un' },
-    { nombre: 'Banofee',                imagen: '/images/Banofee.webp',            unidad: 'un' },
-    { nombre: 'Tartaletas',             imagen: '/images/Tartaletas.webp',         unidad: 'un' },
+    { nombre: 'Pie de Limón Merengado', imagen: imagenes['Pie de Limón Merengado'], unidad: 'un' },
+    { nombre: 'Kuchen Sureño',          imagen: imagenes['Kuchen Sureño'],          unidad: 'un' },
+    { nombre: 'Kuchen de Nuez',         imagen: imagenes['Kuchen de Nuez'],         unidad: 'un' },
+    { nombre: 'Banofee',                imagen: imagenes['Banofee'],                unidad: 'un' },
+    { nombre: 'Tartaletas',             imagen: imagenes['Tartaletas'],             unidad: 'un' },
   ],
   'Queques': [
-    { nombre: 'Queque de Naranja',  imagen: '/images/Queque de naranja.webp',  unidad: 'un' },
-    { nombre: 'Queque Mármol',      imagen: '/images/Queque Mármol.webp',      unidad: 'un' },
-    { nombre: 'Queque Tradicional', imagen: '/images/queque-tradicional.webp', unidad: 'un' },
+    { nombre: 'Queque de Naranja',  imagen: imagenes['Queque de Naranja'],  unidad: 'un' },
+    { nombre: 'Queque Mármol',      imagen: imagenes['Queque Mármol'],      unidad: 'un' },
+    { nombre: 'Queque Tradicional', imagen: imagenes['Queque Tradicional'], unidad: 'un' },
   ],
   'Empanadas': [
-    { nombre: 'Pino',          imagen: '/images/prod-empanada.webp', unidad: 'docena' },
-    { nombre: 'Napolitana',    imagen: '/images/prod-empanada.webp', unidad: 'docena' },
-    { nombre: 'Vegetariana',   imagen: '/images/prod-empanada.webp', unidad: 'docena' },
-    { nombre: 'Queso Camarón', imagen: '/images/prod-empanada.webp', unidad: 'docena' },
+    { nombre: 'Pino',          imagen: imagenes['Pino'],          unidad: 'docena' },
+    { nombre: 'Napolitana',    imagen: imagenes['Napolitana'],    unidad: 'docena' },
+    { nombre: 'Vegetariana',   imagen: imagenes['Vegetariana'],   unidad: 'docena' },
+    { nombre: 'Queso Camarón', imagen: imagenes['Queso Camarón'], unidad: 'docena' },
   ],
 };
 
@@ -205,11 +239,11 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
 
         {/* Fila superior: logo + nombre + cerrar */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 5%' }}>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+          <button onClick={() => { onClose(); document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' }); }} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
             <img src="/images/Nuevologo.webp" alt="Galdi" style={{ height: '52px', width: 'auto', objectFit: 'contain' }} />
           </button>
           <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.2rem, 3vw, 2rem)', fontWeight: 300, color: 'var(--cream)' }}>{nombre}</span>
-          <button onClick={onClose} style={{ background: 'rgba(26,15,10,0.4)', backdropFilter: 'blur(6px)', border: '1px solid rgba(245,230,211,0.25)', color: 'var(--cream)', width: '2.2rem', height: '2.2rem', borderRadius: '50%', fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+          <button onClick={() => { onClose(); document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' }); }} style={{ background: 'rgba(26,15,10,0.4)', backdropFilter: 'blur(6px)', border: '1px solid rgba(245,230,211,0.25)', color: 'var(--cream)', width: '2.2rem', height: '2.2rem', borderRadius: '50%', fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
         </div>
 
         {/* Barra de tabs */}
