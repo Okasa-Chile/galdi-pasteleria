@@ -92,6 +92,19 @@ galdi-nextjs/
 - [x] Imágenes de productos completadas en todas las categorías del catálogo
 - [x] `npm run build` exitoso · `firebase deploy` → `galdi-web.web.app` · `git push origin main`
 
+### Fase 10 — SEO, carrito y ajustes visuales (25-03-2026)
+- [x] Metadatos SEO completos en layout.tsx (title, description, keywords, Open Graph, Twitter)
+- [x] sitemap.xml y robots.txt creados en public/
+- [x] Favicon con Nuevologo.webp
+- [x] Carrito de pedidos con resumen modal, botón vaciar y unidades correctas en WhatsApp
+- [x] ServicioDetalle: imagenes sincronizadas con Catalogo.tsx via export/import
+- [x] Imagen Corporativo.webp para Eventos
+- [x] Ajustes visuales: Contacto, Hero subtítulo, Catalogo padding, Header logo tamaño
+- [x] user-select: none en globals.css
+- [x] Dobloditas descripción corregida
+- [x] Botón WhatsApp eliminado de cards de Catalogo
+- [x] npm run build exitoso · firebase deploy · git push origin main
+
 ### Fase 9 — Sistema de Servicios con Carrito (25-03-2026)
 - [x] Nuevo componente ServicioDetalle.tsx — overlay full screen con animación
 - [x] Logo Galdi visible en overlay (Nuevologo.webp)
@@ -206,12 +219,12 @@ images: { unoptimized: true }  // requerido para export estático
 
 ## 🔜 Pendiente / Próximos Pasos
 
-- [ ] Ajuste de tamaño de textos en sección Servicios (título y descripción más pequeños)
-- [ ] Imágenes reales para tabs de Eventos (Matrimonios, Cóctel, Cumpleaños, Corporativos)
-- [ ] Dominio galdi.cl — pendiente compra con las socias → Cloudflare + Firebase DNS
-- [ ] SEO básico: meta tags, Open Graph, sitemap.xml
-- [ ] Botón flotante WhatsApp
-- [ ] Scroll reveal con IntersectionObserver
+- [ ] **Dominio galdi.cl**: Comprado en NIC Chile a nombre de COMERCIALIZADORA Y DISTRIBUIDORA GALDI SpA (RUT 78.378.827-6). Pendiente configurar nameservers Cloudflare en NIC Chile → agregar galdi.cl en Cloudflare → configurar DNS apuntando a Firebase Hosting
+- [ ] **Imágenes reales para tabs de Eventos** (Matrimonios, Cóctel, Cumpleaños — Corporativo ya tiene imagen propia)
+- [ ] **SEO**: Subir sitio a Google Search Console una vez conectado galdi.cl
+- [ ] **Botón flotante WhatsApp**
+- [ ] **Scroll reveal** con IntersectionObserver
+- [ ] **Email ventas@galdi.cl** — pendiente configurar una vez que galdi.cl esté activo en Cloudflare
 
 ---
 
