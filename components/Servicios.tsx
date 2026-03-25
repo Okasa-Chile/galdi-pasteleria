@@ -2,11 +2,12 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import ServicioDetalle from './ServicioDetalle';
 
 const servicios = [
   {
     id: 'b2b',
-    nombre: 'Distribución B2B',
+    nombre: 'Distribución Almacenes',
     desc: 'Abastecemos negocios, cafeterías y restaurantes con productos frescos y consistentes.',
     imagen: '/images/svc-b2b.webp',
     wa: 'https://wa.me/56990991011?text=Hola%20Galdi%2C%20quiero%20información%20sobre%20distribución%20B2B',
@@ -14,7 +15,7 @@ const servicios = [
   },
   {
     id: 'eventos',
-    nombre: 'Eventos Especiales',
+    nombre: 'Eventos',
     desc: 'Banquetería artesanal para matrimonios, cumpleaños y celebraciones corporativas.',
     imagen: '/images/svc-eventos.webp',
     wa: 'https://wa.me/56990991011?text=Hola%20Galdi%2C%20quiero%20banquetería%20para%20un%20evento',
@@ -32,14 +33,16 @@ const servicios = [
 
 export default function Servicios() {
   const [hovered, setHovered] = useState<string | null>(null);
+  const [selected, setSelected] = useState<typeof servicios[0] | null>(null);
 
   return (
     <section id="servicios" style={{
-      padding: '7rem 5%',
+      padding: '2rem 5% 4rem',
       background: '#3d2010',
+      scrollMarginTop: '80px',
     }}>
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+      <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
         <p style={{
           fontFamily: 'var(--font-sans)',
           fontSize: '0.8rem',
@@ -80,10 +83,11 @@ export default function Servicios() {
             key={svc.id}
             onMouseEnter={() => setHovered(svc.id)}
             onMouseLeave={() => setHovered(null)}
+            onClick={() => setSelected(svc)}
             style={{
               position: 'relative',
               overflow: 'hidden',
-              aspectRatio: '3/4',
+              aspectRatio: '4/5',
               cursor: 'pointer',
             }}
           >
@@ -168,6 +172,14 @@ export default function Servicios() {
           </div>
         ))}
       </div>
+      {selected && (
+        <ServicioDetalle
+          id={selected.id}
+          nombre={selected.nombre}
+          imagen={selected.imagen}
+          onClose={() => setSelected(null)}
+        />
+      )}
     </section>
   );
 }
