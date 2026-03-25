@@ -23,7 +23,7 @@ export const imagenes: Record<string, string> = {
   'Kuchen Sureño':             '/images/kuchen-sureno.webp',
   'Kuchen de Nuez':            '/images/kuchen-nueces.webp',
   'Banofee':                   '/images/Banofee.webp',
-  'Tartaletas':                '/images/tartaleta.webp',
+  'Tartaletas':                '/images/Tartaletas.webp',
   // Tortas
   'Torta 3 Leches':            '/images/torta-3-leches.webp',
   'Torta de Chocolate':        '/images/torta-chocolate.webp',
@@ -220,10 +220,10 @@ export default function Catalogo() {
         }
       `}</style>
 
-      <section id="productos" style={{ padding: '2rem 0 3rem', background: '#f5ede3', scrollMarginTop: '90px' }}>
+      <section id="productos" style={{ padding: '1rem 0 3rem', background: '#f5ede3', scrollMarginTop: '90px' }}>
 
         {/* Header */}
-        <div style={{ textAlign: 'center', padding: '0 5%', marginBottom: '1rem' }}>
+        <div style={{ textAlign: 'center', padding: '0 5%', marginBottom: '0.5rem' }}>
           <p style={{
             fontFamily: 'var(--font-sans)',
             fontSize: '0.67rem',
@@ -273,10 +273,8 @@ export default function Catalogo() {
         </div>
 
         {/* Panel activo */}
-        <div key={activeTab} style={{ padding: '1.5rem 5% 0' }}>
-          {categoriaActiva.badge && (
-            <p className="cat-badge-pill">{categoriaActiva.badge}</p>
-          )}
+        <div key={activeTab} style={{ padding: '0.5rem 5% 0' }}>
+
 
           <div style={{
             display: 'grid',

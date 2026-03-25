@@ -25,7 +25,8 @@ export default function Contacto() {
       }
     `}</style>
     <section id="contacto" style={{
-      padding: '5rem 5%',
+      padding: '2.5rem 5%',
+      scrollMarginTop: '80px',
       background: '#3d2010',
     }}>
       <div style={{
@@ -34,7 +35,7 @@ export default function Contacto() {
       }}>
 
         {/* Header */}
-        <div style={{ marginBottom: '4rem' }}>
+        <div style={{ marginBottom: '0.75rem' }}>
           <p style={{
             fontFamily: 'var(--font-sans)',
             fontSize: '0.75rem',
@@ -57,10 +58,9 @@ export default function Contacto() {
             fontWeight: 300,
             color: 'var(--cream)',
             lineHeight: 1.2,
-            marginBottom: '1rem',
+            marginBottom: '0.5rem',
           }}>
-            ¿Tienes un pedido<br />
-            <em>en mente?</em>
+            ¿Tienes un pedido en mente?
           </h2>
           <p style={{
             fontFamily: 'var(--font-sans)',
@@ -76,7 +76,7 @@ export default function Contacto() {
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '2rem',
+          gap: '1rem',
           alignItems: 'center',
         }}>
 
@@ -155,7 +155,7 @@ export default function Contacto() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: '1rem',
+            gap: '0.5rem',
           }}>
             {/* QR */}
             <Image

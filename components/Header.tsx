@@ -107,12 +107,12 @@ export default function Header() {
             width={250}
             height={90}
             style={{
-              height: scrolled ? '65px' : '90px',
+              height: scrolled ? '52px' : '65px',
               width: 'auto',
               maxWidth: '250px',
               objectFit: 'contain',
               transition: 'height var(--transition), filter var(--transition)',
-              filter: scrolled ? 'brightness(0) invert(1)' : 'none',
+              filter: 'brightness(0) invert(1)',
             }}
             priority
           />

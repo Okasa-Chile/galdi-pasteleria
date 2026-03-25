@@ -66,7 +66,7 @@ export default function Hero() {
       }}>
         <h1 style={{
           fontFamily: 'var(--font-serif)',
-          fontSize: 'clamp(3rem, 8vw, 7rem)',
+          fontSize: 'clamp(1.8rem, 6vw, 6rem)',
           fontWeight: 300,
           color: 'var(--cream)',
           lineHeight: 1.1,
@@ -77,20 +77,20 @@ export default function Hero() {
         </h1>
         <p style={{
           fontFamily: 'var(--font-sans)',
-          fontSize: 'clamp(1rem, 2vw, 1.3rem)',
+          fontSize: 'clamp(0.85rem, 2vw, 1.1rem)',
           fontWeight: 300,
           color: 'var(--cream-light)',
           marginBottom: '2.5rem',
           letterSpacing: '0.05em',
         }}>
-          Pastelería artesanal · Banquetería · Distribución B2B
+          Pastelería artesanal · Distribución Almacenes · Eventos
         </p>
         <a
           href="https://wa.me/56990991011?text=Hola%20Galdi%2C%20quiero%20hacer%20un%20pedido"
           target="_blank"
           rel="noopener noreferrer"
           style={{
-            background: 'var(--terracota)',
+            background: 'rgba(196,112,79,0.7)',
             color: 'var(--cream)',
             padding: '1rem 2.5rem',
             fontFamily: 'var(--font-sans)',
@@ -101,13 +101,16 @@ export default function Hero() {
             textDecoration: 'none',
             transition: 'var(--transition)',
             border: '1px solid var(--terracota)',
+            whiteSpace: 'nowrap',
           }}
           onMouseEnter={e => {
-            e.currentTarget.style.background = 'transparent';
+            e.currentTarget.style.background = 'rgba(196,112,79,0.15)';
+            e.currentTarget.style.border = '1px solid var(--terracota)';
             e.currentTarget.style.color = 'var(--cream)';
           }}
           onMouseLeave={e => {
-            e.currentTarget.style.background = 'var(--terracota)';
+            e.currentTarget.style.background = 'rgba(196,112,79,0.7)';
+            e.currentTarget.style.border = '1px solid var(--terracota)';
             e.currentTarget.style.color = 'var(--cream)';
           }}
         >

@@ -207,7 +207,7 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
         {/* Fila superior: logo + nombre + cerrar */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 5%' }}>
           <button onClick={() => { onClose(); document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' }); }} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-            <img src="/images/Nuevologo.webp" alt="Galdi" style={{ height: '52px', width: 'auto', objectFit: 'contain' }} />
+            <img src="/images/Nuevologo.webp" alt="Galdi" style={{ height: '52px', width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
           </button>
           <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.2rem, 3vw, 2rem)', fontWeight: 300, color: 'var(--cream)' }}>{nombre}</span>
           <button onClick={() => { onClose(); document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' }); }} style={{ background: 'rgba(26,15,10,0.4)', backdropFilter: 'blur(6px)', border: '1px solid rgba(245,230,211,0.25)', color: 'var(--cream)', width: '2.2rem', height: '2.2rem', borderRadius: '50%', fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
@@ -222,7 +222,7 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
       </div>
 
       {/* ── Contenido scrolleable ── */}
-      <div style={{ position: 'relative', zIndex: 10, flex: 1, overflowY: 'auto', padding: '1.5rem 5%', paddingBottom: totalItems > 0 ? '5rem' : '1.5rem' }}>
+      <div style={{ position: 'relative', zIndex: 10, flex: 1, overflowY: 'auto', padding: '0.5rem 5%', paddingBottom: totalItems > 0 ? '5rem' : '1.5rem' }}>
 
         {/* EVENTOS — descripción + imagen ambiente */}
         {id === 'eventos' && (
