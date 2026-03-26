@@ -117,6 +117,18 @@ galdi-nextjs/
 - [x] Botón WhatsApp eliminado de cards de Catalogo
 - [x] npm run build exitoso · firebase deploy · git push origin main
 
+### Fase 12 — Dominio, Email y Ajustes (26-03-2026)
+- [x] galdi.cl conectado a Firebase Hosting (dominio personalizado)
+- [x] www.galdi.cl redirige a galdi.cl
+- [x] SSL activo en galdi.cl
+- [x] Imagen OG creada (og-galdi.webp) y configurada en layout.tsx
+- [x] Email ventas@galdi.cl operativo en Zoho (SPF, DKIM, DMARC configurados)
+- [x] Fix: "Nosotros" → "Nosotras" en Header.tsx
+- [x] Imagen Socias.webp en sección Nosotras
+- [x] Fix: id="nosotras" para scroll correcto desde menú
+- [x] New_Hero_socias.webp con objectPosition center 35% + scale(1.4)
+- [x] npm run build exitoso · firebase deploy · git push origin main
+
 ### Fase 9 — Sistema de Servicios con Carrito (25-03-2026)
 - [x] Nuevo componente ServicioDetalle.tsx — overlay full screen con animación
 - [x] Logo Galdi visible en overlay (Nuevologo.webp)
