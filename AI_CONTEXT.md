@@ -127,6 +127,8 @@ galdi-nextjs/
 - [x] Imagen Socias.webp en sección Nosotras
 - [x] Fix: id="nosotras" para scroll correcto desde menú
 - [x] New_Hero_socias.webp con objectPosition center 35% + scale(1.4)
+- [x] Fix responsive móvil hero socias: scale(1.4) + object-position center 30% en @media max-width 768px
+- [x] className="hero-socias" agregado a imagen New_Hero_socias.webp
 - [x] npm run build exitoso · firebase deploy · git push origin main
 
 ### Fase 9 — Sistema de Servicios con Carrito (25-03-2026)
