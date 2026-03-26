@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 const slides = [
-  { src: '/images/hero-final-16-9.webp', alt: 'Galdi — Pastelería artesanal' },
+  { src: '/images/New_Hero_socias.webp', alt: 'Galdi — Pastelería artesanal' },
   { src: '/images/SlideshowPanes.webp', alt: 'Pan artesanal Galdi' },
   { src: '/images/prod-dulces.webp', alt: 'Dulces artesanales Galdi' },
   { src: '/images/prod-pie.webp', alt: 'Pasteles y tartas Galdi' },
@@ -39,7 +39,7 @@ export default function Hero() {
             src={slide.src}
             alt={slide.alt}
             fill
-            style={{ objectFit: 'cover' }}
+            style={{ objectFit: 'cover', objectPosition: slide.src.includes('New_Hero_socias') ? 'center 25%' : 'center', transform: slide.src.includes('New_Hero_socias') ? 'scale(1.6)' : 'none' }}
             priority={i === 0}
           />
         </div>

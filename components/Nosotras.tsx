@@ -13,7 +13,7 @@ export default function Nosotras() {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
-    <section id="nosotros" style={{
+    <section id="nosotras" style={{
       padding: '7rem 5%',
       background: 'var(--cream)',
     }}>
@@ -35,7 +35,7 @@ export default function Nosotras() {
           overflow: 'hidden',
         }}>
           <Image
-            src="/images/hero-socias-vintage.webp"
+            src="/images/Socias.webp"
             alt="Jacqueline e Ingrid, fundadoras de Galdi"
             fill
             style={{ objectFit: 'cover' }}
