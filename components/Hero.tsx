@@ -23,6 +23,15 @@ export default function Hero() {
   }, []);
 
   return (
+    <>
+    <style>{`
+      @media (max-width: 768px) {
+        .hero-socias {
+          object-position: center 30% !important;
+          transform: scale(1.2) !important;
+        }
+      }
+    `}</style>
     <section id="inicio" style={{
       position: 'relative',
       height: '100vh',
@@ -39,7 +48,8 @@ export default function Hero() {
             src={slide.src}
             alt={slide.alt}
             fill
-            style={{ objectFit: 'cover', objectPosition: slide.src.includes('New_Hero_socias') ? 'center 25%' : 'center', transform: slide.src.includes('New_Hero_socias') ? 'scale(1.6)' : 'none' }}
+            className={slide.src.includes('New_Hero_socias') ? 'hero-socias' : undefined}
+            style={{ objectFit: 'cover', objectPosition: slide.src.includes('New_Hero_socias') ? 'center 25%' : 'center', transform: slide.src.includes('New_Hero_socias') ? 'scale(1.4)' : 'none' }}
             priority={i === 0}
           />
         </div>
@@ -146,5 +156,6 @@ export default function Hero() {
         ))}
       </div>
     </section>
+    </>
   );
 }
