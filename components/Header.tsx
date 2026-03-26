@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-const navItems = ['Productos', 'Servicios', 'Nosotros', 'Contacto'];
+const navItems = ['Productos', 'Servicios', 'Nosotras', 'Contacto'];
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
