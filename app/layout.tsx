@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     siteName: 'Galdi Pastelería',
     images: [
       {
-        url: '/og-galdi.webp',
+        url: '/images/og-galdi.webp',
         width: 1200,
         height: 630,
         alt: 'Galdi — Pastelería Artesanal en Maipú',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Galdi — Pastelería Artesanal en Maipú',
     description: 'Pastelería artesanal en Maipú. Tortas, pasteles, pan y empanadas hechos con cariño.',
-    images: ['/og-galdi.webp'],
+    images: ['/images/og-galdi.webp'],
   },
   icons: {
     icon: [
