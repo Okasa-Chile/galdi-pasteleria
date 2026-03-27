@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galdi — Gestión Interna</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:sans-serif;background:#F9F3EC;min-height:100vh;}
+  #login{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;}
+  h1{font-family:Georgia,serif;font-weight:300;font-size:2.2rem;color:#1a0f0a;margin-bottom:6px;}
+  .sub{color:#9c7a5a;font-size:0.8rem;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:36px;}
+  .err{color:#9b3a2a;font-size:0.85rem;margin-bottom:16px;min-height:20px;}
+  .btn{background:#C9A55A;color:#fff;border:none;padding:12px 32px;border-radius:6px;font-size:0.85rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;font-weight:600;}
+  #app{display:none;}
+  .topbar{background:#1a0f0a;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #C9A55A;}
+  .topbar span{color:#fff;font-family:Georgia,serif;font-size:1.2rem;font-weight:300;}
+  .email{color:#9c7a5a;font-size:0.8rem;}
+  .logout{background:transparent;border:1px solid #C9A55A;color:#C9A55A;padding:5px 14px;border-radius:4px;font-size:0.75rem;cursor:pointer;}
+  iframe{width:100%;border:none;height:calc(100vh - 56px);}
+</style>
+</head>
+<body>
+<div id="login">
+  <h1>galdi</h1>
+  <p class="sub">Gestión Interna</p>
+  <p class="err" id="err"></p>
+  <button class="btn" id="btn-login">Iniciar sesión con Google</button>
+</div>
+<div id="app">
+  <div class="topbar">
+    <span>galdi · gestión</span>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <span class="email" id="email"></span>
+      <button class="logout" id="btn-logout">Salir</button>
+    </div>
+  </div>
+  <iframe src="/gestion-app.html" id="iframe-app"></iframe>
+</div>
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
+  import { getAuth, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
+
+  const AUTORIZADOS = ['contacto@okasa.cl', 'ventas@galdi.cl'];
+
+  // Firebase Hosting inyecta la config automáticamente — sin API key hardcodeada
+  const res = await fetch('/__/firebase/init.json');
+  const config = await res.json();
+
+  const app = initializeApp(config);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  document.getElementById('btn-login').onclick = async () => {
+    try {
+      document.getElementById('err').textContent = '';
+      const result = await signInWithPopup(auth, provider);
+      if (!AUTORIZADOS.includes(result.user.email)) {
+        await signOut(auth);
+        document.getElementById('err').textContent = 'Acceso no autorizado.';
+      }
+    } catch(e) {
+      document.getElementById('err').textContent = 'Error: ' + e.message;
+    }
+  };
+
+  document.getElementById('btn-logout').onclick = () => signOut(auth);
+
+  onAuthStateChanged(auth, user => {
+    document.getElementById('login').style.display = user ? 'none' : 'flex';
+    document.getElementById('app').style.display = user ? 'block' : 'none';
+    if (user) document.getElementById('email').textContent = user.email;
+  });
+</script>
+</body>
+</html>

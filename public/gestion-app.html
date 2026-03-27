@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galdi — Gestión de Precios</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A55A;--gold2:#7a5c2e;--dark:#1a0f0a;--brown:#3d2010;--cream:#F9F3EC;--sand:#EDE3D5;--rose:#F7EEE8;--muted:#9c7a5a;--border:#e4d8c8;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--brown);min-height:100vh;}
+header{background:var(--dark);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--gold);}
+header h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:26px;color:#fff;letter-spacing:.06em;}
+header small{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);}
+.tabs{display:flex;background:var(--sand);border-bottom:1px solid var(--border);}
+.tab{padding:13px 24px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s;}
+.tab:hover{color:var(--brown);}
+.tab.active{color:var(--gold2);border-bottom-color:var(--gold);font-weight:600;background:var(--cream);}
+.panel{display:none;padding:28px;max-width:960px;margin:0 auto;}
+.panel.active{display:block;}
+.card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:22px;margin-bottom:18px;}
+.card-title{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-weight:600;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+label{font-size:11px;color:var(--muted);letter-spacing:.06em;display:block;margin-bottom:4px;}
+input[type=text],input[type=number],select{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:6px;font-family:'Jost',sans-serif;font-size:13px;color:var(--brown);background:var(--cream);}
+input:focus,select:focus{outline:none;border-color:var(--gold);}
+.btn{background:var(--gold);color:#fff;border:none;padding:10px 20px;border-radius:6px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;font-weight:600;transition:background .2s;}
+.btn:hover{background:var(--gold2);}
+.btn-gray{background:var(--muted);}.btn-gray:hover{background:#7a5c3a;}
+.btn-red{background:#9b3a2a;}.btn-red:hover{background:#7a2a1a;}
+.btn-sm{padding:6px 14px;font-size:10px;}
+.result-box{background:var(--dark);border-radius:8px;padding:18px 22px;color:#fff;margin-top:14px;}
+.result-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:13px;}
+.result-row:last-child{border-bottom:none;}
+.result-row .lbl{color:rgba(255,255,255,.6);}
+.result-row .val{font-weight:600;color:#fff;}
+.result-row.highlight .val{color:var(--gold);font-size:17px;}
+.result-row.green .val{color:#7ecb94;}
+.cat-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
+.cat-btn{padding:7px 16px;border:1px solid var(--border);border-radius:20px;font-size:11px;cursor:pointer;background:#fff;color:var(--muted);transition:all .2s;}
+.cat-btn.active{background:var(--dark);color:var(--gold);border-color:var(--dark);}
+.prod-table{width:100%;border-collapse:collapse;font-size:13px;}
+.prod-table th{background:var(--sand);padding:9px 11px;text-align:left;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;}
+.prod-table td{padding:9px 11px;border-bottom:1px solid var(--border);}
+.prod-table tr:last-child td{border-bottom:none;}
+.prod-table tr:hover td{background:var(--rose);}
+.prod-table tr.selected td{background:#fef9ef;}
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;}
+.tag-propio{background:#fdf3e0;color:#7a5c2e;}
+.tag-reventa{background:#e8f0f5;color:#2d5a7a;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:#fff;border-radius:10px;padding:28px;width:100%;max-width:500px;border-top:3px solid var(--gold);max-height:90vh;overflow-y:auto;}
+.modal h3{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;margin-bottom:18px;color:var(--brown);}
+.slider-wrap{margin-bottom:14px;}
+.slider-wrap input[type=range]{width:100%;accent-color:var(--gold);margin-top:5px;}
+.slider-val{font-size:20px;font-weight:600;color:var(--gold2);}
+.progress-bar{background:#e4d8c8;border-radius:20px;height:11px;overflow:hidden;margin:7px 0;}
+.progress-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--gold),#e8c070);transition:width .4s;}
+.progress-fill.green{background:linear-gradient(90deg,#4a7c59,#7ecb94);}
+.progress-fill.red{background:linear-gradient(90deg,#9b3a2a,#f08070);}
+.resumen-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;}
+.resumen-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center;}
+.resumen-card .num{font-size:22px;font-weight:600;color:var(--gold2);}
+.resumen-card .lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+.ventas-table{width:100%;border-collapse:collapse;font-size:13px;}
+.ventas-table th{background:var(--sand);padding:9px 11px;text-align:left;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;}
+.ventas-table td{padding:9px 11px;border-bottom:1px solid var(--border);}
+.ventas-table tr:last-child td{border-bottom:none;}
+.ventas-table tr:hover td{background:var(--rose);}
+@media(max-width:600px){.grid-2,.grid-3,.resumen-grid{grid-template-columns:1fr;}.panel{padding:16px;}.tab{padding:10px 12px;font-size:10px;}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>galdi</h1><small>Gestión de Precios y Ventas</small></div>
+  <small style="color:var(--muted)">Pastelería Artesanal · Maipú</small>
+</header>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('catalogo',this)">1 · Catálogo y Costos</div>
+  <div class="tab" onclick="showTab('simulador',this)">2 · Simulador de Meta</div>
+  <div class="tab" onclick="showTab('ventas',this)">3 · Registro de Ventas</div>
+</div>
+
+<!-- TAB 1 -->
+<div id="tab-catalogo" class="panel active">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:0;">Catálogo de Productos</div>
+      <button class="btn btn-sm" onclick="abrirModal(null)">+ Agregar Producto</button>
+    </div>
+    <div class="cat-tabs" id="cat-tabs"></div>
+    <table class="prod-table">
+      <thead><tr><th>Producto</th><th>Tipo</th><th>Unidad</th><th>Costo Neto</th><th>Precio Final</th><th>Margen</th><th></th></tr></thead>
+      <tbody id="tabla-cat"></tbody>
+    </table>
+  </div>
+  <div class="card" id="card-calc" style="display:none;">
+    <div class="card-title" id="calc-tit">Calculadora</div>
+    <div class="grid-2">
+      <div><label id="lbl-mat">Costo materiales (neto)</label><input type="number" id="c-mat" oninput="recalc()"></div>
+      <div id="wrap-mdo"><label>Mano de obra</label><input type="number" id="c-mdo" oninput="recalc()"></div>
+      <div><label>Energía</label><input type="number" id="c-en" oninput="recalc()"></div>
+      <div><label>Logística</label><input type="number" id="c-log" oninput="recalc()"></div>
+      <div id="wrap-mrg"><label>Margen (%)</label><input type="number" id="c-mrg" oninput="recalc()"></div>
+      <div><label>IVA (%)</label><input type="number" id="c-iva" value="19" oninput="recalc()"></div>
+    </div>
+    <div class="result-box">
+      <div class="result-row"><span class="lbl">Costo neto total</span><span class="val" id="r1">—</span></div>
+      <div class="result-row green"><span class="lbl">Utilidad</span><span class="val" id="r2">—</span></div>
+      <div class="result-row"><span class="lbl">Precio neto</span><span class="val" id="r3">—</span></div>
+      <div class="result-row"><span class="lbl">IVA</span><span class="val" id="r4">—</span></div>
+      <div class="result-row highlight"><span class="lbl">Precio final (IVA inc.)</span><span class="val" id="r5">—</span></div>
+      <div class="result-row"><span class="lbl">Precio combate referencia</span><span class="val" id="r6" style="color:var(--muted);font-size:12px;">—</span></div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:10px;">
+      <button class="btn btn-sm" onclick="guardarPrecio()">Guardar precio</button>
+      <button class="btn btn-sm btn-gray" onclick="cerrarCalc()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2 -->
+<div id="tab-simulador" class="panel">
+  <div class="card">
+    <div class="card-title">Variables del mes</div>
+    <div class="grid-2">
+      <div><label>Días trabajados</label><input type="number" id="dias" value="26" oninput="calcMeta()"></div>
+      <div><label>Meta ingresos mensuales ($)</label><input type="number" id="meta-ing" value="1200000" oninput="calcMeta()"></div>
+      <div><label>Precio pan propio (IVA inc. / kg)</label><input type="number" id="p-pan" value="1800" oninput="calcMeta()"></div>
+      <div><label>Precio promedio torta ($)</label><input type="number" id="p-torta" value="25000" oninput="calcMeta()"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Mix del día</div>
+    <div class="grid-2">
+      <div class="slider-wrap">
+        <label>Tortas hoy: <span class="slider-val" id="vt">0</span></label>
+        <input type="range" min="0" max="15" value="0" id="sl-t" oninput="document.getElementById('vt').textContent=this.value;calcMeta()">
+      </div>
+      <div class="slider-wrap">
+        <label>Banquetería ($): <span class="slider-val" id="vb">$0</span></label>
+        <input type="range" min="0" max="600000" step="10000" value="0" id="sl-b" oninput="document.getElementById('vb').textContent='$'+(+this.value).toLocaleString('es-CL');calcMeta()">
+      </div>
+    </div>
+  </div>
+  <div class="resumen-grid">
+    <div class="resumen-card"><div class="num" id="m1">—</div><div class="lbl">kg pan / mes</div></div>
+    <div class="resumen-card"><div class="num" id="m2">—</div><div class="lbl">kg pan / día</div></div>
+    <div class="resumen-card"><div class="num" id="m3">—</div><div class="lbl">kg menos c/ mix</div></div>
+  </div>
+  <div class="result-box">
+    <div class="card-title" style="color:var(--gold);">Proyección mensual</div>
+    <div class="result-row"><span class="lbl">Solo por pan</span><span class="val" id="s1">—</span></div>
+    <div class="result-row green"><span class="lbl">Tortas (mes)</span><span class="val" id="s2">—</span></div>
+    <div class="result-row green"><span class="lbl">Banquetería (mes)</span><span class="val" id="s3">—</span></div>
+    <div class="result-row highlight"><span class="lbl">Total proyectado</span><span class="val" id="s4">—</span></div>
+    <div class="result-row"><span class="lbl">Estado</span><span class="val" id="s5">—</span></div>
+  </div>
+</div>
+
+<!-- TAB 3 -->
+<div id="tab-ventas" class="panel">
+  <div class="card">
+    <div class="card-title">Registrar venta</div>
+    <div class="grid-3" style="margin-bottom:14px;">
+      <div><label>Día del mes</label><input type="number" id="v-f" placeholder="ej: 27" min="1" max="31"></div>
+      <div><label>Categoría</label>
+        <select id="v-t">
+          <option value="pan">Pan (kg)</option>
+          <option value="torta">Torta (unidad)</option>
+          <option value="pastel">Pastel / Tarta</option>
+          <option value="queque">Queque / Muffin</option>
+          <option value="dulce">Dulces / Alfajores</option>
+          <option value="empanada">Empanadas (docena)</option>
+          <option value="banqueteria">Banquetería ($)</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div><label>Producto / Detalle</label><input type="text" id="v-d" placeholder="ej: Pan Amasado"></div>
+      <div><label>Monto total ($)</label><input type="number" id="v-m" placeholder="0"></div>
+      <div><label>Cliente / Almacén</label><input type="text" id="v-c" placeholder="Opcional"></div>
+      <div style="display:flex;align-items:flex-end;"><button class="btn" onclick="addVenta()">Registrar</button></div>
+    </div>
+  </div>
+  <div class="resumen-grid">
+    <div class="resumen-card"><div class="num" id="tm">$0</div><div class="lbl">Total del mes</div></div>
+    <div class="resumen-card"><div class="num" id="tv">0</div><div class="lbl">Ventas registradas</div></div>
+    <div class="resumen-card"><div class="num" id="pm">0%</div><div class="lbl">% de la meta</div></div>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div class="card-title" style="margin-bottom:0;">Historial del mes</div>
+      <button class="btn btn-sm btn-gray" onclick="limpiarMes()">Nuevo mes</button>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="barra" style="width:0%"></div></div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;" id="txt-meta">$0 de $1.200.000</div>
+    <table class="ventas-table">
+      <thead><tr><th>Día</th><th>Tipo</th><th>Producto</th><th>Cliente</th><th>Monto</th><th></th></tr></thead>
+      <tbody id="tb-ventas"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target.id==='modal')document.getElementById('modal').classList.remove('open')">
+  <div class="modal">
+    <h3 id="m-tit">Nuevo Producto</h3>
+    <input type="hidden" id="m-id">
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div><label>Nombre del producto *</label><input type="text" id="m-nom" placeholder="ej: Queque de Yogurt"></div>
+      <div class="grid-2">
+        <div><label>Categoría</label>
+          <select id="m-cat">
+            <option value="Pan Artesanal">🍞 Pan Artesanal</option>
+            <option value="Pasteles & Tartas">🎂 Pasteles & Tartas</option>
+            <option value="Tortas">🍰 Tortas</option>
+            <option value="Dulces & Alfajores">🍪 Dulces & Alfajores</option>
+            <option value="Queques & Muffins">🥐 Queques & Muffins</option>
+            <option value="Empanadas">🥟 Empanadas</option>
+          </select>
+        </div>
+        <div><label>Tipo</label>
+          <select id="m-tipo">
+            <option value="propio">Producción Propia</option>
+            <option value="reventa">Reventa / Traspaso</option>
+          </select>
+        </div>
+        <div><label>Unidad de venta</label>
+          <select id="m-uni">
+            <option value="kg">Kilogramo (kg)</option>
+            <option value="unidad">Unidad</option>
+            <option value="docena">Docena</option>
+            <option value="porción">Porción</option>
+          </select>
+        </div>
+        <div><label>Costo base neto ($)</label><input type="number" id="m-cost" placeholder="0"></div>
+        <div><label>Energía ($)</label><input type="number" id="m-en" placeholder="0"></div>
+        <div><label>Logística ($)</label><input type="number" id="m-log" value="30"></div>
+        <div><label>Mano de obra ($)</label><input type="number" id="m-mdo" placeholder="0"></div>
+        <div><label>Margen (%)</label><input type="number" id="m-mrg" placeholder="20"></div>
+      </div>
+      <div><label>Precio combate referencia (texto)</label><input type="text" id="m-comb" placeholder="ej: $1.800 / kg"></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end;flex-wrap:wrap;">
+      <button class="btn btn-sm btn-gray" onclick="document.getElementById('modal').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-sm btn-red" id="btn-elim" style="display:none;" onclick="elimProd()">Eliminar</button>
+      <button class="btn btn-sm" onclick="saveProd()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DEFAULTS=[
+  {id:1,nombre:'Pan Amasado',cat:'Pan Artesanal',tipo:'propio',unidad:'kg',costo:1100,energia:135,logistica:30,mdo:50,margen:15,combate:'$1.800 / kg'},
+  {id:2,nombre:'Tortilla con Chicharrones',cat:'Pan Artesanal',tipo:'propio',unidad:'kg',costo:1200,energia:135,logistica:30,mdo:50,margen:15,combate:''},
+  {id:3,nombre:'Pan Integral',cat:'Pan Artesanal',tipo:'propio',unidad:'kg',costo:1150,energia:135,logistica:30,mdo:50,margen:15,combate:''},
+  {id:4,nombre:'Pan Frica',cat:'Pan Artesanal',tipo:'propio',unidad:'kg',costo:1100,energia:135,logistica:30,mdo:50,margen:15,combate:''},
+  {id:5,nombre:'Hallullas',cat:'Pan Artesanal',tipo:'propio',unidad:'kg',costo:1050,energia:135,logistica:30,mdo:50,margen:15,combate:''},
+  {id:6,nombre:'Dobladitas',cat:'Pan Artesanal',tipo:'propio',unidad:'docena',costo:800,energia:135,logistica:30,mdo:50,margen:15,combate:''},
+  {id:7,nombre:'Marraqueta',cat:'Pan Artesanal',tipo:'reventa',unidad:'kg',costo:1555,energia:40,logistica:30,mdo:0,margen:0,combate:'$1.880 / kg'},
+  {id:8,nombre:'Pie de Limón Merengado',cat:'Pasteles & Tartas',tipo:'propio',unidad:'unidad',costo:4500,energia:300,logistica:30,mdo:800,margen:25,combate:''},
+  {id:9,nombre:'Kuchen Sureño',cat:'Pasteles & Tartas',tipo:'propio',unidad:'unidad',costo:3500,energia:300,logistica:30,mdo:700,margen:25,combate:''},
+  {id:10,nombre:'Kuchen de Nuez',cat:'Pasteles & Tartas',tipo:'propio',unidad:'unidad',costo:4000,energia:300,logistica:30,mdo:700,margen:25,combate:''},
+  {id:11,nombre:'Banofee',cat:'Pasteles & Tartas',tipo:'propio',unidad:'unidad',costo:3800,energia:200,logistica:30,mdo:700,margen:25,combate:''},
+  {id:12,nombre:'Tartaletas',cat:'Pasteles & Tartas',tipo:'propio',unidad:'docena',costo:3000,energia:250,logistica:30,mdo:600,margen:25,combate:''},
+  {id:13,nombre:'Torta 3 Leches',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6000,energia:400,logistica:30,mdo:1200,margen:30,combate:''},
+  {id:14,nombre:'Torta de Chocolate',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6500,energia:400,logistica:30,mdo:1200,margen:30,combate:''},
+  {id:15,nombre:'Torta Moka',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6500,energia:400,logistica:30,mdo:1200,margen:30,combate:''},
+  {id:16,nombre:'Torta Selva Negra',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:7000,energia:400,logistica:30,mdo:1300,margen:30,combate:''},
+  {id:17,nombre:'Torta de Piña',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6000,energia:400,logistica:30,mdo:1100,margen:30,combate:''},
+  {id:18,nombre:'Torta de Hojarasca',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:7500,energia:400,logistica:30,mdo:1500,margen:30,combate:''},
+  {id:19,nombre:'Torta Panqueque',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6500,energia:350,logistica:30,mdo:1200,margen:30,combate:''},
+  {id:20,nombre:'Torta Pavé',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:5500,energia:200,logistica:30,mdo:1000,margen:30,combate:''},
+  {id:21,nombre:'Alfajores de Maicena',cat:'Dulces & Alfajores',tipo:'propio',unidad:'docena',costo:2000,energia:150,logistica:30,mdo:400,margen:20,combate:''},
+  {id:22,nombre:'Alfajores de Manjar',cat:'Dulces & Alfajores',tipo:'propio',unidad:'docena',costo:2200,energia:150,logistica:30,mdo:400,margen:20,combate:''},
+  {id:23,nombre:'Alfajores de Chocolate',cat:'Dulces & Alfajores',tipo:'propio',unidad:'docena',costo:2500,energia:150,logistica:30,mdo:450,margen:20,combate:''},
+  {id:24,nombre:'Chilenitos',cat:'Dulces & Alfajores',tipo:'propio',unidad:'docena',costo:2000,energia:150,logistica:30,mdo:400,margen:20,combate:''},
+  {id:25,nombre:'Berlines',cat:'Dulces & Alfajores',tipo:'propio',unidad:'docena',costo:2200,energia:200,logistica:30,mdo:400,margen:20,combate:''},
+  {id:26,nombre:'Pasteles Rectangulares',cat:'Dulces & Alfajores',tipo:'propio',unidad:'docena',costo:3500,energia:300,logistica:30,mdo:600,margen:20,combate:''},
+  {id:27,nombre:'Queque de Naranja',cat:'Queques & Muffins',tipo:'propio',unidad:'unidad',costo:2000,energia:250,logistica:30,mdo:400,margen:20,combate:''},
+  {id:28,nombre:'Queque Mármol',cat:'Queques & Muffins',tipo:'propio',unidad:'unidad',costo:2000,energia:250,logistica:30,mdo:400,margen:20,combate:''},
+  {id:29,nombre:'Queque Tradicional',cat:'Queques & Muffins',tipo:'propio',unidad:'unidad',costo:1800,energia:250,logistica:30,mdo:350,margen:20,combate:''},
+  {id:30,nombre:'Muffins',cat:'Queques & Muffins',tipo:'propio',unidad:'docena',costo:2500,energia:200,logistica:30,mdo:400,margen:20,combate:''},
+  {id:31,nombre:'Empanada de Pino',cat:'Empanadas',tipo:'propio',unidad:'docena',costo:4500,energia:350,logistica:30,mdo:600,margen:20,combate:''},
+  {id:32,nombre:'Empanada Napolitana',cat:'Empanadas',tipo:'propio',unidad:'docena',costo:4000,energia:350,logistica:30,mdo:550,margen:20,combate:''},
+  {id:33,nombre:'Empanada Vegetariana',cat:'Empanadas',tipo:'propio',unidad:'docena',costo:3500,energia:350,logistica:30,mdo:500,margen:20,combate:''},
+  {id:34,nombre:'Empanada Queso Camarón',cat:'Empanadas',tipo:'propio',unidad:'docena',costo:5000,energia:350,logistica:30,mdo:650,margen:20,combate:''},
+];
+
+function cpx(p){const cn=p.costo+p.energia+p.logistica+p.mdo;const u=p.tipo==='propio'?cn*(p.margen/100):0;return Math.round((cn+u)*1.19);}
+let prods=JSON.parse(localStorage.getItem('galdi_prods')||'null')||DEFAULTS.map(p=>({...p,precio:cpx(p)}));
+let ventas=JSON.parse(localStorage.getItem('galdi_ventas')||'[]');
+let catActiva=prods[0]?.cat||'Pan Artesanal';
+let sel=null;
+const META=1200000;
+function save(){localStorage.setItem('galdi_prods',JSON.stringify(prods));}
+
+function showTab(id,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  el.classList.add('active');
+  if(id==='ventas')renderV();
+  if(id==='simulador')calcMeta();
+}
+
+// CATÁLOGO
+function renderCats(){
+  const cats=[...new Set(prods.map(p=>p.cat))];
+  document.getElementById('cat-tabs').innerHTML=cats.map(c=>`<div class="cat-btn${c===catActiva?' active':''}" onclick="selCat('${c}',this)">${c}</div>`).join('');
+}
+function selCat(c,el){catActiva=c;document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');cerrarCalc();renderT();}
+function renderT(){
+  const ps=prods.filter(p=>p.cat===catActiva);
+  const tb=document.getElementById('tabla-cat');
+  if(!ps.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px;">Sin productos. Agrega uno con el botón +</td></tr>';return;}
+  tb.innerHTML=ps.map(p=>{
+    const cn=p.costo+p.energia+p.logistica+p.mdo;
+    const mr=cn>0?Math.round(((p.precio/1.19)-cn)/cn*100):0;
+    return `<tr class="${sel?.id===p.id?'selected':''}" onclick="selProd(${p.id})" style="cursor:pointer;">
+      <td><strong>${p.nombre}</strong></td>
+      <td><span class="tag tag-${p.tipo}">${p.tipo==='propio'?'Propio':'Reventa'}</span></td>
+      <td>${p.unidad}</td>
+      <td>${fmt(cn)}</td>
+      <td><strong>${fmt(p.precio)}</strong></td>
+      <td style="color:${mr>=15?'#4a7c59':'#9b3a2a'}">${mr}%</td>
+      <td><button class="btn btn-sm" style="background:transparent;color:var(--gold2);border:1px solid var(--border);" onclick="event.stopPropagation();abrirModal(${p.id})">✏️</button></td>
+    </tr>`;
+  }).join('');
+}
+function selProd(id){
+  sel=prods.find(p=>p.id===id);if(!sel)return;
+  document.getElementById('card-calc').style.display='block';
+  document.getElementById('calc-tit').textContent='Calculadora — '+sel.nombre;
+  document.getElementById('c-mat').value=sel.costo;
+  document.getElementById('c-mdo').value=sel.mdo;
+  document.getElementById('c-en').value=sel.energia;
+  document.getElementById('c-log').value=sel.logistica;
+  document.getElementById('c-mrg').value=sel.margen;
+  document.getElementById('c-iva').value=19;
+  document.getElementById('wrap-mdo').style.display=sel.tipo==='propio'?'block':'none';
+  document.getElementById('wrap-mrg').style.display=sel.tipo==='propio'?'block':'none';
+  document.getElementById('lbl-mat').textContent=sel.tipo==='propio'?'Costo materiales (neto)':'Precio compra proveedor (neto)';
+  document.getElementById('r6').textContent=sel.combate||'—';
+  recalc();renderT();
+  document.getElementById('card-calc').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function recalc(){
+  if(!sel)return;
+  const mat=+g('c-mat'),mdo=+g('c-mdo'),en=+g('c-en'),log=+g('c-log'),mrg=+g('c-mrg')/100,iva=+g('c-iva')/100;
+  const cn=mat+mdo+en+log,u=sel.tipo==='propio'?cn*mrg:0,pn=cn+u,iv=pn*iva,pf=pn+iv;
+  s('r1',fmt(cn));s('r2',sel.tipo==='propio'?fmt(u):'— (reventa)');s('r3',fmt(pn));s('r4',fmt(iv));s('r5',fmt(pf));
+}
+function guardarPrecio(){
+  if(!sel)return;
+  const idx=prods.findIndex(p=>p.id===sel.id);
+  prods[idx]={...prods[idx],costo:+g('c-mat'),mdo:+g('c-mdo'),energia:+g('c-en'),logistica:+g('c-log'),margen:+g('c-mrg')};
+  prods[idx].precio=cpx(prods[idx]);
+  sel=prods[idx];save();renderT();
+  alert('✓ Precio guardado: '+fmt(prods[idx].precio)+' para '+prods[idx].nombre);
+}
+function cerrarCalc(){sel=null;document.getElementById('card-calc').style.display='none';renderT();}
+
+// MODAL CRUD
+function abrirModal(id){
+  const btn=document.getElementById('btn-elim');
+  if(id){
+    const p=prods.find(x=>x.id===id);
+    document.getElementById('m-tit').textContent='Editar Producto';
+    document.getElementById('m-id').value=id;
+    document.getElementById('m-nom').value=p.nombre;
+    document.getElementById('m-cat').value=p.cat;
+    document.getElementById('m-tipo').value=p.tipo;
+    document.getElementById('m-uni').value=p.unidad;
+    document.getElementById('m-cost').value=p.costo;
+    document.getElementById('m-en').value=p.energia;
+    document.getElementById('m-log').value=p.logistica;
+    document.getElementById('m-mdo').value=p.mdo;
+    document.getElementById('m-mrg').value=p.margen;
+    document.getElementById('m-comb').value=p.combate||'';
+    btn.style.display='inline-block';
+  } else {
+    document.getElementById('m-tit').textContent='Nuevo Producto';
+    document.getElementById('m-id').value='';
+    ['m-nom','m-cost','m-en','m-mdo','m-mrg','m-comb'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('m-log').value=30;document.getElementById('m-mrg').value=20;
+    btn.style.display='none';
+  }
+  document.getElementById('modal').classList.add('open');
+}
+function saveProd(){
+  const id=document.getElementById('m-id').value;
+  const p={nombre:document.getElementById('m-nom').value.trim(),cat:document.getElementById('m-cat').value,tipo:document.getElementById('m-tipo').value,unidad:document.getElementById('m-uni').value,costo:+document.getElementById('m-cost').value||0,energia:+document.getElementById('m-en').value||0,logistica:+document.getElementById('m-log').value||30,mdo:+document.getElementById('m-mdo').value||0,margen:+document.getElementById('m-mrg').value||0,combate:document.getElementById('m-comb').value.trim()};
+  if(!p.nombre){alert('Ingresa el nombre del producto');return;}
+  p.precio=cpx(p);
+  if(id){const i=prods.findIndex(x=>x.id===+id);prods[i]={...prods[i],...p};}
+  else{p.id=Date.now();prods.push(p);catActiva=p.cat;}
+  save();renderCats();renderT();document.getElementById('modal').classList.remove('open');
+}
+function elimProd(){
+  const id=+document.getElementById('m-id').value;
+  if(!confirm('¿Eliminar este producto?'))return;
+  prods=prods.filter(p=>p.id!==id);save();renderCats();renderT();document.getElementById('modal').classList.remove('open');
+}
+
+// SIMULADOR
+function calcMeta(){
+  const dias=+g('dias')||26,meta=+g('meta-ing')||1200000,pp=+g('p-pan')||1800,pt=+g('p-torta')||25000;
+  const nt=+document.getElementById('sl-t').value,mb=+document.getElementById('sl-b').value;
+  const it=nt*pt*dias,ib=mb*dias/7,falta=Math.max(0,meta-it-ib);
+  const km=Math.ceil(falta/pp),kd=Math.ceil(km/dias),red=3553-km;
+  s('m1',km.toLocaleString('es-CL'));s('m2',kd.toLocaleString('es-CL'));s('m3',(red>0?'-':'')+Math.abs(red).toLocaleString('es-CL'));
+  const tot=(km*pp)+it+ib;
+  s('s1',fmt(km*pp));s('s2',fmt(it));s('s3',fmt(Math.round(ib)));s('s4',fmt(Math.round(tot)));
+  const el=document.getElementById('s5');
+  if(tot>=meta){el.textContent='✓ Meta alcanzada';el.style.color='#7ecb94';}
+  else{el.textContent='Faltan '+fmt(Math.round(meta-tot));el.style.color='#f08070';}
+}
+
+// VENTAS
+function addVenta(){
+  const f=document.getElementById('v-f').value,t=document.getElementById('v-t').value,d=document.getElementById('v-d').value,m=+document.getElementById('v-m').value,c=document.getElementById('v-c').value;
+  if(!f||!m){alert('Ingresa fecha y monto');return;}
+  ventas.push({id:Date.now(),fecha:f,tipo:t,desc:d,monto:m,cliente:c});
+  localStorage.setItem('galdi_ventas',JSON.stringify(ventas));
+  ['v-f','v-d','v-m','v-c'].forEach(i=>document.getElementById(i).value='');
+  renderV();
+}
+function delVenta(id){ventas=ventas.filter(v=>v.id!==id);localStorage.setItem('galdi_ventas',JSON.stringify(ventas));renderV();}
+function limpiarMes(){if(confirm('¿Limpiar todas las ventas?')){ventas=[];localStorage.setItem('galdi_ventas',JSON.stringify(ventas));renderV();}}
+function renderV(){
+  const tot=ventas.reduce((a,v)=>a+v.monto,0),p=Math.min(100,Math.round(tot/META*100));
+  s('tm',fmt(tot));s('tv',ventas.length);s('pm',p+'%');
+  document.getElementById('txt-meta').textContent=fmt(tot)+' de '+fmt(META);
+  const b=document.getElementById('barra');b.style.width=p+'%';b.className='progress-fill'+(p>=100?' green':p<30?' red':'');
+  const lm={pan:'Pan',torta:'Torta',pastel:'Pastel',queque:'Queque',dulce:'Dulces',empanada:'Empanada',banqueteria:'Banquetería',otro:'Otro'};
+  const tb=document.getElementById('tb-ventas');
+  if(!ventas.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px;">Sin ventas registradas</td></tr>';return;}
+  tb.innerHTML=[...ventas].reverse().map(v=>`<tr><td>Día ${v.fecha}</td><td><span class="tag tag-propio">${lm[v.tipo]||v.tipo}</span></td><td>${v.desc||'—'}</td><td>${v.cliente||'—'}</td><td><strong>${fmt(v.monto)}</strong></td><td><span style="cursor:pointer;color:var(--muted);font-size:18px;" onclick="delVenta(${v.id})">×</span></td></tr>`).join('');
+}
+
+// HELPERS
+function g(id){return document.getElementById(id)?.value||0;}
+function s(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
+function fmt(n){return '$'+Math.round(n).toLocaleString('es-CL');}
+
+// INIT
+renderCats();renderT();calcMeta();renderV();
+</script>
+</body>
+</html>
