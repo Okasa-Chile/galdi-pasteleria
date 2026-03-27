@@ -24,6 +24,7 @@
 .DS_Store
 *.pem
 .history/
+Galdi-Menu-Almacenes.pdf
 
 # debug
 npm-debug.log*
