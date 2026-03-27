@@ -48,8 +48,14 @@
   const AUTORIZADOS = ['contacto@okasa.cl', 'ventas@galdi.cl', 'iaclaudioferrari@gmail.com', 'ingridgalvezd@gmail.com', 'jacquelinegalvezd@gmail.com'];
 
   // Firebase Hosting inyecta la config automáticamente — sin API key hardcodeada
-  const res = await fetch('/__/firebase/init.json');
-  const config = await res.json();
+  let config;
+  try {
+    config = await fetch('/__/firebase/init.json').then(r=>r.json());
+    console.log('Firebase config OK:', config.projectId);
+  } catch(e) {
+    console.error('Error config Firebase:', e);
+  }
+  if(!config) throw new Error('No se pudo cargar Firebase config');
 
   const app = initializeApp(config);
   const auth = getAuth(app);
