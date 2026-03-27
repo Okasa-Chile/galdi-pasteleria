@@ -174,7 +174,7 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
           ...Object.values(productosDelivery).flat(),
         ];
         const unidad = todosLosProductos.find(p => p.nombre === nombre)?.unidad ?? 'un';
-        return `• ${cantidad} ${unidad} — ${nombre}`;
+        return `• ${cantidad} ${unidad === 'unidad' ? (cantidad === 1 ? 'unidad' : 'unidades') : unidad} — ${nombre}`;
       })
       .join('\n');
     const tipo = id === 'b2b' ? 'distribución a almacén' : 'delivery';
