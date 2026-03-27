@@ -4,6 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Galdi — Gestión de Precios</title>
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
+  import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
+  window._fbReady = fetch('/__/firebase/init.json')
+    .then(r => r.json())
+    .then(config => {
+      const app = initializeApp(config);
+      window._db = getFirestore(app);
+      window._fsReady = true;
+      window.fsSetDoc = (col, id, data) => setDoc(doc(window._db, col, id), data);
+      window.fsGetDocs = (col) => getDocs(collection(window._db, col));
+      window.fsDeleteDoc = (col, id) => deleteDoc(doc(window._db, col, id));
+    });
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--gold:#C9A55A;--gold2:#7a5c2e;--dark:#1a0f0a;--brown:#3d2010;--cream:#F9F3EC;--sand:#EDE3D5;--rose:#F7EEE8;--muted:#9c7a5a;--border:#e4d8c8;}
@@ -295,7 +309,12 @@ let ventas=JSON.parse(localStorage.getItem('galdi_ventas')||'[]');
 let catActiva=prods[0]?.cat||'Pan Artesanal';
 let sel=null;
 const META=1200000;
-function save(){localStorage.setItem('galdi_prods',JSON.stringify(prods));}
+function save(){
+  localStorage.setItem('galdi_prods',JSON.stringify(prods));
+  if(window._fsReady) {
+    prods.forEach(p => window.fsSetDoc('galdi_productos', String(p.id), p));
+  }
+}
 
 function poblarProductos() {
   const tipo = document.getElementById('v-t').value;
@@ -440,12 +459,19 @@ function calcMeta(){
 function addVenta(){
   const f=document.getElementById('v-f').value,t=document.getElementById('v-t').value,d=document.getElementById('v-d').value,m=+document.getElementById('v-m').value,c=document.getElementById('v-c').value;
   if(!f||!m){alert('Ingresa fecha y monto');return;}
-  ventas.push({id:Date.now(),fecha:f,tipo:t,desc:d,monto:m,cliente:c});
+  const venta={id:Date.now(),fecha:f,tipo:t,desc:d,monto:m,cliente:c};
+  ventas.push(venta);
   localStorage.setItem('galdi_ventas',JSON.stringify(ventas));
+  if(window._fsReady) window.fsSetDoc('galdi_ventas', String(venta.id), venta);
   ['v-f','v-d','v-m','v-c'].forEach(i=>document.getElementById(i).value='');
   renderV();
 }
-function delVenta(id){ventas=ventas.filter(v=>v.id!==id);localStorage.setItem('galdi_ventas',JSON.stringify(ventas));renderV();}
+function delVenta(id){
+  ventas=ventas.filter(v=>v.id!==id);
+  localStorage.setItem('galdi_ventas',JSON.stringify(ventas));
+  if(window._fsReady) window.fsDeleteDoc('galdi_ventas', String(id));
+  renderV();
+}
 function limpiarMes(){if(confirm('¿Limpiar todas las ventas?')){ventas=[];localStorage.setItem('galdi_ventas',JSON.stringify(ventas));renderV();}}
 function renderV(){
   const tot=ventas.reduce((a,v)=>a+v.monto,0),p=Math.min(100,Math.round(tot/META*100));
@@ -464,7 +490,26 @@ function s(id,val){const el=document.getElementById(id);if(el)el.textContent=val
 function fmt(n){return '$'+Math.round(n).toLocaleString('es-CL');}
 
 // INIT
-renderCats();renderT();calcMeta();renderV();poblarProductos();
+async function initData() {
+  if(window._fsReady) {
+    try {
+      // Cargar ventas desde Firestore
+      const snap = await window.fsGetDocs('galdi_ventas');
+      if(!snap.empty) {
+        ventas = snap.docs.map(d => d.data());
+      }
+      // Cargar productos desde Firestore
+      const snapP = await window.fsGetDocs('galdi_productos');
+      if(!snapP.empty) {
+        prods = snapP.docs.map(d => d.data());
+        prods.forEach(p => { if(!p.precio) p.precio = cpx(p); });
+      }
+    } catch(e) { console.log('Firestore load error:', e); }
+  }
+  renderCats();renderT();calcMeta();renderV();poblarProductos();
+}
+
+window._fbReady ? window._fbReady.then(initData) : (renderCats(),renderT(),calcMeta(),renderV(),poblarProductos());
 </script>
 </body>
 </html>
