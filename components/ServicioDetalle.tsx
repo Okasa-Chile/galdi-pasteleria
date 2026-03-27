@@ -77,15 +77,17 @@ const WA_NUMBER = '56990991011';
 
 // ─── Mínimos por producto ────────────────────────────────────────────────────
 
-function getMinimo(tab: string, unidad: string): number {
-  if (tab === 'Pan') return 10;
+function getMinimo(tab: string, unidad: string, nombre: string = ''): number {
+  if (nombre === 'Tortilla con Chicharrones') return 2;
+  if (tab === 'Pan' && nombre !== 'Tortilla con Chicharrones') return 10;
   if (unidad === 'docena') return 1;
   if (tab === 'Queques') return 2;
   return 1;
 }
 
-function getLabelMinimo(tab: string, unidad: string): string {
-  if (tab === 'Pan') return 'mín. 10 kg';
+function getLabelMinimo(tab: string, unidad: string, nombre: string = ''): string {
+  if (nombre === 'Tortilla con Chicharrones') return 'mín. 2 un';
+  if (tab === 'Pan' && nombre !== 'Tortilla con Chicharrones') return 'mín. 10 kg';
   if (unidad === 'docena') return 'mín. 1 docena';
   if (tab === 'Queques') return 'mín. 2 un';
   return 'mín. 1 un';
@@ -142,7 +144,7 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
 
   // Carrito helpers
   function agregar(nombre: string, tab: string, unidad: string) {
-    const min = getMinimo(tab, unidad);
+    const min = getMinimo(tab, unidad, nombre);
     setCarrito(prev => ({
       ...prev,
       [nombre]: (prev[nombre] ?? 0) + min,
@@ -150,7 +152,7 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
   }
 
   function quitar(nombre: string, tab: string, unidad: string) {
-    const min = getMinimo(tab, unidad);
+    const min = getMinimo(tab, unidad, nombre);
     setCarrito(prev => {
       const actual = prev[nombre] ?? 0;
       if (actual <= min) {
@@ -254,8 +256,8 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.75rem', marginTop: '1rem' }}>
             {productos.map(prod => {
               const enCarrito = carrito[prod.nombre] ?? 0;
-              const min = getMinimo(activeTab, prod.unidad);
-              const label = getLabelMinimo(activeTab, prod.unidad);
+              const min = getMinimo(activeTab, prod.unidad, prod.nombre);
+              const label = getLabelMinimo(activeTab, prod.unidad, prod.nombre);
               return (
                 <div key={prod.nombre} className="svc-prod-card">
                   {/* Imagen */}
