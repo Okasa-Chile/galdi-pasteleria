@@ -167,7 +167,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
     <div class="grid-3" style="margin-bottom:14px;">
       <div><label>Día del mes</label><input type="number" id="v-f" placeholder="ej: 27" min="1" max="31"></div>
       <div><label>Categoría</label>
-        <select id="v-t">
+        <select id="v-t" onchange="poblarProductos()">
           <option value="pan">Pan (kg)</option>
           <option value="torta">Torta (unidad)</option>
           <option value="pastel">Pastel / Tarta</option>
@@ -178,7 +178,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
           <option value="otro">Otro</option>
         </select>
       </div>
-      <div><label>Producto / Detalle</label><input type="text" id="v-d" placeholder="ej: Pan Amasado"></div>
+      <div><label>Producto / Detalle</label><select id="v-d"></select></div>
       <div><label>Monto total ($)</label><input type="number" id="v-m" placeholder="0"></div>
       <div><label>Cliente / Almacén</label><input type="text" id="v-c" placeholder="Opcional"></div>
       <div style="display:flex;align-items:flex-end;"><button class="btn" onclick="addVenta()">Registrar</button></div>
@@ -296,6 +296,23 @@ let catActiva=prods[0]?.cat||'Pan Artesanal';
 let sel=null;
 const META=1200000;
 function save(){localStorage.setItem('galdi_prods',JSON.stringify(prods));}
+
+function poblarProductos() {
+  const tipo = document.getElementById('v-t').value;
+  const sel = document.getElementById('v-d');
+  const mapa = {
+    pan: ['Pan Amasado','Tortilla con Chicharrones','Pan Integral','Pan Frica','Hallullas','Dobladitas','Marraqueta'],
+    torta: ['Torta 3 Leches','Torta de Chocolate','Torta Moka','Torta Selva Negra','Torta de Piña','Torta de Hojarasca','Torta Panqueque','Torta Pavé'],
+    pastel: ['Pie de Limón Merengado','Kuchen Sureño','Kuchen de Nuez','Banofee','Tartaletas'],
+    queque: ['Queque de Naranja','Queque Mármol','Queque Tradicional','Muffins'],
+    dulce: ['Alfajores de Maicena','Alfajores de Manjar','Alfajores de Chocolate','Chilenitos','Berlines','Pasteles Rectangulares'],
+    empanada: ['Empanada de Pino','Empanada Napolitana','Empanada Vegetariana','Empanada Queso Camarón'],
+    banqueteria: ['Cóctel','Matrimonio','Cumpleaños','Corporativo','Evento escolar','Otro evento'],
+    otro: ['Otro'],
+  };
+  const opciones = mapa[tipo] || ['Otro'];
+  sel.innerHTML = opciones.map(p => `<option value="${p}">${p}</option>`).join('');
+}
 
 function showTab(id,el){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
@@ -447,7 +464,7 @@ function s(id,val){const el=document.getElementById(id);if(el)el.textContent=val
 function fmt(n){return '$'+Math.round(n).toLocaleString('es-CL');}
 
 // INIT
-renderCats();renderT();calcMeta();renderV();
+renderCats();renderT();calcMeta();renderV();poblarProductos();
 </script>
 </body>
 </html>
