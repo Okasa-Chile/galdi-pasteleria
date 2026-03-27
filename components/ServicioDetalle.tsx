@@ -9,7 +9,7 @@ import { imagenes } from './Catalogo';
 const productosAlmacenes: Record<string, { nombre: string; imagen: string; unidad: string }[]> = {
   'Pan': [
     { nombre: 'Pan Amasado',               imagen: imagenes['Pan Amasado'],               unidad: 'kg' },
-    { nombre: 'Tortilla con Chicharrones', imagen: imagenes['Tortilla con Chicharrones'], unidad: 'kg' },
+    { nombre: 'Tortilla con Chicharrones', imagen: imagenes['Tortilla con Chicharrones'], unidad: 'unidad' },
     { nombre: 'Pan Integral',              imagen: imagenes['Pan Integral'],              unidad: 'kg' },
     { nombre: 'Pan Frica',                 imagen: imagenes['Pan Frica'],                 unidad: 'kg' },
     { nombre: 'Dobloditas',                imagen: imagenes['Dobloditas'],                unidad: 'kg' },
