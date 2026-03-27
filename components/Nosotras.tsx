@@ -73,7 +73,7 @@ export default function Nosotras() {
             lineHeight: 1.2,
             marginBottom: '2rem',
           }}>
-            Hechas con amor,<br />
+            Con amor,<br />
             <em>desde nuestra cocina</em>
           </h2>
 
