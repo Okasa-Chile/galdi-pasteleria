@@ -44,6 +44,9 @@
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
   import { getAuth, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
+  import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
+
+(async () => {
 
   const AUTORIZADOS = ['contacto@okasa.cl', 'ventas@galdi.cl', 'iaclaudioferrari@gmail.com', 'ingridgalvezd@gmail.com', 'jacquelinegalvezd@gmail.com'];
 
@@ -81,6 +84,8 @@
     document.getElementById('app').style.display = user ? 'block' : 'none';
     if (user) document.getElementById('email').textContent = user.email;
   });
+
+})(); // fin async IIFE
 </script>
 </body>
 </html>
