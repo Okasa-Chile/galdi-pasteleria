@@ -35,7 +35,7 @@ export default function Nosotras() {
           overflow: 'hidden',
         }}>
           <Image
-            src="/images/Socias.webp"
+            src="/images/Socias_lapiz.webp"
             alt="Jacqueline e Ingrid, fundadoras de Galdi"
             fill
             style={{ objectFit: 'cover' }}
