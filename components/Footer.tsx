@@ -6,8 +6,9 @@ import { useState } from 'react';
 const links = [
   { label: 'Productos',  href: '#productos' },
   { label: 'Servicios',  href: '#servicios' },
-  { label: 'Nosotros',   href: '#nosotros' },
+  { label: 'Nosotras',   href: '#nosotras' },
   { label: 'WhatsApp',   href: 'https://wa.me/56990991011' },
+  { label: 'Acceso interno', href: '/gestion' },
 ];
 
 export default function Footer() {
