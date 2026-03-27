@@ -94,7 +94,7 @@ export default function Nosotras() {
             lineHeight: 1.8,
             marginBottom: '2.5rem',
           }}>
-            Cada producto que sale de nuestra cocina lleva el mismo cuidado que pondríamos en prepararlo para nuestra propia familia. Sin apuros, sin atajos — solo ingredientes buenos y mucho gozo.
+            Cada producto que sale de nuestra cocina lleva el mismo cuidado que pondríamos en prepararlo para nuestra propia familia. Sin apuros, sin atajos — solo productos de calidad y mucho cariño en la preparación.
           </p>
 
           {/* Íconos de valores */}
