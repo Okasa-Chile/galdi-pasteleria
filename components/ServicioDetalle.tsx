@@ -311,7 +311,8 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
                           ...Object.values(productosAlmacenes).flat(),
                           ...Object.values(productosDelivery).flat(),
                         ];
-                        return todosLosProductos.find(p => p.nombre === nombre)?.unidad ?? 'un';
+                        const unidad = todosLosProductos.find(p => p.nombre === nombre)?.unidad ?? 'un';
+                        return unidad === 'unidad' ? (cantidad === 1 ? 'unidad' : 'unidades') : unidad;
                       })()}</span>
                     </div>
                   ))}
