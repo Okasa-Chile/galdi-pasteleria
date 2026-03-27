@@ -10,7 +10,8 @@
       "Bash(pip show:*)",
       "Bash(python:*)",
       "Bash(copy \"public\\\\images\\\\Nuevologo.webp\" \"app\\\\favicon.ico\")",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(find C:/OKasa/Web/galdi-nextjs -name *.html)"
     ]
   }
 }
