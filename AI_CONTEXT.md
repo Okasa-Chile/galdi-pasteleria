@@ -296,3 +296,34 @@ images: { unoptimized: true }  // requerido para export estático
 - [ ] Integrar Firestore para persistir productos y ventas en la nube
 - [ ] Agregar emails de las socias a AUTORIZADOS cuando tengan cuenta Google
 - [ ] Restricciones de dominio a la API key en Google Cloud Console
+
+---
+
+## Sesión 27-03-2026 — Jornada Completa
+
+### Completado
+- [x] Google Search Console configurado para galdi.cl (verificado, sitemap enviado)
+- [x] Cotización COT-G073 generada (Bautizo Benjamín, $390.500, enviada por correo)
+- [x] Script Galdi-Menu-EDITABLE.py en raíz del proyecto (menú almaceneros PDF)
+- [x] Imagen Socias_lapiz.webp en sección Nosotras
+- [x] Textos Nosotras actualizados
+- [x] Sistema de gestión /gestion con Firebase Auth Google
+- [x] Usuarios autorizados: contacto@okasa.cl, ventas@galdi.cl, iaclaudioferrari@gmail.com, ingridgalvezd@gmail.com, jacquelinegalvezd@gmail.com
+- [x] Firestore persistencia cloud — galdi_productos y galdi_ventas
+- [x] API key rotada (exposición accidental en GitHub)
+- [x] Link "Acceso interno" en footer → /gestion
+- [x] Logo Galdi en /gestion clickeable → galdi.cl
+- [x] Dropdown productos en registro de ventas
+- [x] Tortilla con Chicharrones → venta por unidad, mín. 2 unidades
+- [x] Plural "unidades" en carrito y mensaje WhatsApp
+
+### Archivos clave /gestion
+- public/gestion/index.html — app unificada (auth + Firestore + gestión)
+- public/gestion-app.html — versión anterior con iframe (ya no se usa)
+- firestore.rules — reglas permisivas (cualquier auth puede leer/escribir)
+
+### Pendiente
+- [ ] Volver reglas Firestore a lista de emails autorizados (actualmente permisivas)
+- [ ] Precios automáticos en registro de ventas (seleccionar producto → precio se autocompleta)
+- [ ] Fix admin login Okasa (signInWithPopup + URI autorizada)
+- [ ] Integrar páginas SEO para servicios Galdi (/eventos, /delivery, /distribucion)
