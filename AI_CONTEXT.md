@@ -271,3 +271,28 @@ images: { unoptimized: true }  // requerido para export estático
 - **Estilo de trabajo de Claudio**: confirmaciones breves ("ya", "listo", "ahora sí") → Claude pregunta si el contexto es ambiguo antes de actuar
 - **Paleta Galdi**: café oscuro `#1a0f0a`, crema `#f5e6d3`, dorado `#d4a853`, terracota `#c4704f`
 - **Secciones activas en `page.tsx`**: Header · Hero · Catálogo · Servicios · Nosotras · Contacto · Footer
+
+---
+
+## Sesión 27-03-2026 — Jornada Tarde
+
+### Completado
+- [x] Programa web Galdi-Precios.html — 3 tabs: Catálogo+Costos, Simulador Meta, Registro Ventas
+- [x] 34 productos en 6 categorías con CRUD completo (agregar/editar/eliminar)
+- [x] Costos GLP calculados: $135/kg energía (2 cámaras, horno Maigas 4 latas)
+- [x] /gestion live en galdi.cl con Firebase Auth Google (signInWithPopup)
+- [x] Usuarios autorizados: contacto@okasa.cl, ventas@galdi.cl, iaclaudioferrari@gmail.com
+- [x] API key rotada tras exposición accidental en GitHub (commit 3a1d411)
+- [x] firebase.json con rewrites explícitos para /gestion
+- [x] gestion-app.html (sistema de precios) en public/
+- [x] Firebase Auth dominios autorizados: galdi.cl configurado
+
+### Archivos clave
+- public/gestion/index.html — login con Google
+- public/gestion-app.html — sistema de gestión completo
+- .env.local — nueva API key AIzaSyCdLjH... (rotada 27-03-2026)
+
+### Pendiente /gestion
+- [ ] Integrar Firestore para persistir productos y ventas en la nube
+- [ ] Agregar emails de las socias a AUTORIZADOS cuando tengan cuenta Google
+- [ ] Restricciones de dominio a la API key en Google Cloud Console
