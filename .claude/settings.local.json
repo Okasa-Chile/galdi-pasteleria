@@ -9,7 +9,8 @@
       "Bash(git push:*)",
       "Bash(pip show:*)",
       "Bash(python:*)",
-      "Bash(copy \"public\\\\images\\\\Nuevologo.webp\" \"app\\\\favicon.ico\")"
+      "Bash(copy \"public\\\\images\\\\Nuevologo.webp\" \"app\\\\favicon.ico\")",
+      "Bash(npm install:*)"
     ]
   }
 }
