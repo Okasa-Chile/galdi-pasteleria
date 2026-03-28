@@ -79,12 +79,13 @@ export default function Servicios() {
         maxWidth: '1300px',
         margin: '0 auto',
       }}>
-        {servicios.map((svc) => (
+        {servicios.map((svc, i) => (
           <div
             key={svc.id}
             onMouseEnter={() => setHovered(svc.id)}
             onMouseLeave={() => setHovered(null)}
             onClick={() => setSelected(svc)}
+            className={`reveal reveal-delay-${i + 1}`}
             style={{
               position: 'relative',
               overflow: 'hidden',

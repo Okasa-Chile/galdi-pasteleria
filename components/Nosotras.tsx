@@ -17,7 +17,7 @@ export default function Nosotras() {
       padding: '7rem 5%',
       background: 'var(--cream)',
     }}>
-      <div style={{
+      <div className="reveal" style={{
         maxWidth: '1300px',
         margin: '0 auto',
         display: 'grid',
