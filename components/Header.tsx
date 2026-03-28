@@ -145,9 +145,7 @@ export default function Header() {
             🔒
           </a>
           <a
-            href="https://wa.me/56990991011?text=Hola%20Galdi!%20Me%20gustar%C3%ADa%20cotizar"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#servicios"
             className="header-nav-link nav-cta"
           >
             Cotizar
