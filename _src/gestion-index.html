@@ -616,7 +616,9 @@ window.autocompletarPrecio = () => {
 };
 
 window.addVenta = async () => {
-  const f=document.getElementById('v-f').value,t=document.getElementById('v-t').value,d=document.getElementById('v-d').value,m=+document.getElementById('v-m').value,c=document.getElementById('v-c').value;
+  const f=document.getElementById('v-f').value,t=document.getElementById('v-t').value,m=+document.getElementById('v-m').value,c=document.getElementById('v-c').value;
+  const selEl=document.getElementById('v-d');
+  const d=selEl.options[selEl.selectedIndex]?.text.split(' — ')[0] || selEl.value;
   if(!f||!m){alert('Ingresa día y monto');return;}
   const venta={id:Date.now(),fecha:f,tipo:t,desc:d,monto:m,cliente:c};
   ventas.push(venta);
