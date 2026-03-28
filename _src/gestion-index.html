@@ -215,7 +215,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
             <option value="otro">Otro</option>
           </select>
         </div>
-        <div><label>Producto</label><select id="v-d"></select></div>
+        <div><label>Producto</label><select id="v-d" onchange="autocompletarPrecio()"></select></div>
         <div><label>Monto total ($)</label><input type="number" id="v-m" placeholder="0"></div>
         <div><label>Cliente / Almacén</label><input type="text" id="v-c" placeholder="Opcional"></div>
         <div style="display:flex;align-items:flex-end;"><button class="btn" onclick="addVenta()">Registrar</button></div>
@@ -579,20 +579,28 @@ window.calcMeta = () => {
 
 // ── TAB 3: VENTAS ─────────────────────────────────────────────────────────
 window.poblarProductos = () => {
-  const tipo=document.getElementById('v-t').value;
-  const sel=document.getElementById('v-d');
-  const mapa={
-    pan:['Pan Amasado','Tortilla con Chicharrones','Pan Integral','Pan Frica','Hallullas','Dobladitas','Marraqueta'],
-    torta:['Torta 3 Leches','Torta de Chocolate','Torta Moka','Torta Selva Negra','Torta de Piña','Torta de Hojarasca','Torta Panqueque','Torta Pavé'],
-    pastel:['Pie de Limón Merengado','Kuchen Sureño','Kuchen de Nuez','Banofee','Tartaletas'],
-    queque:['Queque de Naranja','Queque Mármol','Queque Tradicional','Muffins'],
-    dulce:['Alfajores de Maicena','Alfajores de Manjar','Alfajores de Chocolate','Chilenitos','Berlines','Pasteles Rectangulares'],
-    empanada:['Empanada de Pino','Empanada Napolitana','Empanada Vegetariana','Empanada Queso Camarón'],
-    banqueteria:['Cóctel','Matrimonio','Cumpleaños','Corporativo','Evento escolar','Otro evento'],
-    otro:['Otro'],
+  const cat = document.getElementById('v-t').value;
+  const sel = document.getElementById('v-d');
+  const mapacat = {
+    'pan':'Pan Artesanal','torta':'Tortas','pastel':'Pasteles & Tartas',
+    'queque':'Queques & Muffins','dulce':'Dulces & Alfajores',
+    'empanada':'Empanadas','banqueteria':'Banquetería'
   };
-  const opciones=mapa[tipo]||['Otro'];
-  sel.innerHTML=opciones.map(p=>`<option value="${p}">${p}</option>`).join('');
+  const filtrados = prods.filter(p => p.categoria === mapacat[cat]);
+  sel.innerHTML = filtrados.length
+    ? filtrados.map(p => `<option value="${p.id}">${p.nombre} — ${fmt(p.precio)}</option>`).join('')
+    : '<option value="">Sin productos en esta categoría</option>';
+  autocompletarPrecio();
+};
+
+window.autocompletarPrecio = () => {
+  const idSel = document.getElementById('v-d').value;
+  const prod = prods.find(p => String(p.id) === String(idSel));
+  if (prod && prod.precio) {
+    document.getElementById('v-m').value = prod.precio;
+  } else {
+    document.getElementById('v-m').value = '';
+  }
 };
 
 window.addVenta = async () => {
