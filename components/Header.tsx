@@ -130,6 +130,21 @@ export default function Header() {
             </a>
           ))}
           <a
+            href="/gestion"
+            title="Acceso interno"
+            style={{
+              color: 'rgba(245,230,211,0.25)',
+              fontSize: '0.75rem',
+              textDecoration: 'none',
+              transition: 'color 0.2s',
+              letterSpacing: '0.05em',
+            }}
+            onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(212,168,83,0.6)'}
+            onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(245,230,211,0.25)'}
+          >
+            🔒
+          </a>
+          <a
             href="https://wa.me/56990991011?text=Hola%20Galdi!%20Me%20gustar%C3%ADa%20cotizar"
             target="_blank"
             rel="noopener noreferrer"

@@ -5,6 +5,7 @@ import Servicios from '@/components/Servicios';
 import Nosotras from '@/components/Nosotras';
 import Contacto from '@/components/Contacto';
 import Footer from '@/components/Footer';
+import WhatsAppFloat from '@/components/WhatsAppFloat';
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <Nosotras />
       <Contacto />
       <Footer />
+      <WhatsAppFloat />
     </main>
   );
 }
