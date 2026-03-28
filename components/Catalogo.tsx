@@ -287,7 +287,7 @@ export default function Catalogo() {
             {categoriaActiva.productos.map((prod, i) => (
               <article
                 key={prod.nombre}
-                className={`cat-card-item reveal reveal-delay-${Math.min(i + 1, 5)}`}
+                className="cat-card-item"
                 style={{ animationDelay: delays[i] ?? '0s' }}
               >
                 {/* Visual */}
