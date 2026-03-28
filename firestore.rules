@@ -1,11 +1,32 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /galdi_productos/{docId} {
-      allow read, write: if request.auth != null;
+
+    // Función helper: solo emails autorizados de Galdi
+    function esAutorizado() {
+      return request.auth != null &&
+        request.auth.token.email in [
+          'contacto@okasa.cl',
+          'ventas@galdi.cl',
+          'iaclaudioferrari@gmail.com',
+          'ingridgalvezd@gmail.com',
+          'jacquelinegalvezd@gmail.com'
+        ];
     }
+
+    // Productos Galdi: solo usuarios autorizados
+    match /galdi_productos/{docId} {
+      allow read, write: if esAutorizado();
+    }
+
+    // Ventas Galdi: solo usuarios autorizados
     match /galdi_ventas/{docId} {
-      allow read, write: if request.auth != null;
+      allow read, write: if esAutorizado();
+    }
+
+    // Bloqueo total por defecto
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }
