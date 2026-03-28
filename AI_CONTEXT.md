@@ -1,5 +1,5 @@
 # AI_CONTEXT — Proyecto Galdi Pastelería
-> Registro de trabajo asistido por IA · Actualizado: 25 marzo 2026
+> Registro de trabajo asistido por IA · Actualizado: 28 marzo 2026
 
 ---
 
@@ -327,3 +327,32 @@ images: { unoptimized: true }  // requerido para export estático
 - [ ] Precios automáticos en registro de ventas (seleccionar producto → precio se autocompleta)
 - [ ] Fix admin login Okasa (signInWithPopup + URI autorizada)
 - [ ] Integrar páginas SEO para servicios Galdi (/eventos, /delivery, /distribucion)
+
+---
+
+## Sesión 28-03-2026 — Completado
+- [x] Favicon PNG generado (32x32, 192x192, apple-touch-icon) reemplaza WebP en layout.tsx
+- [x] Reglas Firestore restringidas a 5 emails autorizados (commit c713e4a)
+- [x] API key restringida a dominios galdi.cl, galdi-web.web.app, localhost en Google Cloud Console
+- [x] Clave API anterior eliminada, nueva actualizada en .env.local
+- [x] Precios automáticos en /gestion: poblarProductos() usa prods de Firestore con id como value
+- [x] addVenta() guarda nombre del producto en lugar del id
+- [x] Categoría y Producto inician con "— Elegir —" en formulario de ventas
+- [x] Botón flotante WhatsApp verde en sitio público (components/WhatsAppFloat.tsx)
+- [x] Acceso discreto 🔒 a /gestion en Header
+- [x] Botón "Cotizar" en header lleva a #servicios
+- [x] Imágenes Unsplash reemplazadas por WebP locales: eventos-matrimonio, eventos-coctel, eventos-cumpleanos
+- [x] Scroll reveal con IntersectionObserver en Servicios y Nosotras
+- [x] 18 fotos reales de matrimonios convertidas a WebP en public/images/eventos/
+- [x] Slideshow automático 3s con dots en tab Matrimonios de Eventos
+- [x] Carpeta _src/ creada con gestion-index.html para acceso IA
+
+### Aprendizaje clave sesión 28-03-2026
+- Siempre que se modifique public/gestion/index.html ejecutar:
+  cp public/gestion/index.html out/gestion/index.html && firebase deploy --only hosting
+
+### Pendiente actualizado
+- [ ] Fotos reales para tabs Cóctel y Cumpleaños (Claudio las proveerá)
+- [ ] Servicios como subpáginas navegables
+- [ ] Plural "docenas" en carrito (2 docena → 2 docenas)
+- [ ] Integrar páginas SEO para servicios (/eventos, /delivery, /distribucion)
