@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import useScrollReveal from '@/hooks/useScrollReveal';
 
 const WA_SVG = (
   <svg viewBox="0 0 24 24" style={{ width: 12, height: 12, fill: 'currentColor', flexShrink: 0 }}>
@@ -125,6 +126,7 @@ const delays = ['0s', '0.06s', '0.12s', '0.18s', '0.24s', '0.30s'];
 export default function Catalogo() {
   const [activeTab, setActiveTab] = useState('pan');
   const categoriaActiva = categorias.find((c) => c.id === activeTab)!;
+  useScrollReveal(activeTab);;
 
   return (
     <>
