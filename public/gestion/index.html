@@ -586,7 +586,7 @@ window.poblarProductos = () => {
     'queque':'Queques & Muffins','dulce':'Dulces & Alfajores',
     'empanada':'Empanadas','banqueteria':'Banquetería'
   };
-  const filtrados = prods.filter(p => p.categoria === mapacat[cat]);
+  const filtrados = prods.filter(p => (p.cat || p.categoria) === mapacat[cat]);
   sel.innerHTML = filtrados.length
     ? filtrados.map(p => `<option value="${p.id}">${p.nombre} — ${fmt(p.precio)}</option>`).join('')
     : '<option value="">Sin productos en esta categoría</option>';
