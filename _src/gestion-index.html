@@ -205,6 +205,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
         <div><label>Día del mes</label><input type="number" id="v-f" placeholder="ej: 27" min="1" max="31"></div>
         <div><label>Categoría</label>
           <select id="v-t" onchange="poblarProductos()">
+            <option value="">— Elegir categoría —</option>
             <option value="pan">Pan (kg)</option>
             <option value="torta">Torta (unidad)</option>
             <option value="pastel">Pastel / Tarta</option>
@@ -581,21 +582,32 @@ window.calcMeta = () => {
 window.poblarProductos = () => {
   const cat = document.getElementById('v-t').value;
   const sel = document.getElementById('v-d');
+  if (!cat) {
+    sel.innerHTML = '<option value="">— Elegir producto —</option>';
+    document.getElementById('v-m').value = '';
+    return;
+  }
   const mapacat = {
     'pan':'Pan Artesanal','torta':'Tortas','pastel':'Pasteles & Tartas',
     'queque':'Queques & Muffins','dulce':'Dulces & Alfajores',
     'empanada':'Empanadas','banqueteria':'Banquetería'
   };
   const filtrados = prods.filter(p => (p.cat || p.categoria) === mapacat[cat]);
-  sel.innerHTML = filtrados.length
-    ? filtrados.map(p => `<option value="${p.id}">${p.nombre} — ${fmt(p.precio)}</option>`).join('')
-    : '<option value="">Sin productos en esta categoría</option>';
-  autocompletarPrecio();
+  sel.innerHTML = '<option value="">— Elegir producto —</option>' +
+    (filtrados.length
+      ? filtrados.map(p => `<option value="${p.id}">${p.nombre} — ${fmt(p.precio)}</option>`).join('')
+      : '<option value="">Sin productos</option>');
+  document.getElementById('v-m').value = '';
 };
 
 window.autocompletarPrecio = () => {
   const idSel = document.getElementById('v-d').value;
+  console.log('=== DEBUG precio ===');
+  console.log('idSel:', idSel, '| tipo:', typeof idSel);
+  console.log('prods cargados:', prods.length);
+  if(prods.length > 0) console.log('ejemplo id:', prods[0].id, '| tipo:', typeof prods[0].id);
   const prod = prods.find(p => String(p.id) === String(idSel));
+  console.log('prod encontrado:', prod);
   if (prod && prod.precio) {
     document.getElementById('v-m').value = prod.precio;
   } else {
