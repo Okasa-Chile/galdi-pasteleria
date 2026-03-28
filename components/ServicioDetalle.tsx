@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { imagenes } from './Catalogo';
 
@@ -75,6 +75,8 @@ const eventosData: Record<string, { imagen: string; desc: string }> = {
 
 const WA_NUMBER = '56990991011';
 
+const matrimonioSlides = Array.from({length: 18}, (_, i) => `/images/eventos/matrimonio${i+1}.webp`);
+
 // ─── Mínimos por producto ────────────────────────────────────────────────────
 
 function getMinimo(tab: string, unidad: string, nombre: string = ''): number {
@@ -121,6 +123,7 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
   const [carrito, setCarrito]     = useState<Carrito>({});
   const [eventoImg, setEventoImg] = useState(eventosData[tabs[0]]?.imagen ?? imagen);
   const [mostrarResumen, setMostrarResumen] = useState(false);
+  const [slideIndex, setSlideIndex] = useState(0);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -133,6 +136,15 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
       setEventoImg(eventosData[activeTab].imagen);
     }
   }, [activeTab, id]);
+
+  // Autoplay slideshow Matrimonios
+  useEffect(() => {
+    if (activeTab !== 'Matrimonios') return;
+    const timer = setInterval(() => {
+      setSlideIndex(prev => (prev + 1) % matrimonioSlides.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [activeTab]);
 
   const bgImagen = id === 'eventos' ? eventoImg : imagen;
 
@@ -248,6 +260,45 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
               style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', border: '1px solid var(--gold)', color: 'var(--gold)', fontFamily: 'var(--font-sans)', fontSize: '0.72rem', letterSpacing: '0.15em', textTransform: 'uppercase', padding: '0.85rem 1.8rem', textDecoration: 'none' }}>
               Consultar por WhatsApp
             </a>
+          </div>
+        )}
+
+        {/* SLIDESHOW Matrimonios */}
+        {activeTab === 'Matrimonios' && (
+          <div style={{ position: 'relative', width: '100%', maxWidth: '700px', margin: '2rem auto', borderRadius: '8px', overflow: 'hidden', aspectRatio: '16/9' }}>
+            {matrimonioSlides.map((src, i) => (
+              <img
+                key={src}
+                src={src}
+                alt={`Matrimonio ${i+1}`}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  opacity: i === slideIndex ? 1 : 0,
+                  transition: 'opacity 1s ease-in-out',
+                }}
+              />
+            ))}
+            {/* Dots */}
+            <div style={{ position: 'absolute', bottom: '0.75rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '6px', zIndex: 2 }}>
+              {matrimonioSlides.map((_, i) => (
+                <span
+                  key={i}
+                  onClick={() => setSlideIndex(i)}
+                  style={{
+                    width: i === slideIndex ? '18px' : '6px',
+                    height: '6px',
+                    borderRadius: '3px',
+                    background: i === slideIndex ? 'var(--gold)' : 'rgba(255,255,255,0.5)',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                  }}
+                />
+              ))}
+            </div>
           </div>
         )}
 
