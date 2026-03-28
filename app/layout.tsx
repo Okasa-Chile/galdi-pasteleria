@@ -30,10 +30,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/images/Nuevologo.webp', type: 'image/webp' },
+      { url: '/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
+      { url: '/favicon-192x192.png', type: 'image/png', sizes: '192x192' },
     ],
     apple: [
-      { url: '/images/Nuevologo.webp', type: 'image/webp' },
+      { url: '/apple-touch-icon.png', type: 'image/png', sizes: '180x180' },
     ],
   },
 };
