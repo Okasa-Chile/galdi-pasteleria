@@ -11,7 +11,12 @@
       "Bash(python:*)",
       "Bash(copy \"public\\\\images\\\\Nuevologo.webp\" \"app\\\\favicon.ico\")",
       "Bash(npm install:*)",
-      "Bash(find C:/OKasa/Web/galdi-nextjs -name *.html)"
+      "Bash(find C:/OKasa/Web/galdi-nextjs -name *.html)",
+      "Bash(py --version)",
+      "Bash(py:*)",
+      "Bash(curl -L \"https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&q=80\" -o public/images/eventos-matrimonio.jpg)",
+      "Bash(curl -L \"https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=1200&q=80\" -o public/images/eventos-coctel.jpg)",
+      "Bash(curl -L \"https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=1200&q=80\" -o public/images/eventos-cumpleanos.jpg)"
     ]
   }
 }

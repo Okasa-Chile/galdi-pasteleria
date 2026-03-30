@@ -77,6 +77,14 @@ const WA_NUMBER = '56990991011';
 
 const matrimonioSlides = Array.from({length: 18}, (_, i) => `/images/eventos/matrimonio${i+1}.webp`);
 
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function pluralizar(cantidad: number, unidad: string): string {
+  if (unidad === 'docena') return cantidad === 1 ? 'docena' : 'docenas';
+  if (unidad === 'unidad') return cantidad === 1 ? 'unidad' : 'unidades';
+  return unidad;
+}
+
 // ─── Mínimos por producto ────────────────────────────────────────────────────
 
 function getMinimo(tab: string, unidad: string, nombre: string = ''): number {
@@ -186,7 +194,7 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
           ...Object.values(productosDelivery).flat(),
         ];
         const unidad = todosLosProductos.find(p => p.nombre === nombre)?.unidad ?? 'un';
-        return `• ${cantidad} ${unidad === 'unidad' ? (cantidad === 1 ? 'unidad' : 'unidades') : unidad} — ${nombre}`;
+        return `• ${cantidad} ${pluralizar(cantidad, unidad)} — ${nombre}`;
       })
       .join('\n');
     const tipo = id === 'b2b' ? 'distribución a almacén' : 'delivery';
@@ -326,7 +334,7 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
                   ) : (
                     <div className="svc-counter">
                       <button onClick={() => quitar(prod.nombre, activeTab, prod.unidad)}>−</button>
-                      <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'var(--cream)' }}>{enCarrito} {prod.unidad}</span>
+                      <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'var(--cream)' }}>{enCarrito} {pluralizar(enCarrito, prod.unidad)}</span>
                       <button onClick={() => agregar(prod.nombre, activeTab, prod.unidad)}>+</button>
                     </div>
                   )}
@@ -363,7 +371,7 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
                           ...Object.values(productosDelivery).flat(),
                         ];
                         const unidad = todosLosProductos.find(p => p.nombre === nombre)?.unidad ?? 'un';
-                        return unidad === 'unidad' ? (cantidad === 1 ? 'unidad' : 'unidades') : unidad;
+                        return pluralizar(cantidad, unidad);
                       })()}</span>
                     </div>
                   ))}
