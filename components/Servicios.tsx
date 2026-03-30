@@ -43,16 +43,6 @@ export default function Servicios() {
     }}>
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: '0.75rem' }}>
-        <p style={{
-          fontFamily: 'var(--font-sans)',
-          fontSize: '0.7rem',
-          letterSpacing: '0.2em',
-          textTransform: 'uppercase',
-          color: 'var(--gold)',
-          marginBottom: '0.75rem',
-        }}>
-          Lo que ofrecemos
-        </p>
         <h2 style={{
           fontFamily: 'var(--font-serif)',
           fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
@@ -61,7 +51,7 @@ export default function Servicios() {
           lineHeight: 1.2,
           letterSpacing: '0.06em',
         }}>
-          Todo lo que <em>necesitas</em>
+          Pide aquí todo lo que <em>necesites</em>
         </h2>
         <div style={{
           width: '3rem',

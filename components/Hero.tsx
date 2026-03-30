@@ -96,9 +96,7 @@ export default function Hero() {
           Pastelería artesanal · Distribución Almacenes · Eventos
         </p>
         <a
-          href="https://wa.me/56990991011?text=Hola%20Galdi%2C%20quiero%20hacer%20un%20pedido"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="#servicios"
           style={{
             background: 'rgba(196,112,79,0.7)',
             color: 'var(--cream)',
@@ -124,7 +122,7 @@ export default function Hero() {
             e.currentTarget.style.color = 'var(--cream)';
           }}
         >
-          Pedir por WhatsApp
+          Ver nuestros productos
         </a>
       </div>
 
