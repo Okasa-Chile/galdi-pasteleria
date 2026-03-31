@@ -44,6 +44,7 @@ export const imagenes: Record<string, string> = {
   'Napolitana':                '/images/empanada-napolitana.webp',
   'Vegetariana':               '/images/prod-empanada.webp',
   'Queso Camarón':             '/images/empanada-camaron.webp',
+  'Empanada de Mariscos':      '/images/Empanada de Mariscos.webp',
   // Queques
   'Queque de Naranja':         '/images/queque-naranja.webp',
   'Queque Mármol':             '/images/queque-marmol.webp',
@@ -117,6 +118,7 @@ const categorias = [
       { nombre: 'Napolitana',    detalle: 'Rellena de jamón, tomate y queso fundido en masa artesanal dorada.' },
       { nombre: 'Vegetariana',   detalle: 'Relleno colorido de verduras salteadas con el punto justo de sazón.' },
       { nombre: 'Queso Camarón', detalle: 'Camarones frescos con queso derretido en masa artesanal dorada.' },
+      { nombre: 'Empanada de Mariscos', detalle: 'Generosa mezcla de mariscos frescos sazonados con especias, envuelta en masa artesanal dorada y crocante.' },
     ],
   },
 ];

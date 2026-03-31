@@ -33,7 +33,8 @@ const productosAlmacenes: Record<string, { nombre: string; imagen: string; unida
     { nombre: 'Pino',          imagen: imagenes['Pino'],          unidad: 'docena' },
     { nombre: 'Napolitana',    imagen: imagenes['Napolitana'],    unidad: 'docena' },
     { nombre: 'Vegetariana',   imagen: imagenes['Vegetariana'],   unidad: 'docena' },
-    { nombre: 'Queso Camarón', imagen: imagenes['Queso Camarón'], unidad: 'docena' },
+    { nombre: 'Queso Camarón',       imagen: imagenes['Queso Camarón'],       unidad: 'docena' },
+    { nombre: 'Empanada de Mariscos', imagen: imagenes['Empanada de Mariscos'], unidad: 'docena' },
   ],
 };
 
@@ -62,7 +63,8 @@ const productosDelivery: Record<string, { nombre: string; imagen: string; unidad
     { nombre: 'Pino',          imagen: imagenes['Pino'],          unidad: 'docena' },
     { nombre: 'Napolitana',    imagen: imagenes['Napolitana'],    unidad: 'docena' },
     { nombre: 'Vegetariana',   imagen: imagenes['Vegetariana'],   unidad: 'docena' },
-    { nombre: 'Queso Camarón', imagen: imagenes['Queso Camarón'], unidad: 'docena' },
+    { nombre: 'Queso Camarón',        imagen: imagenes['Queso Camarón'],        unidad: 'docena' },
+    { nombre: 'Empanada de Mariscos', imagen: imagenes['Empanada de Mariscos'], unidad: 'docena' },
   ],
 };
 

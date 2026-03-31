@@ -114,7 +114,8 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
   <div class="tabs">
     <div class="tab active" onclick="showTab('catalogo',this)">1 · Catálogo y Costos</div>
     <div class="tab" onclick="showTab('simulador',this)">2 · Simulador de Meta</div>
-    <div class="tab" onclick="showTab('ventas',this)">3 · Registro de Ventas</div>
+    <div class="tab" onclick="showTab('compras',this)">3 · Registro de Compras</div>
+    <div class="tab" onclick="showTab('ventas',this)">4 · Registro de Ventas</div>
   </div>
 
   <!-- TAB 1 -->
@@ -217,6 +218,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
           </select>
         </div>
         <div><label>Producto</label><select id="v-d" onchange="autocompletarPrecio()"></select></div>
+        <div><label>Cantidad</label><input type="number" id="v-q" placeholder="ej: 2" min="1"></div>
         <div><label>Monto total ($)</label><input type="number" id="v-m" placeholder="0"></div>
         <div><label>Cliente / Almacén</label><input type="text" id="v-c" placeholder="Opcional"></div>
         <div style="display:flex;align-items:flex-end;"><button class="btn" onclick="addVenta()">Registrar</button></div>
@@ -236,8 +238,44 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
       <div class="progress-bar"><div class="progress-fill" id="barra" style="width:0%"></div></div>
       <div style="font-size:11px;color:var(--muted);margin-bottom:14px;" id="txt-meta">$0 de $1.200.000</div>
       <table class="ventas-table">
-        <thead><tr><th>Día</th><th>Tipo</th><th>Producto</th><th>Cliente</th><th>Monto</th><th></th></tr></thead>
+        <thead><tr><th>Día</th><th>Tipo</th><th>Producto</th><th>Cant.</th><th>Cliente</th><th>Monto</th><th></th></tr></thead>
         <tbody id="tb-ventas"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="tab-compras" class="panel">
+    <div class="card">
+      <div class="card-title">Registrar compra</div>
+      <div class="grid-3" style="margin-bottom:14px;">
+        <div><label>Día del mes</label><input type="number" id="c-dia" placeholder="ej: 27" min="1" max="31"></div>
+        <div><label>Proveedor</label><input type="text" id="c-prov" placeholder="Nombre proveedor"></div>
+        <div><label>Producto / Insumo</label><input type="text" id="c-prod" placeholder="ej: Harina, Mantequilla"></div>
+        <div><label>Cantidad</label><input type="number" id="c-cant" placeholder="ej: 10" min="1"></div>
+        <div><label>Monto total ($)</label><input type="number" id="c-monto" placeholder="0"></div>
+        <div><label>Tipo documento</label>
+          <select id="c-tipo">
+            <option value="boleta">Boleta</option>
+            <option value="factura">Factura</option>
+          </select>
+        </div>
+        <div><label>N° Factura / Boleta</label><input type="text" id="c-ndoc" placeholder="ej: 001234"></div>
+        <div style="display:flex;align-items:flex-end;"><button class="btn" onclick="addCompra()">Registrar</button></div>
+      </div>
+      <div class="sync-badge" id="sync-compras"></div>
+    </div>
+    <div class="resumen-grid">
+      <div class="resumen-card"><div class="num" id="tc">$0</div><div class="lbl">Total del mes</div></div>
+      <div class="resumen-card"><div class="num" id="nc">0</div><div class="lbl">Compras registradas</div></div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div class="card-title" style="margin-bottom:0;">Historial de Compras</div>
+        <button class="btn btn-sm" style="background:#f5e6e6;color:#9b3a2a;border:1px solid #e4b8b8;" onclick="if(confirm('¿Vaciar todas las compras del mes?')){compras.forEach(c=>fsDeleteCompra(c.id));compras=[];renderC();}">Vaciar</button>
+      </div>
+      <table class="ventas-table">
+        <thead><tr><th>Día</th><th>Proveedor</th><th>Producto</th><th>Cant.</th><th>Documento</th><th>N° Doc.</th><th>Monto</th><th></th></tr></thead>
+        <tbody id="tb-compras"></tbody>
       </table>
     </div>
   </div>
@@ -294,7 +332,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
 import { getAuth, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
-import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, deleteDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
 
 // ── CONFIG ────────────────────────────────────────────────────────────────
 const AUTORIZADOS = ['contacto@okasa.cl','ventas@galdi.cl','iaclaudioferrari@gmail.com','ingridgalvezd@gmail.com','jacquelinegalvezd@gmail.com'];
@@ -343,6 +381,7 @@ const DEFAULTS=[
   {id:32,nombre:'Empanada Napolitana',cat:'Empanadas',tipo:'propio',unidad:'docena',costo:4000,energia:350,logistica:30,mdo:550,margen:20,combate:''},
   {id:33,nombre:'Empanada Vegetariana',cat:'Empanadas',tipo:'propio',unidad:'docena',costo:3500,energia:350,logistica:30,mdo:500,margen:20,combate:''},
   {id:34,nombre:'Empanada Queso Camarón',cat:'Empanadas',tipo:'propio',unidad:'docena',costo:5000,energia:350,logistica:30,mdo:650,margen:20,combate:''},
+  {id:35,nombre:'Empanada de Mariscos',cat:'Empanadas',tipo:'propio',unidad:'docena',costo:20000,energia:350,logistica:30,mdo:700,margen:20,combate:''},
 ];
 
 function cpx(p){const cn=p.costo+p.energia+p.logistica+p.mdo;const u=p.tipo==='propio'?cn*(p.margen/100):0;return Math.round((cn+u)*1.19);}
@@ -433,7 +472,8 @@ onAuthStateChanged(auth, async user => {
   if(user) {
     document.getElementById('user-email').textContent = user.email;
     await fsLoad();
-    renderCats();renderT();calcMeta();renderV();poblarProductos();
+    await fsLoadCompras();
+    renderCats();renderT();calcMeta();renderV();renderC();poblarProductos();
   }
 });
 
@@ -444,6 +484,7 @@ window.showTab = (id,el) => {
   document.getElementById('tab-'+id).classList.add('active');
   el.classList.add('active');
   if(id==='ventas')renderV();
+  if(id==='compras')renderC();
   if(id==='simulador')calcMeta();
 };
 
@@ -620,7 +661,7 @@ window.addVenta = async () => {
   const selEl=document.getElementById('v-d');
   const d=selEl.options[selEl.selectedIndex]?.text.split(' — ')[0] || selEl.value;
   if(!f||!m){alert('Ingresa día y monto');return;}
-  const venta={id:Date.now(),fecha:f,tipo:t,desc:d,monto:m,cliente:c};
+  const venta={id:Date.now(),fecha:f,tipo:t,desc:d,cantidad:parseInt(document.getElementById('v-q')?.value)||1,monto:m,cliente:c};
   ventas.push(venta);
   setSyncBadge('sync-ventas','Guardando...','');
   await fsSaveVenta(venta);
@@ -653,9 +694,82 @@ window.renderV = () => {
     <td>Día ${v.fecha}</td>
     <td><span class="tag tag-propio">${lm[v.tipo]||v.tipo}</span></td>
     <td>${v.desc||'—'}</td>
+    <td>${v.cantidad||1}</td>
     <td>${v.cliente||'—'}</td>
     <td><strong>${fmt(v.monto)}</strong></td>
     <td><span style="cursor:pointer;color:var(--muted);font-size:18px;" onclick="delVenta(${v.id})">×</span></td>
+  </tr>`).join('');
+};
+
+// ── TAB 3: COMPRAS ────────────────────────────────────────────────────────
+let compras = [];
+
+async function fsLoadCompras() {
+  try {
+    const q = query(collection(db,'galdi_compras'), orderBy('id'));
+    const snap = await getDocs(q);
+    compras = snap.docs.map(d=>({...d.data(), _docId:d.id}));
+  } catch(e) { console.error('fsLoadCompras',e); }
+}
+
+async function fsAddCompra(c) {
+  try {
+    const ref = await addDoc(collection(db,'galdi_compras'), c);
+    return ref.id;
+  } catch(e) { document.getElementById('sync-compras').textContent='Error al guardar'; }
+}
+
+async function fsDeleteCompra(id) {
+  try {
+    const snap = await getDocs(query(collection(db,'galdi_compras')));
+    snap.docs.forEach(async d=>{ if(d.data().id===id) await deleteDoc(doc(db,d.ref.path)); });
+  } catch(e) { console.error('fsDeleteCompra',e); }
+}
+
+window.addCompra = async () => {
+  const dia   = parseInt(document.getElementById('c-dia')?.value)||0;
+  const prov  = document.getElementById('c-prov')?.value.trim();
+  const prod  = document.getElementById('c-prod')?.value.trim();
+  const cant  = parseInt(document.getElementById('c-cant')?.value)||1;
+  const monto = parseFloat(document.getElementById('c-monto')?.value)||0;
+  const tipo  = document.getElementById('c-tipo')?.value;
+  const ndoc  = document.getElementById('c-ndoc')?.value.trim();
+  if(!dia||!prov||!prod||!monto){ alert('Completa día, proveedor, producto y monto'); return; }
+  const c = { id: Date.now(), fecha: dia, proveedor: prov, producto: prod,
+              cantidad: cant, monto, tipo, ndoc: ndoc||'—' };
+  const docId = await fsAddCompra(c);
+  if(docId){ c._docId=docId; compras.push(c); renderC(); }
+  ['c-dia','c-prov','c-prod','c-cant','c-monto','c-ndoc'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('sync-compras').className='sync-badge ok';
+  document.getElementById('sync-compras').textContent='✓ Guardado';
+};
+
+window.delCompra = async (id) => {
+  await fsDeleteCompra(id);
+  compras = compras.filter(c=>c.id!==id);
+  renderC();
+};
+
+window.renderC = () => {
+  const tot = compras.reduce((a,c)=>a+c.monto, 0);
+  document.getElementById('tc').textContent = fmt(tot);
+  document.getElementById('nc').textContent = compras.length;
+  const tb = document.getElementById('tb-compras');
+  if(!compras.length){
+    tb.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px;">Sin compras registradas</td></tr>';
+    return;
+  }
+  tb.innerHTML = [...compras].sort((a,b)=>b.id-a.id).map(c=>`<tr>
+    <td>Día ${c.fecha}</td>
+    <td>${c.proveedor}</td>
+    <td>${c.producto}</td>
+    <td>${c.cantidad}</td>
+    <td><span class="tag tag-propio">${c.tipo==='factura'?'Factura':'Boleta'}</span></td>
+    <td>${c.ndoc}</td>
+    <td><strong>${fmt(c.monto)}</strong></td>
+    <td><span style="cursor:pointer;color:var(--muted);font-size:18px;" onclick="delCompra(${c.id})">×</span></td>
   </tr>`).join('');
 };
 
