@@ -48,6 +48,24 @@ export default function Footer() {
         }
       `}</style>
 
+      <div style={{ maxWidth: '1300px', margin: '0 auto 2rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem 1.5rem' }}>
+        {[
+          { label: 'Productos artesanales', href: '/productos' },
+          { label: 'Empanadas en Maipú', href: '/empanadas-maipu' },
+          { label: 'Tortas en Maipú', href: '/tortas-maipu' },
+          { label: 'Pan artesanal Maipú', href: '/pan-artesanal-maipu' },
+          { label: 'Delivery Maipú', href: '/delivery-maipu' },
+          { label: 'Distribución almacenes', href: '/distribucion-maipu' },
+          { label: 'Matrimonios Maipú', href: '/matrimonios-maipu' },
+          { label: 'Cóctel Maipú', href: '/coctel-maipu' },
+          { label: 'Cumpleaños Maipú', href: '/cumpleanos-maipu' },
+        ].map((link) => (
+          <a key={link.href} href={link.href} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', color: 'rgba(245,230,211,0.25)', textDecoration: 'none', letterSpacing: '0.05em' }}>
+            {link.label}
+          </a>
+        ))}
+      </div>
+
       {/* Línea decorativa */}
       <div style={{
         height: '2px',
