@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import useScrollReveal from '@/hooks/useScrollReveal';
 
@@ -125,10 +125,22 @@ const categorias = [
 
 const delays = ['0s', '0.06s', '0.12s', '0.18s', '0.24s', '0.30s'];
 
-export default function Catalogo() {
+function CatalogoInner() {
   const [activeTab, setActiveTab] = useState('pan');
+
+  useEffect(() => {
+    const target = sessionStorage.getItem('scrollTo');
+    if (target === 'productos') {
+      sessionStorage.removeItem('scrollTo');
+      setTimeout(() => {
+        const el = document.getElementById('productos');
+        if (el) el.scrollIntoView({ behavior: 'auto' });
+      }, 50);
+    }
+  }, []);
+
   const categoriaActiva = categorias.find((c) => c.id === activeTab)!;
-  useScrollReveal(activeTab);;
+  useScrollReveal(activeTab);
 
   return (
     <>
@@ -348,4 +360,8 @@ export default function Catalogo() {
       </section>
     </>
   );
+}
+
+export default function Catalogo() {
+  return <CatalogoInner />;
 }
