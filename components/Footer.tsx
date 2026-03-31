@@ -13,6 +13,7 @@ const links = [
 
 export default function Footer() {
   const [hovered, setHovered] = useState<number | null>(null);
+  const [seoOpen, setSeoOpen] = useState(false);
 
   return (
     <footer style={{
@@ -47,24 +48,6 @@ export default function Footer() {
           }
         }
       `}</style>
-
-      <div style={{ maxWidth: '1300px', margin: '0 auto 2rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem 1.5rem' }}>
-        {[
-          { label: 'Productos artesanales', href: '/productos' },
-          { label: 'Empanadas en Maipú', href: '/empanadas-maipu' },
-          { label: 'Tortas en Maipú', href: '/tortas-maipu' },
-          { label: 'Pan artesanal Maipú', href: '/pan-artesanal-maipu' },
-          { label: 'Delivery Maipú', href: '/delivery-maipu' },
-          { label: 'Distribución almacenes', href: '/distribucion-maipu' },
-          { label: 'Matrimonios Maipú', href: '/matrimonios-maipu' },
-          { label: 'Cóctel Maipú', href: '/coctel-maipu' },
-          { label: 'Cumpleaños Maipú', href: '/cumpleanos-maipu' },
-        ].map((link) => (
-          <a key={link.href} href={link.href} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', color: 'rgba(245,230,211,0.25)', textDecoration: 'none', letterSpacing: '0.05em' }}>
-            {link.label}
-          </a>
-        ))}
-      </div>
 
       {/* Línea decorativa */}
       <div style={{
@@ -126,6 +109,33 @@ export default function Footer() {
             </li>
           ))}
         </ul>
+
+        <div style={{ position: 'relative' }}>
+          <button
+            onClick={() => setSeoOpen(!seoOpen)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: seoOpen ? 'var(--gold)' : 'rgba(245,230,211,0.45)', letterSpacing: '0.08em', textTransform: 'uppercase', padding: 0 }}>
+            Links {seoOpen ? '▲' : '▼'}
+          </button>
+          {seoOpen && (
+            <div style={{ position: 'absolute', bottom: '2rem', right: 0, background: '#2a1205', border: '1px solid rgba(212,168,83,0.2)', padding: '1rem 1.25rem', display: 'flex', flexDirection: 'column', gap: '0.6rem', minWidth: '200px', zIndex: 100 }}>
+              {[
+                { label: 'Productos artesanales', href: '/productos' },
+                { label: 'Empanadas en Maipú', href: '/empanadas-maipu' },
+                { label: 'Tortas en Maipú', href: '/tortas-maipu' },
+                { label: 'Pan artesanal Maipú', href: '/pan-artesanal-maipu' },
+                { label: 'Delivery Maipú', href: '/delivery-maipu' },
+                { label: 'Distribución almacenes', href: '/distribucion-maipu' },
+                { label: 'Matrimonios Maipú', href: '/matrimonios-maipu' },
+                { label: 'Cóctel Maipú', href: '/coctel-maipu' },
+                { label: 'Cumpleaños Maipú', href: '/cumpleanos-maipu' },
+              ].map((link) => (
+                <a key={link.href} href={link.href} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'rgba(245,230,211,0.55)', textDecoration: 'none', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
 
       </div>
     </footer>
