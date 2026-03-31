@@ -6,14 +6,29 @@ export const metadata: Metadata = {
   keywords: 'pan artesanal Maipú, panadería Maipú, pan amasado Maipú, distribución pan Maipú',
 };
 export default function Page() {
-  return <SeoPage
-    titulo="Pan Artesanal en Maipú"
-    subtitulo="Amasado a mano con receta familiar. Distribución fresca a tu negocio."
-    descripcion="Elaboramos pan artesanal todos los días: pan amasado, marraqueta, integral, pan frica, dobladitas y tortilla con chicharrones. Distribuimos a almacenes, cafeterías y negocios de Maipú con entrega fresca."
-    imagen="/images/pan-amasado-new.webp"
-    ctaTexto="Ver distribución"
-    ctaHref="/?servicio=b2b&tab=Pan"
-    waTexto="Hola Galdi, quiero información sobre pan artesanal"
-    breadcrumb="Galdi · Productos · Pan Artesanal"
-  />;
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FoodEstablishment",
+        "name": "Galdi Pastelería Artesanal",
+        "description": "Pan artesanal en Maipú: pan amasado, marraqueta, integral, dobladitas. Distribución fresca a almacenes.",
+        "url": "https://galdi.cl/pan-artesanal-maipu",
+        "telephone": "+56990991011",
+        "address": { "@type": "PostalAddress", "streetAddress": "Pasaje Marcos Echenique 809", "addressLocality": "Maipú", "addressRegion": "Región Metropolitana", "addressCountry": "CL" },
+        "servesCuisine": "Chilean",
+        "areaServed": "Maipú"
+      })}} />
+      <SeoPage
+        titulo="Pan Artesanal en Maipú"
+        subtitulo="Amasado a mano con receta familiar. Distribución fresca a tu negocio."
+        descripcion="Elaboramos pan artesanal todos los días: pan amasado, marraqueta, integral, pan frica, dobladitas y tortilla con chicharrones. Distribuimos a almacenes, cafeterías y negocios de Maipú con entrega fresca."
+        imagen="/images/pan-amasado-new.webp"
+        ctaTexto="Ver distribución"
+        ctaHref="/?servicio=b2b&tab=Pan"
+        waTexto="Hola Galdi, quiero información sobre pan artesanal"
+        breadcrumb="Galdi · Productos · Pan Artesanal"
+      />
+    </>
+  );
 }
