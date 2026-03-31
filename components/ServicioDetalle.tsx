@@ -111,6 +111,7 @@ interface Props {
   id: string;
   nombre: string;
   imagen: string;
+  initialTab?: string;
   onClose: () => void;
 }
 
@@ -118,7 +119,7 @@ type Carrito = Record<string, number>;
 
 // ─── Componente principal ────────────────────────────────────────────────────
 
-export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) {
+export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClose }: Props) {
 
   const tabsAlmacenes = Object.keys(productosAlmacenes);
   const tabsDelivery  = Object.keys(productosDelivery);
@@ -129,7 +130,7 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
     id === 'delivery' ? tabsDelivery  :
     tabsEventos;
 
-  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [activeTab, setActiveTab] = useState(initialTab ?? tabs[0]);
   const [carrito, setCarrito]     = useState<Carrito>({});
   const [eventoImg, setEventoImg] = useState(eventosData[tabs[0]]?.imagen ?? imagen);
   const [mostrarResumen, setMostrarResumen] = useState(false);
@@ -275,7 +276,7 @@ export default function ServicioDetalle({ id, nombre, imagen, onClose }: Props) 
 
         {/* SLIDESHOW Matrimonios */}
         {activeTab === 'Matrimonios' && (
-          <div style={{ position: 'relative', width: '100%', maxWidth: '700px', margin: '2rem auto', borderRadius: '8px', overflow: 'hidden', aspectRatio: '16/9' }}>
+          <div style={{ position: 'relative', width: '100%', maxWidth: '700px', margin: '2rem auto', borderRadius: '8px', overflow: 'hidden', height: 'clamp(220px, 40vh, 420px)' }}>
             {matrimonioSlides.map((src, i) => (
               <img
                 key={src}

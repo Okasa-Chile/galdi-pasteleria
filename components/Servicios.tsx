@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import ServicioDetalle from './ServicioDetalle';
 
@@ -31,9 +32,20 @@ const servicios = [
   },
 ];
 
-export default function Servicios() {
+function ServiciosInner() {
+  const searchParams = useSearchParams();
   const [hovered, setHovered] = useState<string | null>(null);
   const [selected, setSelected] = useState<typeof servicios[0] | null>(null);
+
+  useEffect(() => {
+    const servicioParam = searchParams.get('servicio');
+    if (servicioParam) {
+      const found = servicios.find(s => s.id === servicioParam);
+      if (found) setSelected(found);
+    }
+  }, [searchParams]);
+
+  const tabParam = searchParams.get('tab') ?? undefined;
 
   return (
     <section id="servicios" style={{
@@ -170,9 +182,18 @@ export default function Servicios() {
           id={selected.id}
           nombre={selected.nombre}
           imagen={selected.imagen}
+          initialTab={tabParam}
           onClose={() => setSelected(null)}
         />
       )}
     </section>
+  );
+}
+
+export default function Servicios() {
+  return (
+    <Suspense fallback={null}>
+      <ServiciosInner />
+    </Suspense>
   );
 }
