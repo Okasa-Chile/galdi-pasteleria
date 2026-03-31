@@ -203,7 +203,7 @@ Alfajores de Maicena · Alfajores de Manjar · Alfajores de Chocolate · Chileni
 Queque de Naranja · Queque Mármol · Queque de Yogurt · Muffins
 
 ### 🥟 Empanadas (venta por docena)
-Pino · Napolitana · Vegetariana · Queso Camarón
+Pino · Napolitana · Vegetariana · Queso Camarón · **Empanada de Mariscos**
 
 ---
 
@@ -245,13 +245,12 @@ images: { unoptimized: true }  // requerido para export estático
 
 ## 🔜 Pendiente / Próximos Pasos
 
-- [ ] **Confirmar propagación DNS**: Esperar correo de Cloudflare confirmando activación de galdi.cl
-- [ ] **Conectar galdi.cl a Firebase Hosting**: Una vez activo Cloudflare, agregar dominio personalizado en Firebase Console
-- [ ] **Email ventas@galdi.cl**: Agregar galdi.cl como dominio adicional en cuenta Zoho existente (la misma de Okasa) + configurar registros MX en Cloudflare
-- [ ] **Google Search Console**: Subir sitio una vez que galdi.cl esté activo
-- [ ] **Imágenes reales para tabs de Eventos** (Matrimonios, Cóctel, Cumpleaños)
-- [ ] **Botón flotante WhatsApp**
-- [ ] **Scroll reveal** con IntersectionObserver
+- [ ] Fotos reales para tabs Cóctel y Cumpleaños (Claudio las proveerá)
+- [ ] Estatuto Galdi (actualización societaria pendiente)
+- [ ] Banco de Chile — respuesta pendiente a contacto@okasa.cl
+- [ ] Página /coffee-break-maipu agregada al footer Links
+- [ ] Schema.org reviews strategy Okasa (Google Business)
+- [ ] Nuevo blog post Okasa targeting "inspección vivienda usada"
 
 ---
 
@@ -356,3 +355,33 @@ images: { unoptimized: true }  // requerido para export estático
 - [ ] Servicios como subpáginas navegables
 - [ ] Plural "docenas" en carrito (2 docena → 2 docenas)
 - [ ] Integrar páginas SEO para servicios (/eventos, /delivery, /distribucion)
+
+---
+
+### Sesión 31-03-2026 — SEO + Nuevos Productos
+- [x] Empanada de Mariscos agregada en Catalogo.tsx, ServicioDetalle.tsx (Almacenes + Delivery) y gestion-index.html (id:35, costo:20000, precio venta $2.500/un = $30.000/docena)
+- [x] URL params para auto-apertura de servicios y tabs: ?servicio=eventos&tab=Matrimonios
+- [x] Servicios.tsx refactorizado con ServiciosInner + Suspense + useSearchParams
+- [x] ServicioDetalle.tsx recibe prop initialTab?: string
+- [x] Fix slideshow matrimonios: aspectRatio reemplazado por height: clamp(220px, 40vh, 420px)
+- [x] Componente SeoPage.tsx creado en components/
+- [x] 10 páginas SEO creadas en app/:
+  - /productos — página principal con grid de 6 categorías
+  - /empanadas-maipu
+  - /tortas-maipu
+  - /pan-artesanal-maipu
+  - /delivery-maipu
+  - /distribucion-maipu
+  - /matrimonios-maipu
+  - /coctel-maipu
+  - /cumpleanos-maipu
+  - /coffee-break-maipu
+- [x] Cada página SEO con metadata único (title, description, keywords)
+- [x] Schema.org JSON-LD en todas las páginas SEO + layout.tsx + /productos
+- [x] Google Business Profile conectado via sameAs en todos los schemas
+- [x] sitemap.xml actualizado a 11 URLs
+- [x] robots.txt con Sitemap apuntando a galdi.cl/sitemap.xml
+- [x] Indexación solicitada en Google Search Console
+- [x] Internal linking: desplegable "Links" discreto en Footer.tsx con 10 páginas SEO
+- [x] sessionStorage para scroll a #productos desde /productos
+- [x] npm run build exitoso · firebase deploy · git push origin main
