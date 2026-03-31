@@ -128,6 +128,7 @@ export default function Footer() {
                 { label: 'Matrimonios Maipú', href: '/matrimonios-maipu' },
                 { label: 'Cóctel Maipú', href: '/coctel-maipu' },
                 { label: 'Cumpleaños Maipú', href: '/cumpleanos-maipu' },
+                { label: 'Coffee Break Maipú', href: '/coffee-break-maipu' },
               ].map((link) => (
                 <a key={link.href} href={link.href} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'rgba(245,230,211,0.55)', textDecoration: 'none', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>
                   {link.label}
