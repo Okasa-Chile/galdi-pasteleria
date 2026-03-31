@@ -17,7 +17,8 @@ export default function Page() {
         "telephone": "+56990991011",
         "address": { "@type": "PostalAddress", "streetAddress": "Pasaje Marcos Echenique 809", "addressLocality": "Maipú", "addressRegion": "Región Metropolitana", "addressCountry": "CL" },
         "servesCuisine": "Chilean",
-        "areaServed": "Maipú"
+        "areaServed": "Maipú",
+        "sameAs": "https://share.google/s9CQErdNSBOZ8y15P"
       })}} />
       <SeoPage
         titulo="Pan Artesanal en Maipú"

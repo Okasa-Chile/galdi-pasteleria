@@ -18,7 +18,8 @@ export default function Page() {
         "address": { "@type": "PostalAddress", "streetAddress": "Pasaje Marcos Echenique 809", "addressLocality": "Maipú", "addressRegion": "Región Metropolitana", "addressCountry": "CL" },
         "servesCuisine": "Chilean",
         "areaServed": "Maipú",
-        "event": { "@type": "Event", "name": "Banquetería para Matrimonios" }
+        "event": { "@type": "Event", "name": "Banquetería para Matrimonios" },
+        "sameAs": "https://share.google/s9CQErdNSBOZ8y15P"
       })}} />
       <SeoPage
         titulo="Banquetería para Matrimonios en Maipú"

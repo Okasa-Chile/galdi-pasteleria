@@ -18,7 +18,8 @@ export default function Page() {
         "address": { "@type": "PostalAddress", "streetAddress": "Pasaje Marcos Echenique 809", "addressLocality": "Maipú", "addressRegion": "Región Metropolitana", "addressCountry": "CL" },
         "servesCuisine": "Chilean",
         "areaServed": "Maipú",
-        "hasOfferCatalog": { "@type": "OfferCatalog", "name": "Delivery Maipú" }
+        "hasOfferCatalog": { "@type": "OfferCatalog", "name": "Delivery Maipú" },
+        "sameAs": "https://share.google/s9CQErdNSBOZ8y15P"
       })}} />
       <SeoPage
         titulo="Delivery de Pasteles en Maipú"

@@ -14,6 +14,18 @@ const categorias = [
 export default function Page() {
   return (
     <main style={{ background: 'var(--cream)', minHeight: '100vh', fontFamily: 'var(--font-sans)' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FoodEstablishment",
+        "name": "Galdi Pastelería Artesanal",
+        "description": "Catálogo completo de productos artesanales Galdi en Maipú: empanadas, tortas, pan amasado, pasteles, queques y dulces.",
+        "url": "https://galdi.cl/productos",
+        "telephone": "+56990991011",
+        "address": { "@type": "PostalAddress", "streetAddress": "Pasaje Marcos Echenique 809", "addressLocality": "Maipú", "addressRegion": "Región Metropolitana", "addressCountry": "CL" },
+        "servesCuisine": "Chilean",
+        "areaServed": "Maipú",
+        "sameAs": "https://share.google/s9CQErdNSBOZ8y15P"
+      })}} />
 
       {/* Hero */}
       <div style={{ position: 'relative', height: 'clamp(280px, 45vh, 480px)', overflow: 'hidden' }}>

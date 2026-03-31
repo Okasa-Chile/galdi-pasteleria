@@ -46,7 +46,33 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FoodEstablishment",
+          "name": "Galdi Pastelería Artesanal",
+          "description": "Pastelería artesanal en Maipú. Tortas, pasteles, pan y empanadas hechos con cariño. Distribución a almacenes, eventos y delivery en toda la comuna.",
+          "url": "https://galdi.cl",
+          "telephone": "+56990991011",
+          "email": "ventas@galdi.cl",
+          "address": { "@type": "PostalAddress", "streetAddress": "Pasaje Marcos Echenique 809", "addressLocality": "Maipú", "addressRegion": "Región Metropolitana", "addressCountry": "CL" },
+          "servesCuisine": "Chilean",
+          "areaServed": "Maipú",
+          "sameAs": "https://share.google/s9CQErdNSBOZ8y15P",
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Productos Galdi",
+            "itemListElement": [
+              { "@type": "Offer", "itemOffered": { "@type": "FoodService", "name": "Empanadas artesanales" } },
+              { "@type": "Offer", "itemOffered": { "@type": "FoodService", "name": "Tortas por encargo" } },
+              { "@type": "Offer", "itemOffered": { "@type": "FoodService", "name": "Pan artesanal" } },
+              { "@type": "Offer", "itemOffered": { "@type": "FoodService", "name": "Delivery Maipú" } },
+              { "@type": "Offer", "itemOffered": { "@type": "FoodService", "name": "Banquetería eventos" } }
+            ]
+          }
+        })}} />
+        {children}
+      </body>
     </html>
   );
 }
