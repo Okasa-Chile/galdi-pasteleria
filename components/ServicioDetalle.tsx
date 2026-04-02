@@ -105,6 +105,19 @@ const cumpleanosSlides = [
   '/images/eventos/cumpleanos10.webp',
 ];
 
+const corporativosSlides = [
+  '/images/eventos/coffee01.webp',
+  '/images/eventos/coffee02.webp',
+  '/images/eventos/coffee03.webp',
+  '/images/eventos/coffee04.webp',
+  '/images/eventos/coffee05.webp',
+  '/images/eventos/coffee06.webp',
+  '/images/eventos/coffee07.webp',
+  '/images/eventos/coffee08.webp',
+  '/images/eventos/coffee09.webp',
+  '/images/eventos/coffee10.webp',
+];
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function pluralizar(cantidad: number, unidad: string): string {
@@ -180,9 +193,10 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
   // Autoplay slideshow Matrimonios / Cóctel / Cumpleaños
   useEffect(() => {
     const slides =
-      activeTab === 'Matrimonios' ? matrimonioSlides :
-      activeTab === 'Cóctel'      ? coctelSlides      :
-      activeTab === 'Cumpleaños'  ? cumpleanosSlides  : null;
+      activeTab === 'Matrimonios'  ? matrimonioSlides  :
+      activeTab === 'Cóctel'       ? coctelSlides       :
+      activeTab === 'Cumpleaños'   ? cumpleanosSlides   :
+      activeTab === 'Corporativos' ? corporativosSlides : null;
     if (!slides) return;
     const timer = setInterval(() => {
       setSlideIndex(prev => (prev + 1) % slides.length);
@@ -308,11 +322,12 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
         )}
 
         {/* SLIDESHOW Matrimonios / Cóctel / Cumpleaños */}
-        {(activeTab === 'Matrimonios' || activeTab === 'Cóctel' || activeTab === 'Cumpleaños') && (() => {
+        {(activeTab === 'Matrimonios' || activeTab === 'Cóctel' || activeTab === 'Cumpleaños' || activeTab === 'Corporativos') && (() => {
           const slides =
-            activeTab === 'Matrimonios' ? matrimonioSlides :
-            activeTab === 'Cóctel'      ? coctelSlides      :
-            cumpleanosSlides;
+            activeTab === 'Matrimonios'  ? matrimonioSlides  :
+            activeTab === 'Cóctel'       ? coctelSlides       :
+            activeTab === 'Cumpleaños'   ? cumpleanosSlides   :
+            corporativosSlides;
           return (
             <div style={{ position: 'relative', width: '100%', maxWidth: '700px', margin: '2rem auto', borderRadius: '8px', overflow: 'hidden', height: 'clamp(220px, 40vh, 420px)' }}>
               {slides.map((src, i) => (
