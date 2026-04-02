@@ -93,7 +93,7 @@ export default function Hero() {
           marginBottom: '2.5rem',
           letterSpacing: '0.05em',
         }}>
-          Pastelería artesanal · Distribución Almacenes · Eventos
+          Todo hecho con cariño · Pastelería artesanal · Eventos · Delivery · Distribución
         </p>
         <a
           href="#servicios"
