@@ -385,3 +385,23 @@ images: { unoptimized: true }  // requerido para export estático
 - [x] Internal linking: desplegable "Links" discreto en Footer.tsx con 10 páginas SEO
 - [x] sessionStorage para scroll a #productos desde /productos
 - [x] npm run build exitoso · firebase deploy · git push origin main
+
+---
+
+### Jornada 02-04-2026
+
+**Completado:**
+- ✅ SEO: 8 reseñas Google Business respondidas personalizadamente
+- ✅ SEO: Galdi registrado en Yelp.cl
+- ✅ SEO: Conecta Pyme — listing enviado, pendiente aprobación
+- ✅ SEO: Canonical URL agregado en layout.tsx (commit 3eebd67)
+- ✅ SEO: Subtítulo Hero actualizado con palabras del H1 (commit 198c03b)
+- ✅ feat: 10 fotos reales Cóctel en ServicioDetalle.tsx
+- ✅ feat: 10 fotos reales Cumpleaños en ServicioDetalle.tsx
+- ✅ feat: 10 fotos reales Corporativos/Coffee en ServicioDetalle.tsx
+- ✅ Slideshow automático 3s con dots en los 4 tabs de Eventos (commit d3ee30d)
+- ✅ Mensaje de reseñas enviado a las socias para solicitar más reviews
+
+**Pendientes:**
+- Estatuto societario Galdi — actualización pendiente
+- Conecta Pyme — esperando aprobación del listing
