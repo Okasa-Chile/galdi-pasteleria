@@ -79,6 +79,32 @@ const WA_NUMBER = '56990991011';
 
 const matrimonioSlides = Array.from({length: 18}, (_, i) => `/images/eventos/matrimonio${i+1}.webp`);
 
+const coctelSlides = [
+  '/images/eventos/coctel01.webp',
+  '/images/eventos/coctel02.webp',
+  '/images/eventos/coctel03.webp',
+  '/images/eventos/coctel04.webp',
+  '/images/eventos/coctel05.webp',
+  '/images/eventos/coctel06.webp',
+  '/images/eventos/coctel07.webp',
+  '/images/eventos/coctel08.webp',
+  '/images/eventos/coctel09.webp',
+  '/images/eventos/coctel10.webp',
+];
+
+const cumpleanosSlides = [
+  '/images/eventos/cumpleanos01.webp',
+  '/images/eventos/cumpleanos02.webp',
+  '/images/eventos/cumpleanos03.webp',
+  '/images/eventos/cumpleanos04.webp',
+  '/images/eventos/cumpleanos05.webp',
+  '/images/eventos/cumpleanos06.webp',
+  '/images/eventos/cumpleanos07.webp',
+  '/images/eventos/cumpleanos08.webp',
+  '/images/eventos/cumpleanos09.webp',
+  '/images/eventos/cumpleanos10.webp',
+];
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function pluralizar(cantidad: number, unidad: string): string {
@@ -148,11 +174,18 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
     }
   }, [activeTab, id]);
 
-  // Autoplay slideshow Matrimonios
+  // Reset slide al cambiar tab
+  useEffect(() => { setSlideIndex(0); }, [activeTab]);
+
+  // Autoplay slideshow Matrimonios / Cóctel / Cumpleaños
   useEffect(() => {
-    if (activeTab !== 'Matrimonios') return;
+    const slides =
+      activeTab === 'Matrimonios' ? matrimonioSlides :
+      activeTab === 'Cóctel'      ? coctelSlides      :
+      activeTab === 'Cumpleaños'  ? cumpleanosSlides  : null;
+    if (!slides) return;
     const timer = setInterval(() => {
-      setSlideIndex(prev => (prev + 1) % matrimonioSlides.length);
+      setSlideIndex(prev => (prev + 1) % slides.length);
     }, 3000);
     return () => clearInterval(timer);
   }, [activeTab]);
@@ -274,44 +307,50 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
           </div>
         )}
 
-        {/* SLIDESHOW Matrimonios */}
-        {activeTab === 'Matrimonios' && (
-          <div style={{ position: 'relative', width: '100%', maxWidth: '700px', margin: '2rem auto', borderRadius: '8px', overflow: 'hidden', height: 'clamp(220px, 40vh, 420px)' }}>
-            {matrimonioSlides.map((src, i) => (
-              <img
-                key={src}
-                src={src}
-                alt={`Matrimonio ${i+1}`}
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  opacity: i === slideIndex ? 1 : 0,
-                  transition: 'opacity 1s ease-in-out',
-                }}
-              />
-            ))}
-            {/* Dots */}
-            <div style={{ position: 'absolute', bottom: '0.75rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '6px', zIndex: 2 }}>
-              {matrimonioSlides.map((_, i) => (
-                <span
-                  key={i}
-                  onClick={() => setSlideIndex(i)}
+        {/* SLIDESHOW Matrimonios / Cóctel / Cumpleaños */}
+        {(activeTab === 'Matrimonios' || activeTab === 'Cóctel' || activeTab === 'Cumpleaños') && (() => {
+          const slides =
+            activeTab === 'Matrimonios' ? matrimonioSlides :
+            activeTab === 'Cóctel'      ? coctelSlides      :
+            cumpleanosSlides;
+          return (
+            <div style={{ position: 'relative', width: '100%', maxWidth: '700px', margin: '2rem auto', borderRadius: '8px', overflow: 'hidden', height: 'clamp(220px, 40vh, 420px)' }}>
+              {slides.map((src, i) => (
+                <img
+                  key={src}
+                  src={src}
+                  alt={`${activeTab} ${i+1}`}
                   style={{
-                    width: i === slideIndex ? '18px' : '6px',
-                    height: '6px',
-                    borderRadius: '3px',
-                    background: i === slideIndex ? 'var(--gold)' : 'rgba(255,255,255,0.5)',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
+                    position: 'absolute',
+                    inset: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    opacity: i === slideIndex ? 1 : 0,
+                    transition: 'opacity 1s ease-in-out',
                   }}
                 />
               ))}
+              {/* Dots */}
+              <div style={{ position: 'absolute', bottom: '0.75rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '6px', zIndex: 2 }}>
+                {slides.map((_, i) => (
+                  <span
+                    key={i}
+                    onClick={() => setSlideIndex(i)}
+                    style={{
+                      width: i === slideIndex ? '18px' : '6px',
+                      height: '6px',
+                      borderRadius: '3px',
+                      background: i === slideIndex ? 'var(--gold)' : 'rgba(255,255,255,0.5)',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                    }}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* ALMACENES / DELIVERY — grilla de productos */}
         {(id === 'b2b' || id === 'delivery') && (
