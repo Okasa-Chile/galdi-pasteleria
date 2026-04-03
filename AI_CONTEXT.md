@@ -1,5 +1,5 @@
 # AI_CONTEXT — Proyecto Galdi Pastelería
-> Registro de trabajo asistido por IA · Actualizado: 28 marzo 2026
+> Registro de trabajo asistido por IA · Actualizado: 03 abril 2026
 
 ---
 
@@ -240,6 +240,21 @@ images: { unoptimized: true }  // requerido para export estático
 ### Flujo de trabajo IA
 - Claude.ai (chat) → prepara prompts/archivos `.txt` → Claudio los abre en VS Code → copia → pega en Claude Code
 - Cambios múltiples siempre en un solo prompt a Claude Code
+
+---
+
+## 🧰 Herramientas Instaladas en Claude Code
+
+> Actualizado: 03-04-2026
+
+| Plugin | Versión | Descripción |
+|---|---|---|
+| **Superpowers** (`obra/superpowers`) | — | Plugin oficial Anthropic. Brainstorming obligatorio antes de codear, sub-agentes paralelos, TDD, code review automático. |
+| **Everything Claude Code** | — | 75 skills, 58 agentes, 33 hooks activos. |
+| **UI/UX Pro Max** | — | Instalado en Okasa y Galdi. 57 estilos, 95 paletas, 56 tipografías. Se activa automáticamente en tareas de diseño. |
+| **Claude Men** | — | Memoria permanente entre sesiones CC. |
+| **GSD — Get Shit Done** | v1.30.0 | Meta-prompting y context engineering. Comandos: `/gsd:new-milestone`, `/gsd:do`, `/gsd:quick`. |
+| **CC Templates** | on-demand | Disponible con `npx claude-code-templates@latest` desde terminal VSCode. |
 
 ---
 
