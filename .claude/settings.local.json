@@ -21,7 +21,12 @@
       "Bash(cp:*)",
       "Read(//c/Galdi/Imágenes/Eventos/Cocteles/**)",
       "Read(//c/Galdi/Imágenes/Eventos/Cumpleaños/**)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(uipro init:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx next:*)",
+      "Bash(npx get-shit-done-cc:*)",
+      "Bash(npx claude-code-templates@latest:*)"
     ]
   }
 }

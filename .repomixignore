@@ -1,0 +1,6 @@
+﻿.firebase/
+.claude/skills/
+public/gestion/
+_src/
+package-lock.json
+*.cache
