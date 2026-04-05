@@ -420,3 +420,20 @@ images: { unoptimized: true }  // requerido para export estático
 **Pendientes:**
 - Estatuto societario Galdi — actualización pendiente
 - Conecta Pyme — esperando aprobación del listing
+
+---
+
+### Sesión 05-04-2026 — Favicon + Accesibilidad + SEO + Google Business
+
+**Completado:**
+- ✅ Limpieza logos duplicados en public/images/
+- ✅ Favicon regenerado desde Nuevologo.webp (279 KB → 0.6 KB)
+- ✅ Accesibilidad Hero.tsx: aria-label dots + padding área táctil
+- ✅ Accesibilidad Catalogo.tsx: role="tablist" + contraste 0.46→0.75
+- ✅ Accesibilidad Footer.tsx: contraste links 0.36→0.60
+- ✅ Pagespeed Accesibilidad: 82 → 97 (+15 puntos)
+- ✅ Repo galdi-pasteleria cambiado a público (Claude lo lee vía Chrome)
+- ✅ Análisis SEO ~55 términos: aparecemos solo con "artesanal" como diferenciador
+- ✅ Google Business Profile: descripción optimizada 696/750 chars con keywords
+- ✅ GBP áreas de servicio: Maipú + Cerrillos + Pudahuel
+- ✅ GBP vínculo de menú: galdi
