@@ -140,6 +140,7 @@ export default function Hero() {
           <button
             key={i}
             onClick={() => setCurrent(i)}
+            aria-label={`Ir al slide ${i + 1} de ${slides.length}`}
             style={{
               width: i === current ? '2rem' : '0.5rem',
               height: '0.5rem',
@@ -148,7 +149,8 @@ export default function Hero() {
               border: 'none',
               cursor: 'pointer',
               transition: 'var(--transition)',
-              padding: 0,
+              padding: '1rem 0.5rem',
+              margin: '0 2px',
             }}
           />
         ))}

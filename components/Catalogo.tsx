@@ -162,7 +162,7 @@ function CatalogoInner() {
           flex-shrink: 0;
           position: relative;
           transition: color var(--transition);
-          color: rgba(26,15,10,0.42);
+          color: rgba(26,15,10,0.65);
         }
         .cat-tab-btn::after {
           content: '';
@@ -273,7 +273,7 @@ function CatalogoInner() {
           zIndex: 100,
           backgroundColor: 'var(--cream)',
         }}>
-          <div style={{ display: 'inline-flex', minWidth: '100%' }}>
+          <div role="tablist" aria-label="Categorías de productos" style={{ display: 'inline-flex', minWidth: '100%' }}>
             {categorias.map((cat) => (
               <button
                 key={cat.id}
@@ -281,6 +281,7 @@ function CatalogoInner() {
                 onClick={() => setActiveTab(cat.id)}
                 role="tab"
                 aria-selected={activeTab === cat.id}
+                aria-label={cat.label}
               >
                 {cat.label}
               </button>
@@ -343,7 +344,7 @@ function CatalogoInner() {
                   <p style={{
                     fontSize: '0.75rem',
                     letterSpacing: '0.01em',
-                    color: 'rgba(245,230,211,0.46)',
+                    color: 'rgba(245,230,211,0.75)',
                     lineHeight: 1.65,
                     flex: 1,
                     marginBottom: '1.1rem',

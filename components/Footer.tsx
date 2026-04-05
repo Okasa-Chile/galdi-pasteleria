@@ -74,7 +74,7 @@ export default function Footer() {
         <p style={{
           fontFamily: 'var(--font-sans)',
           fontSize: '0.72rem',
-          color: 'rgba(245,230,211,0.32)',
+          color: 'rgba(245,230,211,0.55)',
           letterSpacing: '0.07em',
           textAlign: 'center',
           margin: 0,
@@ -96,7 +96,7 @@ export default function Footer() {
                 onMouseLeave={() => setHovered(null)}
                 style={{
                   fontFamily: 'var(--font-sans)',
-                  color: hovered === i ? 'var(--gold)' : 'rgba(245,230,211,0.36)',
+                  color: hovered === i ? 'var(--gold)' : 'rgba(245,230,211,0.60)',
                   fontSize: '0.72rem',
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
