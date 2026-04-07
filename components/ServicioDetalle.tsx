@@ -130,7 +130,7 @@ function pluralizar(cantidad: number, unidad: string): string {
 
 function getMinimo(tab: string, unidad: string, nombre: string = ''): number {
   if (nombre === 'Tortilla con Chicharrones') return 2;
-  if (tab === 'Pan' && nombre !== 'Tortilla con Chicharrones') return 10;
+  if (tab === 'Pan' && nombre !== 'Tortilla con Chicharrones') return 3;
   if (unidad === 'docena') return 1;
   if (tab === 'Queques') return 2;
   return 1;
@@ -138,7 +138,7 @@ function getMinimo(tab: string, unidad: string, nombre: string = ''): number {
 
 function getLabelMinimo(tab: string, unidad: string, nombre: string = ''): string {
   if (nombre === 'Tortilla con Chicharrones') return 'mín. 2 un';
-  if (tab === 'Pan' && nombre !== 'Tortilla con Chicharrones') return 'mín. 10 kg';
+  if (tab === 'Pan' && nombre !== 'Tortilla con Chicharrones') return 'mín. 3 kg';
   if (unidad === 'docena') return 'mín. 1 docena';
   if (tab === 'Queques') return 'mín. 2 un';
   return 'mín. 1 un';
@@ -237,6 +237,16 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
   const totalItems = Object.keys(carrito).length;
 
   function enviarWhatsApp() {
+    // Validar mínimo 9 kg total de pan
+    const productosPan = productosAlmacenes['Pan']
+      ?.filter(p => p.nombre !== 'Tortilla con Chicharrones')
+      .map(p => p.nombre) ?? [];
+    const totalKgPan = productosPan.reduce((sum, nombre) => sum + (carrito[nombre] ?? 0), 0);
+    if (totalKgPan > 0 && totalKgPan < 9) {
+      alert(`El pedido de pan debe sumar al menos 9 kg en total (actualmente: ${totalKgPan} kg).`);
+      return;
+    }
+
     const lineas = Object.entries(carrito)
       .map(([nombre, cantidad]) => {
         const todosLosProductos = [
