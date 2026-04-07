@@ -128,17 +128,19 @@ function pluralizar(cantidad: number, unidad: string): string {
 
 // ─── Mínimos por producto ────────────────────────────────────────────────────
 
-function getMinimo(tab: string, unidad: string, nombre: string = ''): number {
+function getMinimo(tab: string, unidad: string, nombre: string = '', serviceId: string = ''): number {
   if (nombre === 'Tortilla con Chicharrones') return 2;
   if (tab === 'Pan' && nombre !== 'Tortilla con Chicharrones') return 3;
+  if (tab === 'Empanadas' && serviceId === 'delivery') return 4;
   if (unidad === 'docena') return 1;
   if (tab === 'Queques') return 2;
   return 1;
 }
 
-function getLabelMinimo(tab: string, unidad: string, nombre: string = ''): string {
+function getLabelMinimo(tab: string, unidad: string, nombre: string = '', serviceId: string = ''): string {
   if (nombre === 'Tortilla con Chicharrones') return 'mín. 2 un';
   if (tab === 'Pan' && nombre !== 'Tortilla con Chicharrones') return 'mín. 3 kg';
+  if (tab === 'Empanadas' && serviceId === 'delivery') return 'mín. 4 un';
   if (unidad === 'docena') return 'mín. 1 docena';
   if (tab === 'Queques') return 'mín. 2 un';
   return 'mín. 1 un';
@@ -382,8 +384,8 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.75rem', marginTop: '1rem' }}>
             {productos.map(prod => {
               const enCarrito = carrito[prod.nombre] ?? 0;
-              const min = getMinimo(activeTab, prod.unidad, prod.nombre);
-              const label = getLabelMinimo(activeTab, prod.unidad, prod.nombre);
+              const min = getMinimo(activeTab, prod.unidad, prod.nombre, id);
+              const label = getLabelMinimo(activeTab, prod.unidad, prod.nombre, id);
               return (
                 <div key={prod.nombre} className="svc-prod-card">
                   {/* Imagen */}
