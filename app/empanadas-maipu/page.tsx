@@ -23,7 +23,7 @@ export default function Page() {
       <SeoPage
         titulo="Empanadas Artesanales en Maipú"
         subtitulo="Hechas a mano con rellenos generosos. Pedido mínimo 1 docena."
-        descripcion="En Galdi elaboramos empanadas artesanales con recetas familiares: pino chileno tradicional, napolitana, vegetariana, queso camarón y mariscos frescos. Perfectas para eventos, reuniones o para abastecer tu almacén."
+        descripcion="En Galdi elaboramos empanadas artesanales con recetas familiares: tradicional de pino, queso, napolitana, vegetariana (queso champiñón), queso camarón y la exquisita empanada de mariscos al horno. Perfectas para eventos, reuniones o para abastecer tu almacén."
         imagen="/images/empanada-pino.webp"
         ctaTexto="Ver todas las empanadas"
         ctaHref="/?servicio=b2b&tab=Empanadas"

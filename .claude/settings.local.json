@@ -26,7 +26,8 @@
       "Bash(npx tsc:*)",
       "Bash(npx next:*)",
       "Bash(npx get-shit-done-cc:*)",
-      "Bash(npx claude-code-templates@latest:*)"
+      "Bash(npx claude-code-templates@latest:*)",
+      "Bash(ls app/favicon* public/favicon*)"
     ]
   }
 }

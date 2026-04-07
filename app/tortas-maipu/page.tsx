@@ -21,9 +21,9 @@ export default function Page() {
         "sameAs": "https://share.google/s9CQErdNSBOZ8y15P"
       })}} />
       <SeoPage
-        titulo="Tortas por Encargo en Maipú"
+        titulo="Tortas a Pedido en Maipú"
         subtitulo="Tortas artesanales para cada ocasión. Delivery en toda la comuna."
-        descripcion="Elaboramos tortas con recetas familiares: 3 leches, chocolate, moca, selva negra, panqueque, piña y hojarasca. Cada torta se prepara por encargo con ingredientes frescos y el cariño que nos caracteriza."
+        descripcion="Elaboramos tortas con recetas familiares: 3 leches, chocolate, moca, selva negra, panqueque, piña, hojarasca y muchas otras variedades. Cada torta se prepara por encargo con ingredientes frescos y el cariño que nos caracteriza. ¿Cómo te podemos ayudar con tu pedido?"
         imagen="/images/Torta 3 Leches.webp"
         ctaTexto="Ver todas las tortas"
         ctaHref="/?servicio=delivery&tab=Tortas"
