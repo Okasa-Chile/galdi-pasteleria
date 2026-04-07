@@ -437,3 +437,13 @@ images: { unoptimized: true }  // requerido para export estático
 - ✅ Google Business Profile: descripción optimizada 696/750 chars con keywords
 - ✅ GBP áreas de servicio: Maipú + Cerrillos + Pudahuel
 - ✅ GBP vínculo de menú: galdi
+
+---
+
+### Sesión 07-04-2026 — Mínimos pedido pan y empanadas delivery
+
+**Completado:**
+- ✅ fix: mínimo pan por producto en Almacenes: 10 kg → 3 kg
+- ✅ fix: validación pedido total de pan en Almacenes: mínimo 9 kg acumulados (excluye Tortilla con Chicharrones que mantiene mín. 2 unidades)
+- ✅ fix: empanadas en Delivery Maipú: mínimo 4 unidades (en Almacenes sigue siendo 1 docena)
+- ✅ fix: contador, resumen modal y mensaje WhatsApp muestran "unidades" para empanadas en delivery
