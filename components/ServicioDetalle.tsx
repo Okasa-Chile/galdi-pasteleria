@@ -216,7 +216,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
 
   // Carrito helpers
   function agregar(nombre: string, tab: string, unidad: string) {
-    const min = getMinimo(tab, unidad, nombre);
+    const min = getMinimo(tab, unidad, nombre, id);
     setCarrito(prev => ({
       ...prev,
       [nombre]: (prev[nombre] ?? 0) + min,
@@ -224,7 +224,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
   }
 
   function quitar(nombre: string, tab: string, unidad: string) {
-    const min = getMinimo(tab, unidad, nombre);
+    const min = getMinimo(tab, unidad, nombre, id);
     setCarrito(prev => {
       const actual = prev[nombre] ?? 0;
       if (actual <= min) {
@@ -405,7 +405,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                   ) : (
                     <div className="svc-counter">
                       <button onClick={() => quitar(prod.nombre, activeTab, prod.unidad)}>−</button>
-                      <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'var(--cream)' }}>{enCarrito} {pluralizar(enCarrito, prod.unidad)}</span>
+                      <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'var(--cream)' }}>{enCarrito} {pluralizar(enCarrito, (activeTab === 'Empanadas' && id === 'delivery') ? 'unidad' : prod.unidad)}</span>
                       <button onClick={() => agregar(prod.nombre, activeTab, prod.unidad)}>+</button>
                     </div>
                   )}
@@ -441,7 +441,9 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                           ...Object.values(productosAlmacenes).flat(),
                           ...Object.values(productosDelivery).flat(),
                         ];
-                        const unidad = todosLosProductos.find(p => p.nombre === nombre)?.unidad ?? 'un';
+                        const prod = todosLosProductos.find(p => p.nombre === nombre);
+                        const esEmpanadasDelivery = productosDelivery['Empanadas']?.some(p => p.nombre === nombre) && id === 'delivery';
+                        const unidad = esEmpanadasDelivery ? 'unidad' : (prod?.unidad ?? 'un');
                         return pluralizar(cantidad, unidad);
                       })()}</span>
                     </div>
