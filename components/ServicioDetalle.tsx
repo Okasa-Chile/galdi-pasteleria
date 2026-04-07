@@ -255,7 +255,9 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
           ...Object.values(productosAlmacenes).flat(),
           ...Object.values(productosDelivery).flat(),
         ];
-        const unidad = todosLosProductos.find(p => p.nombre === nombre)?.unidad ?? 'un';
+        const prod = todosLosProductos.find(p => p.nombre === nombre);
+        const esEmpanada = productosDelivery['Empanadas']?.some(p => p.nombre === nombre);
+        const unidad = (id === 'delivery' && esEmpanada) ? 'unidad' : (prod?.unidad ?? 'un');
         return `• ${cantidad} ${pluralizar(cantidad, unidad)} — ${nombre}`;
       })
       .join('\n');
