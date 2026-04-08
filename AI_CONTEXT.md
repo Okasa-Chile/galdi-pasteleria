@@ -447,3 +447,24 @@ images: { unoptimized: true }  // requerido para export estático
 - ✅ fix: validación pedido total de pan en Almacenes: mínimo 9 kg acumulados (excluye Tortilla con Chicharrones que mantiene mín. 2 unidades)
 - ✅ fix: empanadas en Delivery Maipú: mínimo 4 unidades (en Almacenes sigue siendo 1 docena)
 - ✅ fix: contador, resumen modal y mensaje WhatsApp muestran "unidades" para empanadas en delivery
+
+---
+
+### Sesión 07-04-2026 — Tarde
+
+**Completado:**
+- ✅ fix: mínimo pan por producto en Almacenes: 10 kg → 3 kg
+- ✅ fix: validación pedido total de pan en Almacenes: mínimo 9 kg acumulados (excluye Tortilla con Chicharrones, mín. 2 unidades)
+- ✅ fix: empanadas en Delivery Maipú: mínimo 4 unidades (Almacenes sigue en 1 docena)
+- ✅ fix: contador, resumen modal y mensaje WhatsApp muestran "unidades" para empanadas en delivery
+- ✅ feat: app/empanadas-maipu/page.tsx — variedades actualizadas: "tradicional de pino, queso, napolitana, vegetariana (queso champiñón), queso camarón y la exquisita empanada de mariscos al horno"
+- ✅ feat: app/tortas-maipu/page.tsx — título cambiado a "Tortas a Pedido en Maipú", descripción actualizada con "y muchas otras variedades. ¿Cómo te podemos ayudar con tu pedido?"
+- ✅ feat: app/matrimonios-maipu/page.tsx — página SEO expandida a 362 líneas con estructura propia (hero, servicios, ventajas, pasos, FAQs, JSON-LD enriquecido)
+- ✅ feat: matrimonios — agregados items Servicio de Cena y Barra de Tragos (con platos y tragos típicos chilenos)
+- ✅ feat: matrimonios — Mesa de Dulces actualizada con postres de matrimonio: profiteroles, mousse, pannacotta, mini cheesecakes, macarons, tiramisú, alfajores de maicena y mini tartaletas de frutas
+- ✅ feat: matrimonios — Bocados Salados actualizados: mini empanadas, canapés de salmón ahumado, blinis, tartaletas saladas y crostinis con queso crema
+- ✅ feat: matrimonios — JSON-LD corregido (osobuco → lomo liso al jugo)
+- ✅ feat: matrimonios — párrafo introductorio actualizado con cena y barra de tragos
+- ✅ feat: matrimonios — FAQ "¿Qué incluye?" actualizado con todos los servicios correctos
+- ✅ feat: New_Hero_socias.webp reemplazada por versión mejorada (mismo nombre)
+- ✅ REGLA establecida: project_knowledge_search es la fuente de verdad, usarlo SIEMPRE antes de cualquier acción técnica
