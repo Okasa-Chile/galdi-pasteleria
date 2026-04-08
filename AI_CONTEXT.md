@@ -258,6 +258,33 @@ images: { unoptimized: true }  // requerido para export estático
 
 ---
 
+### Sesión 08-04-2026 — SEO + Panel Gestión + Cotización
+
+**Completado:**
+- ✅ SEO: Nosotras.tsx expandido de 2 a 3 párrafos (~250 palabras nuevas)
+- ✅ SEO: Keywords integradas naturalmente — "pastelería artesanal" x2, "Maipú" x2, "hecho con cariño", "pan artesanal", "delivery", "eventos", "almacenes"
+- ✅ SEO: H1 "El sabor de lo hecho con cariño" ahora referenciado en el cuerpo
+- ✅ SEO: Anchor texts del menú diversificados — "Servicios y Pedidos", "Nuestra Historia", "Contacto y Delivery"
+- ✅ SEO: navItems refactorizado a objetos {label, id} en Header.tsx (desktop y mobile)
+- ✅ Panel /gestion: selector de N° personas para precio automático de tortas (5 rangos con precios provisionales — pendiente confirmar con socias)
+- ✅ COT-G073 Bautizo Benjamín: modificada — nueva sección Cóctel Caliente, jugos 30 un., empanaditas champiñón queso 50 un., total actualizado a $257.500
+- ✅ Correo de modificación de cotización redactado y enviado al cliente
+
+**Pendientes actualizados:**
+- [ ] Precios tortas por N° personas — confirmar con socias y actualizar constante PRECIOS_TORTA en gestion-index.html
+- [ ] Cupones de descuento — prompt .txt ya generado, listo para ejecutar en CC
+- [ ] Sistema de cotizaciones — Tab 6 en /gestion con secciones dinámicas, totales automáticos y exportación a PDF
+- [ ] Reseñas Google Business — meta 30 (hoy: 13)
+- [ ] Conecta Pyme — esperando aprobación del listing
+- [ ] Métodos de pago en GBP — espera terminal tarjetas (fines de abril)
+- [ ] Re-análisis Seobility — esperar ~7 días para medir mejora SEO
+- [ ] Estatuto societario Galdi — trámite externo pendiente
+
+**Aprendizaje clave sesión:**
+- Edición de cotizaciones Excel con openpyxl es frágil al reorganizar secciones — solución: sistema de cotizaciones propio en Tab 6 de /gestion
+
+---
+
 ## 🔜 Pendiente / Próximos Pasos
 
 - [ ] Fotos reales para tabs Cóctel y Cumpleaños (Claudio las proveerá)
