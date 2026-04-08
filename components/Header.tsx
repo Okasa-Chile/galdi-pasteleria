@@ -3,7 +3,12 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-const navItems = ['Productos', 'Servicios', 'Nosotras', 'Contacto'];
+const navItems = [
+  { label: 'Productos', id: 'productos' },
+  { label: 'Servicios y Pedidos', id: 'servicios' },
+  { label: 'Nuestra Historia', id: 'nosotras' },
+  { label: 'Contacto y Delivery', id: 'contacto' },
+];
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -122,11 +127,11 @@ export default function Header() {
         <nav className="header-nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: '2.5rem', listStyle: 'none' }}>
           {navItems.map((item) => (
             <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
+              key={item.id}
+              href={`#${item.id}`}
               className="header-nav-link"
             >
-              {item}
+              {item.label}
             </a>
           ))}
           <a
@@ -183,13 +188,13 @@ export default function Header() {
         }}>
           {navItems.map((item) => (
             <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
+              key={item.id}
+              href={`#${item.id}`}
               onClick={() => setMenuOpen(false)}
               className="header-nav-link"
               style={{ fontSize: '1rem' }}
             >
-              {item}
+              {item.label}
             </a>
           ))}
           <a

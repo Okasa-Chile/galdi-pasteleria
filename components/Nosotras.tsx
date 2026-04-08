@@ -85,7 +85,16 @@ export default function Nosotras() {
             lineHeight: 1.8,
             marginBottom: '1.25rem',
           }}>
-            Somos Jacqueline e Ingrid, dos hermanas de Maipú que encontraron en la pastelería su forma de decirle al mundo que el cariño se puede probar. Lo que comenzó como recetas familiares pasadas de generación en generación, hoy llega a su mesa con la misma dedicación de siempre.
+            Somos Jacqueline e Ingrid, dos hermanas de Maipú que encontraron en la pastelería artesanal su forma de decirle al mundo que el cariño se puede probar. Lo que comenzó como recetas familiares pasadas de generación en generación, hoy llega a su mesa con la misma dedicación de siempre.
+          </p>
+          <p style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: '0.9rem',
+            color: '#3d2010',
+            lineHeight: 1.8,
+            marginBottom: '1.25rem',
+          }}>
+            Cada producto que sale de nuestra cocina en Maipú lleva el mismo cuidado que pondríamos en prepararlo para nuestra propia familia. Sin apuros, sin atajos — solo ingredientes de calidad, recetas probadas y mucho cariño en cada preparación. Así es como entendemos la pastelería artesanal: hecha con las manos, pensada con el corazón.
           </p>
           <p style={{
             fontFamily: 'var(--font-sans)',
@@ -94,7 +103,7 @@ export default function Nosotras() {
             lineHeight: 1.8,
             marginBottom: '2.5rem',
           }}>
-            Cada producto que sale de nuestra cocina lleva el mismo cuidado que pondríamos en prepararlo para nuestra propia familia. Sin apuros, sin atajos — solo productos de calidad y mucho cariño en la preparación.
+            Desde nuestras tortas y pasteles hasta el pan artesanal que horneamos cada semana, todo lo que ofrecemos nace del mismo lugar: el deseo de compartir el sabor de lo hecho con cariño. Atendemos pedidos para eventos, delivery en Maipú y distribución a almacenes de la comuna. Si buscas una pastelería artesanal en Maipú con sabor de verdad, estás en el lugar correcto.
           </p>
 
           {/* Íconos de valores */}
