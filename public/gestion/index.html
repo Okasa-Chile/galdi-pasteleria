@@ -218,6 +218,17 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
           </select>
         </div>
         <div><label>Producto</label><select id="v-d" onchange="autocompletarPrecio()"></select></div>
+        <div id="wrap-personas" style="display:none;">
+          <label>N° de personas</label>
+          <select id="v-personas" onchange="autocompletarPrecioTorta()">
+            <option value="">— Seleccionar —</option>
+            <option value="10">Hasta 10 personas</option>
+            <option value="20">11 a 20 personas</option>
+            <option value="35">21 a 35 personas</option>
+            <option value="50">36 a 50 personas</option>
+            <option value="99">Más de 50 personas</option>
+          </select>
+        </div>
         <div><label>Cantidad</label><input type="number" id="v-q" placeholder="ej: 2" min="1"></div>
         <div><label>Monto total ($)</label><input type="number" id="v-m" placeholder="0"></div>
         <div><label>Cliente / Almacén</label><input type="text" id="v-c" placeholder="Opcional"></div>
@@ -619,8 +630,25 @@ window.calcMeta = () => {
 };
 
 // ── TAB 3: VENTAS ─────────────────────────────────────────────────────────
+const PRECIOS_TORTA = {
+  '10': 15000,
+  '20': 20000,
+  '35': 28000,
+  '50': 38000,
+  '99': 55000,
+};
+
 window.poblarProductos = () => {
   const cat = document.getElementById('v-t').value;
+  const wrapPersonas = document.getElementById('wrap-personas');
+  const selPersonas = document.getElementById('v-personas');
+  if (cat === 'torta') {
+    wrapPersonas.style.display = '';
+    selPersonas.value = '';
+  } else {
+    wrapPersonas.style.display = 'none';
+    selPersonas.value = '';
+  }
   const sel = document.getElementById('v-d');
   if (!cat) {
     sel.innerHTML = '<option value="">— Elegir producto —</option>';
@@ -650,6 +678,15 @@ window.autocompletarPrecio = () => {
   console.log('prod encontrado:', prod);
   if (prod && prod.precio) {
     document.getElementById('v-m').value = prod.precio;
+  } else {
+    document.getElementById('v-m').value = '';
+  }
+};
+
+window.autocompletarPrecioTorta = () => {
+  const personas = document.getElementById('v-personas').value;
+  if (personas && PRECIOS_TORTA[personas]) {
+    document.getElementById('v-m').value = PRECIOS_TORTA[personas];
   } else {
     document.getElementById('v-m').value = '';
   }
