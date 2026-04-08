@@ -109,7 +109,7 @@ const jsonLd = {
               '@type': 'FoodService',
               name: 'Servicio de Cena para Matrimonios',
               description:
-                'Plateada al jugo, osobuco, filete al champiñón, lomo vetado, pollo relleno y pasta. Menú completo coordinado para tu matrimonio.',
+                'Plateada al jugo, lomo liso al jugo, filete al champiñón, lomo vetado a la parrilla, pollo relleno y pasta rellena. Menú completo coordinado para tu matrimonio.',
             },
           },
           {
@@ -238,8 +238,8 @@ export default function MatrimoniosMaipuPage() {
           <p style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1rem, 2vw, 1.2rem)', fontWeight: 300, color: '#3d2010', lineHeight: 1.9, marginBottom: '3.5rem', textAlign: 'center' }}>
             Galdi es una pastelería artesanal ubicada en Pasaje Marcos Echenique 809, Maipú,
             Región Metropolitana. Ofrece banquetería completa para matrimonios: torta de novios
-            personalizada, mesa de dulces artesanales sin conservantes, bocados salados y queques
-            decorados. Atiende eventos desde 20 hasta más de 100 invitados, con entrega a domicilio
+            personalizada, mesa de postres artesanales, bocados salados, servicio de cena y barra
+            de tragos. Atiende eventos desde 20 hasta más de 100 invitados, con entrega a domicilio
             en Maipú y comunas cercanas.
           </p>
 
