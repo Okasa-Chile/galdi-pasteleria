@@ -44,7 +44,7 @@ Plans:
   5. La socia puede aplicar un descuento (% o monto fijo con toggle) y el total final se actualiza inmediatamente
 **Plans**: 1 plan
 Plans:
-- [ ] 02-01-PLAN.md — Card 6 Detalle + Card 7 Totales HTML/CSS/JS with catalog cascade and real-time calculation
+- [x] 02-01-PLAN.md — Card 6 Detalle + Card 7 Totales HTML/CSS/JS with catalog cascade and real-time calculation
 **UI hint**: yes
 
 ### Phase 3: Persistencia Firestore

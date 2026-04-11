@@ -15,16 +15,16 @@
 
 ### Líneas de detalle (LINE)
 
-- [ ] **LINE-01**: Usuario puede agregar líneas en modo catálogo: dropdown categoría → producto → precio unitario se autocompleta desde `galdi_productos`
-- [ ] **LINE-02**: Usuario puede agregar líneas en modo manual: descripción libre + cantidad + precio unitario
-- [ ] **LINE-03**: Usuario puede agregar nuevas filas dinámicamente con botón "+ Agregar línea"
-- [ ] **LINE-04**: Usuario puede eliminar filas individualmente con botón "✕"
+- [x] **LINE-01**: Usuario puede agregar líneas en modo catálogo: dropdown categoría → producto → precio unitario se autocompleta desde `galdi_productos`
+- [x] **LINE-02**: Usuario puede agregar líneas en modo manual: descripción libre + cantidad + precio unitario
+- [x] **LINE-03**: Usuario puede agregar nuevas filas dinámicamente con botón "+ Agregar línea"
+- [x] **LINE-04**: Usuario puede eliminar filas individualmente con botón "✕"
 
 ### Totales (TOT)
 
-- [ ] **TOT-01**: Sistema calcula subtotal en tiempo real (suma de cantidad × precio por línea)
-- [ ] **TOT-02**: Usuario puede aplicar descuento opcional como % o monto fijo (toggle entre ambos)
-- [ ] **TOT-03**: Sistema muestra total final descontado, actualizado en tiempo real al editar cualquier campo
+- [x] **TOT-01**: Sistema calcula subtotal en tiempo real (suma de cantidad × precio por línea)
+- [x] **TOT-02**: Usuario puede aplicar descuento opcional como % o monto fijo (toggle entre ambos)
+- [x] **TOT-03**: Sistema muestra total final descontado, actualizado en tiempo real al editar cualquier campo
 
 ### Persistencia Firestore (FIRE)
 
@@ -76,13 +76,13 @@
 | FORM-03 | Phase 1 | Complete |
 | FORM-04 | Phase 1 | Complete |
 | FORM-05 | Phase 1 | Complete |
-| LINE-01 | Phase 2 | Pending |
-| LINE-02 | Phase 2 | Pending |
-| LINE-03 | Phase 2 | Pending |
-| LINE-04 | Phase 2 | Pending |
-| TOT-01 | Phase 2 | Pending |
-| TOT-02 | Phase 2 | Pending |
-| TOT-03 | Phase 2 | Pending |
+| LINE-01 | Phase 2 | Complete |
+| LINE-02 | Phase 2 | Complete |
+| LINE-03 | Phase 2 | Complete |
+| LINE-04 | Phase 2 | Complete |
+| TOT-01 | Phase 2 | Complete |
+| TOT-02 | Phase 2 | Complete |
+| TOT-03 | Phase 2 | Complete |
 | FIRE-01 | Phase 3 | Pending |
 | FIRE-02 | Phase 3 | Pending |
 | FIRE-03 | Phase 3 | Pending |
