@@ -25,17 +25,15 @@ Las socias pueden cotizar, registrar y controlar el negocio desde una sola panta
 
 ### Validated
 
-(None yet — primer milestone)
+- [x] Formulario de presupuesto con número correlativo automático (COT-GXXX) — *Validated in Phase 1: Tab + Formulario Base*
+- [x] Datos del cliente: nombre, teléfono, email, fecha del evento, tipo de evento — *Validated in Phase 1: Tab + Formulario Base*
+- [x] Campos: observaciones, válido hasta, forma de pago sugerida — *Validated in Phase 1: Tab + Formulario Base*
+- [x] Líneas de detalle modo catálogo: dropdown categoría → producto → precio autocompleta — *Validated in Phase 2: Líneas de Detalle + Totales*
+- [x] Líneas de detalle modo manual: descripción libre + cantidad + precio unitario — *Validated in Phase 2: Líneas de Detalle + Totales*
+- [x] Agregar/eliminar líneas dinámicamente — *Validated in Phase 2: Líneas de Detalle + Totales*
+- [x] Totales en tiempo real: subtotal, descuento (% o monto fijo), total — *Validated in Phase 2: Líneas de Detalle + Totales*
 
 ### Active
-
-- [ ] Formulario de presupuesto con número correlativo automático (COT-GXXX)
-- [ ] Datos del cliente: nombre, teléfono, email, fecha del evento, tipo de evento
-- [ ] Líneas de detalle modo catálogo: dropdown categoría → producto → precio autocompleta
-- [ ] Líneas de detalle modo manual: descripción libre + cantidad + precio unitario
-- [ ] Agregar/eliminar líneas dinámicamente
-- [ ] Totales en tiempo real: subtotal, descuento (% o monto fijo), total
-- [ ] Campos: observaciones, válido hasta, forma de pago sugerida
 - [ ] Guardar borrador → Firestore estado "borrador"
 - [ ] Generar presupuesto → Firestore estado "enviado" + mostrar vista previa
 - [ ] Vista previa con logo, tabla de líneas, totales en dorado, pie de página
@@ -96,4 +94,4 @@ Este documento evoluciona en transiciones de fase y límites de milestone.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-11 — Milestone v1.0 iniciado*
+*Last updated: 2026-04-11 — Phase 2 complete: líneas dinámicas y totales implementados*
