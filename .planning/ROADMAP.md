@@ -29,7 +29,7 @@ El Tab 5 · Presupuestos se construye en cinco fases que siguen el flujo natural
   4. La socia puede seleccionar fecha y tipo de evento, agregar observaciones, establecer fecha de validez y forma de pago sugerida
 **Plans**: 1 plan
 Plans:
-- [ ] 01-PLAN-1.md — Tab 5 button + panel HTML + COT-GXXX auto-number JS
+- [x] 01-01-PLAN.md — Tab 5 button + panel HTML + COT-GXXX auto-number JS
 **UI hint**: yes
 
 ### Phase 2: Líneas de Detalle + Totales
@@ -44,7 +44,7 @@ Plans:
   5. La socia puede aplicar un descuento (% o monto fijo con toggle) y el total final se actualiza inmediatamente
 **Plans**: 1 plan
 Plans:
-- [ ] 01-PLAN-1.md — Tab 5 button + panel HTML + COT-GXXX auto-number JS
+- [ ] 02-01-PLAN.md — Card 6 Detalle + Card 7 Totales HTML/CSS/JS with catalog cascade and real-time calculation
 **UI hint**: yes
 
 ### Phase 3: Persistencia Firestore
@@ -96,7 +96,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Tab + Formulario Base | 1/1 | Complete    | 2026-04-11 |
-| 2. Líneas de Detalle + Totales | 0/? | Not started | - |
+| 2. Líneas de Detalle + Totales | 0/1 | Planning complete | - |
 | 3. Persistencia Firestore | 0/? | Not started | - |
 | 4. Vista Previa e Impresión | 0/? | Not started | - |
 | 5. Historial | 0/? | Not started | - |
