@@ -27,7 +27,9 @@ El Tab 5 · Presupuestos se construye en cinco fases que siguen el flujo natural
   2. Al abrir el tab se muestra un número correlativo automático (COT-GXXX) pre-llenado, tomando el máximo existente en Firestore o partiendo desde COT-G077
   3. La socia puede ingresar nombre, teléfono y email del cliente en campos dedicados
   4. La socia puede seleccionar fecha y tipo de evento, agregar observaciones, establecer fecha de validez y forma de pago sugerida
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 01-PLAN-1.md — Tab 5 button + panel HTML + COT-GXXX auto-number JS
 **UI hint**: yes
 
 ### Phase 2: Líneas de Detalle + Totales
@@ -40,7 +42,9 @@ El Tab 5 · Presupuestos se construye en cinco fases que siguen el flujo natural
   3. Cada fila tiene un botón "✕" que la elimina; el botón "+ Agregar línea" añade una fila nueva vacía
   4. El subtotal se recalcula en tiempo real al cambiar cantidad o precio en cualquier fila
   5. La socia puede aplicar un descuento (% o monto fijo con toggle) y el total final se actualiza inmediatamente
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 01-PLAN-1.md — Tab 5 button + panel HTML + COT-GXXX auto-number JS
 **UI hint**: yes
 
 ### Phase 3: Persistencia Firestore
@@ -51,7 +55,9 @@ El Tab 5 · Presupuestos se construye en cinco fases que siguen el flujo natural
   1. Al pulsar "Guardar borrador" el presupuesto se almacena en `galdi_presupuestos` con estado "borrador" y todos sus campos (numero, fechaCreacion, cliente, evento, lineas, subtotal, descuento, total, observaciones, validoHasta, formaPago, estado)
   2. Al pulsar "Generar presupuesto" el documento se guarda con estado "enviado" en Firestore y se lanza la vista previa
   3. El número COT-GXXX es correlativo: nunca se repite aunque se recargue la página
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 01-PLAN-1.md — Tab 5 button + panel HTML + COT-GXXX auto-number JS
 
 ### Phase 4: Vista Previa e Impresión
 **Goal**: Al generar un presupuesto la socia ve un modal con el documento formateado listo para imprimir o guardar como PDF, con logo, tabla de líneas, totales en dorado y pie de página con datos de contacto
@@ -63,7 +69,9 @@ El Tab 5 · Presupuestos se construye en cinco fases que siguen el flujo natural
   3. El modal muestra Subtotal, Descuento (si aplica) y TOTAL en dorado grande
   4. El pie del modal incluye `ventas@galdi.cl · WhatsApp +56 9 9099 1011 · galdi.cl`, fecha de validez y forma de pago
   5. Al pulsar "Imprimir / Guardar PDF" se ejecuta `window.print()` y CSS @media print oculta todo excepto la vista previa sin márgenes de página
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 01-PLAN-1.md — Tab 5 button + panel HTML + COT-GXXX auto-number JS
 **UI hint**: yes
 
 ### Phase 5: Historial
@@ -75,7 +83,9 @@ El Tab 5 · Presupuestos se construye en cinco fases que siguen el flujo natural
   2. Al pulsar "Ver" en cualquier fila el formulario se recarga con los datos de ese presupuesto, listo para editar
   3. Al pulsar "Enviado" en un borrador, su estado cambia a "enviado" en Firestore y el badge se actualiza en la tabla sin recargar la página
   4. Los badges distinguen visualmente el estado: borrador=amarillo, enviado=verde
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 01-PLAN-1.md — Tab 5 button + panel HTML + COT-GXXX auto-number JS
 **UI hint**: yes
 
 ## Progress
@@ -85,7 +95,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Tab + Formulario Base | 0/? | Not started | - |
+| 1. Tab + Formulario Base | 0/1 | Planning complete | - |
 | 2. Líneas de Detalle + Totales | 0/? | Not started | - |
 | 3. Persistencia Firestore | 0/? | Not started | - |
 | 4. Vista Previa e Impresión | 0/? | Not started | - |
