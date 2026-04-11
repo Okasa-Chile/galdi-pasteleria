@@ -664,6 +664,175 @@ window.cargarNumeroPres = async () => {
   }
 };
 
+// ── TAB 5: PRESUPUESTOS — LINE & TOTAL FUNCTIONS ────────────────────────────
+window.presAgregarLinea = () => {
+  const id = Date.now().toString();
+  const cats = [...new Set(prods.map(p => p.cat || p.categoria))];
+  const catOpts = '<option value="">-- Categoría --</option>' + cats.map(c => '<option value="' + c + '">' + c + '</option>').join('');
+  const div = document.createElement('div');
+  div.className = 'pres-linea';
+  div.setAttribute('data-id', id);
+  div.setAttribute('style', 'display:grid;grid-template-columns:110px 1fr 80px 110px 80px 36px;gap:8px;align-items:center;padding:8px 11px;border-bottom:1px solid var(--border);');
+  div.innerHTML =
+    '<div class="pres-modo-toggle" style="display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:10px;">' +
+      '<button class="pres-modo-btn active" data-modo="catalogo" onclick="presSetModo(this,\'catalogo\')" style="flex:1;padding:5px 4px;border:none;cursor:pointer;background:var(--dark);color:var(--gold);font-family:\'Jost\',sans-serif;font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;">Cat</button>' +
+      '<button class="pres-modo-btn" data-modo="manual" onclick="presSetModo(this,\'manual\')" style="flex:1;padding:5px 4px;border:none;cursor:pointer;background:#fff;color:var(--muted);font-family:\'Jost\',sans-serif;font-size:10px;letter-spacing:.06em;text-transform:uppercase;">Man</button>' +
+    '</div>' +
+    '<div class="pres-desc-wrap" style="display:flex;flex-direction:column;gap:4px;">' +
+      '<select class="pres-cat-sel" onchange="presCargarProductos(this)" style="font-size:12px;">' + catOpts + '</select>' +
+      '<select class="pres-prod-sel" onchange="presAutocompletarPrecio(this)" disabled style="font-size:12px;background:var(--sand);color:var(--muted);cursor:not-allowed;"><option value="">-- Producto --</option></select>' +
+    '</div>' +
+    '<input type="number" class="pres-cant" min="1" value="1" oninput="presRecalcLinea(this)" style="width:100%;text-align:right;">' +
+    '<input type="number" class="pres-precio" min="0" step="1" placeholder="0" oninput="presRecalcLinea(this)" style="width:100%;text-align:right;">' +
+    '<input type="text" class="pres-subtotal-linea" readonly value="$0" style="width:100%;text-align:right;background:var(--sand);color:var(--brown);cursor:default;">' +
+    '<button class="btn btn-sm btn-red" onclick="presEliminarLinea(this)" style="padding:6px 8px;font-size:13px;line-height:1;">&#10005;</button>';
+  document.getElementById('pres-lineas').appendChild(div);
+  document.getElementById('pres-header-lineas').style.display = 'grid';
+  document.getElementById('pres-empty-lineas').style.display = 'none';
+  const firstSel = div.querySelector('.pres-cat-sel');
+  if (firstSel) firstSel.focus();
+};
+
+window.presEliminarLinea = (btn) => {
+  btn.closest('.pres-linea').remove();
+  const container = document.getElementById('pres-lineas');
+  if (!container.children.length) {
+    document.getElementById('pres-header-lineas').style.display = 'none';
+    document.getElementById('pres-empty-lineas').style.display = '';
+  }
+  presRecalcTotales();
+};
+
+window.presSetModo = (btn, modo) => {
+  const row = btn.closest('.pres-linea');
+  row.querySelectorAll('.pres-modo-btn').forEach(b => {
+    b.classList.remove('active');
+    b.style.background = '#fff';
+    b.style.color = 'var(--muted)';
+    b.style.fontWeight = '400';
+  });
+  btn.classList.add('active');
+  btn.style.background = 'var(--dark)';
+  btn.style.color = 'var(--gold)';
+  btn.style.fontWeight = '600';
+  const wrap = row.querySelector('.pres-desc-wrap');
+  if (modo === 'catalogo') {
+    const cats = [...new Set(prods.map(p => p.cat || p.categoria))];
+    const catOpts = '<option value="">-- Categoría --</option>' + cats.map(c => '<option value="' + c + '">' + c + '</option>').join('');
+    wrap.style.display = 'flex';
+    wrap.style.flexDirection = 'column';
+    wrap.style.gap = '4px';
+    wrap.innerHTML =
+      '<select class="pres-cat-sel" onchange="presCargarProductos(this)" style="font-size:12px;">' + catOpts + '</select>' +
+      '<select class="pres-prod-sel" onchange="presAutocompletarPrecio(this)" disabled style="font-size:12px;background:var(--sand);color:var(--muted);cursor:not-allowed;"><option value="">-- Producto --</option></select>';
+  } else {
+    wrap.style.display = '';
+    wrap.style.flexDirection = '';
+    wrap.style.gap = '';
+    wrap.innerHTML = '<input type="text" class="pres-desc-manual" placeholder="Descripción del ítem" style="width:100%;font-size:13px;">';
+  }
+  row.querySelector('.pres-precio').value = '';
+  row.querySelector('.pres-subtotal-linea').value = '$0';
+  presRecalcTotales();
+};
+
+window.presCargarProductos = (catSel) => {
+  const cat = catSel.value;
+  const wrap = catSel.closest('.pres-desc-wrap');
+  const prodSel = wrap.querySelector('.pres-prod-sel');
+  if (!cat) {
+    prodSel.innerHTML = '<option value="">-- Producto --</option>';
+    prodSel.disabled = true;
+    prodSel.style.background = 'var(--sand)';
+    prodSel.style.color = 'var(--muted)';
+    prodSel.style.cursor = 'not-allowed';
+    return;
+  }
+  const filtrados = prods.filter(p => (p.cat || p.categoria) === cat);
+  prodSel.innerHTML = '<option value="">-- Producto --</option>' +
+    filtrados.map(p => '<option value="' + p.precio + '" data-nombre="' + p.nombre + '">' + p.nombre + ' — ' + fmt(p.precio) + '</option>').join('');
+  prodSel.disabled = false;
+  prodSel.style.background = '';
+  prodSel.style.color = '';
+  prodSel.style.cursor = '';
+};
+
+window.presAutocompletarPrecio = (prodSel) => {
+  const precio = prodSel.value;
+  const row = prodSel.closest('.pres-linea');
+  const precioInput = row.querySelector('.pres-precio');
+  if (precio) {
+    precioInput.value = precio;
+  } else {
+    precioInput.value = '';
+  }
+  presRecalcLinea(precioInput);
+};
+
+window.presRecalcLinea = (inputEl) => {
+  const row = inputEl.closest('.pres-linea');
+  const cant = parseFloat(row.querySelector('.pres-cant').value) || 0;
+  const precio = parseFloat(row.querySelector('.pres-precio').value) || 0;
+  const sub = cant * precio;
+  row.querySelector('.pres-subtotal-linea').value = fmt(sub);
+  presRecalcTotales();
+};
+
+window.presRecalcTotales = () => {
+  let subtotal = 0;
+  document.querySelectorAll('.pres-linea').forEach(row => {
+    const cant = parseFloat(row.querySelector('.pres-cant').value) || 0;
+    const precio = parseFloat(row.querySelector('.pres-precio').value) || 0;
+    subtotal += cant * precio;
+  });
+  const descValor = parseFloat(document.getElementById('pres-desc-valor').value) || 0;
+  const esPct = document.getElementById('pres-desc-tipo-pct').classList.contains('active');
+  let descuento = 0;
+  if (esPct) {
+    descuento = subtotal * (descValor / 100);
+  } else {
+    descuento = descValor;
+  }
+  descuento = Math.min(Math.max(descuento, 0), subtotal);
+  const total = subtotal - descuento;
+  document.getElementById('pres-val-subtotal').textContent = fmt(subtotal);
+  document.getElementById('pres-val-descuento').textContent = '−' + fmt(descuento);
+  document.getElementById('pres-val-total').textContent = fmt(total);
+  document.getElementById('pres-row-descuento').style.display = descuento > 0 ? '' : 'none';
+};
+
+window.presSetDescTipo = (tipo) => {
+  const btnPct = document.getElementById('pres-desc-tipo-pct');
+  const btnFijo = document.getElementById('pres-desc-tipo-fijo');
+  const simbolo = document.getElementById('pres-desc-simbolo');
+  const input = document.getElementById('pres-desc-valor');
+  if (tipo === 'pct') {
+    btnPct.classList.add('active');
+    btnPct.style.background = 'var(--dark)';
+    btnPct.style.color = 'var(--gold)';
+    btnPct.style.fontWeight = '600';
+    btnFijo.classList.remove('active');
+    btnFijo.style.background = '#fff';
+    btnFijo.style.color = 'var(--muted)';
+    btnFijo.style.fontWeight = '';
+    simbolo.textContent = '%';
+    input.setAttribute('max', '100');
+  } else {
+    btnFijo.classList.add('active');
+    btnFijo.style.background = 'var(--dark)';
+    btnFijo.style.color = 'var(--gold)';
+    btnFijo.style.fontWeight = '600';
+    btnPct.classList.remove('active');
+    btnPct.style.background = '#fff';
+    btnPct.style.color = 'var(--muted)';
+    btnPct.style.fontWeight = '';
+    simbolo.textContent = '$';
+    input.removeAttribute('max');
+  }
+  input.value = 0;
+  presRecalcTotales();
+};
+
 // ── TAB 1: CATÁLOGO ───────────────────────────────────────────────────────
 window.renderCats = () => {
   const cats=[...new Set(prods.map(p=>p.cat))];
