@@ -88,7 +88,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
 .sync-badge{font-size:10px;color:var(--muted);text-align:right;margin-bottom:8px;}
 .sync-badge.ok{color:#4a7c59;}
 .sync-badge.err{color:#9b3a2a;}
-@media(max-width:600px){.grid-2,.grid-3,.resumen-grid{grid-template-columns:1fr;}.panel{padding:16px;}.tab{padding:10px 12px;font-size:10px;}}
+.pres-linea:last-child{border-bottom:none;}
+@media(max-width:600px){.grid-2,.grid-3,.resumen-grid{grid-template-columns:1fr;}.panel{padding:16px;}.tab{padding:10px 12px;font-size:10px;}#pres-header-lineas{display:none !important;}.pres-linea{grid-template-columns:1fr 1fr !important;grid-template-rows:auto auto auto !important;}}
 </style>
 </head>
 <body>
@@ -380,6 +381,54 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
       <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end;flex-wrap:wrap;">
         <button class="btn btn-gray" disabled style="opacity:0.5;cursor:not-allowed;">Guardar borrador</button>
         <button class="btn" disabled style="opacity:0.5;cursor:not-allowed;">Generar presupuesto</button>
+      </div>
+    </div>
+
+    <!-- Card 6: Detalle del Presupuesto -->
+    <div class="card" id="card-detalle">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div class="card-title" style="margin-bottom:0;">Detalle del presupuesto</div>
+        <button class="btn btn-sm" onclick="presAgregarLinea()">+ Agregar línea</button>
+      </div>
+      <div id="pres-header-lineas" style="display:none;grid-template-columns:110px 1fr 80px 110px 80px 36px;gap:8px;background:var(--sand);padding:7px 11px;border-radius:6px 6px 0 0;margin-bottom:0;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;">
+        <span>Modo</span>
+        <span>Descripción / Producto</span>
+        <span>Cant.</span>
+        <span>Precio unit.</span>
+        <span>Sub.</span>
+        <span></span>
+      </div>
+      <div id="pres-lineas"></div>
+      <div id="pres-empty-lineas" style="color:var(--muted);font-size:13px;text-align:center;padding:22px 0;">
+        Aún no hay ítems. Pulsa "+ Agregar línea" para comenzar a construir el presupuesto.
+      </div>
+    </div>
+
+    <!-- Card 7: Totales -->
+    <div class="card" id="card-totales">
+      <div class="card-title">Totales</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+        <label style="margin-bottom:0;">Descuento:</label>
+        <div style="display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:11px;">
+          <button id="pres-desc-tipo-pct" class="pres-desc-tipo active" onclick="presSetDescTipo('pct')" style="padding:5px 10px;border:none;cursor:pointer;background:var(--dark);color:var(--gold);font-family:'Jost',sans-serif;font-size:11px;font-weight:600;">%</button>
+          <button id="pres-desc-tipo-fijo" class="pres-desc-tipo" onclick="presSetDescTipo('fijo')" style="padding:5px 10px;border:none;cursor:pointer;background:#fff;color:var(--muted);font-family:'Jost',sans-serif;font-size:11px;">$ Fijo</button>
+        </div>
+        <input type="number" id="pres-desc-valor" min="0" value="0" placeholder="0" oninput="presRecalcTotales()" style="width:90px;text-align:right;">
+        <span id="pres-desc-simbolo" style="color:var(--muted);font-size:13px;">%</span>
+      </div>
+      <div class="result-box">
+        <div class="result-row">
+          <span class="lbl">Subtotal</span>
+          <span class="val" id="pres-val-subtotal">$0</span>
+        </div>
+        <div class="result-row" id="pres-row-descuento" style="display:none;">
+          <span class="lbl">Descuento</span>
+          <span class="val" id="pres-val-descuento" style="color:#f08070;">−$0</span>
+        </div>
+        <div class="result-row highlight">
+          <span class="lbl">Total</span>
+          <span class="val" id="pres-val-total">$0</span>
+        </div>
       </div>
     </div>
 
