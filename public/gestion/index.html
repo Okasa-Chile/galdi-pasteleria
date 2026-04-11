@@ -590,6 +590,29 @@ window.showTab = (id,el) => {
   if(id==='ventas')renderV();
   if(id==='compras')renderC();
   if(id==='simulador')calcMeta();
+  if(id==='presupuestos')cargarNumeroPres();
+};
+
+// ── TAB 5: PRESUPUESTOS ──────────────────────────────────────────────────
+window.cargarNumeroPres = async () => {
+  const el = document.getElementById('pres-numero');
+  if (!el) return;
+  try {
+    const snap = await getDocs(collection(db, 'galdi_presupuestos'));
+    let maxNum = 76; // default so first = 077
+    snap.docs.forEach(d => {
+      const data = d.data();
+      if (data.numero && typeof data.numero === 'string') {
+        const parsed = parseInt(data.numero.replace('COT-G', ''), 10);
+        if (!isNaN(parsed) && parsed > maxNum) maxNum = parsed;
+      }
+    });
+    const next = String(maxNum + 1).padStart(3, '0');
+    el.value = 'COT-G' + next;
+  } catch (e) {
+    console.error('Error cargando numero presupuesto:', e);
+    el.value = 'COT-G077';
+  }
 };
 
 // ── TAB 1: CATÁLOGO ───────────────────────────────────────────────────────
