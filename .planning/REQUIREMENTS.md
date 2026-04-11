@@ -7,11 +7,11 @@
 
 ### Formulario (FORM)
 
-- [ ] **FORM-01**: Usuario puede crear presupuesto con número correlativo automático (COT-GXXX, desde COT-G077 si no hay registros en Firestore)
-- [ ] **FORM-02**: Usuario puede ingresar datos del cliente: nombre, teléfono, email
-- [ ] **FORM-03**: Usuario puede ingresar datos del evento: fecha y tipo
-- [ ] **FORM-04**: Usuario puede agregar observaciones / notas en campo textarea
-- [ ] **FORM-05**: Usuario puede definir fecha de validez y forma de pago sugerida
+- [x] **FORM-01**: Usuario puede crear presupuesto con número correlativo automático (COT-GXXX, desde COT-G077 si no hay registros en Firestore)
+- [x] **FORM-02**: Usuario puede ingresar datos del cliente: nombre, teléfono, email
+- [x] **FORM-03**: Usuario puede ingresar datos del evento: fecha y tipo
+- [x] **FORM-04**: Usuario puede agregar observaciones / notas en campo textarea
+- [x] **FORM-05**: Usuario puede definir fecha de validez y forma de pago sugerida
 
 ### Líneas de detalle (LINE)
 
@@ -71,11 +71,11 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FORM-01 | Phase 1 | Pending |
-| FORM-02 | Phase 1 | Pending |
-| FORM-03 | Phase 1 | Pending |
-| FORM-04 | Phase 1 | Pending |
-| FORM-05 | Phase 1 | Pending |
+| FORM-01 | Phase 1 | Complete |
+| FORM-02 | Phase 1 | Complete |
+| FORM-03 | Phase 1 | Complete |
+| FORM-04 | Phase 1 | Complete |
+| FORM-05 | Phase 1 | Complete |
 | LINE-01 | Phase 2 | Pending |
 | LINE-02 | Phase 2 | Pending |
 | LINE-03 | Phase 2 | Pending |

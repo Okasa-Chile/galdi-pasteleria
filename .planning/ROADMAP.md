@@ -10,7 +10,7 @@ El Tab 5 · Presupuestos se construye en cinco fases que siguen el flujo natural
 - Integer phases (1, 2, 3): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
-- [ ] **Phase 1: Tab + Formulario Base** - Estructura del tab integrada al panel, formulario con datos de cliente, evento, observaciones y campos auxiliares
+- [x] **Phase 1: Tab + Formulario Base** - Estructura del tab integrada al panel, formulario con datos de cliente, evento, observaciones y campos auxiliares (completed 2026-04-11)
 - [ ] **Phase 2: Líneas de Detalle + Totales** - Filas dinámicas en modo catálogo y manual, cálculo automático de subtotal, descuento y total en tiempo real
 - [ ] **Phase 3: Persistencia Firestore** - Guardar presupuesto como borrador o enviado en `galdi_presupuestos` con numeración correlativa COT-GXXX
 - [ ] **Phase 4: Vista Previa e Impresión** - Modal con layout imprimible, logo, tabla de líneas, totales en dorado y CSS @media print
@@ -95,7 +95,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Tab + Formulario Base | 0/1 | Planning complete | - |
+| 1. Tab + Formulario Base | 1/1 | Complete   | 2026-04-11 |
 | 2. Líneas de Detalle + Totales | 0/? | Not started | - |
 | 3. Persistencia Firestore | 0/? | Not started | - |
 | 4. Vista Previa e Impresión | 0/? | Not started | - |
