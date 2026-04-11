@@ -47,7 +47,14 @@ All values replicate the existing inline spacing used in tabs 1–4 of `index.ht
 | gap-sm | 10px | Flex gap between action buttons |
 | gap-md | 14px | `.grid-2` and `.grid-3` gap |
 
-Exceptions: Input padding is `8px 11px` (not on the 4-point scale — inherited from existing inputs, do NOT change).
+**Exceptions — inherited from existing index.html stylesheet (do NOT change):**
+- md (14px): `.grid-2` gap and `.card` internal spacing — inherited, pre-existing
+- lg (22px): `.card` padding — inherited, pre-existing
+- 2xl (18px): `.card` margin-bottom — inherited, pre-existing
+- gap-sm (10px): button flex gap — inherited, pre-existing
+- Input padding 8px 11px: existing input style — inherited, pre-existing
+
+None of these values conform to the 4-point grid because the pre-existing system predates this grid convention. All are verbatim measurements from `public/gestion/index.html` and MUST NOT be changed to preserve visual parity with tabs 1–4.
 
 ---
 
