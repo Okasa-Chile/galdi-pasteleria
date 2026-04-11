@@ -39,8 +39,8 @@ body{font-family:'Jost',sans-serif;background:#F9F3EC;min-height:100vh;}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
 label{font-size:11px;color:var(--muted);letter-spacing:.06em;display:block;margin-bottom:4px;}
-input[type=text],input[type=number],select{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:6px;font-family:'Jost',sans-serif;font-size:13px;color:var(--brown);background:var(--cream);}
-input:focus,select:focus{outline:none;border-color:var(--gold);}
+input[type=text],input[type=number],input[type=date],select{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:6px;font-family:'Jost',sans-serif;font-size:13px;color:var(--brown);background:var(--cream);}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
 .btn{background:var(--gold);color:#fff;border:none;padding:10px 20px;border-radius:6px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;font-weight:600;transition:background .2s;}
 .btn:hover{background:var(--gold2);}
 .btn-gray{background:var(--muted);}.btn-gray:hover{background:#7a5c3a;}
@@ -116,6 +116,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
     <div class="tab" onclick="showTab('simulador',this)">2 · Simulador de Meta</div>
     <div class="tab" onclick="showTab('compras',this)">3 · Registro de Compras</div>
     <div class="tab" onclick="showTab('ventas',this)">4 · Registro de Ventas</div>
+    <div class="tab" onclick="showTab('presupuestos',this)">5 · Presupuestos</div>
   </div>
 
   <!-- TAB 1 -->
@@ -289,6 +290,99 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
         <tbody id="tb-compras"></tbody>
       </table>
     </div>
+  </div>
+
+  <!-- TAB 5 -->
+  <div id="tab-presupuestos" class="panel">
+
+    <!-- Card 1: Numero -->
+    <div class="card">
+      <div class="card-title">Presupuesto</div>
+      <div>
+        <label>N° Presupuesto</label>
+        <input type="text" id="pres-numero" readonly
+               style="background:var(--sand);color:var(--gold2);font-weight:600;letter-spacing:0.08em;cursor:default;">
+      </div>
+    </div>
+
+    <!-- Card 2: Cliente -->
+    <div class="card">
+      <div class="card-title">Datos del Cliente</div>
+      <div style="margin-bottom:14px;">
+        <label>Nombre del cliente *</label>
+        <input type="text" id="pres-nombre" placeholder="ej: María González">
+      </div>
+      <div class="grid-2">
+        <div>
+          <label>Teléfono</label>
+          <input type="text" id="pres-telefono" placeholder="ej: +56 9 1234 5678">
+        </div>
+        <div>
+          <label>Email</label>
+          <input type="text" id="pres-email" placeholder="ej: cliente@correo.cl">
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Evento -->
+    <div class="card">
+      <div class="card-title">Datos del Evento</div>
+      <div class="grid-2">
+        <div>
+          <label>Fecha del evento</label>
+          <input type="date" id="pres-fecha-evento">
+        </div>
+        <div>
+          <label>Tipo de evento</label>
+          <select id="pres-tipo-evento">
+            <option value="">— Seleccionar tipo —</option>
+            <option value="matrimonio">Matrimonio</option>
+            <option value="cumpleanos">Cumpleaños</option>
+            <option value="coffee-break">Coffee Break</option>
+            <option value="coctel">Cóctel</option>
+            <option value="aniversario">Aniversario</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: Observaciones -->
+    <div class="card">
+      <div class="card-title">Observaciones / Notas</div>
+      <div>
+        <label>Observaciones</label>
+        <textarea id="pres-obs" rows="3" placeholder="Notas internas, detalles especiales, restricciones alimentarias..."
+          style="width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:6px;font-family:'Jost',sans-serif;font-size:13px;color:var(--brown);background:var(--cream);resize:vertical;"></textarea>
+      </div>
+    </div>
+
+    <!-- Card 5: Condiciones -->
+    <div class="card">
+      <div class="card-title">Condiciones</div>
+      <div class="grid-2">
+        <div>
+          <label>Válido hasta</label>
+          <input type="date" id="pres-valido-hasta">
+        </div>
+        <div>
+          <label>Forma de pago sugerida</label>
+          <select id="pres-forma-pago">
+            <option value="">— Seleccionar —</option>
+            <option value="transferencia">Transferencia bancaria</option>
+            <option value="efectivo">Efectivo</option>
+            <option value="debito">Débito</option>
+            <option value="credito">Crédito</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end;flex-wrap:wrap;">
+        <button class="btn btn-gray" disabled style="opacity:0.5;cursor:not-allowed;">Guardar borrador</button>
+        <button class="btn" disabled style="opacity:0.5;cursor:not-allowed;">Generar presupuesto</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
