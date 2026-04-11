@@ -71,37 +71,37 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FORM-01 | — | Pending |
-| FORM-02 | — | Pending |
-| FORM-03 | — | Pending |
-| FORM-04 | — | Pending |
-| FORM-05 | — | Pending |
-| LINE-01 | — | Pending |
-| LINE-02 | — | Pending |
-| LINE-03 | — | Pending |
-| LINE-04 | — | Pending |
-| TOT-01 | — | Pending |
-| TOT-02 | — | Pending |
-| TOT-03 | — | Pending |
-| FIRE-01 | — | Pending |
-| FIRE-02 | — | Pending |
-| FIRE-03 | — | Pending |
-| PREV-01 | — | Pending |
-| PREV-02 | — | Pending |
-| PREV-03 | — | Pending |
-| PREV-04 | — | Pending |
-| PREV-05 | — | Pending |
-| PREV-06 | — | Pending |
-| HIST-01 | — | Pending |
-| HIST-02 | — | Pending |
-| HIST-03 | — | Pending |
-| HIST-04 | — | Pending |
+| FORM-01 | Phase 1 | Pending |
+| FORM-02 | Phase 1 | Pending |
+| FORM-03 | Phase 1 | Pending |
+| FORM-04 | Phase 1 | Pending |
+| FORM-05 | Phase 1 | Pending |
+| LINE-01 | Phase 2 | Pending |
+| LINE-02 | Phase 2 | Pending |
+| LINE-03 | Phase 2 | Pending |
+| LINE-04 | Phase 2 | Pending |
+| TOT-01 | Phase 2 | Pending |
+| TOT-02 | Phase 2 | Pending |
+| TOT-03 | Phase 2 | Pending |
+| FIRE-01 | Phase 3 | Pending |
+| FIRE-02 | Phase 3 | Pending |
+| FIRE-03 | Phase 3 | Pending |
+| PREV-01 | Phase 4 | Pending |
+| PREV-02 | Phase 4 | Pending |
+| PREV-03 | Phase 4 | Pending |
+| PREV-04 | Phase 4 | Pending |
+| PREV-05 | Phase 4 | Pending |
+| PREV-06 | Phase 4 | Pending |
+| HIST-01 | Phase 5 | Pending |
+| HIST-02 | Phase 5 | Pending |
+| HIST-03 | Phase 5 | Pending |
+| HIST-04 | Phase 5 | Pending |
 
 **Coverage:**
 - v1 requirements: 25 total
-- Mapped to phases: 0 (pendiente roadmap)
-- Unmapped: 25 ⚠️
+- Mapped to phases: 25 ✓
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-04-11*
-*Last updated: 2026-04-11 after initial definition*
+*Last updated: 2026-04-11 — Traceability completada tras creación del roadmap*
