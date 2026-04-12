@@ -1,5 +1,31 @@
 # AI_CONTEXT — Proyecto Galdi Pastelería
-> Registro de trabajo asistido por IA · Actualizado: 11 abril 2026
+> Registro de trabajo asistido por IA · Actualizado: 12 abril 2026
+
+---
+
+## 📋 Sesión 12-04-2026 — Tab 5 Presupuestos completo + QR + /validar-presupuesto
+
+### Cambios realizados
+- **Tab 5 Presupuestos — completado al 100%:**
+  - Phase 3: guardar en Firestore (colección `galdi_presupuestos`) con token único
+  - Phase 4: vista previa imprimible con logo, QR y botón PDF
+  - Phase 5: historial de presupuestos con botón reimprimir
+- **Fix Firestore rules:** agregadas colecciones `galdi_presupuestos` (lectura pública, escritura autorizados) y `galdi_compras` (solo autorizados)
+- **QR único por presupuesto:** generado con QRCode.js, apunta a galdi.cl/validar-presupuesto?token=XXX
+- **Página /validar-presupuesto:** live en galdi.cl, muestra presupuesto validado con colores Galdi
+- **Vista previa mejorada:** logo oficial, web galdi.cl en encabezado, orden correcto de secciones
+- **Tipo de evento reordenado:** opciones más comunes primero
+- **Precio bloqueado:** al seleccionar producto del catálogo el precio queda readonly; solo editable en modo manual
+- **Validaciones:** teléfono (8-9 dígitos), email (@ y punto)
+- **Campos nuevos en cliente:** Dirección y Comuna (select con todas las comunas RM)
+- **Sitemap:** /validar-presupuesto agregado
+- **Repo limpio:** worktrees embebidos eliminados del índice git + `.claude/worktrees/` en `.gitignore`
+- **Pendiente próxima sesión:** desactivar GitHub Pages workflow en repo Galdi (llegan correos de error innecesarios)
+
+### Aprendizajes clave
+- `cp public/gestion/index.html out/gestion/index.html` es obligatorio antes de cada deploy en Galdi
+- Firestore rules deben desplegarse por separado: `firebase deploy --only firestore:rules`
+- QRCode.js desde cdnjs funciona en ventana emergente (`win.document.getElementById`) sin necesidad de cargar la lib en el popup
 
 ---
 
