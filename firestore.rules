@@ -24,6 +24,24 @@ service cloud.firestore {
       allow read, write: if esAutorizado();
     }
 
+    // Compras Galdi: solo usuarios autorizados
+    match /galdi_compras/{docId} {
+      allow read, write: if esAutorizado();
+    }
+
+    // Presupuestos Galdi: lectura pública por token, escritura solo autorizados
+    match /galdi_presupuestos/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null &&
+        request.auth.token.email in [
+          'contacto@okasa.cl',
+          'ventas@galdi.cl',
+          'iaclaudioferrari@gmail.com',
+          'ingridgalvezd@gmail.com',
+          'jacquelinegalvezd@gmail.com'
+        ];
+    }
+
     // Bloqueo total por defecto
     match /{document=**} {
       allow read, write: if false;

@@ -91,6 +91,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
 .pres-linea:last-child{border-bottom:none;}
 @media(max-width:600px){.grid-2,.grid-3,.resumen-grid{grid-template-columns:1fr;}.panel{padding:16px;}.tab{padding:10px 12px;font-size:10px;}#pres-header-lineas{display:none !important;}.pres-linea{grid-template-columns:1fr 1fr !important;grid-template-rows:auto auto auto !important;}}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -316,7 +317,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
       <div class="grid-2">
         <div>
           <label>Teléfono</label>
-          <input type="text" id="pres-telefono" placeholder="ej: +56 9 1234 5678">
+          <input type="text" id="pres-telefono" placeholder="9 9999 9999">
         </div>
         <div>
           <label>Email</label>
@@ -337,11 +338,14 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
           <label>Tipo de evento</label>
           <select id="pres-tipo-evento">
             <option value="">— Seleccionar tipo —</option>
-            <option value="matrimonio">Matrimonio</option>
-            <option value="cumpleanos">Cumpleaños</option>
-            <option value="coffee-break">Coffee Break</option>
+            <option value="tortas-pasteles">Tortas y Pasteles</option>
+            <option value="pan-artesanal">Pan Artesanal</option>
+            <option value="empanadas">Empanadas</option>
+            <option value="desayuno-once">Desayuno / Once</option>
+            <option value="evento-matrimonio">Evento / Matrimonio</option>
             <option value="coctel">Cóctel</option>
-            <option value="aniversario">Aniversario</option>
+            <option value="coffee-break">Coffee Break</option>
+            <option value="cumpleanos">Cumpleaños</option>
             <option value="otro">Otro</option>
           </select>
         </div>
@@ -380,7 +384,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
       </div>
       <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end;flex-wrap:wrap;">
         <button class="btn btn-gray" disabled style="opacity:0.5;cursor:not-allowed;">Guardar borrador</button>
-        <button class="btn" disabled style="opacity:0.5;cursor:not-allowed;">Generar presupuesto</button>
+        <button class="btn btn-gray" onclick="vistaPreviaPresupuesto()" style="opacity:1;cursor:pointer;">🖨️ Vista previa</button>
+        <button class="btn" onclick="guardarPresupuesto()">Generar presupuesto</button>
       </div>
     </div>
 
@@ -430,6 +435,28 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
           <span class="val" id="pres-val-total">$0</span>
         </div>
       </div>
+    </div>
+
+    <!-- Card 8: Historial de Presupuestos -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div class="card-title" style="margin-bottom:0;">Historial de Presupuestos</div>
+        <button class="btn btn-sm btn-gray" onclick="cargarHistorialPresupuestos()">↻ Actualizar</button>
+      </div>
+      <table class="ventas-table" id="tb-historial-pres">
+        <thead>
+          <tr>
+            <th>N° Presupuesto</th>
+            <th>Cliente</th>
+            <th>Total</th>
+            <th>Fecha</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tb-historial-pres-body">
+          <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">Cargando...</td></tr>
+        </tbody>
+      </table>
     </div>
 
   </div>
@@ -486,7 +513,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
 import { getAuth, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
-import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, deleteDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, deleteDoc, query, orderBy, serverTimestamp, limit } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
 
 // ── CONFIG ────────────────────────────────────────────────────────────────
 const AUTORIZADOS = ['contacto@okasa.cl','ventas@galdi.cl','iaclaudioferrari@gmail.com','ingridgalvezd@gmail.com','jacquelinegalvezd@gmail.com'];
@@ -639,7 +666,7 @@ window.showTab = (id,el) => {
   if(id==='ventas')renderV();
   if(id==='compras')renderC();
   if(id==='simulador')calcMeta();
-  if(id==='presupuestos')cargarNumeroPres();
+  if(id==='presupuestos'){cargarNumeroPres();cargarHistorialPresupuestos();}
 };
 
 // ── TAB 5: PRESUPUESTOS ──────────────────────────────────────────────────
@@ -831,6 +858,513 @@ window.presSetDescTipo = (tipo) => {
   }
   input.value = 0;
   presRecalcTotales();
+};
+
+window.guardarPresupuesto = async () => {
+  // Validaciones
+  const cliente = document.getElementById('pres-nombre')?.value.trim();
+  if (!cliente) { alert('Ingresa el nombre del cliente antes de generar el presupuesto.'); return; }
+  const lineas = document.querySelectorAll('.pres-linea');
+  if (!lineas.length) { alert('Agrega al menos un ítem al presupuesto.'); return; }
+  const _telVal = document.getElementById('pres-telefono')?.value.trim() || '';
+  if (_telVal) {
+    const _telDigits = _telVal.replace(/[\s\-]/g, '');
+    if (!/^\d{8,9}$/.test(_telDigits)) { alert('El teléfono debe tener 8 o 9 dígitos'); return; }
+  }
+  const _emailVal = document.getElementById('pres-email')?.value.trim() || '';
+  if (_emailVal) {
+    const _at = _emailVal.indexOf('@');
+    if (_at < 0 || !_emailVal.slice(_at + 1).includes('.')) { alert('Ingresa un email válido (ej: nombre@gmail.com)'); return; }
+  }
+
+  // Leer ítems
+  const items = [];
+  for (const row of lineas) {
+    const cant = parseFloat(row.querySelector('.pres-cant')?.value) || 0;
+    const precioUnit = parseFloat(row.querySelector('.pres-precio')?.value) || 0;
+    const descManual = row.querySelector('.pres-desc-manual');
+    const prodSel = row.querySelector('.pres-prod-sel');
+    let descripcion = '';
+    if (descManual) {
+      descripcion = descManual.value.trim() || 'Sin descripción';
+    } else if (prodSel) {
+      const opt = prodSel.options[prodSel.selectedIndex];
+      descripcion = opt?.dataset?.nombre || opt?.text?.split(' — ')[0] || 'Producto';
+    }
+    items.push({ descripcion, cantidad: cant, precioUnit, subtotalLinea: cant * precioUnit });
+  }
+
+  // Calcular totales
+  const subtotal = items.reduce((a, i) => a + i.subtotalLinea, 0);
+  const descValor = parseFloat(document.getElementById('pres-desc-valor')?.value) || 0;
+  const esPct = document.getElementById('pres-desc-tipo-pct')?.classList.contains('active');
+  let descuento = esPct ? subtotal * (descValor / 100) : descValor;
+  descuento = Math.min(Math.max(descuento, 0), subtotal);
+  const total = subtotal - descuento;
+  const iva = Math.round(total / 1.19 * 0.19);
+
+  // Construir documento
+  const presupuesto = {
+    numero:       document.getElementById('pres-numero')?.value || '',
+    cliente,
+    telefono:     document.getElementById('pres-telefono')?.value.trim() || '',
+    email:        document.getElementById('pres-email')?.value.trim() || '',
+    fechaEvento:  document.getElementById('pres-fecha-evento')?.value || '',
+    tipoEvento:   document.getElementById('pres-tipo-evento')?.value || '',
+    observaciones: document.getElementById('pres-obs')?.value.trim() || '',
+    validoHasta:  document.getElementById('pres-valido-hasta')?.value || '',
+    formaPago:    document.getElementById('pres-forma-pago')?.value || '',
+    descuentoTipo: esPct ? 'porcentaje' : 'fijo',
+    descuentoValor: descValor,
+    items,
+    subtotal,
+    descuento,
+    iva,
+    total,
+    creadoEn: serverTimestamp(),
+    token: Math.random().toString(36).substring(2,10) + Math.random().toString(36).substring(2,10),
+  };
+
+  // Guardar en Firestore
+  try {
+    await addDoc(collection(db, 'galdi_presupuestos'), presupuesto);
+  } catch (e) {
+    console.error('Error guardando presupuesto:', e);
+    alert('Error al guardar el presupuesto. Intenta nuevamente.');
+    return;
+  }
+
+  alert('✓ Presupuesto ' + presupuesto.numero + ' guardado correctamente.');
+
+  // Limpiar formulario
+  ['pres-nombre','pres-telefono','pres-email','pres-obs','pres-valido-hasta'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  ['pres-fecha-evento','pres-tipo-evento','pres-forma-pago'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('pres-desc-valor').value = 0;
+  presSetDescTipo('pct');
+  document.getElementById('pres-lineas').innerHTML = '';
+  document.getElementById('pres-header-lineas').style.display = 'none';
+  document.getElementById('pres-empty-lineas').style.display = '';
+  presRecalcTotales();
+  await cargarNumeroPres();
+};
+
+window.vistaPreviaPresupuesto = () => {
+  // Validaciones
+  const cliente = document.getElementById('pres-nombre')?.value.trim();
+  if (!cliente) { alert('Ingresa el nombre del cliente antes de generar la vista previa.'); return; }
+  const lineas = document.querySelectorAll('.pres-linea');
+  if (!lineas.length) { alert('Agrega al menos un ítem al presupuesto.'); return; }
+  const _telVal = document.getElementById('pres-telefono')?.value.trim() || '';
+  if (_telVal) {
+    const _telDigits = _telVal.replace(/[\s\-]/g, '');
+    if (!/^\d{8,9}$/.test(_telDigits)) { alert('El teléfono debe tener 8 o 9 dígitos'); return; }
+  }
+  const _emailVal = document.getElementById('pres-email')?.value.trim() || '';
+  if (_emailVal) {
+    const _at = _emailVal.indexOf('@');
+    if (_at < 0 || !_emailVal.slice(_at + 1).includes('.')) { alert('Ingresa un email válido (ej: nombre@gmail.com)'); return; }
+  }
+
+  // Leer campos
+  const numero      = document.getElementById('pres-numero')?.value || '';
+  const telefono    = document.getElementById('pres-telefono')?.value.trim() || '';
+  const email       = document.getElementById('pres-email')?.value.trim() || '';
+  const fechaEvento = document.getElementById('pres-fecha-evento')?.value || '';
+  const tipoEvento  = document.getElementById('pres-tipo-evento')?.value || '';
+  const obs         = document.getElementById('pres-obs')?.value.trim() || '';
+  const validoHasta = document.getElementById('pres-valido-hasta')?.value || '';
+  const formaPago   = document.getElementById('pres-forma-pago')?.value || '';
+  const hoy         = new Date().toLocaleDateString('es-CL', {day:'2-digit',month:'2-digit',year:'numeric'});
+
+  const fmtFecha = v => {
+    if (!v) return '—';
+    const [y,m,d] = v.split('-');
+    return d + '/' + m + '/' + y;
+  };
+
+  const fmtNum = n => '$' + Math.round(n).toLocaleString('es-CL');
+
+  // Leer ítems
+  const items = [];
+  for (const row of lineas) {
+    const cant = parseFloat(row.querySelector('.pres-cant')?.value) || 0;
+    const precioUnit = parseFloat(row.querySelector('.pres-precio')?.value) || 0;
+    const descManual = row.querySelector('.pres-desc-manual');
+    const prodSel = row.querySelector('.pres-prod-sel');
+    let descripcion = '';
+    if (descManual) {
+      descripcion = descManual.value.trim() || 'Sin descripción';
+    } else if (prodSel) {
+      const opt = prodSel.options[prodSel.selectedIndex];
+      descripcion = opt?.dataset?.nombre || opt?.text?.split(' — ')[0] || 'Producto';
+    }
+    items.push({ descripcion, cantidad: cant, precioUnit, subtotalLinea: cant * precioUnit });
+  }
+
+  // Calcular totales
+  const subtotal = items.reduce((a, i) => a + i.subtotalLinea, 0);
+  const descValor = parseFloat(document.getElementById('pres-desc-valor')?.value) || 0;
+  const esPct = document.getElementById('pres-desc-tipo-pct')?.classList.contains('active');
+  let descuento = esPct ? subtotal * (descValor / 100) : descValor;
+  descuento = Math.min(Math.max(descuento, 0), subtotal);
+  const total = subtotal - descuento;
+  const iva = Math.round(total / 1.19 * 0.19);
+  const neto = total - iva;
+
+  // Filas de ítems
+  const filasItems = items.map((it, i) => `
+    <tr style="background:${i % 2 === 0 ? '#fdf8f2' : '#fff'};">
+      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;">${it.descripcion}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:center;">${it.cantidad}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:right;">${fmtNum(it.precioUnit)}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
+    </tr>`).join('');
+
+  // Fila descuento (solo si aplica)
+  const filaDescuento = descuento > 0 ? `
+    <tr>
+      <td colspan="3" style="padding:7px 12px;text-align:right;color:#888;">Descuento${esPct ? ' (' + descValor + '%)' : ''}:</td>
+      <td style="padding:7px 12px;text-align:right;color:#c0392b;">− ${fmtNum(descuento)}</td>
+    </tr>` : '';
+
+  // Teléfono sin prefijo +56
+  const fmtTel = t => t ? t.replace(/^\+?56\s*/, '') : '';
+
+  // Filas info cliente extra
+  const extraCliente = [
+    telefono ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${fmtTel(telefono)}</td></tr>` : '',
+    email    ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${email}</td></tr>` : '',
+  ].join('');
+
+  // Filas datos del evento
+  const extraEvento = [
+    tipoEvento  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Tipo de evento</td><td style="padding:2px 0;">${tipoEvento.charAt(0).toUpperCase()+tipoEvento.slice(1)}</td></tr>` : '',
+    fechaEvento ? `<tr><td style="color:#888;padding:2px 0;">Fecha del evento</td><td style="padding:2px 0;">${fmtFecha(fechaEvento)}</td></tr>` : '',
+  ].join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Presupuesto ${numero} — Galdi Pastelería</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:Arial,sans-serif; font-size:13px; color:#3D1F0A; background:#fff; padding:32px 40px; max-width:800px; margin:auto; }
+    @media print { body { padding:12px 20px; } .no-print { display:none; } }
+  </style>
+</head>
+<body>
+
+  <!-- Encabezado -->
+  <table style="width:100%;margin-bottom:28px;">
+    <tr>
+      <td style="vertical-align:middle;">
+        <img src="https://galdi.cl/images/logo-ancho.webp" alt="Galdi" style="height:50px;">
+        <div style="font-size:12px;color:#3D1F0A;font-weight:600;margin-top:2px;">Pastelería Artesanal</div>
+        <div style="font-size:11px;color:#888;margin-top:6px;">RUT 78.378.827-6</div>
+        <div style="font-size:11px;color:#888;">ventas@galdi.cl · +56 9 9099 1011</div>
+      </td>
+      <td style="text-align:right;vertical-align:top;">
+        <div style="background:#C9A55A;color:#fff;display:inline-block;padding:6px 18px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:0.1em;margin-bottom:6px;">PRESUPUESTO</div>
+        <div style="font-size:18px;font-weight:700;color:#3D1F0A;">${numero}</div>
+        <div style="font-size:11px;color:#888;margin-top:4px;">Fecha de emisión: ${hoy}</div>
+        ${validoHasta ? `<div style="font-size:11px;color:#888;">Válido hasta: ${fmtFecha(validoHasta)}</div>` : ''}
+        ${formaPago ? `<div style="font-size:11px;color:#888;margin-top:2px;">Pago: ${formaPago.charAt(0).toUpperCase()+formaPago.slice(1)}</div>` : ''}
+      </td>
+    </tr>
+  </table>
+
+  <!-- Divider -->
+  <div style="border-top:2px solid #C9A55A;margin-bottom:24px;"></div>
+
+  <!-- Datos cliente -->
+  <div style="background:#fdf8f2;border:1px solid #ede3d4;border-radius:6px;padding:14px 18px;margin-bottom:24px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#C9A55A;margin-bottom:8px;">Datos del Cliente</div>
+    <table style="font-size:13px;">
+      <tr><td style="color:#888;padding:2px 0;width:130px;">Nombre</td><td style="padding:2px 0;font-weight:600;">${cliente}</td></tr>
+      ${extraCliente}
+    </table>
+  </div>
+
+  <!-- Datos del evento -->
+  ${extraEvento ? `<div style="background:#fdf8f2;border:1px solid #ede3d4;border-radius:6px;padding:14px 18px;margin-bottom:24px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#C9A55A;margin-bottom:8px;">Datos del Evento</div>
+    <table style="font-size:13px;">${extraEvento}</table>
+  </div>` : ''}
+
+  <!-- Tabla de ítems -->
+  <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+    <thead>
+      <tr style="background:#3D1F0A;color:#fff;">
+        <th style="padding:10px 12px;text-align:left;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Descripción</th>
+        <th style="padding:10px 12px;text-align:center;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;width:70px;">Cant.</th>
+        <th style="padding:10px 12px;text-align:right;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;width:120px;">Precio unit.</th>
+        <th style="padding:10px 12px;text-align:right;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;width:120px;">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>${filasItems}</tbody>
+  </table>
+
+  <!-- Totales -->
+  <table style="width:100%;margin-bottom:24px;">
+    <tr>
+      <td style="width:60%"></td>
+      <td style="width:40%;">
+        <table style="width:100%;font-size:13px;border-top:1px solid #ede3d4;padding-top:8px;">
+          <tr>
+            <td style="padding:5px 12px;color:#888;">Neto (sin IVA):</td>
+            <td style="padding:5px 12px;text-align:right;">${fmtNum(neto)}</td>
+          </tr>
+          ${filaDescuento}
+          <tr>
+            <td style="padding:5px 12px;color:#888;">IVA (19%):</td>
+            <td style="padding:5px 12px;text-align:right;">${fmtNum(iva)}</td>
+          </tr>
+          <tr style="background:#3D1F0A;color:#fff;">
+            <td style="padding:10px 12px;font-weight:700;font-size:14px;border-radius:4px 0 0 4px;">TOTAL</td>
+            <td style="padding:10px 12px;text-align:right;font-weight:700;font-size:14px;border-radius:0 4px 4px 0;">${fmtNum(total)}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Observaciones -->
+  ${obs ? `<div style="border:1px solid #ede3d4;border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#666;"><strong style="color:#3D1F0A;">Observaciones:</strong> ${obs}</div>` : ''}
+
+  <!-- Pie -->
+  <div style="border-top:1px solid #ede3d4;padding-top:14px;font-size:11px;color:#aaa;text-align:center;">
+    ${validoHasta ? 'Presupuesto válido hasta el ' + fmtFecha(validoHasta) + '.' : 'Presupuesto sujeto a disponibilidad.'}
+    · Galdi Pastelería Artesanal · RUT 78.378.827-6 · Maipú, Santiago de Chile
+  </div>
+
+  <!-- QR validación -->
+  <div class="no-print" style="text-align:center;margin-top:20px;">
+    <div id="qr-container" style="display:inline-block;"></div>
+    <div style="font-size:10px;color:#aaa;margin-top:6px;">Escanea para validar este presupuesto</div>
+  </div>
+
+  <!-- Botón imprimir (no se imprime) -->
+  <div class="no-print" style="text-align:center;margin-top:16px;">
+    <button onclick="window.print()" style="background:#C9A55A;color:#fff;border:none;padding:10px 28px;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;">🖨️ Imprimir / Guardar PDF</button>
+  </div>
+
+  <script>window.onload = () => window.print();<\/script>
+</body>
+</html>`;
+
+  const _token = Math.random().toString(36).substring(2,10) + Math.random().toString(36).substring(2,10);
+  const win = window.open('', '_blank', 'width=900,height=700,scrollbars=yes');
+  if (!win) { alert('El navegador bloqueó la ventana emergente. Permite pop-ups para este sitio.'); return; }
+  win.document.write(html);
+  win.document.close();
+  new QRCode(win.document.getElementById('qr-container'), {
+    text: `https://galdi.cl/validar-presupuesto?token=${_token}`,
+    width: 100, height: 100
+  });
+};
+
+window.cargarHistorialPresupuestos = async () => {
+  const tbody = document.getElementById('tb-historial-pres-body');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">Cargando...</td></tr>';
+  try {
+    const q = query(collection(db, 'galdi_presupuestos'), orderBy('creadoEn', 'desc'));
+    const snap = await getDocs(q);
+    const docs = snap.docs.slice(0, 20);
+    if (!docs.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">Sin presupuestos guardados.</td></tr>';
+      return;
+    }
+    const fmtNum = n => '$' + Math.round(n || 0).toLocaleString('es-CL');
+    const fmtTs = ts => {
+      if (!ts) return '—';
+      const d = ts.toDate ? ts.toDate() : new Date(ts);
+      return d.toLocaleDateString('es-CL', {day:'2-digit', month:'2-digit', year:'numeric'});
+    };
+    tbody.innerHTML = docs.map(d => {
+      const data = d.data();
+      return `<tr>
+        <td><strong style="color:var(--gold2);">${data.numero || '—'}</strong></td>
+        <td>${data.cliente || '—'}</td>
+        <td><strong>${fmtNum(data.total)}</strong></td>
+        <td>${fmtTs(data.creadoEn)}</td>
+        <td><button class="btn btn-sm btn-gray" onclick="vistaPreviaDesdeHistorial('${d.id}')">🖨️ Reimprimir</button></td>
+      </tr>`;
+    }).join('');
+    // guardar los docs en memoria para acceso rápido desde vistaPreviaDesdeHistorial
+    window._historialPres = {};
+    docs.forEach(d => { window._historialPres[d.id] = d.data(); });
+  } catch (e) {
+    console.error('Error cargando historial:', e);
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">Error al cargar historial.</td></tr>';
+  }
+};
+
+window.vistaPreviaDesdeHistorial = (docId) => {
+  const data = window._historialPres?.[docId];
+  if (!data) { alert('No se encontraron datos para este presupuesto.'); return; }
+
+  const fmtNum = n => '$' + Math.round(n || 0).toLocaleString('es-CL');
+  const fmtFecha = v => {
+    if (!v) return '—';
+    if (v.toDate) {
+      const d = v.toDate();
+      return d.toLocaleDateString('es-CL', {day:'2-digit', month:'2-digit', year:'numeric'});
+    }
+    const [y,m,d] = v.split('-');
+    return (d||'') + '/' + (m||'') + '/' + (y||'');
+  };
+  const hoy = new Date().toLocaleDateString('es-CL', {day:'2-digit',month:'2-digit',year:'numeric'});
+
+  const items = Array.isArray(data.items) ? data.items : [];
+  const subtotal = data.subtotal || 0;
+  const descuento = data.descuento || 0;
+  const total = data.total || 0;
+  const iva = data.iva || Math.round(total / 1.19 * 0.19);
+  const neto = total - iva;
+
+  const filasItems = items.map((it, i) => `
+    <tr style="background:${i % 2 === 0 ? '#fdf8f2' : '#fff'};">
+      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;">${it.descripcion || '—'}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:center;">${it.cantidad}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:right;">${fmtNum(it.precioUnit)}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
+    </tr>`).join('');
+
+  const filaDescuento = descuento > 0 ? `
+    <tr>
+      <td colspan="3" style="padding:7px 12px;text-align:right;color:#888;">Descuento${data.descuentoTipo==='porcentaje' ? ' (' + data.descuentoValor + '%)' : ''}:</td>
+      <td style="padding:7px 12px;text-align:right;color:#c0392b;">− ${fmtNum(descuento)}</td>
+    </tr>` : '';
+
+  const fmtTel = t => t ? t.replace(/^\+?56\s*/, '') : '';
+
+  const extraCliente = [
+    data.telefono ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${fmtTel(data.telefono)}</td></tr>` : '',
+    data.email    ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${data.email}</td></tr>` : '',
+  ].join('');
+
+  const extraEvento = [
+    data.tipoEvento  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Tipo de evento</td><td style="padding:2px 0;">${data.tipoEvento.charAt(0).toUpperCase()+data.tipoEvento.slice(1)}</td></tr>` : '',
+    data.fechaEvento ? `<tr><td style="color:#888;padding:2px 0;">Fecha del evento</td><td style="padding:2px 0;">${fmtFecha(data.fechaEvento)}</td></tr>` : '',
+  ].join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Presupuesto ${data.numero} — Galdi Pastelería</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:Arial,sans-serif; font-size:13px; color:#3D1F0A; background:#fff; padding:32px 40px; max-width:800px; margin:auto; }
+    @media print { body { padding:12px 20px; } .no-print { display:none; } }
+  </style>
+</head>
+<body>
+
+  <table style="width:100%;margin-bottom:28px;">
+    <tr>
+      <td style="vertical-align:middle;">
+        <img src="https://galdi.cl/images/logo-ancho.webp" alt="Galdi" style="height:50px;">
+        <div style="font-size:12px;color:#3D1F0A;font-weight:600;margin-top:2px;">Pastelería Artesanal</div>
+        <div style="font-size:11px;color:#888;margin-top:6px;">RUT 78.378.827-6</div>
+        <div style="font-size:11px;color:#888;">ventas@galdi.cl · +56 9 9099 1011</div>
+      </td>
+      <td style="text-align:right;vertical-align:top;">
+        <div style="background:#C9A55A;color:#fff;display:inline-block;padding:6px 18px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:0.1em;margin-bottom:6px;">PRESUPUESTO</div>
+        <div style="font-size:18px;font-weight:700;color:#3D1F0A;">${data.numero}</div>
+        <div style="font-size:11px;color:#888;margin-top:4px;">Fecha de emisión: ${hoy}</div>
+        ${data.validoHasta ? `<div style="font-size:11px;color:#888;">Válido hasta: ${fmtFecha(data.validoHasta)}</div>` : ''}
+        ${data.formaPago ? `<div style="font-size:11px;color:#888;margin-top:2px;">Pago: ${data.formaPago.charAt(0).toUpperCase()+data.formaPago.slice(1)}</div>` : ''}
+      </td>
+    </tr>
+  </table>
+
+  <div style="border-top:2px solid #C9A55A;margin-bottom:24px;"></div>
+
+  <div style="background:#fdf8f2;border:1px solid #ede3d4;border-radius:6px;padding:14px 18px;margin-bottom:24px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#C9A55A;margin-bottom:8px;">Datos del Cliente</div>
+    <table style="font-size:13px;">
+      <tr><td style="color:#888;padding:2px 0;width:130px;">Nombre</td><td style="padding:2px 0;font-weight:600;">${data.cliente}</td></tr>
+      ${extraCliente}
+    </table>
+  </div>
+
+  ${extraEvento ? `<div style="background:#fdf8f2;border:1px solid #ede3d4;border-radius:6px;padding:14px 18px;margin-bottom:24px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#C9A55A;margin-bottom:8px;">Datos del Evento</div>
+    <table style="font-size:13px;">${extraEvento}</table>
+  </div>` : ''}
+
+  <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+    <thead>
+      <tr style="background:#3D1F0A;color:#fff;">
+        <th style="padding:10px 12px;text-align:left;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Descripción</th>
+        <th style="padding:10px 12px;text-align:center;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;width:70px;">Cant.</th>
+        <th style="padding:10px 12px;text-align:right;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;width:120px;">Precio unit.</th>
+        <th style="padding:10px 12px;text-align:right;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;width:120px;">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>${filasItems}</tbody>
+  </table>
+
+  <table style="width:100%;margin-bottom:24px;">
+    <tr>
+      <td style="width:60%"></td>
+      <td style="width:40%;">
+        <table style="width:100%;font-size:13px;border-top:1px solid #ede3d4;padding-top:8px;">
+          <tr>
+            <td style="padding:5px 12px;color:#888;">Neto (sin IVA):</td>
+            <td style="padding:5px 12px;text-align:right;">${fmtNum(neto)}</td>
+          </tr>
+          ${filaDescuento}
+          <tr>
+            <td style="padding:5px 12px;color:#888;">IVA (19%):</td>
+            <td style="padding:5px 12px;text-align:right;">${fmtNum(iva)}</td>
+          </tr>
+          <tr style="background:#3D1F0A;color:#fff;">
+            <td style="padding:10px 12px;font-weight:700;font-size:14px;border-radius:4px 0 0 4px;">TOTAL</td>
+            <td style="padding:10px 12px;text-align:right;font-weight:700;font-size:14px;border-radius:0 4px 4px 0;">${fmtNum(total)}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  ${data.observaciones ? `<div style="border:1px solid #ede3d4;border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#666;"><strong style="color:#3D1F0A;">Observaciones:</strong> ${data.observaciones}</div>` : ''}
+
+  <div style="border-top:1px solid #ede3d4;padding-top:14px;font-size:11px;color:#aaa;text-align:center;">
+    ${data.validoHasta ? 'Presupuesto válido hasta el ' + fmtFecha(data.validoHasta) + '.' : 'Presupuesto sujeto a disponibilidad.'}
+    · Galdi Pastelería Artesanal · RUT 78.378.827-6 · Maipú, Santiago de Chile
+  </div>
+
+  <!-- QR validación -->
+  <div class="no-print" style="text-align:center;margin-top:20px;">
+    <div id="qr-container" style="display:inline-block;"></div>
+    <div style="font-size:10px;color:#aaa;margin-top:6px;">Escanea para validar este presupuesto</div>
+  </div>
+
+  <div class="no-print" style="text-align:center;margin-top:16px;">
+    <button onclick="window.print()" style="background:#C9A55A;color:#fff;border:none;padding:10px 28px;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;">🖨️ Imprimir / Guardar PDF</button>
+  </div>
+
+  <script>window.onload = () => window.print();<\/script>
+</body>
+</html>`;
+
+  const _token = data.token || (Math.random().toString(36).substring(2,10) + Math.random().toString(36).substring(2,10));
+  const win = window.open('', '_blank', 'width=900,height=700,scrollbars=yes');
+  if (!win) { alert('El navegador bloqueó la ventana emergente. Permite pop-ups para este sitio.'); return; }
+  win.document.write(html);
+  win.document.close();
+  new QRCode(win.document.getElementById('qr-container'), {
+    text: `https://galdi.cl/validar-presupuesto?token=${_token}`,
+    width: 100, height: 100
+  });
 };
 
 // ── TAB 1: CATÁLOGO ───────────────────────────────────────────────────────
