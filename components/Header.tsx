@@ -7,6 +7,7 @@ const navItems = [
   { label: 'Productos', id: 'productos' },
   { label: 'Servicios y Pedidos', id: 'servicios' },
   { label: 'Nuestra Historia', id: 'nosotras' },
+  { label: 'Dudas Frecuentes', id: 'preguntas-frecuentes' },
   { label: 'Contacto y Delivery', id: 'contacto' },
 ];
 
