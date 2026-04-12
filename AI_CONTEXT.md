@@ -1,5 +1,26 @@
 # AI_CONTEXT — Proyecto Galdi Pastelería
-> Registro de trabajo asistido por IA · Actualizado: 09 abril 2026 (noche)
+> Registro de trabajo asistido por IA · Actualizado: 11 abril 2026
+
+---
+
+## 📋 Sesión 11-04-2026 — Recuperación componentes + Tab 5 Presupuestos + GA4
+
+### Cambios realizados
+- **Google Analytics 4** (`G-LW81BNRRFP`) instalado en `layout.tsx` con `next/script strategy="afterInteractive"` — verificado en tiempo real
+- **FAQ.tsx recuperado** — `components/FAQ.tsx` creado con 7 preguntas en acordeón, `id="preguntas-frecuentes"`
+- **Header.tsx** — "Dudas Frecuentes" agregado al `navItems` (desktop + mobile)
+- **Nosotras.tsx** — 6 párrafos completos restaurados
+- **Tab 5 Presupuestos en `/gestion`** — Phase 1 (formulario base, correlativo COT-G077) y Phase 2 (líneas dinámicas, totales en tiempo real) completadas
+- **fix:** Incidente Gemini/mex resuelto — archivos contaminados revertidos con `git restore` + `git clean`
+- **chore:** worktrees de agentes eliminados del índice git
+- Todos los cambios pusheados a `origin/main` (commit `c20a895`)
+
+### Aprendizajes clave
+- **GSD**: descartado para proyectos pequeños — consume demasiados tokens en ceremonias sin beneficio real para archivos HTML vanilla o proyectos de una persona. Desinstalar en próxima sesión.
+- **mex**: herramienta experimental peligrosa — modifica código fuente sin permiso. No usar hasta versión estable (~2-3 meses).
+- Nunca trabajar con otra IA sin hacer `git push` antes
+- Nunca `git clean -fd` sin revisar `git status` primero
+- Al terminar cualquier sesión: siempre `git push`
 
 ---
 
@@ -86,13 +107,14 @@ galdi-nextjs/
 ## 🔜 Pendiente
 
 ### Gestión (/gestion)
+- [ ] **Tab 5 Presupuestos — Phases 3-5** — Phase 3 (Firestore), Phase 4 (Vista Previa + PDF), Phase 5 (Historial); ejecutar con prompt directo sin GSD
 - [ ] **Precios tortas por N° personas** — confirmar con socias y actualizar constante `PRECIOS_TORTA` en `gestion/index.html` (selector ya implementado, precios son provisionales)
 - [ ] **Cupones de descuento** — prompt `.txt` ya generado, listo para ejecutar en Claude Code
-- [ ] **Sistema de cotizaciones** — Tab 6 en `/gestion`: secciones dinámicas, totales automáticos, exportación a PDF
 - [ ] **Plural "docenas"** — carrito: "2 docena" → "2 docenas"
+- [ ] **Desinstalar GSD de Claude Code** — descartado para proyectos pequeños
 
 ### SEO / Marketing
-- [ ] **Reseñas Google Business** — meta: 30 reseñas (hoy: ~13 al 08-04-2026)
+- [ ] **Reseñas Google Business** — meta: 30 reseñas (hoy: ~18 al 11-04-2026)
 - [ ] **Conecta Pyme** — listing enviado, esperando aprobación
 - [ ] **Métodos de pago en GBP** — espera terminal tarjetas (fines de abril 2026)
 - [ ] **Re-análisis Seobility** — esperar hasta ~15-04-2026 para medir impacto del contenido SEO agregado
@@ -222,7 +244,7 @@ images: { unoptimized: true }
 |---|---|
 | **Superpowers** | Brainstorming, sub-agentes paralelos, TDD, code review |
 | **Everything Claude Code** | 75+ skills especializados |
-| **GSD** | Meta-prompting: `/gsd:do`, `/gsd:quick`, `/gsd:new-milestone` |
+| **GSD** | ~~Meta-prompting~~ — **descartado** (demasiado ceremonial para proyectos pequeños, desinstalar) |
 | **addyosmani/agent-skills** | 21 skills + 7 comandos slash: `/spec`, `/plan`, `/build`, `/test`, `/review`, `/code-simplify`, `/ship` |
 
 ---
