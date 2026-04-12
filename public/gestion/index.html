@@ -324,6 +324,14 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
           <input type="text" id="pres-email" placeholder="ej: cliente@correo.cl">
         </div>
       </div>
+      <div style="margin-top:14px;">
+        <label>Dirección</label>
+        <input type="text" id="pres-direccion" placeholder="ej: Av. Principal 123, Depto 45">
+      </div>
+      <div style="margin-top:14px;">
+        <label>Comuna</label>
+        <input type="text" id="pres-comuna" placeholder="ej: Maipú">
+      </div>
     </div>
 
     <!-- Card 3: Evento -->
@@ -919,6 +927,8 @@ window.guardarPresupuesto = async () => {
     cliente,
     telefono:     document.getElementById('pres-telefono')?.value.trim() || '',
     email:        document.getElementById('pres-email')?.value.trim() || '',
+    direccion:    document.getElementById('pres-direccion')?.value.trim() || '',
+    comuna:       document.getElementById('pres-comuna')?.value.trim() || '',
     fechaEvento:  document.getElementById('pres-fecha-evento')?.value || '',
     tipoEvento:   document.getElementById('pres-tipo-evento')?.value || '',
     observaciones: document.getElementById('pres-obs')?.value.trim() || '',
@@ -983,6 +993,8 @@ window.vistaPreviaPresupuesto = () => {
   const numero      = document.getElementById('pres-numero')?.value || '';
   const telefono    = document.getElementById('pres-telefono')?.value.trim() || '';
   const email       = document.getElementById('pres-email')?.value.trim() || '';
+  const direccion   = document.getElementById('pres-direccion')?.value.trim() || '';
+  const comuna      = document.getElementById('pres-comuna')?.value.trim() || '';
   const fechaEvento = document.getElementById('pres-fecha-evento')?.value || '';
   const tipoEvento  = document.getElementById('pres-tipo-evento')?.value || '';
   const obs         = document.getElementById('pres-obs')?.value.trim() || '';
@@ -1046,8 +1058,10 @@ window.vistaPreviaPresupuesto = () => {
 
   // Filas info cliente extra
   const extraCliente = [
-    telefono ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${fmtTel(telefono)}</td></tr>` : '',
-    email    ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${email}</td></tr>` : '',
+    telefono  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${fmtTel(telefono)}</td></tr>` : '',
+    email     ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${email}</td></tr>` : '',
+    direccion ? `<tr><td style="color:#888;padding:2px 0;">Dirección</td><td style="padding:2px 0;">${direccion}</td></tr>` : '',
+    comuna    ? `<tr><td style="color:#888;padding:2px 0;">Comuna</td><td style="padding:2px 0;">${comuna}</td></tr>` : '',
   ].join('');
 
   // Filas datos del evento
@@ -1255,8 +1269,10 @@ window.vistaPreviaDesdeHistorial = (docId) => {
   const fmtTel = t => t ? t.replace(/^\+?56\s*/, '') : '';
 
   const extraCliente = [
-    data.telefono ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${fmtTel(data.telefono)}</td></tr>` : '',
-    data.email    ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${data.email}</td></tr>` : '',
+    data.telefono  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${fmtTel(data.telefono)}</td></tr>` : '',
+    data.email     ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${data.email}</td></tr>` : '',
+    data.direccion ? `<tr><td style="color:#888;padding:2px 0;">Dirección</td><td style="padding:2px 0;">${data.direccion}</td></tr>` : '',
+    data.comuna    ? `<tr><td style="color:#888;padding:2px 0;">Comuna</td><td style="padding:2px 0;">${data.comuna}</td></tr>` : '',
   ].join('');
 
   const extraEvento = [
