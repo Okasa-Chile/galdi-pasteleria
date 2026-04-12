@@ -758,7 +758,11 @@ window.presSetModo = (btn, modo) => {
     wrap.style.gap = '';
     wrap.innerHTML = '<input type="text" class="pres-desc-manual" placeholder="Descripción del ítem" style="width:100%;font-size:13px;">';
   }
-  row.querySelector('.pres-precio').value = '';
+  const precioInput = row.querySelector('.pres-precio');
+  precioInput.value = '';
+  precioInput.readOnly = false;
+  precioInput.style.background = '';
+  precioInput.style.cursor = '';
   row.querySelector('.pres-subtotal-linea').value = '$0';
   presRecalcTotales();
 };
@@ -790,8 +794,14 @@ window.presAutocompletarPrecio = (prodSel) => {
   const precioInput = row.querySelector('.pres-precio');
   if (precio) {
     precioInput.value = precio;
+    precioInput.readOnly = true;
+    precioInput.style.background = '#f0f0f0';
+    precioInput.style.cursor = 'not-allowed';
   } else {
     precioInput.value = '';
+    precioInput.readOnly = false;
+    precioInput.style.background = '';
+    precioInput.style.cursor = '';
   }
   presRecalcLinea(precioInput);
 };
@@ -1066,7 +1076,7 @@ window.vistaPreviaPresupuesto = () => {
         <img src="https://galdi.cl/images/logo-ancho.webp" alt="Galdi" style="height:50px;">
         <div style="font-size:12px;color:#3D1F0A;font-weight:600;margin-top:2px;">Pastelería Artesanal</div>
         <div style="font-size:11px;color:#888;margin-top:6px;">RUT 78.378.827-6</div>
-        <div style="font-size:11px;color:#888;">ventas@galdi.cl · +56 9 9099 1011</div>
+        <div style="font-size:11px;color:#888;">galdi.cl · ventas@galdi.cl · +56 9 9099 1011</div>
       </td>
       <td style="text-align:right;vertical-align:top;">
         <div style="background:#C9A55A;color:#fff;display:inline-block;padding:6px 18px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:0.1em;margin-bottom:6px;">PRESUPUESTO</div>
@@ -1273,7 +1283,7 @@ window.vistaPreviaDesdeHistorial = (docId) => {
         <img src="https://galdi.cl/images/logo-ancho.webp" alt="Galdi" style="height:50px;">
         <div style="font-size:12px;color:#3D1F0A;font-weight:600;margin-top:2px;">Pastelería Artesanal</div>
         <div style="font-size:11px;color:#888;margin-top:6px;">RUT 78.378.827-6</div>
-        <div style="font-size:11px;color:#888;">ventas@galdi.cl · +56 9 9099 1011</div>
+        <div style="font-size:11px;color:#888;">galdi.cl · ventas@galdi.cl · +56 9 9099 1011</div>
       </td>
       <td style="text-align:right;vertical-align:top;">
         <div style="background:#C9A55A;color:#fff;display:inline-block;padding:6px 18px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:0.1em;margin-bottom:6px;">PRESUPUESTO</div>
