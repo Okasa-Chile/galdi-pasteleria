@@ -352,44 +352,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
       </div>
     </div>
 
-    <!-- Card 4: Observaciones -->
-    <div class="card">
-      <div class="card-title">Observaciones / Notas</div>
-      <div>
-        <label>Observaciones</label>
-        <textarea id="pres-obs" rows="3" placeholder="Notas internas, detalles especiales, restricciones alimentarias..."
-          style="width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:6px;font-family:'Jost',sans-serif;font-size:13px;color:var(--brown);background:var(--cream);resize:vertical;"></textarea>
-      </div>
-    </div>
-
-    <!-- Card 5: Condiciones -->
-    <div class="card">
-      <div class="card-title">Condiciones</div>
-      <div class="grid-2">
-        <div>
-          <label>Válido hasta</label>
-          <input type="date" id="pres-valido-hasta">
-        </div>
-        <div>
-          <label>Forma de pago sugerida</label>
-          <select id="pres-forma-pago">
-            <option value="">— Seleccionar —</option>
-            <option value="transferencia">Transferencia bancaria</option>
-            <option value="efectivo">Efectivo</option>
-            <option value="debito">Débito</option>
-            <option value="credito">Crédito</option>
-            <option value="otro">Otro</option>
-          </select>
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end;flex-wrap:wrap;">
-        <button class="btn btn-gray" disabled style="opacity:0.5;cursor:not-allowed;">Guardar borrador</button>
-        <button class="btn btn-gray" onclick="vistaPreviaPresupuesto()" style="opacity:1;cursor:pointer;">🖨️ Vista previa</button>
-        <button class="btn" onclick="guardarPresupuesto()">Generar presupuesto</button>
-      </div>
-    </div>
-
-    <!-- Card 6: Detalle del Presupuesto -->
+    <!-- Card 4: Detalle del Presupuesto -->
     <div class="card" id="card-detalle">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
         <div class="card-title" style="margin-bottom:0;">Detalle del presupuesto</div>
@@ -409,7 +372,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
       </div>
     </div>
 
-    <!-- Card 7: Totales -->
+    <!-- Card 5: Totales -->
     <div class="card" id="card-totales">
       <div class="card-title">Totales</div>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
@@ -434,6 +397,43 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
           <span class="lbl">Total</span>
           <span class="val" id="pres-val-total">$0</span>
         </div>
+      </div>
+    </div>
+
+    <!-- Card 6: Observaciones -->
+    <div class="card">
+      <div class="card-title">Observaciones / Notas</div>
+      <div>
+        <label>Observaciones</label>
+        <textarea id="pres-obs" rows="3" placeholder="Notas internas, detalles especiales, restricciones alimentarias..."
+          style="width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:6px;font-family:'Jost',sans-serif;font-size:13px;color:var(--brown);background:var(--cream);resize:vertical;"></textarea>
+      </div>
+    </div>
+
+    <!-- Card 7: Condiciones -->
+    <div class="card">
+      <div class="card-title">Condiciones</div>
+      <div class="grid-2">
+        <div>
+          <label>Válido hasta</label>
+          <input type="date" id="pres-valido-hasta">
+        </div>
+        <div>
+          <label>Forma de pago sugerida</label>
+          <select id="pres-forma-pago">
+            <option value="">— Seleccionar —</option>
+            <option value="transferencia">Transferencia bancaria</option>
+            <option value="efectivo">Efectivo</option>
+            <option value="debito">Débito</option>
+            <option value="credito">Crédito</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end;flex-wrap:wrap;">
+        <button class="btn btn-gray" disabled style="opacity:0.5;cursor:not-allowed;">Guardar borrador</button>
+        <button class="btn btn-gray" onclick="vistaPreviaPresupuesto()" style="opacity:1;cursor:pointer;">🖨️ Vista previa</button>
+        <button class="btn" onclick="guardarPresupuesto()">Generar presupuesto</button>
       </div>
     </div>
 
