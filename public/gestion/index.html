@@ -221,6 +221,15 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
           </select>
         </div>
         <div><label>Producto</label><select id="v-d" onchange="autocompletarPrecio()"></select></div>
+        <div id="wrap-talla-v" style="display:none;">
+          <label>Talla</label>
+          <select id="v-talla" onchange="actualizarPrecioTalla()">
+            <option value="">— Seleccionar —</option>
+            <option value="S">S — 8 a 10 personas</option>
+            <option value="M">M — 14 a 16 personas</option>
+            <option value="L">L — 20 a 22 personas</option>
+          </select>
+        </div>
         <div id="wrap-personas" style="display:none;">
           <label>N° de personas</label>
           <select id="v-personas" onchange="autocompletarPrecioTorta()">
@@ -770,6 +779,7 @@ window.presAgregarLinea = () => {
     '<div class="pres-desc-wrap" style="display:flex;flex-direction:column;gap:4px;">' +
       '<select class="pres-cat-sel" onchange="presCargarProductos(this)" style="font-size:12px;">' + catOpts + '</select>' +
       '<select class="pres-prod-sel" onchange="presAutocompletarPrecio(this)" disabled style="font-size:12px;background:var(--sand);color:var(--muted);cursor:not-allowed;"><option value="">-- Producto --</option></select>' +
+      '<select class="sel-talla-pres" onchange="presTallaChanged(this)" style="display:none;font-size:12px;"><option value="">— Talla —</option><option value="S">S — 8 a 10 p.</option><option value="M">M — 14 a 16 p.</option><option value="L">L — 20 a 22 p.</option></select>' +
     '</div>' +
     '<input type="number" class="pres-cant" min="1" value="1" oninput="presRecalcLinea(this)" style="width:100%;text-align:right;">' +
     '<input type="number" class="pres-precio" min="0" step="1" placeholder="0" oninput="presRecalcLinea(this)" style="width:100%;text-align:right;">' +
@@ -813,7 +823,8 @@ window.presSetModo = (btn, modo) => {
     wrap.style.gap = '4px';
     wrap.innerHTML =
       '<select class="pres-cat-sel" onchange="presCargarProductos(this)" style="font-size:12px;">' + catOpts + '</select>' +
-      '<select class="pres-prod-sel" onchange="presAutocompletarPrecio(this)" disabled style="font-size:12px;background:var(--sand);color:var(--muted);cursor:not-allowed;"><option value="">-- Producto --</option></select>';
+      '<select class="pres-prod-sel" onchange="presAutocompletarPrecio(this)" disabled style="font-size:12px;background:var(--sand);color:var(--muted);cursor:not-allowed;"><option value="">-- Producto --</option></select>' +
+      '<select class="sel-talla-pres" onchange="presTallaChanged(this)" style="display:none;font-size:12px;"><option value="">— Talla —</option><option value="S">S — 8 a 10 p.</option><option value="M">M — 14 a 16 p.</option><option value="L">L — 20 a 22 p.</option></select>';
   } else {
     wrap.style.display = '';
     wrap.style.flexDirection = '';
@@ -842,8 +853,9 @@ window.presCargarProductos = (catSel) => {
     return;
   }
   const filtrados = prods.filter(p => (p.cat || p.categoria) === cat);
+  const esTortaOPastel = (cat === 'Tortas' || cat === 'Pasteles & Tartas');
   prodSel.innerHTML = '<option value="">-- Producto --</option>' +
-    filtrados.map(p => '<option value="' + p.precio + '" data-nombre="' + p.nombre + '">' + p.nombre + ' — ' + fmt(p.precio) + '</option>').join('');
+    filtrados.map(p => '<option value="' + (esTortaOPastel ? '' : p.precio) + '" data-cat="' + cat + '" data-original-nombre="' + p.nombre + '">' + p.nombre + (esTortaOPastel ? '' : ' — ' + fmt(p.precio)) + '</option>').join('');
   prodSel.disabled = false;
   prodSel.style.background = '';
   prodSel.style.color = '';
@@ -854,8 +866,36 @@ window.presAutocompletarPrecio = (prodSel) => {
   const precio = prodSel.value;
   const row = prodSel.closest('.pres-linea');
   const precioInput = row.querySelector('.pres-precio');
-  if (precio) {
+  const selectedOpt = prodSel.options[prodSel.selectedIndex];
+  const cat = selectedOpt?.getAttribute('data-cat') || '';
+  const esTortaOPastel = (cat === 'Tortas' || cat === 'Pasteles & Tartas');
+  const tallaEl = row.querySelector('.sel-talla-pres');
+  if (tallaEl) {
+    tallaEl.style.display = (selectedOpt && selectedOpt.value !== '' && esTortaOPastel) ? '' : 'none';
+    tallaEl.value = '';
+    tallaEl.setAttribute('data-cat', cat);
+  }
+  if (precio && !esTortaOPastel) {
     precioInput.value = precio;
+    precioInput.readOnly = true;
+    precioInput.style.background = '#f0f0f0';
+    precioInput.style.cursor = 'not-allowed';
+  } else {
+    precioInput.value = '';
+    precioInput.readOnly = false;
+    precioInput.style.background = '';
+    precioInput.style.cursor = '';
+  }
+  presRecalcLinea(precioInput);
+};
+
+window.presTallaChanged = (tallaEl) => {
+  const cat = tallaEl.getAttribute('data-cat');
+  const talla = tallaEl.value;
+  const row = tallaEl.closest('.pres-linea');
+  const precioInput = row.querySelector('.pres-precio');
+  if (cat && talla && PRECIOS_TALLA[cat] && PRECIOS_TALLA[cat][talla]) {
+    precioInput.value = PRECIOS_TALLA[cat][talla];
     precioInput.readOnly = true;
     precioInput.style.background = '#f0f0f0';
     precioInput.style.cursor = 'not-allowed';
@@ -1467,8 +1507,11 @@ window.renderT = () => {
   tb.innerHTML=ps.map(p=>{
     const cn=p.costo+p.energia+p.logistica+p.mdo;
     const mr=cn>0?Math.round(((p.precio/1.19)-cn)/cn*100):0;
+    const esTortaOPastel=(p.cat==='Tortas'||p.cat==='Pasteles & Tartas');
+    const precios=PRECIOS_TALLA[p.cat]??{};
+    const badgeTallas=esTortaOPastel?`<div style="margin-top:4px;font-size:10px;color:#C9A55A;line-height:1.8;"><span style="border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;margin-right:3px;">S ${(precios.S||0).toLocaleString('es-CL')}</span><span style="border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;margin-right:3px;">M ${(precios.M||0).toLocaleString('es-CL')}</span><span style="border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">L ${(precios.L||0).toLocaleString('es-CL')}</span></div>`:''
     return `<tr class="${sel?.id===p.id?'selected':''}" onclick="selProd(${p.id})" style="cursor:pointer;">
-      <td><strong>${p.nombre}</strong></td>
+      <td><strong>${p.nombre}</strong>${badgeTallas}</td>
       <td><span class="tag tag-${p.tipo}">${p.tipo==='propio'?'Propio':'Reventa'}</span></td>
       <td>${p.unidad}</td>
       <td>${fmt(cn)}</td>
@@ -1587,16 +1630,32 @@ const PRECIOS_TORTA = {
   '99': 55000,
 };
 
+// PRECIOS POR TALLA — PROVISIONALES hasta confirmación de las socias
+const PRECIOS_TALLA = {
+  'Tortas':            { S: 18000, M: 25000, L: 35000 },
+  'Pasteles & Tartas': { S: 12000, M: 18000, L: 26000 },
+};
+
 window.poblarProductos = () => {
   const cat = document.getElementById('v-t').value;
   const wrapPersonas = document.getElementById('wrap-personas');
   const selPersonas = document.getElementById('v-personas');
+  const wrapTalla = document.getElementById('wrap-talla-v');
+  const selTalla = document.getElementById('v-talla');
+  const esTortaOPastel = (cat === 'torta' || cat === 'pastel');
   if (cat === 'torta') {
     wrapPersonas.style.display = '';
     selPersonas.value = '';
   } else {
     wrapPersonas.style.display = 'none';
     selPersonas.value = '';
+  }
+  if (esTortaOPastel) {
+    wrapTalla.style.display = '';
+    selTalla.value = '';
+  } else {
+    wrapTalla.style.display = 'none';
+    selTalla.value = '';
   }
   const sel = document.getElementById('v-d');
   if (!cat) {
@@ -1641,16 +1700,35 @@ window.autocompletarPrecioTorta = () => {
   }
 };
 
+window.actualizarPrecioTalla = () => {
+  const cat = document.getElementById('v-t').value;
+  const talla = document.getElementById('v-talla').value;
+  const mapacat = {
+    'torta': 'Tortas',
+    'pastel': 'Pasteles & Tartas',
+  };
+  const catNombre = mapacat[cat];
+  if (catNombre && talla && PRECIOS_TALLA[catNombre] && PRECIOS_TALLA[catNombre][talla]) {
+    document.getElementById('v-m').value = PRECIOS_TALLA[catNombre][talla];
+  } else {
+    document.getElementById('v-m').value = '';
+  }
+};
+
 window.addVenta = async () => {
   const f=document.getElementById('v-f').value,t=document.getElementById('v-t').value,m=+document.getElementById('v-m').value,c=document.getElementById('v-c').value;
   const selEl=document.getElementById('v-d');
   const d=selEl.options[selEl.selectedIndex]?.text.split(' — ')[0] || selEl.value;
   if(!f||!m){alert('Ingresa día y monto');return;}
-  const venta={id:Date.now(),fecha:f,tipo:t,desc:d,cantidad:parseInt(document.getElementById('v-q')?.value)||1,monto:m,cliente:c};
+  const wrapTallaEl=document.getElementById('wrap-talla-v');
+  const tallaEl=document.getElementById('v-talla');
+  const talla=(wrapTallaEl&&wrapTallaEl.style.display!=='none'&&tallaEl)?tallaEl.value||null:null;
+  const venta={id:Date.now(),fecha:f,tipo:t,desc:d,cantidad:parseInt(document.getElementById('v-q')?.value)||1,monto:m,cliente:c,...(talla?{talla}:{})};
   ventas.push(venta);
   setSyncBadge('sync-ventas','Guardando...','');
   await fsSaveVenta(venta);
   ['v-f','v-m','v-c'].forEach(i=>document.getElementById(i).value='');
+  if(tallaEl)tallaEl.value='';
   renderV();
 };
 
@@ -1675,15 +1753,18 @@ window.renderV = () => {
   const lm={pan:'Pan',torta:'Torta',pastel:'Pastel',queque:'Queque',dulce:'Dulces',empanada:'Empanada',banqueteria:'Banquetería',otro:'Otro'};
   const tb=document.getElementById('tb-ventas');
   if(!ventas.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px;">Sin ventas registradas</td></tr>';return;}
-  tb.innerHTML=[...ventas].sort((a,b)=>b.id-a.id).map(v=>`<tr>
+  tb.innerHTML=[...ventas].sort((a,b)=>b.id-a.id).map(v=>{
+    const nombreMostrado=v.talla?`${v.desc||'—'} <span style="background:#C9A55A22;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:0 6px;font-size:11px;">${v.talla}</span>`:v.desc||'—';
+    return `<tr>
     <td>Día ${v.fecha}</td>
     <td><span class="tag tag-propio">${lm[v.tipo]||v.tipo}</span></td>
-    <td>${v.desc||'—'}</td>
+    <td>${nombreMostrado}</td>
     <td>${v.cantidad||1}</td>
     <td>${v.cliente||'—'}</td>
     <td><strong>${fmt(v.monto)}</strong></td>
     <td><span style="cursor:pointer;color:var(--muted);font-size:18px;" onclick="delVenta(${v.id})">×</span></td>
-  </tr>`).join('');
+  </tr>`;
+  }).join('');
 };
 
 // ── TAB 3: COMPRAS ────────────────────────────────────────────────────────
