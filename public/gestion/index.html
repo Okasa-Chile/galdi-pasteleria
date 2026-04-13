@@ -900,10 +900,22 @@ window.presAutocompletarPrecio = (prodSel) => {
 };
 
 window.presTallaChanged = (tallaEl) => {
-  // No autocompletar precio — la usuaria lo ingresa manualmente según precio acordado
-  // Solo recalcular para reflejar cambios en subtotal si hay precio ya ingresado
+  const cat = tallaEl.getAttribute('data-cat');
+  const talla = tallaEl.value;
   const row = tallaEl.closest('.pres-linea');
-  presRecalcLinea(row.querySelector('.pres-precio'));
+  const precioInput = row.querySelector('.pres-precio');
+  precioInput.removeAttribute('readonly');
+  if (cat && talla && COSTOS_TALLA[cat]?.[talla]) {
+    precioInput.value = COSTOS_TALLA[cat][talla];
+    precioInput.setAttribute('readonly', '');
+    precioInput.style.background = '#f0f0f0';
+    precioInput.style.cursor = 'not-allowed';
+  } else {
+    precioInput.value = '';
+    precioInput.style.background = '';
+    precioInput.style.cursor = '';
+  }
+  presRecalcLinea(precioInput);
 };
 
 window.presRecalcLinea = (inputEl) => {
