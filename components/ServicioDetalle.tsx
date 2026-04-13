@@ -12,7 +12,7 @@ const productosAlmacenes: Record<string, { nombre: string; imagen: string; unida
     { nombre: 'Tortilla con Chicharrones', imagen: imagenes['Tortilla con Chicharrones'], unidad: 'unidad' },
     { nombre: 'Pan Integral',              imagen: imagenes['Pan Integral'],              unidad: 'kg' },
     { nombre: 'Pan Frica',                 imagen: imagenes['Pan Frica'],                 unidad: 'kg' },
-    { nombre: 'Dobloditas',                imagen: imagenes['Dobloditas'],                unidad: 'kg' },
+    { nombre: 'Dobladitas',                imagen: imagenes['Dobladitas'],                unidad: 'kg' },
     { nombre: 'Marraqueta',                imagen: imagenes['Marraqueta'],                unidad: 'kg' },
   ],
   'Queques': [

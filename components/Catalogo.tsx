@@ -16,7 +16,7 @@ export const imagenes: Record<string, string> = {
   'Tortilla con Chicharrones': '/images/tortilla-chicharrones-new.webp',
   'Pan Integral':              '/images/Pan integral.webp',
   'Pan Frica':                 '/images/Pan Frica.webp',
-  'Dobloditas':                '/images/Dobladitas.webp',
+  'Dobladitas':                '/images/Dobladitas.webp',
   'Marraqueta':                '/images/Marraquetas.webp',
   'Chicharrones':              '/images/chicharrones.webp',
   // Pasteles & Tartas
@@ -61,7 +61,7 @@ const categorias = [
       { nombre: 'Tortilla con Chicharrones', detalle: 'Masa tierna enriquecida con chicharrones dorados, perfecta para el desayuno o la once en familia.' },
       { nombre: 'Pan Integral',              detalle: 'Elaborado con cereales integrales seleccionados, nutritivo y auténticamente artesanal de principio a fin.' },
       { nombre: 'Pan Frica',                 detalle: 'Pan esponjoso y dorado, opcionalmente coronado con sésamo tostado para un toque crujiente especial.' },
-      { nombre: 'Dobloditas',                detalle: 'Rollitos de masa suave y tierna, ideales para el desayuno y once familiar.' },
+      { nombre: 'Dobladitas',                detalle: 'Rollitos de masa suave y tierna, ideales para el desayuno y once familiar.' },
       { nombre: 'Marraqueta',                detalle: 'El pan chileno por excelencia. Corteza crujiente, miga suave y aroma inconfundible, hecho a mano.' },
     ],
   },
