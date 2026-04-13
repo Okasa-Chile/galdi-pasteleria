@@ -173,6 +173,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
 
   const [activeTab, setActiveTab] = useState(initialTab ?? tabs[0]);
   const [carrito, setCarrito]     = useState<Carrito>({});
+  const [tallaActiva, setTallaActiva] = useState<Record<string, 'S'|'M'|'L'>>({});
   const [eventoImg, setEventoImg] = useState(eventosData[tabs[0]]?.imagen ?? imagen);
   const [mostrarResumen, setMostrarResumen] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
@@ -215,24 +216,26 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
     [];
 
   // Carrito helpers
-  function agregar(nombre: string, tab: string, unidad: string) {
+  function agregar(nombre: string, tab: string, unidad: string, carritoKey?: string) {
+    const key = carritoKey ?? nombre;
     const min = getMinimo(tab, unidad, nombre, id);
     setCarrito(prev => ({
       ...prev,
-      [nombre]: (prev[nombre] ?? 0) + min,
+      [key]: (prev[key] ?? 0) + min,
     }));
   }
 
-  function quitar(nombre: string, tab: string, unidad: string) {
+  function quitar(nombre: string, tab: string, unidad: string, carritoKey?: string) {
+    const key = carritoKey ?? nombre;
     const min = getMinimo(tab, unidad, nombre, id);
     setCarrito(prev => {
-      const actual = prev[nombre] ?? 0;
+      const actual = prev[key] ?? 0;
       if (actual <= min) {
         const next = { ...prev };
-        delete next[nombre];
+        delete next[key];
         return next;
       }
-      return { ...prev, [nombre]: actual - min };
+      return { ...prev, [key]: actual - min };
     });
   }
 
@@ -250,21 +253,31 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
     }
 
     const lineas = Object.entries(carrito)
-      .map(([nombre, cantidad]) => {
+      .map(([key, cantidad]) => {
+        const partes = key.split(' · ');
+        const nomProd = partes[0];
+        const tallaProd = partes[1] as 'S'|'M'|'L' | undefined;
         const todosLosProductos = [
           ...Object.values(productosAlmacenes).flat(),
           ...Object.values(productosDelivery).flat(),
         ];
-        const prod = todosLosProductos.find(p => p.nombre === nombre);
-        const esEmpanada = productosDelivery['Empanadas']?.some(p => p.nombre === nombre);
+        const prod = todosLosProductos.find(p => p.nombre === nomProd);
+        const esEmpanada = productosDelivery['Empanadas']?.some(p => p.nombre === nomProd);
         const unidad = (id === 'delivery' && esEmpanada) ? 'unidad' : (prod?.unidad ?? 'un');
-        return `• ${cantidad} ${pluralizar(cantidad, unidad)} — ${nombre}`;
+        const tallaStr = tallaProd ? ` (talla ${tallaProd}, ${DESC_TALLA[tallaProd].split(' — ')[1]})` : '';
+        return `• ${cantidad} ${pluralizar(cantidad, unidad)} — ${nomProd}${tallaStr}`;
       })
       .join('\n');
     const tipo = id === 'b2b' ? 'distribución a almacén' : 'delivery';
     const msg = `Hola Galdi, quiero hacer un pedido de ${tipo}:\n${lineas}\n¿Me pueden cotizar?`;
     window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
   }
+
+  const DESC_TALLA: Record<string, string> = {
+    S: 'S — 8 a 10 personas',
+    M: 'M — 14 a 16 personas',
+    L: 'L — 20 a 22 personas',
+  };
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', flexDirection: 'column', animation: 'svcFadeIn 0.5s cubic-bezier(0.25,0.46,0.45,0.94) both' }}>
@@ -287,6 +300,10 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
         .svc-resumen-panel { background: #2a1205; border: 1px solid rgba(212,168,83,0.25); border-bottom: none; width: 100%; max-width: 560px; padding: 1.5rem; border-radius: 12px 12px 0 0; animation: slideUp 0.3s ease; }
         @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .svc-resumen-item { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid rgba(212,168,83,0.1); font-family: var(--font-sans); font-size: 0.8rem; color: var(--cream); }
+        .talla-btn { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--gold); background: transparent; color: var(--gold); font-size: 9px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s; padding: 0; line-height: 1; }
+        .talla-btn.sel { background: var(--gold); color: var(--dark); }
+        .talla-btn:hover { background: var(--gold); color: var(--dark); }
+        .talla-personas { font-size: 9px; color: rgba(201,165,90,0.8); text-align: center; padding: 4px 0 6px; letter-spacing: 0.04em; min-height: 18px; }
       `}</style>
 
       {/* ── Imagen de fondo ── */}
@@ -385,7 +402,10 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
         {(id === 'b2b' || id === 'delivery') && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.75rem', marginTop: '1rem' }}>
             {productos.map(prod => {
-              const enCarrito = carrito[prod.nombre] ?? 0;
+              const esTorta = id === 'delivery' && activeTab === 'Tortas';
+              const tallaSeleccionada = tallaActiva[prod.nombre];
+              const carritoKey = esTorta && tallaSeleccionada ? `${prod.nombre} · ${tallaSeleccionada}` : prod.nombre;
+              const enCarrito = carrito[carritoKey] ?? 0;
               const min = getMinimo(activeTab, prod.unidad, prod.nombre, id);
               const label = getLabelMinimo(activeTab, prod.unidad, prod.nombre, id);
               return (
@@ -394,19 +414,42 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                   <div style={{ position: 'relative', height: '260px' }}>
                     <Image src={prod.imagen} alt={prod.nombre} fill style={{ objectFit: 'cover' }} />
                   </div>
-                  {/* Nombre + mínimo */}
-                  <div style={{ padding: '0.4rem 0.5rem 0.3rem', flex: 1 }}>
-                    <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: 'var(--cream)', fontWeight: 500, margin: 0, lineHeight: 1.3 }}>{prod.nombre}</p>
-                    <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.6rem', color: 'rgba(212,168,83,0.7)', margin: '0.15rem 0 0', letterSpacing: '0.05em' }}>{label}</p>
+                  {/* Nombre + mínimo + selector talla */}
+                  <div style={{ padding: '0.4rem 0.5rem 0.3rem', flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '6px' }}>
+                    <div>
+                      <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: 'var(--cream)', fontWeight: 500, margin: 0, lineHeight: 1.3 }}>{prod.nombre}</p>
+                      <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.6rem', color: 'rgba(212,168,83,0.7)', margin: '0.15rem 0 0', letterSpacing: '0.05em' }}>{label}</p>
+                    </div>
+                    {esTorta && (
+                      <div style={{ display: 'flex', gap: '4px', flexShrink: 0, marginTop: '1px' }}>
+                        {(['S', 'M', 'L'] as const).map(t => (
+                          <button
+                            key={t}
+                            className={`talla-btn${tallaSeleccionada === t ? ' sel' : ''}`}
+                            onClick={() => setTallaActiva(prev => ({ ...prev, [prod.nombre]: t }))}
+                          >{t}</button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   {/* Botón agregar / contador */}
-                  {enCarrito === 0 ? (
-                    <button className="svc-btn-add" onClick={() => agregar(prod.nombre, activeTab, prod.unidad)}><span style={{fontSize:'1rem'}}>🛒</span> AGREGAR</button>
+                  {esTorta && !tallaSeleccionada ? (
+                    <button className="svc-btn-add" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+                      Elige talla
+                    </button>
+                  ) : enCarrito === 0 ? (
+                    <button className="svc-btn-add" onClick={() => agregar(carritoKey, activeTab, prod.unidad)}><span style={{fontSize:'1rem'}}>🛒</span> AGREGAR</button>
                   ) : (
                     <div className="svc-counter">
-                      <button onClick={() => quitar(prod.nombre, activeTab, prod.unidad)}>−</button>
+                      <button onClick={() => quitar(carritoKey, activeTab, prod.unidad)}>−</button>
                       <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'var(--cream)' }}>{enCarrito} {pluralizar(enCarrito, (activeTab === 'Empanadas' && id === 'delivery') ? 'unidad' : prod.unidad)}</span>
-                      <button onClick={() => agregar(prod.nombre, activeTab, prod.unidad)}>+</button>
+                      <button onClick={() => agregar(carritoKey, activeTab, prod.unidad)}>+</button>
+                    </div>
+                  )}
+                  {/* Texto personas — solo tortas en delivery */}
+                  {esTorta && (
+                    <div className="talla-personas" style={{ color: tallaSeleccionada ? 'rgba(201,165,90,0.8)' : 'rgba(220,100,100,0.8)' }}>
+                      {tallaSeleccionada ? DESC_TALLA[tallaSeleccionada] : '← Elige un tamaño primero'}
                     </div>
                   )}
                 </div>
@@ -433,21 +476,36 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                 </div>
                 {/* Lista de productos */}
                 <div style={{ marginBottom: '1.25rem', maxHeight: '55vh', overflowY: 'auto' }}>
-                  {Object.entries(carrito).map(([nombre, cantidad]) => (
-                    <div key={nombre} className="svc-resumen-item">
-                      <span>🛒 {nombre}</span>
-                      <span style={{ color: 'var(--gold)', fontWeight: 500 }}>{cantidad} {(() => {
-                        const todosLosProductos = [
-                          ...Object.values(productosAlmacenes).flat(),
-                          ...Object.values(productosDelivery).flat(),
-                        ];
-                        const prod = todosLosProductos.find(p => p.nombre === nombre);
-                        const esEmpanadasDelivery = productosDelivery['Empanadas']?.some(p => p.nombre === nombre) && id === 'delivery';
-                        const unidad = esEmpanadasDelivery ? 'unidad' : (prod?.unidad ?? 'un');
-                        return pluralizar(cantidad, unidad);
-                      })()}</span>
-                    </div>
-                  ))}
+                  {Object.entries(carrito).map(([key, cantidad]) => {
+                    const partes = key.split(' · ');
+                    const nomProd = partes[0];
+                    const tallaProd = partes[1] as 'S'|'M'|'L' | undefined;
+                    const todosLosProductos = [
+                      ...Object.values(productosAlmacenes).flat(),
+                      ...Object.values(productosDelivery).flat(),
+                    ];
+                    const prod = todosLosProductos.find(p => p.nombre === nomProd);
+                    const esEmpanadasDelivery = productosDelivery['Empanadas']?.some(p => p.nombre === nomProd) && id === 'delivery';
+                    const unidad = esEmpanadasDelivery ? 'unidad' : (prod?.unidad ?? 'un');
+                    return (
+                      <div key={key} className="svc-resumen-item">
+                        <div>
+                          <span>🛒 {nomProd}</span>
+                          {tallaProd && (
+                            <div style={{ marginTop: '2px' }}>
+                              <span style={{ background: 'var(--gold)', color: 'var(--dark)', fontSize: '0.6rem', fontWeight: 700, padding: '1px 5px', borderRadius: '3px', letterSpacing: '0.05em' }}>
+                                {tallaProd}
+                              </span>
+                              <span style={{ fontSize: '0.65rem', color: 'rgba(201,165,90,0.8)', marginLeft: '4px' }}>
+                                {DESC_TALLA[tallaProd].split(' — ')[1]}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <span style={{ color: 'var(--gold)', fontWeight: 500 }}>{cantidad} {pluralizar(cantidad, unidad)}</span>
+                      </div>
+                    );
+                  })}
                 </div>
                 {/* Botón enviar */}
                 <button onClick={() => { enviarWhatsApp(); setMostrarResumen(false); }} style={{ width: '100%', background: '#25D366', border: 'none', color: '#fff', fontFamily: 'var(--font-sans)', fontSize: '0.78rem', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', borderRadius: '4px' }}>
