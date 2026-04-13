@@ -3,6 +3,44 @@
 
 ---
 
+## 📋 Sesión 13-04-2026 (tarde) — Tallas S/M/L en /gestion completo
+
+### Cambios realizados
+- **Catálogo Tab 1:** badges S · M · L en filas Tortas y Pasteles & Tartas
+  - Solo visuales, sin interacción
+  - Fix stopPropagation: clic en badge no dispara selProd() ni modifica c-mat
+- **Calculadora Tab 1:** selector "Tamaño" aparece al abrir calculadora de Torta/Pastel
+  - selProd() no precarga c-mat para Tortas/Pasteles → campo vacío hasta elegir tamaño
+  - Al elegir tamaño → carga COSTOS_TALLA[cat][talla] en c-mat y recalcula
+  - Para Pan/Queques/etc → c-mat se carga normal desde sel.costo
+- **Tab Ventas:** selector talla visible al elegir categoría Torta o Pastel
+  - Monto libre, sin autocompletar
+  - Historial muestra "Torta 3 Leches (M)"
+- **Tab Presupuestos:** selector talla en líneas CAT para Tortas y Pasteles
+  - Al elegir producto → precio unit = cpx(p) recalculado en tiempo real
+  - Al elegir talla → precio recalcula: cn = COSTOS_TALLA[cat][talla] + prod.mdo + prod.energia + prod.logistica, aplica margen e IVA
+  - Map global lineaProds almacena objeto prod por lineaId
+  - Al eliminar línea → lineaProds.delete(lineaId)
+  - Descripción guardada: "Torta Panqueque (talla L)"
+  - Desplegable producto muestra solo nombre, sin precio
+  - COSTOS_TALLA queda exclusivamente para calculadora del Tab Catálogo
+
+### Constantes agregadas
+- COSTOS_TALLA = { 'Tortas': {S:18000, M:25000, L:35000}, 'Pasteles & Tartas': {S:12000, M:18000, L:26000} }
+  → PROVISIONALES hasta confirmación de las socias
+
+### Aprendizajes clave
+- Event bubbling: clic en badge dentro de `<tr onclick="selProd()">` dispara selProd() → siempre usar stopPropagation en elementos visuales dentro de filas clicables
+- readonly en inputs bloquea escritura via JS → usar removeAttribute/setAttribute alrededor de la asignación
+- cpx(p) siempre más confiable que p.precio (que puede estar desactualizado en Firestore)
+- COSTOS_TALLA son costos de materiales, no precios de venta — el precio final se recalcula con cpx usando esos costos + mdo/energía/logística/margen/IVA del producto
+
+### Pendiente futuro
+- [ ] Confirmar precios reales por talla con Jaqueline e Ingrid → actualizar COSTOS_TALLA
+- [ ] Integrar pedido WhatsApp con registro automático en /gestion (pedidos entrantes)
+
+---
+
 ## 📋 Sesión 13-04-2026 — Fix ortográfico + Selector tallas tortas
 
 ### Cambios realizados
