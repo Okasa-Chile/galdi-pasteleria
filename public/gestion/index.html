@@ -1529,7 +1529,8 @@ window.selProd = (id) => {
   sel=prods.find(p=>p.id===id);if(!sel)return;
   document.getElementById('card-calc').style.display='block';
   document.getElementById('calc-tit').textContent='Calculadora — '+sel.nombre;
-  document.getElementById('c-mat').value=sel.costo;
+  const esTallaVariable=(sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas');
+  document.getElementById('c-mat').value=esTallaVariable?'':sel.costo;
   document.getElementById('c-mdo').value=sel.mdo;
   document.getElementById('c-en').value=sel.energia;
   document.getElementById('c-log').value=sel.logistica;
@@ -1539,8 +1540,7 @@ window.selProd = (id) => {
   document.getElementById('wrap-mrg').style.display=sel.tipo==='propio'?'block':'none';
   document.getElementById('lbl-mat').textContent=sel.tipo==='propio'?'Costo materiales (neto)':'Precio compra proveedor (neto)';
   document.getElementById('r6').textContent=sel.combate||'—';
-  const conTallaCalc=(sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas');
-  document.getElementById('wrap-talla-calc').style.display=conTallaCalc?'':'none';
+  document.getElementById('wrap-talla-calc').style.display=esTallaVariable?'':'none';
   document.getElementById('calc-talla').value='';
   recalc();renderT();
   document.getElementById('card-calc').scrollIntoView({behavior:'smooth',block:'nearest'});
