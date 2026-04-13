@@ -139,6 +139,15 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
     </div>
     <div class="card" id="card-calc" style="display:none;">
       <div class="card-title" id="calc-tit">Calculadora</div>
+      <div id="wrap-talla-calc" style="display:none;margin-bottom:12px;">
+        <label>Talla (referencia de costo)</label>
+        <select id="calc-talla" onchange="aplicarCostoTalla()">
+          <option value="">— Sin talla —</option>
+          <option value="S">S — 8 a 10 personas</option>
+          <option value="M">M — 14 a 16 personas</option>
+          <option value="L">L — 20 a 22 personas</option>
+        </select>
+      </div>
       <div class="grid-2">
         <div><label id="lbl-mat">Costo materiales (neto)</label><input type="number" id="c-mat" oninput="recalc()"></div>
         <div id="wrap-mdo"><label>Mano de obra</label><input type="number" id="c-mdo" oninput="recalc()"></div>
@@ -223,8 +232,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
         <div><label>Producto</label><select id="v-d" onchange="autocompletarPrecio()"></select></div>
         <div id="wrap-talla-v" style="display:none;">
           <label>Talla</label>
-          <select id="v-talla" onchange="actualizarPrecioTalla()">
-            <option value="">— Seleccionar —</option>
+          <select id="v-talla">
+            <option value="">— Sin talla —</option>
             <option value="S">S — 8 a 10 personas</option>
             <option value="M">M — 14 a 16 personas</option>
             <option value="L">L — 20 a 22 personas</option>
@@ -779,7 +788,7 @@ window.presAgregarLinea = () => {
     '<div class="pres-desc-wrap" style="display:flex;flex-direction:column;gap:4px;">' +
       '<select class="pres-cat-sel" onchange="presCargarProductos(this)" style="font-size:12px;">' + catOpts + '</select>' +
       '<select class="pres-prod-sel" onchange="presAutocompletarPrecio(this)" disabled style="font-size:12px;background:var(--sand);color:var(--muted);cursor:not-allowed;"><option value="">-- Producto --</option></select>' +
-      '<select class="sel-talla-pres" onchange="presTallaChanged(this)" style="display:none;font-size:12px;"><option value="">— Talla —</option><option value="S">S — 8 a 10 p.</option><option value="M">M — 14 a 16 p.</option><option value="L">L — 20 a 22 p.</option></select>' +
+      '<select class="sel-talla-linea" onchange="presTallaChanged(this)" style="display:none;font-size:12px;"><option value="">— Talla —</option><option value="S">S — 8 a 10 p.</option><option value="M">M — 14 a 16 p.</option><option value="L">L — 20 a 22 p.</option></select>' +
     '</div>' +
     '<input type="number" class="pres-cant" min="1" value="1" oninput="presRecalcLinea(this)" style="width:100%;text-align:right;">' +
     '<input type="number" class="pres-precio" min="0" step="1" placeholder="0" oninput="presRecalcLinea(this)" style="width:100%;text-align:right;">' +
@@ -824,7 +833,7 @@ window.presSetModo = (btn, modo) => {
     wrap.innerHTML =
       '<select class="pres-cat-sel" onchange="presCargarProductos(this)" style="font-size:12px;">' + catOpts + '</select>' +
       '<select class="pres-prod-sel" onchange="presAutocompletarPrecio(this)" disabled style="font-size:12px;background:var(--sand);color:var(--muted);cursor:not-allowed;"><option value="">-- Producto --</option></select>' +
-      '<select class="sel-talla-pres" onchange="presTallaChanged(this)" style="display:none;font-size:12px;"><option value="">— Talla —</option><option value="S">S — 8 a 10 p.</option><option value="M">M — 14 a 16 p.</option><option value="L">L — 20 a 22 p.</option></select>';
+      '<select class="sel-talla-linea" onchange="presTallaChanged(this)" style="display:none;font-size:12px;"><option value="">— Talla —</option><option value="S">S — 8 a 10 p.</option><option value="M">M — 14 a 16 p.</option><option value="L">L — 20 a 22 p.</option></select>';
   } else {
     wrap.style.display = '';
     wrap.style.flexDirection = '';
@@ -844,6 +853,14 @@ window.presCargarProductos = (catSel) => {
   const cat = catSel.value;
   const wrap = catSel.closest('.pres-desc-wrap');
   const prodSel = wrap.querySelector('.pres-prod-sel');
+  const tallaEl = wrap.querySelector('.sel-talla-linea');
+  const esTortaOPastel = (cat === 'Tortas' || cat === 'Pasteles & Tartas');
+  // Mostrar/ocultar talla al elegir categoría
+  if (tallaEl) {
+    tallaEl.style.display = esTortaOPastel ? '' : 'none';
+    tallaEl.value = '';
+    tallaEl.setAttribute('data-cat', cat);
+  }
   if (!cat) {
     prodSel.innerHTML = '<option value="">-- Producto --</option>';
     prodSel.disabled = true;
@@ -853,9 +870,8 @@ window.presCargarProductos = (catSel) => {
     return;
   }
   const filtrados = prods.filter(p => (p.cat || p.categoria) === cat);
-  const esTortaOPastel = (cat === 'Tortas' || cat === 'Pasteles & Tartas');
   prodSel.innerHTML = '<option value="">-- Producto --</option>' +
-    filtrados.map(p => '<option value="' + (esTortaOPastel ? '' : p.precio) + '" data-cat="' + cat + '" data-original-nombre="' + p.nombre + '">' + p.nombre + (esTortaOPastel ? '' : ' — ' + fmt(p.precio)) + '</option>').join('');
+    filtrados.map(p => '<option value="' + p.precio + '" data-cat="' + cat + '" data-original-nombre="' + p.nombre + '">' + p.nombre + ' — ' + fmt(p.precio) + '</option>').join('');
   prodSel.disabled = false;
   prodSel.style.background = '';
   prodSel.style.color = '';
@@ -866,16 +882,10 @@ window.presAutocompletarPrecio = (prodSel) => {
   const precio = prodSel.value;
   const row = prodSel.closest('.pres-linea');
   const precioInput = row.querySelector('.pres-precio');
-  const selectedOpt = prodSel.options[prodSel.selectedIndex];
-  const cat = selectedOpt?.getAttribute('data-cat') || '';
-  const esTortaOPastel = (cat === 'Tortas' || cat === 'Pasteles & Tartas');
-  const tallaEl = row.querySelector('.sel-talla-pres');
-  if (tallaEl) {
-    tallaEl.style.display = (selectedOpt && selectedOpt.value !== '' && esTortaOPastel) ? '' : 'none';
-    tallaEl.value = '';
-    tallaEl.setAttribute('data-cat', cat);
-  }
-  if (precio && !esTortaOPastel) {
+  const tallaEl = row.querySelector('.sel-talla-linea');
+  // Si hay selector de talla visible, no autocompletar precio (lo ingresa la usuaria)
+  const conTalla = tallaEl && tallaEl.style.display !== 'none';
+  if (precio && !conTalla) {
     precioInput.value = precio;
     precioInput.readOnly = true;
     precioInput.style.background = '#f0f0f0';
@@ -890,22 +900,10 @@ window.presAutocompletarPrecio = (prodSel) => {
 };
 
 window.presTallaChanged = (tallaEl) => {
-  const cat = tallaEl.getAttribute('data-cat');
-  const talla = tallaEl.value;
+  // No autocompletar precio — la usuaria lo ingresa manualmente según precio acordado
+  // Solo recalcular para reflejar cambios en subtotal si hay precio ya ingresado
   const row = tallaEl.closest('.pres-linea');
-  const precioInput = row.querySelector('.pres-precio');
-  if (cat && talla && PRECIOS_TALLA[cat] && PRECIOS_TALLA[cat][talla]) {
-    precioInput.value = PRECIOS_TALLA[cat][talla];
-    precioInput.readOnly = true;
-    precioInput.style.background = '#f0f0f0';
-    precioInput.style.cursor = 'not-allowed';
-  } else {
-    precioInput.value = '';
-    precioInput.readOnly = false;
-    precioInput.style.background = '';
-    precioInput.style.cursor = '';
-  }
-  presRecalcLinea(precioInput);
+  presRecalcLinea(row.querySelector('.pres-precio'));
 };
 
 window.presRecalcLinea = (inputEl) => {
@@ -1001,7 +999,10 @@ window.guardarPresupuesto = async () => {
       descripcion = descManual.value.trim() || 'Sin descripción';
     } else if (prodSel) {
       const opt = prodSel.options[prodSel.selectedIndex];
-      descripcion = opt?.dataset?.nombre || opt?.text?.split(' — ')[0] || 'Producto';
+      const nombreBase = opt?.getAttribute('data-original-nombre') || opt?.text?.split(' — ')[0] || 'Producto';
+      const tallaLinea = row.querySelector('.sel-talla-linea');
+      const tallaVal = tallaLinea && tallaLinea.style.display !== 'none' ? tallaLinea.value : '';
+      descripcion = tallaVal ? `${nombreBase} (talla ${tallaVal})` : nombreBase;
     }
     items.push({ descripcion, cantidad: cant, precioUnit, subtotalLinea: cant * precioUnit });
   }
@@ -1116,7 +1117,10 @@ window.vistaPreviaPresupuesto = () => {
       descripcion = descManual.value.trim() || 'Sin descripción';
     } else if (prodSel) {
       const opt = prodSel.options[prodSel.selectedIndex];
-      descripcion = opt?.dataset?.nombre || opt?.text?.split(' — ')[0] || 'Producto';
+      const nombreBase = opt?.getAttribute('data-original-nombre') || opt?.text?.split(' — ')[0] || 'Producto';
+      const tallaLinea = row.querySelector('.sel-talla-linea');
+      const tallaVal = tallaLinea && tallaLinea.style.display !== 'none' ? tallaLinea.value : '';
+      descripcion = tallaVal ? `${nombreBase} (talla ${tallaVal})` : nombreBase;
     }
     items.push({ descripcion, cantidad: cant, precioUnit, subtotalLinea: cant * precioUnit });
   }
@@ -1508,8 +1512,7 @@ window.renderT = () => {
     const cn=p.costo+p.energia+p.logistica+p.mdo;
     const mr=cn>0?Math.round(((p.precio/1.19)-cn)/cn*100):0;
     const esTortaOPastel=(p.cat==='Tortas'||p.cat==='Pasteles & Tartas');
-    const precios=PRECIOS_TALLA[p.cat]??{};
-    const badgeTallas=esTortaOPastel?`<div style="margin-top:4px;font-size:10px;color:#C9A55A;line-height:1.8;"><span style="border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;margin-right:3px;">S ${(precios.S||0).toLocaleString('es-CL')}</span><span style="border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;margin-right:3px;">M ${(precios.M||0).toLocaleString('es-CL')}</span><span style="border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">L ${(precios.L||0).toLocaleString('es-CL')}</span></div>`:''
+    const badgeTallas=esTortaOPastel?`<div style="margin-top:4px;display:flex;gap:4px;"><span style="font-size:10px;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">S</span><span style="font-size:10px;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">M</span><span style="font-size:10px;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">L</span></div>`:''
     return `<tr class="${sel?.id===p.id?'selected':''}" onclick="selProd(${p.id})" style="cursor:pointer;">
       <td><strong>${p.nombre}</strong>${badgeTallas}</td>
       <td><span class="tag tag-${p.tipo}">${p.tipo==='propio'?'Propio':'Reventa'}</span></td>
@@ -1536,6 +1539,9 @@ window.selProd = (id) => {
   document.getElementById('wrap-mrg').style.display=sel.tipo==='propio'?'block':'none';
   document.getElementById('lbl-mat').textContent=sel.tipo==='propio'?'Costo materiales (neto)':'Precio compra proveedor (neto)';
   document.getElementById('r6').textContent=sel.combate||'—';
+  const conTallaCalc=(sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas');
+  document.getElementById('wrap-talla-calc').style.display=conTallaCalc?'':'none';
+  document.getElementById('calc-talla').value='';
   recalc();renderT();
   document.getElementById('card-calc').scrollIntoView({behavior:'smooth',block:'nearest'});
 };
@@ -1545,6 +1551,15 @@ window.recalc = () => {
   const mat=+g('c-mat'),mdo=+g('c-mdo'),en=+g('c-en'),log=+g('c-log'),mrg=+g('c-mrg')/100,iva=+g('c-iva')/100;
   const cn=mat+mdo+en+log,u=sel.tipo==='propio'?cn*mrg:0,pn=cn+u,iv=pn*iva,pf=pn+iv;
   s('r1',fmt(cn));s('r2',sel.tipo==='propio'?fmt(u):'— (reventa)');s('r3',fmt(pn));s('r4',fmt(iv));s('r5',fmt(pf));
+};
+
+window.aplicarCostoTalla = () => {
+  const talla = document.getElementById('calc-talla').value;
+  if (!talla || !sel) return;
+  const costo = COSTOS_TALLA[sel.cat]?.[talla];
+  if (!costo) return;
+  document.getElementById('c-mat').value = costo;
+  recalc();
 };
 
 window.guardarPrecio = async () => {
@@ -1630,8 +1645,8 @@ const PRECIOS_TORTA = {
   '99': 55000,
 };
 
-// PRECIOS POR TALLA — PROVISIONALES hasta confirmación de las socias
-const PRECIOS_TALLA = {
+// COSTOS MATERIALES POR TALLA — PROVISIONALES hasta confirmación de las socias
+const COSTOS_TALLA = {
   'Tortas':            { S: 18000, M: 25000, L: 35000 },
   'Pasteles & Tartas': { S: 12000, M: 18000, L: 26000 },
 };
@@ -1700,21 +1715,6 @@ window.autocompletarPrecioTorta = () => {
   }
 };
 
-window.actualizarPrecioTalla = () => {
-  const cat = document.getElementById('v-t').value;
-  const talla = document.getElementById('v-talla').value;
-  const mapacat = {
-    'torta': 'Tortas',
-    'pastel': 'Pasteles & Tartas',
-  };
-  const catNombre = mapacat[cat];
-  if (catNombre && talla && PRECIOS_TALLA[catNombre] && PRECIOS_TALLA[catNombre][talla]) {
-    document.getElementById('v-m').value = PRECIOS_TALLA[catNombre][talla];
-  } else {
-    document.getElementById('v-m').value = '';
-  }
-};
-
 window.addVenta = async () => {
   const f=document.getElementById('v-f').value,t=document.getElementById('v-t').value,m=+document.getElementById('v-m').value,c=document.getElementById('v-c').value;
   const selEl=document.getElementById('v-d');
@@ -1754,7 +1754,7 @@ window.renderV = () => {
   const tb=document.getElementById('tb-ventas');
   if(!ventas.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px;">Sin ventas registradas</td></tr>';return;}
   tb.innerHTML=[...ventas].sort((a,b)=>b.id-a.id).map(v=>{
-    const nombreMostrado=v.talla?`${v.desc||'—'} <span style="background:#C9A55A22;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:0 6px;font-size:11px;">${v.talla}</span>`:v.desc||'—';
+    const nombreMostrado=v.talla?`${v.desc||'—'} (${v.talla})`:v.desc||'—';
     return `<tr>
     <td>Día ${v.fecha}</td>
     <td><span class="tag tag-propio">${lm[v.tipo]||v.tipo}</span></td>
