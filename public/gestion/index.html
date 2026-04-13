@@ -882,10 +882,8 @@ window.presAutocompletarPrecio = (prodSel) => {
   const precio = prodSel.value;
   const row = prodSel.closest('.pres-linea');
   const precioInput = row.querySelector('.pres-precio');
-  const tallaEl = row.querySelector('.sel-talla-linea');
-  // Si hay selector de talla visible, no autocompletar precio (lo ingresa la usuaria)
-  const conTalla = tallaEl && tallaEl.style.display !== 'none';
-  if (precio && !conTalla) {
+  if (precio) {
+    // Precio viene de cpx(p) — siempre setearlo, independiente de si hay talla
     precioInput.value = precio;
     precioInput.readOnly = true;
     precioInput.style.background = '#f0f0f0';
@@ -900,22 +898,9 @@ window.presAutocompletarPrecio = (prodSel) => {
 };
 
 window.presTallaChanged = (tallaEl) => {
-  const cat = tallaEl.getAttribute('data-cat');
-  const talla = tallaEl.value;
+  // La talla solo cambia la descripción — NO toca el precio unitario
   const row = tallaEl.closest('.pres-linea');
-  const precioInput = row.querySelector('.pres-precio');
-  precioInput.removeAttribute('readonly');
-  if (cat && talla && COSTOS_TALLA[cat]?.[talla]) {
-    precioInput.value = COSTOS_TALLA[cat][talla];
-    precioInput.setAttribute('readonly', '');
-    precioInput.style.background = '#f0f0f0';
-    precioInput.style.cursor = 'not-allowed';
-  } else {
-    precioInput.value = '';
-    precioInput.style.background = '';
-    precioInput.style.cursor = '';
-  }
-  presRecalcLinea(precioInput);
+  presRecalcLinea(row.querySelector('.pres-precio'));
 };
 
 window.presRecalcLinea = (inputEl) => {
