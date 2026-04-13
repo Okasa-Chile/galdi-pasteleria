@@ -1,5 +1,36 @@
 # AI_CONTEXT — Proyecto Galdi Pastelería
-> Registro de trabajo asistido por IA · Actualizado: 12 abril 2026
+> Registro de trabajo asistido por IA · Actualizado: 13 abril 2026
+
+---
+
+## 📋 Sesión 13-04-2026 — Fix ortográfico + Selector tallas tortas
+
+### Cambios realizados
+- **fix:** corrección ortográfica "Dobloditas" → "Dobladitas" en 3 lugares:
+  - `components/Catalogo.tsx` línea 19 (key imagenes)
+  - `components/Catalogo.tsx` línea 64 (campo nombre)
+  - `components/ServicioDetalle.tsx` línea 15 (nombre + key imagenes)
+- **feat:** selector de talla S/M/L en cards de Tortas (delivery)
+  - Botones circulares S/M/L al lado derecho del nombre
+  - Texto descriptivo debajo del botón AGREGAR:
+    S = 8-10 personas · M = 14-16 personas · L = 20-22 personas
+  - Sin talla seleccionada: botón deshabilitado con texto rojizo
+  - Carrito con key compuesta "Torta 3 Leches · M" → permite
+    misma torta en tallas distintas como entradas independientes
+  - Badge dorado con talla en resumen modal
+  - Mensaje WhatsApp incluye talla y rango de personas
+  - Pan, Queques, Dulces, Empanadas, Pasteles → sin cambios
+- Commits: fix `c50ca5a` · deploy Release complete
+
+### Pendiente futuro anotado
+- [ ] Integrar pedido WhatsApp con registro automático en /gestion
+  → nueva sección "Pedidos entrantes" con estado pendiente/confirmado/entregado
+
+### Aprendizajes clave
+- Key del carrito debe ser compuesta (nombre · talla) desde el inicio
+  cuando un producto tiene variantes — no se puede agregar después sin refactorizar
+- `enCarrito` debe buscar por la misma key compuesta que usa AGREGAR,
+  de lo contrario el contador bloquea agregar variantes del mismo producto
 
 ---
 
