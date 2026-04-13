@@ -875,7 +875,7 @@ window.presCargarProductos = (catSel) => {
   }
   const filtrados = prods.filter(p => (p.cat || p.categoria) === cat);
   prodSel.innerHTML = '<option value="">-- Producto --</option>' +
-    filtrados.map(p => '<option value="' + cpx(p) + '" data-cat="' + cat + '" data-original-nombre="' + p.nombre + '">' + p.nombre + ' — ' + fmt(cpx(p)) + '</option>').join('');
+    filtrados.map(p => '<option value="' + cpx(p) + '" data-cat="' + cat + '" data-original-nombre="' + p.nombre + '">' + p.nombre + '</option>').join('');
   prodSel.disabled = false;
   prodSel.style.background = '';
   prodSel.style.color = '';
