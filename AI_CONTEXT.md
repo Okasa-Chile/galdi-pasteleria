@@ -3,6 +3,39 @@
 
 ---
 
+## 🏗️ Arquitectura del Proyecto
+
+### Stack base
+
+| Capa       | Tecnología                              |
+|------------|-----------------------------------------|
+| Framework  | Next.js 16 + React 19 + TypeScript      |
+| Estilos    | Tailwind CSS v4 + shadcn/ui             |
+| Backend/DB | Firebase (Firestore + Auth + Hosting)   |
+| Deploy     | Firebase Hosting (static export out/)   |
+| Analytics  | Google Analytics 4 (G-LW81BNRRFP)      |
+
+### Dos aplicaciones en un mismo proyecto
+
+**CRÍTICO:** Dos apps conviven en el mismo repositorio:
+
+1. **Next.js (SPA pública)** → compilada como static export a `out/` → Firebase Hosting sirve `out/`
+2. **`/gestion` (vanilla HTML/JS)** → vive en `public/gestion/index.html` → se copia manualmente a `out/gestion/index.html` antes de cada deploy → Firebase Hosting lo sirve vía rewrite
+
+⚠️ Antes de cada deploy ejecutar obligatoriamente:
+cp public/gestion/index.html out/gestion/index.html
+
+### Colecciones Firestore
+
+| Colección          | Acceso                                    | Uso                                 |
+|--------------------|-------------------------------------------|-------------------------------------|
+| galdi_productos    | Solo autorizados                          | Catálogo interno con costos/tallas  |
+| galdi_ventas       | Solo autorizados                          | Registro de ventas                  |
+| galdi_compras      | Solo autorizados                          | Registro de compras/insumos         |
+| galdi_presupuestos | Escritura: autorizados / Lectura: pública | Vista de presupuesto vía token      |
+
+---
+
 ## 📋 Sesión 13-04-2026 (tarde) — Tallas S/M/L en /gestion completo
 
 ### Cambios realizados
