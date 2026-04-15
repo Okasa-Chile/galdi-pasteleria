@@ -31,6 +31,7 @@ export const imagenes: Record<string, string> = {
   'Moca / Pralinée':           '/images/torta-moka.webp',
   'Selva Negra':               '/images/torta-selva-negra.webp',
   'Panqueque':                 '/images/torta-panqueques.webp',
+  'Torta Panqueque':           '/images/torta-panqueques.webp',
   'Torta de Piña':             '/images/torta-pina-new.webp',
   'Torta de Hojarasca':        '/images/torta-hojarasca-new.webp',
   // Dulces & Alfajores
