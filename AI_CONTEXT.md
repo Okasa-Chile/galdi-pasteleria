@@ -36,6 +36,45 @@ cp public/gestion/index.html out/gestion/index.html
 
 ---
 
+## 📋 Sesión 15-04-2026 — Sistema costosTalla completo + mejoras /gestion
+
+### Cambios realizados
+- **fix:** costosTalla guarda y recupera TODOS los campos por talla (mat, mdo, energía, logística, margen) — antes solo guardaba mat
+- **fix:** calculadora Tab 1 — todos los inputs editables (eliminado readonly)
+- **fix:** modal Editar simplificado — eliminados campos financieros (costo, energía, logística, mdo, margen); ahora solo nombre, categoría, tipo, unidad y precio combate. saveProd() preserva valores financieros existentes
+- **feat:** talla XL exclusiva Torta Panqueque — mat:20000, mdo:5190, energia:400, logistica:30, margen:23, precio final ~$37.500
+  - Aparece en: calculadora, badge catálogo, registro ventas, presupuestos, delivery público
+- **feat:** Torta Panqueque agregada a productosDelivery en ServicioDetalle.tsx (faltaba)
+- **fix:** imagen Torta Panqueque en delivery — agregada clave en objeto imagenes
+- **fix:** Registro Ventas mejorado:
+  - Producto muestra solo nombre (sin precio)
+  - Label "Talla" → "Tamaño"
+  - Eliminado selector N° de personas
+  - Input cantidad achicado (max-width:80px)
+  - Monto total calculado automático: cantidad × precio por talla (con fallback COSTOS_TALLA)
+- **fix:** presTallaChanged() en presupuestos — actualizada a nueva estructura costosTalla {mat,mdo,energia,logistica,margen}
+- **fix:** plural "docenas" marcado como resuelto en AI_CONTEXT ✅
+- **fix:** COSTOS_TALLA cambiada de const a let para permitir actualizaciones en memoria
+
+### Commits sesión
+be93717 · ad1e1ff · 9b921f3 · 64ab780 · 64ab780 · e6c3aad · 60e9b74 · 4f65d0d · 6f6a7e0 · 34cbffe · dd7e028 · 778b8b6 · y otros
+
+### Aprendizajes clave
+- costosTalla debe guardar objeto completo {mat,mdo,energia,logistica,margen} por talla — no solo mat
+- presTallaChanged() y calcularMonto() deben usar vals.mat, no costoTalla directamente
+- Nombres de productos deben ser consistentes entre Catalogo.tsx, ServicioDetalle.tsx y gestion/index.html
+- COSTOS_TALLA necesita fallback en todas las funciones que calculan precio por talla
+
+### Pendiente actualizado
+- [ ] Confirmar precios reales S/M/L con Jacqueline e Ingrid → actualizar COSTOS_TALLA
+- [ ] Desinstalar GSD de Claude Code
+- [ ] Favicon: actualizar src/app/favicon.ico y public/favicon.ico
+- [ ] Link discreto a /gestion en header
+- [ ] Desactivar GitHub Pages workflow (llegan correos de error)
+- [ ] Reseñas Google Business (meta: 30, ~18 al 11-04)
+
+---
+
 ## 📋 Sesión 13-04-2026 (tarde) — Tallas S/M/L en /gestion completo
 
 ### Cambios realizados
