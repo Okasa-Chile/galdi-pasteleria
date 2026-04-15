@@ -574,11 +574,6 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
             <option value="porción">Porción</option>
           </select>
         </div>
-        <div><label>Costo base neto ($)</label><input type="number" id="m-cost" placeholder="0"></div>
-        <div><label>Energía ($)</label><input type="number" id="m-en" placeholder="0"></div>
-        <div><label>Logística ($)</label><input type="number" id="m-log" value="30"></div>
-        <div><label>Mano de obra ($)</label><input type="number" id="m-mdo" placeholder="0"></div>
-        <div><label>Margen (%)</label><input type="number" id="m-mrg" placeholder="20"></div>
       </div>
       <div><label>Precio combate referencia</label><input type="text" id="m-comb" placeholder="ej: $1.800 / kg"></div>
     </div>
@@ -1584,11 +1579,14 @@ window.aplicarCostoTalla = () => {
   if(!sel) return;
   const talla = g('calc-talla');
   if(!talla) return;
-  const costoGuardado = sel.costosTalla?.[talla];
-  const costoFallback = COSTOS_TALLA[sel.cat]?.[talla] ?? 0;
-  document.getElementById('c-mat').removeAttribute('readonly');
-  document.getElementById('c-mat').value = costoGuardado ?? costoFallback;
-  document.getElementById('c-mat').setAttribute('readonly','');
+  const guardado = sel.costosTalla?.[talla];
+  const fallback = COSTOS_TALLA[sel.cat]?.[talla] ?? {};
+  const vals = guardado ?? fallback;
+  document.getElementById('c-mat').value  = vals.mat      ?? 0;
+  document.getElementById('c-mdo').value  = vals.mdo      ?? sel.mdo;
+  document.getElementById('c-en').value   = vals.energia  ?? sel.energia;
+  document.getElementById('c-log').value  = vals.logistica ?? sel.logistica;
+  document.getElementById('c-mrg').value  = vals.margen   ?? sel.margen;
   recalc();
 };
 
@@ -1598,20 +1596,38 @@ window.guardarPrecio = async () => {
   const esTallaVariable = (sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas');
   const talla = esTallaVariable ? g('calc-talla') : null;
 
-  // Actualizar costosTalla si corresponde
-  if(talla) {
-    const costosTalla = {...(prods[idx].costosTalla || COSTOS_TALLA[sel.cat])};
-    costosTalla[talla] = +g('c-mat');
-    prods[idx].costosTalla = costosTalla;
-    COSTOS_TALLA[sel.cat] = {...COSTOS_TALLA[sel.cat], ...costosTalla};
+  if(esTallaVariable && !talla) {
+    alert('Elige un tamaño antes de guardar');
+    return;
   }
 
-  prods[idx] = {...prods[idx], costo:+g('c-mat'), mdo:+g('c-mdo'), energia:+g('c-en'), logistica:+g('c-log'), margen:+g('c-mrg')};
+  if(talla) {
+    const costosTalla = {...(prods[idx].costosTalla || {})};
+    costosTalla[talla] = {
+      mat:      +g('c-mat'),
+      mdo:      +g('c-mdo'),
+      energia:  +g('c-en'),
+      logistica:+g('c-log'),
+      margen:   +g('c-mrg'),
+    };
+    prods[idx].costosTalla = costosTalla;
+  } else {
+    prods[idx] = {...prods[idx],
+      costo:    +g('c-mat'),
+      mdo:      +g('c-mdo'),
+      energia:  +g('c-en'),
+      logistica:+g('c-log'),
+      margen:   +g('c-mrg'),
+    };
+  }
+
   prods[idx].precio = cpx(prods[idx]);
   sel = prods[idx];
   await fsSaveProd(prods[idx]);
   renderT();
-  const msg = talla ? `✓ Precio talla ${talla} guardado para ${prods[idx].nombre}` : `✓ Precio guardado: ${fmt(prods[idx].precio)} para ${prods[idx].nombre}`;
+  const msg = talla
+    ? `✓ Talla ${talla} guardada para ${prods[idx].nombre}`
+    : `✓ Precio guardado: ${fmt(prods[idx].precio)} para ${prods[idx].nombre}`;
   alert(msg);
 };
 
@@ -1628,18 +1644,12 @@ window.abrirModal = (id) => {
     document.getElementById('m-cat').value=p.cat;
     document.getElementById('m-tipo').value=p.tipo;
     document.getElementById('m-uni').value=p.unidad;
-    document.getElementById('m-cost').value=p.costo;
-    document.getElementById('m-en').value=p.energia;
-    document.getElementById('m-log').value=p.logistica;
-    document.getElementById('m-mdo').value=p.mdo;
-    document.getElementById('m-mrg').value=p.margen;
     document.getElementById('m-comb').value=p.combate||'';
     btn.style.display='inline-block';
   } else {
     document.getElementById('m-tit').textContent='Nuevo Producto';
     document.getElementById('m-id').value='';
-    ['m-nom','m-cost','m-en','m-mdo','m-mrg','m-comb'].forEach(i=>document.getElementById(i).value='');
-    document.getElementById('m-log').value=30;document.getElementById('m-mrg').value=20;
+    ['m-nom','m-comb'].forEach(i=>document.getElementById(i).value='');
     btn.style.display='none';
   }
   document.getElementById('modal').classList.add('open');
@@ -1647,7 +1657,20 @@ window.abrirModal = (id) => {
 
 window.saveProd = async () => {
   const id=document.getElementById('m-id').value;
-  const p={nombre:document.getElementById('m-nom').value.trim(),cat:document.getElementById('m-cat').value,tipo:document.getElementById('m-tipo').value,unidad:document.getElementById('m-uni').value,costo:+document.getElementById('m-cost').value||0,energia:+document.getElementById('m-en').value||0,logistica:+document.getElementById('m-log').value||30,mdo:+document.getElementById('m-mdo').value||0,margen:+document.getElementById('m-mrg').value||0,combate:document.getElementById('m-comb').value.trim()};
+  const existing = prods.find(x=>x.id===+id) || {};
+  const p = {
+    nombre: document.getElementById('m-nom').value.trim(),
+    cat: document.getElementById('m-cat').value,
+    tipo: document.getElementById('m-tipo').value,
+    unidad: document.getElementById('m-uni').value,
+    combate: document.getElementById('m-comb').value.trim(),
+    costo: existing.costo || 0,
+    energia: existing.energia || 0,
+    logistica: existing.logistica || 30,
+    mdo: existing.mdo || 0,
+    margen: existing.margen || 20,
+    costosTalla: existing.costosTalla || null,
+  };
   if(!p.nombre){alert('Ingresa el nombre del producto');return;}
   p.precio=cpx(p);
   if(id){const i=prods.findIndex(x=>x.id===+id);prods[i]={...prods[i],...p};}
@@ -1689,8 +1712,8 @@ const PRECIOS_TORTA = {
 
 // COSTOS MATERIALES POR TALLA — PROVISIONALES hasta confirmación de las socias
 let COSTOS_TALLA = {
-  'Tortas':            { S: 18000, M: 25000, L: 35000 },
-  'Pasteles & Tartas': { S: 12000, M: 18000, L: 26000 },
+  'Tortas':            { S: {mat:18000,mdo:1200,energia:400,logistica:30,margen:30}, M: {mat:25000,mdo:1400,energia:400,logistica:30,margen:30}, L: {mat:35000,mdo:1600,energia:400,logistica:30,margen:30} },
+  'Pasteles & Tartas': { S: {mat:12000,mdo:800,energia:300,logistica:30,margen:25},  M: {mat:18000,mdo:1000,energia:300,logistica:30,margen:25}, L: {mat:26000,mdo:1200,energia:300,logistica:30,margen:25} },
 };
 
 window.poblarProductos = () => {
