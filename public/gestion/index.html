@@ -142,10 +142,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
       <div id="wrap-talla-calc" style="display:none;margin-bottom:12px;">
         <label>Tamaño</label>
         <select id="calc-talla" onchange="aplicarCostoTalla()">
-          <option value="">— Sin talla —</option>
+          <option value="">— Elige tamaño —</option>
           <option value="S">S — 8 a 10 personas</option>
           <option value="M">M — 14 a 16 personas</option>
           <option value="L">L — 20 a 22 personas</option>
+          <option value="XL" id="opt-xl-calc" style="display:none">XL — 25 personas</option>
         </select>
       </div>
       <div class="grid-2">
@@ -237,6 +238,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
             <option value="S">S — 8 a 10 personas</option>
             <option value="M">M — 14 a 16 personas</option>
             <option value="L">L — 20 a 22 personas</option>
+            <option value="XL" id="opt-xl-ventas" style="display:none">XL — 25 personas</option>
           </select>
         </div>
         <div id="wrap-personas" style="display:none;">
@@ -785,7 +787,7 @@ window.presAgregarLinea = () => {
     '<div class="pres-desc-wrap" style="display:flex;flex-direction:column;gap:4px;">' +
       '<select class="pres-cat-sel" onchange="presCargarProductos(this)" style="font-size:12px;">' + catOpts + '</select>' +
       '<select class="pres-prod-sel" onchange="presAutocompletarPrecio(this)" disabled style="font-size:12px;background:var(--sand);color:var(--muted);cursor:not-allowed;"><option value="">-- Producto --</option></select>' +
-      '<select class="sel-talla-linea" onchange="presTallaChanged(this)" style="display:none;font-size:12px;"><option value="">— Talla —</option><option value="S">S — 8 a 10 p.</option><option value="M">M — 14 a 16 p.</option><option value="L">L — 20 a 22 p.</option></select>' +
+      '<select class="sel-talla-linea" onchange="presTallaChanged(this)" style="display:none;font-size:12px;"><option value="">— Talla —</option><option value="S">S — 8 a 10 p.</option><option value="M">M — 14 a 16 p.</option><option value="L">L — 20 a 22 p.</option><option value="XL" class="opt-xl-pres" style="display:none">XL — 25 p.</option></select>' +
     '</div>' +
     '<input type="number" class="pres-cant" min="1" value="1" oninput="presRecalcLinea(this)" style="width:100%;text-align:right;">' +
     '<input type="number" class="pres-precio" min="0" step="1" placeholder="0" oninput="presRecalcLinea(this)" style="width:100%;text-align:right;">' +
@@ -832,7 +834,7 @@ window.presSetModo = (btn, modo) => {
     wrap.innerHTML =
       '<select class="pres-cat-sel" onchange="presCargarProductos(this)" style="font-size:12px;">' + catOpts + '</select>' +
       '<select class="pres-prod-sel" onchange="presAutocompletarPrecio(this)" disabled style="font-size:12px;background:var(--sand);color:var(--muted);cursor:not-allowed;"><option value="">-- Producto --</option></select>' +
-      '<select class="sel-talla-linea" onchange="presTallaChanged(this)" style="display:none;font-size:12px;"><option value="">— Talla —</option><option value="S">S — 8 a 10 p.</option><option value="M">M — 14 a 16 p.</option><option value="L">L — 20 a 22 p.</option></select>';
+      '<select class="sel-talla-linea" onchange="presTallaChanged(this)" style="display:none;font-size:12px;"><option value="">— Talla —</option><option value="S">S — 8 a 10 p.</option><option value="M">M — 14 a 16 p.</option><option value="L">L — 20 a 22 p.</option><option value="XL" class="opt-xl-pres" style="display:none">XL — 25 p.</option></select>';
   } else {
     wrap.style.display = '';
     wrap.style.flexDirection = '';
@@ -891,6 +893,9 @@ window.presAutocompletarPrecio = (prodSel) => {
     : null;
   if (prod) lineaProds.set(lineaId, prod);
   else lineaProds.delete(lineaId);
+  const tallaEl = prodSel.closest('.pres-desc-wrap')?.querySelector('.sel-talla-linea');
+  const optXLpres = tallaEl?.querySelector('.opt-xl-pres');
+  if(optXLpres) optXLpres.style.display = prod?.nombre === 'Torta Panqueque' ? '' : 'none';
   if (precio) {
     precioInput.value = precio;
     precioInput.readOnly = true;
@@ -1564,6 +1569,8 @@ window.selProd = (id) => {
   document.getElementById('r6').textContent=sel.combate||'—';
   document.getElementById('wrap-talla-calc').style.display=esTallaVariable?'':'none';
   document.getElementById('calc-talla').value='';
+  const optXLcalc = document.getElementById('opt-xl-calc');
+  if(optXLcalc) optXLcalc.style.display = sel.nombre==='Torta Panqueque' ? '' : 'none';
   recalc();renderT();
   document.getElementById('card-calc').scrollIntoView({behavior:'smooth',block:'nearest'});
 };
@@ -1712,8 +1719,8 @@ const PRECIOS_TORTA = {
 
 // COSTOS MATERIALES POR TALLA — PROVISIONALES hasta confirmación de las socias
 let COSTOS_TALLA = {
-  'Tortas':            { S: {mat:18000,mdo:1200,energia:400,logistica:30,margen:30}, M: {mat:25000,mdo:1400,energia:400,logistica:30,margen:30}, L: {mat:35000,mdo:1600,energia:400,logistica:30,margen:30} },
-  'Pasteles & Tartas': { S: {mat:12000,mdo:800,energia:300,logistica:30,margen:25},  M: {mat:18000,mdo:1000,energia:300,logistica:30,margen:25}, L: {mat:26000,mdo:1200,energia:300,logistica:30,margen:25} },
+  'Tortas':            { S:{mat:18000,mdo:1200,energia:400,logistica:30,margen:30}, M:{mat:25000,mdo:1400,energia:400,logistica:30,margen:30}, L:{mat:35000,mdo:1600,energia:400,logistica:30,margen:30}, XL:{mat:20000,mdo:5190,energia:400,logistica:30,margen:23} },
+  'Pasteles & Tartas': { S:{mat:12000,mdo:800,energia:300,logistica:30,margen:25},  M:{mat:18000,mdo:1000,energia:300,logistica:30,margen:25}, L:{mat:26000,mdo:1200,energia:300,logistica:30,margen:25} },
 };
 
 window.poblarProductos = () => {
@@ -1758,17 +1765,14 @@ window.poblarProductos = () => {
 
 window.autocompletarPrecio = () => {
   const idSel = document.getElementById('v-d').value;
-  console.log('=== DEBUG precio ===');
-  console.log('idSel:', idSel, '| tipo:', typeof idSel);
-  console.log('prods cargados:', prods.length);
-  if(prods.length > 0) console.log('ejemplo id:', prods[0].id, '| tipo:', typeof prods[0].id);
   const prod = prods.find(p => String(p.id) === String(idSel));
-  console.log('prod encontrado:', prod);
   if (prod && prod.precio) {
     document.getElementById('v-m').value = prod.precio;
   } else {
     document.getElementById('v-m').value = '';
   }
+  const optXLv = document.getElementById('opt-xl-ventas');
+  if(optXLv) optXLv.style.display = prod?.nombre === 'Torta Panqueque' ? '' : 'none';
 };
 
 window.autocompletarPrecioTorta = () => {
