@@ -232,7 +232,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
         </div>
         <div><label>Producto</label><select id="v-d" onchange="autocompletarPrecio()"></select></div>
         <div id="wrap-talla-v" style="display:none;">
-          <label>Talla</label>
+          <label>Tamaño</label>
           <select id="v-talla">
             <option value="">— Sin talla —</option>
             <option value="S">S — 8 a 10 personas</option>
@@ -241,18 +241,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
             <option value="XL" id="opt-xl-ventas" style="display:none">XL — 25 personas</option>
           </select>
         </div>
-        <div id="wrap-personas" style="display:none;">
-          <label>N° de personas</label>
-          <select id="v-personas" onchange="autocompletarPrecioTorta()">
-            <option value="">— Seleccionar —</option>
-            <option value="10">Hasta 10 personas</option>
-            <option value="20">11 a 20 personas</option>
-            <option value="35">21 a 35 personas</option>
-            <option value="50">36 a 50 personas</option>
-            <option value="99">Más de 50 personas</option>
-          </select>
-        </div>
-        <div><label>Cantidad</label><input type="number" id="v-q" placeholder="ej: 2" min="1"></div>
+        <div><label>Cantidad</label><input type="number" id="v-q" placeholder="ej: 2" min="1" style="max-width:80px" oninput="calcularMonto()"></div>
         <div><label>Monto total ($)</label><input type="number" id="v-m" placeholder="0"></div>
         <div><label>Cliente / Almacén</label><input type="text" id="v-c" placeholder="Opcional"></div>
         <div style="display:flex;align-items:flex-end;"><button class="btn" onclick="addVenta()">Registrar</button></div>
@@ -1725,18 +1714,9 @@ let COSTOS_TALLA = {
 
 window.poblarProductos = () => {
   const cat = document.getElementById('v-t').value;
-  const wrapPersonas = document.getElementById('wrap-personas');
-  const selPersonas = document.getElementById('v-personas');
   const wrapTalla = document.getElementById('wrap-talla-v');
   const selTalla = document.getElementById('v-talla');
   const esTortaOPastel = (cat === 'torta' || cat === 'pastel');
-  if (cat === 'torta') {
-    wrapPersonas.style.display = '';
-    selPersonas.value = '';
-  } else {
-    wrapPersonas.style.display = 'none';
-    selPersonas.value = '';
-  }
   if (esTortaOPastel) {
     wrapTalla.style.display = '';
     selTalla.value = '';
@@ -1758,21 +1738,26 @@ window.poblarProductos = () => {
   const filtrados = prods.filter(p => (p.cat || p.categoria) === mapacat[cat]);
   sel.innerHTML = '<option value="">— Elegir producto —</option>' +
     (filtrados.length
-      ? filtrados.map(p => `<option value="${p.id}">${p.nombre} — ${fmt(p.precio)}</option>`).join('')
+      ? filtrados.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('')
       : '<option value="">Sin productos</option>');
   document.getElementById('v-m').value = '';
 };
 
+let precioVentaActual = 0;
+
 window.autocompletarPrecio = () => {
   const idSel = document.getElementById('v-d').value;
   const prod = prods.find(p => String(p.id) === String(idSel));
-  if (prod && prod.precio) {
-    document.getElementById('v-m').value = prod.precio;
-  } else {
-    document.getElementById('v-m').value = '';
-  }
+  precioVentaActual = prod?.precio || 0;
+  calcularMonto();
   const optXLv = document.getElementById('opt-xl-ventas');
   if(optXLv) optXLv.style.display = prod?.nombre === 'Torta Panqueque' ? '' : 'none';
+};
+
+window.calcularMonto = () => {
+  const cant = +document.getElementById('v-q')?.value || 1;
+  const monto = precioVentaActual * cant;
+  if(monto > 0) document.getElementById('v-m').value = monto;
 };
 
 window.autocompletarPrecioTorta = () => {
