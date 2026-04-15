@@ -1759,6 +1759,14 @@ window.autocompletarPrecio = () => {
 window.calcularMonto = () => {
   const cant = +document.getElementById('v-q')?.value || 1;
   const talla = document.getElementById('v-talla')?.value;
+
+  // Si es producto con talla y no se eligió tamaño, limpiar monto
+  const esTallaVariable = selProdVenta && (selProdVenta.cat === 'Tortas' || selProdVenta.cat === 'Pasteles & Tartas');
+  if(esTallaVariable && !talla) {
+    document.getElementById('v-m').value = '';
+    return;
+  }
+
   let precio = precioVentaActual;
   if(talla && selProdVenta) {
     const vals = selProdVenta.costosTalla?.[talla];
