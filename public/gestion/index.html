@@ -233,7 +233,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
         <div><label>Producto</label><select id="v-d" onchange="autocompletarPrecio()"></select></div>
         <div id="wrap-talla-v" style="display:none;">
           <label>Tamaño</label>
-          <select id="v-talla">
+          <select id="v-talla" onchange="calcularMonto()">
             <option value="">— Sin talla —</option>
             <option value="S">S — 8 a 10 personas</option>
             <option value="M">M — 14 a 16 personas</option>
@@ -1744,10 +1744,12 @@ window.poblarProductos = () => {
 };
 
 let precioVentaActual = 0;
+let selProdVenta = null;
 
 window.autocompletarPrecio = () => {
   const idSel = document.getElementById('v-d').value;
   const prod = prods.find(p => String(p.id) === String(idSel));
+  selProdVenta = prod || null;
   precioVentaActual = prod?.precio || 0;
   calcularMonto();
   const optXLv = document.getElementById('opt-xl-ventas');
@@ -1756,8 +1758,18 @@ window.autocompletarPrecio = () => {
 
 window.calcularMonto = () => {
   const cant = +document.getElementById('v-q')?.value || 1;
-  const monto = precioVentaActual * cant;
-  if(monto > 0) document.getElementById('v-m').value = monto;
+  const talla = document.getElementById('v-talla')?.value;
+  let precio = precioVentaActual;
+  if(talla && selProdVenta) {
+    const vals = selProdVenta.costosTalla?.[talla];
+    if(vals) {
+      const cn = vals.mat + vals.mdo + vals.energia + vals.logistica;
+      const u = cn * (vals.margen/100);
+      const pn = cn + u;
+      precio = Math.round(pn * 1.19);
+    }
+  }
+  if(precio > 0) document.getElementById('v-m').value = precio * cant;
 };
 
 window.autocompletarPrecioTorta = () => {
