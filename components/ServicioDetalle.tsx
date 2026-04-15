@@ -44,6 +44,7 @@ const productosDelivery: Record<string, { nombre: string; imagen: string; unidad
     { nombre: 'Torta de Chocolate', imagen: imagenes['Torta de Chocolate'], unidad: 'un' },
     { nombre: 'Moca / Pralinée',    imagen: imagenes['Moca / Pralinée'],    unidad: 'un' },
     { nombre: 'Selva Negra',        imagen: imagenes['Selva Negra'],        unidad: 'un' },
+    { nombre: 'Torta Panqueque',    imagen: imagenes['Torta Panqueque'],    unidad: 'un' },
     { nombre: 'Torta de Piña',      imagen: imagenes['Torta de Piña'],      unidad: 'un' },
     { nombre: 'Torta de Hojarasca', imagen: imagenes['Torta de Hojarasca'], unidad: 'un' },
   ],
