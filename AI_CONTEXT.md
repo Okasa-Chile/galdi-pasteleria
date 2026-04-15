@@ -274,18 +274,18 @@ galdi-nextjs/
 ## 🔜 Pendiente
 
 ### Gestión (/gestion)
-- [ ] **Tab 5 Presupuestos — Phases 3-5** — Phase 3 (Firestore), Phase 4 (Vista Previa + PDF), Phase 5 (Historial); ejecutar con prompt directo sin GSD
+- [x] **Tab 5 Presupuestos — Phases 3-5** — completado ✅
 - [ ] **Precios tortas por N° personas** — confirmar con socias y actualizar constante `PRECIOS_TORTA` en `gestion/index.html` (selector ya implementado, precios son provisionales)
 - [ ] **Cupones de descuento** — prompt `.txt` ya generado, listo para ejecutar en Claude Code
 - [x] **Plural "docenas"** — carrito: "2 docena" → "2 docenas" ✅ resuelto 15-04-2026
-- [ ] **Desinstalar GSD de Claude Code** — descartado para proyectos pequeños
+- [x] **GSD** — viene dentro de everything-claude-code, no se puede desinstalar independiente. No usar. ✅
 
 ### SEO / Marketing
 - [ ] **Reseñas Google Business** — meta: 30 reseñas (hoy: ~18 al 11-04-2026)
 - [ ] **Conecta Pyme** — listing enviado, esperando aprobación
 - [ ] **Métodos de pago en GBP** — espera terminal tarjetas (fines de abril 2026)
-- [ ] **Re-análisis Seobility** — esperar hasta ~15-04-2026 para medir impacto del contenido SEO agregado
-- [ ] **Rich Results Test** — validar FAQPage en search.google.com/test/rich-results con URL galdi.cl
+- [x] **Re-análisis Seobility** — realizado 15-04-2026, score subió de 84% a 92% ✅
+- [x] **Rich Results Test** — validado 15-04-2026: 3 elementos válidos (FAQPage, Empresas locales, Organización) ✅
 - [ ] **Schema.org reviews strategy Okasa** — Google Business
 
 ### Trámites externos
