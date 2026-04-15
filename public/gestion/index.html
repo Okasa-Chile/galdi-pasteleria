@@ -1581,23 +1581,38 @@ window.recalc = () => {
 };
 
 window.aplicarCostoTalla = () => {
-  const talla = document.getElementById('calc-talla').value;
-  if (!talla || !sel) return;
-  const costo = COSTOS_TALLA[sel.cat]?.[talla];
-  if (!costo) return;
-  document.getElementById('c-mat').value = costo;
+  if(!sel) return;
+  const talla = g('calc-talla');
+  if(!talla) return;
+  const costoGuardado = sel.costosTalla?.[talla];
+  const costoFallback = COSTOS_TALLA[sel.cat]?.[talla] ?? 0;
+  document.getElementById('c-mat').removeAttribute('readonly');
+  document.getElementById('c-mat').value = costoGuardado ?? costoFallback;
+  document.getElementById('c-mat').setAttribute('readonly','');
   recalc();
 };
 
 window.guardarPrecio = async () => {
-  if(!sel)return;
-  const idx=prods.findIndex(p=>p.id===sel.id);
-  prods[idx]={...prods[idx],costo:+g('c-mat'),mdo:+g('c-mdo'),energia:+g('c-en'),logistica:+g('c-log'),margen:+g('c-mrg')};
-  prods[idx].precio=cpx(prods[idx]);
-  sel=prods[idx];
+  if(!sel) return;
+  const idx = prods.findIndex(p=>p.id===sel.id);
+  const esTallaVariable = (sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas');
+  const talla = esTallaVariable ? g('calc-talla') : null;
+
+  // Actualizar costosTalla si corresponde
+  if(talla) {
+    const costosTalla = {...(prods[idx].costosTalla || COSTOS_TALLA[sel.cat])};
+    costosTalla[talla] = +g('c-mat');
+    prods[idx].costosTalla = costosTalla;
+    COSTOS_TALLA[sel.cat] = {...COSTOS_TALLA[sel.cat], ...costosTalla};
+  }
+
+  prods[idx] = {...prods[idx], costo:+g('c-mat'), mdo:+g('c-mdo'), energia:+g('c-en'), logistica:+g('c-log'), margen:+g('c-mrg')};
+  prods[idx].precio = cpx(prods[idx]);
+  sel = prods[idx];
   await fsSaveProd(prods[idx]);
   renderT();
-  alert('✓ Precio guardado: '+fmt(prods[idx].precio)+' para '+prods[idx].nombre);
+  const msg = talla ? `✓ Precio talla ${talla} guardado para ${prods[idx].nombre}` : `✓ Precio guardado: ${fmt(prods[idx].precio)} para ${prods[idx].nombre}`;
+  alert(msg);
 };
 
 window.cerrarCalc = () => {sel=null;document.getElementById('card-calc').style.display='none';renderT();};
@@ -1673,7 +1688,7 @@ const PRECIOS_TORTA = {
 };
 
 // COSTOS MATERIALES POR TALLA — PROVISIONALES hasta confirmación de las socias
-const COSTOS_TALLA = {
+let COSTOS_TALLA = {
   'Tortas':            { S: 18000, M: 25000, L: 35000 },
   'Pasteles & Tartas': { S: 12000, M: 18000, L: 26000 },
 };
