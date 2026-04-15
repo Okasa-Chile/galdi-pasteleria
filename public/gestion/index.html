@@ -1769,7 +1769,7 @@ window.calcularMonto = () => {
 
   let precio = precioVentaActual;
   if(talla && selProdVenta) {
-    const vals = selProdVenta.costosTalla?.[talla];
+    const vals = selProdVenta.costosTalla?.[talla] ?? COSTOS_TALLA[selProdVenta.cat]?.[talla];
     if(vals) {
       const cn = vals.mat + vals.mdo + vals.energia + vals.logistica;
       const u = cn * (vals.margen/100);
