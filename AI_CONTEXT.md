@@ -238,7 +238,7 @@ galdi-nextjs/
 - [ ] **Tab 5 Presupuestos — Phases 3-5** — Phase 3 (Firestore), Phase 4 (Vista Previa + PDF), Phase 5 (Historial); ejecutar con prompt directo sin GSD
 - [ ] **Precios tortas por N° personas** — confirmar con socias y actualizar constante `PRECIOS_TORTA` en `gestion/index.html` (selector ya implementado, precios son provisionales)
 - [ ] **Cupones de descuento** — prompt `.txt` ya generado, listo para ejecutar en Claude Code
-- [ ] **Plural "docenas"** — carrito: "2 docena" → "2 docenas"
+- [x] **Plural "docenas"** — carrito: "2 docena" → "2 docenas" ✅ resuelto 15-04-2026
 - [ ] **Desinstalar GSD de Claude Code** — descartado para proyectos pequeños
 
 ### SEO / Marketing
