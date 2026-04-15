@@ -67,7 +67,7 @@ be93717 · ad1e1ff · 9b921f3 · 64ab780 · 64ab780 · e6c3aad · 60e9b74 · 4f6
 
 ### Pendiente actualizado
 - [ ] Confirmar precios reales S/M/L con Jacqueline e Ingrid → actualizar COSTOS_TALLA
-- [ ] Desinstalar GSD de Claude Code
+- [x] GSD descartado — viene dentro de everything-claude-code, no se puede desinstalar de forma independiente. Simplemente no usar. ✅
 - [ ] Favicon: actualizar src/app/favicon.ico y public/favicon.ico
 - [ ] Link discreto a /gestion en header
 - [ ] Desactivar GitHub Pages workflow (llegan correos de error)
