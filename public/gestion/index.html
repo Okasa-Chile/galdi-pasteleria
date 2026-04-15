@@ -906,17 +906,18 @@ window.presTallaChanged = (tallaEl) => {
   const lineaId = row.getAttribute('data-id');
   const precioInput = row.querySelector('.pres-precio');
   const prod = lineaProds.get(lineaId);
-  const costoTalla = (cat && talla) ? (COSTOS_TALLA[cat]?.[talla] ?? null) : null;
-  if (prod && costoTalla !== null) {
-    // Recalcular precio final con costo por talla + estructura del producto
-    const cn = costoTalla + (prod.mdo||0) + (prod.energia||0) + (prod.logistica||0);
-    const pn = cn + (prod.tipo === 'propio' ? cn * ((prod.margen||0) / 100) : 0);
-    const pf = Math.round(pn * 1.19);
-    precioInput.removeAttribute('readonly');
-    precioInput.value = pf;
-    precioInput.setAttribute('readonly', '');
-    precioInput.style.background = '#f0f0f0';
-    precioInput.style.cursor = 'not-allowed';
+  if (prod && talla) {
+    const vals = prod.costosTalla?.[talla] ?? COSTOS_TALLA[cat]?.[talla];
+    if(vals) {
+      const cn = vals.mat + vals.mdo + vals.energia + vals.logistica;
+      const u = prod.tipo === 'propio' ? cn * (vals.margen / 100) : 0;
+      const pf = Math.round((cn + u) * 1.19);
+      precioInput.removeAttribute('readonly');
+      precioInput.value = pf;
+      precioInput.setAttribute('readonly', '');
+      precioInput.style.background = '#f0f0f0';
+      precioInput.style.cursor = 'not-allowed';
+    }
   }
   // Sin talla o sin prod → mantener precio base de cpx(p)
   presRecalcLinea(precioInput);
