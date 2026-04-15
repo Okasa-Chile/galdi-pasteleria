@@ -173,7 +173,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
 
   const [activeTab, setActiveTab] = useState(initialTab ?? tabs[0]);
   const [carrito, setCarrito]     = useState<Carrito>({});
-  const [tallaActiva, setTallaActiva] = useState<Record<string, 'S'|'M'|'L'>>({});
+  const [tallaActiva, setTallaActiva] = useState<Record<string, 'S'|'M'|'L'|'XL'>>({});
   const [eventoImg, setEventoImg] = useState(eventosData[tabs[0]]?.imagen ?? imagen);
   const [mostrarResumen, setMostrarResumen] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
@@ -256,7 +256,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
       .map(([key, cantidad]) => {
         const partes = key.split(' · ');
         const nomProd = partes[0];
-        const tallaProd = partes[1] as 'S'|'M'|'L' | undefined;
+        const tallaProd = partes[1] as 'S'|'M'|'L'|'XL' | undefined;
         const todosLosProductos = [
           ...Object.values(productosAlmacenes).flat(),
           ...Object.values(productosDelivery).flat(),
@@ -264,7 +264,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
         const prod = todosLosProductos.find(p => p.nombre === nomProd);
         const esEmpanada = productosDelivery['Empanadas']?.some(p => p.nombre === nomProd);
         const unidad = (id === 'delivery' && esEmpanada) ? 'unidad' : (prod?.unidad ?? 'un');
-        const tallaStr = tallaProd ? ` (talla ${tallaProd}, ${DESC_TALLA[tallaProd].split(' — ')[1]})` : '';
+        const tallaStr = tallaProd ? ` (talla ${tallaProd}, ${DESC_TALLA[tallaProd].split(' — ')[1] ?? DESC_TALLA[tallaProd]})` : '';
         return `• ${cantidad} ${pluralizar(cantidad, unidad)} — ${nomProd}${tallaStr}`;
       })
       .join('\n');
@@ -277,6 +277,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
     S: 'S — 8 a 10 personas',
     M: 'M — 14 a 16 personas',
     L: 'L — 20 a 22 personas',
+    XL: '25 personas',
   };
 
   return (
@@ -422,11 +423,11 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                     </div>
                     {esTorta && (
                       <div style={{ display: 'flex', gap: '4px', flexShrink: 0, marginTop: '1px' }}>
-                        {(['S', 'M', 'L'] as const).map(t => (
+                        {(['S', 'M', 'L', ...(prod.nombre === 'Torta Panqueque' ? ['XL'] : [])] as const).map(t => (
                           <button
                             key={t}
                             className={`talla-btn${tallaSeleccionada === t ? ' sel' : ''}`}
-                            onClick={() => setTallaActiva(prev => ({ ...prev, [prod.nombre]: t }))}
+                            onClick={() => setTallaActiva(prev => ({ ...prev, [prod.nombre]: t as 'S'|'M'|'L'|'XL' }))}
                           >{t}</button>
                         ))}
                       </div>
@@ -479,7 +480,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                   {Object.entries(carrito).map(([key, cantidad]) => {
                     const partes = key.split(' · ');
                     const nomProd = partes[0];
-                    const tallaProd = partes[1] as 'S'|'M'|'L' | undefined;
+                    const tallaProd = partes[1] as 'S'|'M'|'L'|'XL' | undefined;
                     const todosLosProductos = [
                       ...Object.values(productosAlmacenes).flat(),
                       ...Object.values(productosDelivery).flat(),
@@ -497,7 +498,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                                 {tallaProd}
                               </span>
                               <span style={{ fontSize: '0.65rem', color: 'rgba(201,165,90,0.8)', marginLeft: '4px' }}>
-                                {DESC_TALLA[tallaProd].split(' — ')[1]}
+                                {DESC_TALLA[tallaProd].split(' — ')[1] ?? DESC_TALLA[tallaProd]}
                               </span>
                             </div>
                           )}
