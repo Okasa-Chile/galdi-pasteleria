@@ -53,68 +53,6 @@ export default function RootLayout({
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "FAQPage",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "¿Cómo hago un pedido?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "La forma más rápida es escribirnos por WhatsApp al +56 9 9099 1011. Cuéntanos qué necesitas, la fecha de entrega y la dirección, y te respondemos con disponibilidad y precio el mismo día. También puedes escribirnos a ventas@galdi.cl si prefieres el correo."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "¿Hacen delivery? ¿A qué sectores despachan?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Sí, hacemos delivery dentro de Maipú y comunas cercanas. El pedido llega directamente a tu domicilio o lugar de evento en el horario que acordemos. Los costos y la cobertura exacta los confirmamos por WhatsApp según tu dirección."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "¿Con cuánta anticipación debo hacer mi pedido?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Las tortas personalizadas requieren mínimo 5 días de anticipación. Para el resto de productos — pan, empanadas, galletas, kuchen, desayunos — con 48 horas es suficiente."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "¿Pueden adaptarse a restricciones alimentarias?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Sí, trabajamos con restricciones específicas según el pedido. Consúltanos directamente por WhatsApp: te indicamos qué productos son aptos para distintas necesidades y evaluamos si podemos preparar versiones adaptadas. Siempre es mejor avisarnos antes para coordinar los ingredientes y evitar contaminación cruzada."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "¿Tienen precios especiales para eventos?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Para eventos con 20 o más personas preparamos una cotización personalizada según el tipo de preparación, la cantidad y la modalidad de entrega. Escríbenos con la fecha, el número de invitados y el tipo de servicio que necesitas — coffee break, mesa dulce, cóctel, matrimonio — y te enviamos la propuesta en el día."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "¿Hacen tortas para celíacos o diabéticos?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Consultamos caso a caso. Para celíacos, nuestra cocina no es libre de gluten por defecto y existe riesgo de contaminación cruzada, algo que siempre informamos con honestidad. Para personas diabéticas o con restricción de azúcar, podemos preparar versiones con endulzante alternativo en varias de nuestras tortas."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "¿Puedo ir a buscar el pedido o solo hacen despacho?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Sí, puedes retirar tu pedido directamente en nuestra cocina en Maipú. Coordinas el día y la hora de retiro al momento de hacer el pedido por WhatsApp. Si prefieres que lleguemos a ti, también hacemos despacho a domicilio dentro de Maipú y comunas cercanas."
-              }
-            }
-          ]
-        })}} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-          "@context": "https://schema.org",
           "@type": "FoodEstablishment",
           "name": "Galdi Pastelería Artesanal",
           "description": "Pastelería artesanal en Maipú. Tortas, pasteles, pan y empanadas hechos con cariño. Distribución a almacenes, eventos y delivery en toda la comuna.",
