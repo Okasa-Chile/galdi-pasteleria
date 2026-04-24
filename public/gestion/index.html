@@ -907,10 +907,13 @@ window.presTallaChanged = (tallaEl) => {
   const precioInput = row.querySelector('.pres-precio');
   const prod = lineaProds.get(lineaId);
   if (prod && talla) {
-    const vals = prod.costosTalla?.[talla] ?? COSTOS_TALLA[cat]?.[talla];
-    if(vals) {
-      const cn = vals.mat + vals.mdo + vals.energia + vals.logistica;
-      const u = prod.tipo === 'propio' ? cn * (vals.margen / 100) : 0;
+    const catKey = prod?.nombre === 'Torta de Chocolate' ? 'Torta de Chocolate' : cat;
+    const saved = prod.costosTalla?.[talla];
+    const fallbackMat = COSTOS_TALLA[catKey]?.[talla] ?? 0;
+    if(saved || fallbackMat) {
+      const mat = saved?.mat ?? fallbackMat;
+      const cn = mat + (saved?.mdo ?? prod.mdo) + (saved?.energia ?? prod.energia) + (saved?.logistica ?? prod.logistica);
+      const u = prod.tipo === 'propio' ? cn * ((saved?.margen ?? prod.margen) / 100) : 0;
       const pf = Math.round((cn + u) * 1.19);
       precioInput.removeAttribute('readonly');
       precioInput.value = pf;
@@ -1577,13 +1580,13 @@ window.aplicarCostoTalla = () => {
   const talla = g('calc-talla');
   if(!talla) return;
   const guardado = sel.costosTalla?.[talla];
-  const fallback = COSTOS_TALLA[sel.cat]?.[talla] ?? {};
-  const vals = guardado ?? fallback;
-  document.getElementById('c-mat').value  = vals.mat      ?? 0;
-  document.getElementById('c-mdo').value  = vals.mdo      ?? sel.mdo;
-  document.getElementById('c-en').value   = vals.energia  ?? sel.energia;
-  document.getElementById('c-log').value  = vals.logistica ?? sel.logistica;
-  document.getElementById('c-mrg').value  = vals.margen   ?? sel.margen;
+  const catKey = sel.nombre === 'Torta de Chocolate' ? 'Torta de Chocolate' : sel.cat;
+  const fallbackMat = COSTOS_TALLA[catKey]?.[talla] ?? 0;
+  document.getElementById('c-mat').value  = guardado?.mat      ?? fallbackMat;
+  document.getElementById('c-mdo').value  = guardado?.mdo      ?? sel.mdo;
+  document.getElementById('c-en').value   = guardado?.energia  ?? sel.energia;
+  document.getElementById('c-log').value  = guardado?.logistica ?? sel.logistica;
+  document.getElementById('c-mrg').value  = guardado?.margen   ?? sel.margen;
   recalc();
 };
 
@@ -1709,8 +1712,9 @@ const PRECIOS_TORTA = {
 
 // COSTOS MATERIALES POR TALLA — PROVISIONALES hasta confirmación de las socias
 let COSTOS_TALLA = {
-  'Tortas':            { S:{mat:18000,mdo:1200,energia:400,logistica:30,margen:30}, M:{mat:25000,mdo:1400,energia:400,logistica:30,margen:30}, L:{mat:35000,mdo:1600,energia:400,logistica:30,margen:30}, XL:{mat:20000,mdo:5190,energia:400,logistica:30,margen:23} },
-  'Pasteles & Tartas': { S:{mat:12000,mdo:800,energia:300,logistica:30,margen:25},  M:{mat:18000,mdo:1000,energia:300,logistica:30,margen:25}, L:{mat:26000,mdo:1200,energia:300,logistica:30,margen:25} },
+  'Tortas':            { S:18000, M:25000, L:35000 },
+  'Torta de Chocolate':{ S:9359,  M:13238, L:19055 },
+  'Pasteles & Tartas': { S:12000, M:18000, L:26000 },
 };
 
 window.poblarProductos = () => {
@@ -1770,10 +1774,13 @@ window.calcularMonto = () => {
 
   let precio = precioVentaActual;
   if(talla && selProdVenta) {
-    const vals = selProdVenta.costosTalla?.[talla] ?? COSTOS_TALLA[selProdVenta.cat]?.[talla];
-    if(vals) {
-      const cn = vals.mat + vals.mdo + vals.energia + vals.logistica;
-      const u = cn * (vals.margen/100);
+    const catKey = selProdVenta?.nombre === 'Torta de Chocolate' ? 'Torta de Chocolate' : selProdVenta.cat;
+    const saved = selProdVenta.costosTalla?.[talla];
+    const fallbackMat = COSTOS_TALLA[catKey]?.[talla] ?? 0;
+    if(saved || fallbackMat) {
+      const mat = saved?.mat ?? fallbackMat;
+      const cn = mat + (saved?.mdo ?? selProdVenta.mdo) + (saved?.energia ?? selProdVenta.energia) + (saved?.logistica ?? selProdVenta.logistica);
+      const u = cn * ((saved?.margen ?? selProdVenta.margen)/100);
       const pn = cn + u;
       precio = Math.round(pn * 1.19);
     }

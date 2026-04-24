@@ -56,7 +56,16 @@
       "Bash(node __TRACKED_VAR__/.claude/get-shit-done/bin/gsd-tools.cjs commit 'docs\\(phase-1\\): complete phase execution' --files .planning/ROADMAP.md .planning/STATE.md .planning/REQUIREMENTS.md .planning/phases/01-tab-formulario-base/01-VERIFICATION.md)",
       "Skill(gsd:plan-phase)",
       "Skill(gsd:ui-phase)",
-      "Skill(gsd:execute-phase)"
+      "Skill(gsd:execute-phase)",
+      "Bash(kill %1)",
+      "Bash(wait)",
+      "Bash(cp -r out/. /tmp/out_backup/)",
+      "Bash(cp public/gestion/index.html out/gestion/index.html)",
+      "Bash(claude plugins *)"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "code-review-graph"
+  ]
 }

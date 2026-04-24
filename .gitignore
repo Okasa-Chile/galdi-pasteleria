@@ -46,3 +46,5 @@ repomix-output.xml
 
 # Claude Code worktrees
 .claude/worktrees/
+# Added by code-review-graph
+.code-review-graph/
