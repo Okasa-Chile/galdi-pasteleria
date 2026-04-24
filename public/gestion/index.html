@@ -606,14 +606,14 @@ const DEFAULTS=[
   {id:10,nombre:'Kuchen de Nuez',cat:'Pasteles & Tartas',tipo:'propio',unidad:'unidad',costo:4000,energia:300,logistica:30,mdo:700,margen:25,combate:''},
   {id:11,nombre:'Banofee',cat:'Pasteles & Tartas',tipo:'propio',unidad:'unidad',costo:3800,energia:200,logistica:30,mdo:700,margen:25,combate:''},
   {id:12,nombre:'Tartaletas',cat:'Pasteles & Tartas',tipo:'propio',unidad:'docena',costo:3000,energia:250,logistica:30,mdo:600,margen:25,combate:''},
-  {id:13,nombre:'Torta 3 Leches',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6000,energia:400,logistica:30,mdo:1200,margen:30,combate:''},
+  {id:13,nombre:'Torta 3 Leches',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6000,energia:350,logistica:750,mdo:1232,margen:22,combate:''},
   {id:14,nombre:'Torta de Chocolate',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6500,energia:400,logistica:30,mdo:1200,margen:30,combate:''},
-  {id:15,nombre:'Torta Moka',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6500,energia:400,logistica:30,mdo:1200,margen:30,combate:''},
-  {id:16,nombre:'Torta Selva Negra',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:7000,energia:400,logistica:30,mdo:1300,margen:30,combate:''},
-  {id:17,nombre:'Torta de Piña',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6000,energia:400,logistica:30,mdo:1100,margen:30,combate:''},
-  {id:18,nombre:'Torta de Hojarasca',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:7500,energia:400,logistica:30,mdo:1500,margen:30,combate:''},
+  {id:15,nombre:'Torta Moka',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6500,energia:350,logistica:750,mdo:1232,margen:22,combate:''},
+  {id:16,nombre:'Torta Selva Negra',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:7000,energia:350,logistica:750,mdo:1232,margen:22,combate:''},
+  {id:17,nombre:'Torta de Piña',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6000,energia:350,logistica:750,mdo:1232,margen:22,combate:''},
+  {id:18,nombre:'Torta de Hojarasca',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:7500,energia:350,logistica:750,mdo:1232,margen:22,combate:''},
   {id:19,nombre:'Torta Panqueque',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6500,energia:350,logistica:30,mdo:1200,margen:30,combate:''},
-  {id:20,nombre:'Torta Pavé',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:5500,energia:200,logistica:30,mdo:1000,margen:30,combate:''},
+  {id:20,nombre:'Torta Pavé',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:5500,energia:350,logistica:750,mdo:1232,margen:22,combate:''},
   {id:21,nombre:'Alfajores de Maicena',cat:'Dulces & Alfajores',tipo:'propio',unidad:'docena',costo:2000,energia:150,logistica:30,mdo:400,margen:20,combate:''},
   {id:22,nombre:'Alfajores de Manjar',cat:'Dulces & Alfajores',tipo:'propio',unidad:'docena',costo:2200,energia:150,logistica:30,mdo:400,margen:20,combate:''},
   {id:23,nombre:'Alfajores de Chocolate',cat:'Dulces & Alfajores',tipo:'propio',unidad:'docena',costo:2500,energia:150,logistica:30,mdo:450,margen:20,combate:''},
@@ -907,13 +907,21 @@ window.presTallaChanged = (tallaEl) => {
   const precioInput = row.querySelector('.pres-precio');
   const prod = lineaProds.get(lineaId);
   if (prod && talla) {
-    const catKey = prod?.nombre === 'Torta de Chocolate' ? 'Torta de Chocolate' : cat;
     const saved = prod.costosTalla?.[talla];
-    const fallbackMat = COSTOS_TALLA[catKey]?.[talla] ?? 0;
-    if(saved || fallbackMat) {
-      const mat = saved?.mat ?? fallbackMat;
-      const cn = mat + (saved?.mdo ?? prod.mdo) + (saved?.energia ?? prod.energia) + (saved?.logistica ?? prod.logistica);
-      const u = prod.tipo === 'propio' ? cn * ((saved?.margen ?? prod.margen) / 100) : 0;
+    const esPanquequeXL = prod.nombre === 'Torta Panqueque' && talla === 'XL' && !saved?.mat;
+    const pxl = esPanquequeXL ? PANQUEQUE_XL : null;
+    const catKey = prod.nombre === 'Torta de Chocolate' ? 'Torta de Chocolate' : prod.cat;
+    const fallbackMat = pxl ? pxl.mat : (COSTOS_TALLA[catKey]?.[talla] ?? 0);
+    const esTortaEstandar = prod.cat === 'Tortas' && prod.nombre !== 'Torta Panqueque';
+    const vt = esTortaEstandar ? VALORES_TALLA_TORTAS[talla] : null;
+    if(pxl || saved || fallbackMat) {
+      const mat      = pxl ? pxl.mat      : (saved?.mat ?? fallbackMat);
+      const mdo      = pxl ? pxl.mdo      : (vt ? vt.mdo      : (saved?.mdo      ?? prod.mdo));
+      const energia  = pxl ? pxl.energia  : (vt ? vt.energia  : (saved?.energia  ?? prod.energia));
+      const logistica= pxl ? pxl.logistica: (vt ? vt.logistica: (saved?.logistica ?? prod.logistica));
+      const margen   = pxl ? pxl.margen   : (vt ? vt.margen   : (saved?.margen   ?? prod.margen));
+      const cn = mat + mdo + energia + logistica;
+      const u = prod.tipo === 'propio' ? cn * (margen / 100) : 0;
       const pf = Math.round((cn + u) * 1.19);
       precioInput.removeAttribute('readonly');
       precioInput.value = pf;
@@ -1580,13 +1588,24 @@ window.aplicarCostoTalla = () => {
   const talla = g('calc-talla');
   if(!talla) return;
   const guardado = sel.costosTalla?.[talla];
+  if(sel.nombre === 'Torta Panqueque' && talla === 'XL' && !guardado?.mat) {
+    document.getElementById('c-mat').value = PANQUEQUE_XL.mat;
+    document.getElementById('c-mdo').value = PANQUEQUE_XL.mdo;
+    document.getElementById('c-en').value  = PANQUEQUE_XL.energia;
+    document.getElementById('c-log').value = PANQUEQUE_XL.logistica;
+    document.getElementById('c-mrg').value = PANQUEQUE_XL.margen;
+    recalc();
+    return;
+  }
   const catKey = sel.nombre === 'Torta de Chocolate' ? 'Torta de Chocolate' : sel.cat;
   const fallbackMat = COSTOS_TALLA[catKey]?.[talla] ?? 0;
+  const esTortaEstandar = sel.cat === 'Tortas' && sel.nombre !== 'Torta Panqueque';
+  const vt = esTortaEstandar ? VALORES_TALLA_TORTAS[talla] : null;
   document.getElementById('c-mat').value  = guardado?.mat      ?? fallbackMat;
-  document.getElementById('c-mdo').value  = guardado?.mdo      ?? sel.mdo;
-  document.getElementById('c-en').value   = guardado?.energia  ?? sel.energia;
-  document.getElementById('c-log').value  = guardado?.logistica ?? sel.logistica;
-  document.getElementById('c-mrg').value  = guardado?.margen   ?? sel.margen;
+  document.getElementById('c-mdo').value  = vt ? vt.mdo      : (guardado?.mdo      ?? sel.mdo);
+  document.getElementById('c-en').value   = vt ? vt.energia  : (guardado?.energia  ?? sel.energia);
+  document.getElementById('c-log').value  = vt ? vt.logistica: (guardado?.logistica ?? sel.logistica);
+  document.getElementById('c-mrg').value  = vt ? vt.margen   : (guardado?.margen   ?? sel.margen);
   recalc();
 };
 
@@ -1710,11 +1729,19 @@ const PRECIOS_TORTA = {
   '99': 55000,
 };
 
+const VALORES_TALLA_TORTAS = {
+  S:  {mdo:1232, energia:350, logistica:750, margen:22},
+  M:  {mdo:2398, energia:350, logistica:750, margen:22},
+  L:  {mdo:3396, energia:350, logistica:750, margen:23},
+  XL: {mdo:5190, energia:400, logistica:30,  margen:23}
+};
+const PANQUEQUE_XL = {mat:20000, mdo:5190, energia:400, logistica:30, margen:23};
+
 // COSTOS MATERIALES POR TALLA — PROVISIONALES hasta confirmación de las socias
 let COSTOS_TALLA = {
-  'Tortas':            { S:18000, M:25000, L:35000 },
-  'Torta de Chocolate':{ S:9359,  M:13238, L:19055 },
-  'Pasteles & Tartas': { S:12000, M:18000, L:26000 },
+  'Tortas': {S:8000, M:12000, L:16000, XL:20000},
+  'Torta de Chocolate': {S:9378, M:14067, L:18733, XL:0},
+  'Pasteles & Tartas': {S:12000, M:18000, L:26000}
 };
 
 window.poblarProductos = () => {
@@ -1774,13 +1801,21 @@ window.calcularMonto = () => {
 
   let precio = precioVentaActual;
   if(talla && selProdVenta) {
-    const catKey = selProdVenta?.nombre === 'Torta de Chocolate' ? 'Torta de Chocolate' : selProdVenta.cat;
     const saved = selProdVenta.costosTalla?.[talla];
-    const fallbackMat = COSTOS_TALLA[catKey]?.[talla] ?? 0;
-    if(saved || fallbackMat) {
-      const mat = saved?.mat ?? fallbackMat;
-      const cn = mat + (saved?.mdo ?? selProdVenta.mdo) + (saved?.energia ?? selProdVenta.energia) + (saved?.logistica ?? selProdVenta.logistica);
-      const u = cn * ((saved?.margen ?? selProdVenta.margen)/100);
+    const esPanquequeXL = selProdVenta.nombre === 'Torta Panqueque' && talla === 'XL' && !saved?.mat;
+    const pxl = esPanquequeXL ? PANQUEQUE_XL : null;
+    const catKey = selProdVenta?.nombre === 'Torta de Chocolate' ? 'Torta de Chocolate' : selProdVenta.cat;
+    const fallbackMat = pxl ? pxl.mat : (COSTOS_TALLA[catKey]?.[talla] ?? 0);
+    const esTortaEstandar = selProdVenta.cat === 'Tortas' && selProdVenta.nombre !== 'Torta Panqueque';
+    const vt = esTortaEstandar ? VALORES_TALLA_TORTAS[talla] : null;
+    if(pxl || saved || fallbackMat) {
+      const mat      = pxl ? pxl.mat      : (saved?.mat ?? fallbackMat);
+      const mdo      = pxl ? pxl.mdo      : (vt ? vt.mdo      : (saved?.mdo      ?? selProdVenta.mdo));
+      const energia  = pxl ? pxl.energia  : (vt ? vt.energia  : (saved?.energia  ?? selProdVenta.energia));
+      const logistica= pxl ? pxl.logistica: (vt ? vt.logistica: (saved?.logistica ?? selProdVenta.logistica));
+      const margen   = pxl ? pxl.margen   : (vt ? vt.margen   : (saved?.margen   ?? selProdVenta.margen));
+      const cn = mat + mdo + energia + logistica;
+      const u = cn * (margen/100);
       const pn = cn + u;
       precio = Math.round(pn * 1.19);
     }
