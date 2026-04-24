@@ -437,7 +437,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                   {/* Botón agregar / contador */}
                   {esTorta && !tallaSeleccionada ? (
                     <button className="svc-btn-add" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
-                      Elige talla
+                      Elige tamaño
                     </button>
                   ) : enCarrito === 0 ? (
                     <button className="svc-btn-add" onClick={() => agregar(carritoKey, activeTab, prod.unidad)}><span style={{fontSize:'1rem'}}>🛒</span> AGREGAR</button>
