@@ -93,88 +93,114 @@ export default function Header() {
         left: 0,
         right: 0,
         zIndex: 500,
-        padding: scrolled ? '0.7rem 5%' : '15px 40px',
-        minHeight: '90px',
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        flexDirection: 'column',
         background: scrolled ? 'rgba(26,15,10,0.93)' : 'transparent',
         backdropFilter: scrolled ? 'blur(18px)' : 'none',
         WebkitBackdropFilter: scrolled ? 'blur(18px)' : 'none',
         borderBottom: scrolled ? '1px solid rgba(212,168,83,0.12)' : '1px solid transparent',
-        transition: 'background var(--transition), padding var(--transition), border-color var(--transition)',
+        transition: 'background var(--transition), border-color var(--transition)',
       }}>
 
-        {/* Logo */}
-        <a href="#inicio" style={{ lineHeight: 0 }}>
-          <Image
-            src="/images/Nuevologo.webp"
-            alt="Galdi — Pastelería Artesanal"
-            width={250}
-            height={90}
-            style={{
-              height: scrolled ? '52px' : '65px',
-              width: 'auto',
-              maxWidth: '250px',
-              objectFit: 'contain',
-              transition: 'height var(--transition), filter var(--transition)',
-              filter: 'brightness(0) invert(1)',
-            }}
-            priority
-          />
-        </a>
+        {/* Franja Día de la Madre */}
+        <div style={{
+          background: '#c4704f',
+          padding: '7px 16px',
+          textAlign: 'center',
+          fontFamily: 'var(--font-sans)',
+          fontSize: '12px',
+          color: '#f5e6d3',
+          letterSpacing: '0.04em',
+        }}>
+          <a href="/dia-de-la-madre" style={{ color: '#f5e6d3', textDecoration: 'none', display: 'block' }}>
+            🌸 <strong style={{ fontWeight: 500 }}>Día de la Madre</strong> — Tortas artesanales con delivery en Maipú · Encarga la tuya →
+          </a>
+        </div>
 
-        {/* Nav desktop */}
-        <nav className="header-nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: '2.5rem', listStyle: 'none' }}>
-          {navItems.map((item) => (
+        {/* Nav row */}
+        <div style={{
+          padding: scrolled ? '0.7rem 5%' : '15px 40px',
+          minHeight: '90px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          boxSizing: 'border-box',
+          transition: 'padding var(--transition)',
+        }}>
+
+          {/* Logo */}
+          <a href="#inicio" style={{ lineHeight: 0 }}>
+            <Image
+              src="/images/Nuevologo.webp"
+              alt="Galdi — Pastelería Artesanal"
+              width={250}
+              height={90}
+              style={{
+                height: scrolled ? '52px' : '65px',
+                width: 'auto',
+                maxWidth: '250px',
+                objectFit: 'contain',
+                transition: 'height var(--transition), filter var(--transition)',
+                filter: 'brightness(0) invert(1)',
+              }}
+              priority
+            />
+          </a>
+
+          {/* Nav desktop */}
+          <nav className="header-nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: '2.5rem', listStyle: 'none' }}>
+            {navItems.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                className="header-nav-link"
+              >
+                {item.label}
+              </a>
+            ))}
             <a
-              key={item.id}
-              href={`#${item.id}`}
-              className="header-nav-link"
+              href="/gestion"
+              title="Acceso interno"
+              style={{
+                color: 'rgba(245,230,211,0.25)',
+                fontSize: '0.75rem',
+                textDecoration: 'none',
+                transition: 'color 0.2s',
+                letterSpacing: '0.05em',
+              }}
+              onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(212,168,83,0.6)'}
+              onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(245,230,211,0.25)'}
             >
-              {item.label}
+              🔒
             </a>
-          ))}
-          <a
-            href="/gestion"
-            title="Acceso interno"
-            style={{
-              color: 'rgba(245,230,211,0.25)',
-              fontSize: '0.75rem',
-              textDecoration: 'none',
-              transition: 'color 0.2s',
-              letterSpacing: '0.05em',
-            }}
-            onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(212,168,83,0.6)'}
-            onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(245,230,211,0.25)'}
-          >
-            🔒
-          </a>
-          <a
-            href="#servicios"
-            className="header-nav-link nav-cta"
-          >
-            Cotizar
-          </a>
-        </nav>
+            <a
+              href="#servicios"
+              className="header-nav-link nav-cta"
+            >
+              Cotizar
+            </a>
+          </nav>
 
-        {/* Hamburguesa */}
-        <button
-          className="menu-toggle"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Abrir menú"
-        >
-          <span style={{ transform: menuOpen ? 'rotate(45deg) translate(4.5px, 4.5px)' : '' }} />
-          <span style={{ opacity: menuOpen ? 0 : 1 }} />
-          <span style={{ transform: menuOpen ? 'rotate(-45deg) translate(4.5px, -4.5px)' : '' }} />
-        </button>
+          {/* Hamburguesa */}
+          <button
+            className="menu-toggle"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Abrir menú"
+          >
+            <span style={{ transform: menuOpen ? 'rotate(45deg) translate(4.5px, 4.5px)' : '' }} />
+            <span style={{ opacity: menuOpen ? 0 : 1 }} />
+            <span style={{ transform: menuOpen ? 'rotate(-45deg) translate(4.5px, -4.5px)' : '' }} />
+          </button>
+
+        </div>
       </header>
 
       {/* Menú mobile */}
       {menuOpen && (
         <div style={{
           position: 'fixed',
-          top: '90px',
+          top: '122px',
           left: 0,
           right: 0,
           zIndex: 499,

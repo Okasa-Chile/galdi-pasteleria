@@ -1,7 +1,6 @@
 'use client';
 
 import Header from '@/components/Header';
-import BannerDiaMadre from '@/components/BannerDiaMadre';
 import Hero from '@/components/Hero';
 import Catalogo from '@/components/Catalogo';
 import Servicios from '@/components/Servicios';
@@ -17,9 +16,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <div>
-        <BannerDiaMadre />
-        <main>
+      <main>
           <Hero />
           <Catalogo />
           <Servicios />
@@ -28,8 +25,7 @@ export default function Home() {
           <Contacto />
           <Footer />
           <WhatsAppFloat />
-        </main>
-      </div>
+      </main>
     </>
   );
 }
