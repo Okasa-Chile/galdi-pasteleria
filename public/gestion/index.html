@@ -1674,19 +1674,19 @@ window.abrirModal = (id) => {
 
 window.saveProd = async () => {
   const id=document.getElementById('m-id').value;
-  const existing = prods.find(x=>x.id===+id) || {};
+  const existing = id ? prods.find(x=>x.id===+id) : null;
   const p = {
     nombre: document.getElementById('m-nom').value.trim(),
     cat: document.getElementById('m-cat').value,
     tipo: document.getElementById('m-tipo').value,
     unidad: document.getElementById('m-uni').value,
     combate: document.getElementById('m-comb').value.trim(),
-    costo: existing.costo || 0,
-    energia: existing.energia || 0,
-    logistica: existing.logistica || 30,
-    mdo: existing.mdo || 0,
-    margen: existing.margen || 20,
-    costosTalla: existing.costosTalla || null,
+    costo: document.getElementById('m-cost') ? (+document.getElementById('m-cost').value||0) : (existing?.costo||0),
+    energia: document.getElementById('m-en') ? (+document.getElementById('m-en').value||0) : (existing?.energia||0),
+    logistica: document.getElementById('m-log') ? (+document.getElementById('m-log').value||30) : (existing?.logistica||30),
+    mdo: document.getElementById('m-mdo') ? (+document.getElementById('m-mdo').value||0) : (existing?.mdo||0),
+    margen: document.getElementById('m-mrg') ? (+document.getElementById('m-mrg').value||0) : (existing?.margen||20),
+    costosTalla: existing?.costosTalla || null,
   };
   if(!p.nombre){alert('Ingresa el nombre del producto');return;}
   p.precio=cpx(p);
