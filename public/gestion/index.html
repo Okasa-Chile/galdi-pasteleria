@@ -919,15 +919,13 @@ window.presTallaChanged = (tallaEl) => {
     const esPanquequeXL = prod.nombre === 'Torta Panqueque' && talla === 'XL' && !saved?.mat;
     const pxl = esPanquequeXL ? PANQUEQUE_XL : null;
     const catKey = prod.nombre === 'Torta de Chocolate' ? 'Torta de Chocolate' : prod.cat;
-    const fallbackMat = pxl ? pxl.mat : (COSTOS_TALLA[catKey]?.[talla] ?? 0);
-    const esTortaEstandar = prod.cat === 'Tortas' && prod.nombre !== 'Torta Panqueque';
-    const vt = esTortaEstandar ? VALORES_TALLA_TORTAS[talla] : null;
-    if(pxl || saved || fallbackMat) {
-      const mat      = pxl ? pxl.mat      : (saved?.mat ?? fallbackMat);
-      const mdo      = pxl ? pxl.mdo      : (vt ? vt.mdo      : (saved?.mdo      ?? prod.mdo));
-      const energia  = pxl ? pxl.energia  : (vt ? vt.energia  : (saved?.energia  ?? prod.energia));
-      const logistica= pxl ? pxl.logistica: (vt ? vt.logistica: (saved?.logistica ?? prod.logistica));
-      const margen   = pxl ? pxl.margen   : (vt ? vt.margen   : (saved?.margen   ?? prod.margen));
+    const fb = pxl ? pxl : (COSTOS_TALLA[catKey]?.[talla] ?? null);
+    if(pxl || saved || fb) {
+      const mat      = pxl ? pxl.mat      : (saved?.mat      ?? fb?.mat      ?? 0);
+      const mdo      = pxl ? pxl.mdo      : (saved?.mdo      ?? fb?.mdo      ?? prod.mdo);
+      const energia  = pxl ? pxl.energia  : (saved?.energia  ?? fb?.energia  ?? prod.energia);
+      const logistica= pxl ? pxl.logistica: (saved?.logistica ?? fb?.logistica ?? prod.logistica);
+      const margen   = pxl ? pxl.margen   : (saved?.margen   ?? fb?.margen   ?? prod.margen);
       const cn = mat + mdo + energia + logistica;
       const u = prod.tipo === 'propio' ? cn * (margen / 100) : 0;
       const pf = Math.round((cn + u) * 1.19);
@@ -1604,14 +1602,12 @@ window.aplicarCostoTalla = () => {
     return;
   }
   const catKey = sel.nombre === 'Torta de Chocolate' ? 'Torta de Chocolate' : sel.cat;
-  const fallbackMat = COSTOS_TALLA[catKey]?.[talla] ?? 0;
-  const esTortaEstandar = sel.cat === 'Tortas' && sel.nombre !== 'Torta Panqueque';
-  const vt = esTortaEstandar ? VALORES_TALLA_TORTAS[talla] : null;
-  document.getElementById('c-mat').value  = guardado?.mat      ?? fallbackMat;
-  document.getElementById('c-mdo').value  = vt ? vt.mdo      : (guardado?.mdo      ?? sel.mdo);
-  document.getElementById('c-en').value   = vt ? vt.energia  : (guardado?.energia  ?? sel.energia);
-  document.getElementById('c-log').value  = vt ? vt.logistica: (guardado?.logistica ?? sel.logistica);
-  document.getElementById('c-mrg').value  = vt ? vt.margen   : (guardado?.margen   ?? sel.margen);
+  const fb = COSTOS_TALLA[catKey]?.[talla] ?? null;
+  document.getElementById('c-mat').value  = guardado?.mat      ?? fb?.mat      ?? 0;
+  document.getElementById('c-mdo').value  = guardado?.mdo      ?? fb?.mdo      ?? sel.mdo;
+  document.getElementById('c-en').value   = guardado?.energia  ?? fb?.energia  ?? sel.energia;
+  document.getElementById('c-log').value  = guardado?.logistica ?? fb?.logistica ?? sel.logistica;
+  document.getElementById('c-mrg').value  = guardado?.margen   ?? fb?.margen   ?? sel.margen;
   recalc();
 };
 
@@ -1822,15 +1818,13 @@ window.calcularMonto = () => {
     const esPanquequeXL = selProdVenta.nombre === 'Torta Panqueque' && talla === 'XL' && !saved?.mat;
     const pxl = esPanquequeXL ? PANQUEQUE_XL : null;
     const catKey = selProdVenta?.nombre === 'Torta de Chocolate' ? 'Torta de Chocolate' : selProdVenta.cat;
-    const fallbackMat = pxl ? pxl.mat : (COSTOS_TALLA[catKey]?.[talla] ?? 0);
-    const esTortaEstandar = selProdVenta.cat === 'Tortas' && selProdVenta.nombre !== 'Torta Panqueque';
-    const vt = esTortaEstandar ? VALORES_TALLA_TORTAS[talla] : null;
-    if(pxl || saved || fallbackMat) {
-      const mat      = pxl ? pxl.mat      : (saved?.mat ?? fallbackMat);
-      const mdo      = pxl ? pxl.mdo      : (vt ? vt.mdo      : (saved?.mdo      ?? selProdVenta.mdo));
-      const energia  = pxl ? pxl.energia  : (vt ? vt.energia  : (saved?.energia  ?? selProdVenta.energia));
-      const logistica= pxl ? pxl.logistica: (vt ? vt.logistica: (saved?.logistica ?? selProdVenta.logistica));
-      const margen   = pxl ? pxl.margen   : (vt ? vt.margen   : (saved?.margen   ?? selProdVenta.margen));
+    const fb = pxl ? pxl : (COSTOS_TALLA[catKey]?.[talla] ?? null);
+    if(pxl || saved || fb) {
+      const mat      = pxl ? pxl.mat      : (saved?.mat      ?? fb?.mat      ?? 0);
+      const mdo      = pxl ? pxl.mdo      : (saved?.mdo      ?? fb?.mdo      ?? selProdVenta.mdo);
+      const energia  = pxl ? pxl.energia  : (saved?.energia  ?? fb?.energia  ?? selProdVenta.energia);
+      const logistica= pxl ? pxl.logistica: (saved?.logistica ?? fb?.logistica ?? selProdVenta.logistica);
+      const margen   = pxl ? pxl.margen   : (saved?.margen   ?? fb?.margen   ?? selProdVenta.margen);
       const cn = mat + mdo + energia + logistica;
       const u = cn * (margen/100);
       const pn = cn + u;
