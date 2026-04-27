@@ -25,7 +25,7 @@ export default function SeoPage({
     <main style={{ background: 'var(--cream)', minHeight: '100vh', fontFamily: 'var(--font-sans)' }}>
 
       {/* Hero */}
-      <div style={{ position: 'relative', height: 'clamp(280px, 45vh, 480px)', overflow: 'hidden' }}>
+      <div style={{ position: 'relative', height: 'clamp(220px, 30vh, 320px)', overflow: 'hidden' }}>
         <Image src={imagen} alt={titulo} fill style={{ objectFit: 'cover', objectPosition: 'center' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(26,15,10,0.35), rgba(26,15,10,0.75))' }} />
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 5%' }}>
@@ -42,10 +42,10 @@ export default function SeoPage({
       </div>
 
       {/* Contenido */}
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '4rem 5%' }}>
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 5%' }}>
 
         {/* Descripción */}
-        <p style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1rem, 2vw, 1.25rem)', fontWeight: 300, color: '#3d2010', lineHeight: 1.8, marginBottom: '3rem', textAlign: 'center' }}>
+        <p style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1rem, 2vw, 1.25rem)', fontWeight: 300, color: '#3d2010', lineHeight: 1.8, marginBottom: '1.5rem', textAlign: 'center' }}>
           {descripcion}
         </p>
 

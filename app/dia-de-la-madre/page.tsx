@@ -48,7 +48,7 @@ export default function DiaDeLaMadrePage() {
         titulo="Tortas para el Día de la Madre"
         subtitulo="Sorpréndela con algo hecho con cariño"
         descripcion="El Día de la Madre merece algo especial y artesanal. En Galdi elaboramos tortas personalizadas con los mejores ingredientes, con delivery directo en Maipú. Encarga con anticipación y asegura tu pedido."
-        imagen="/images/torta-tres-leches.webp"
+        imagen="/images/torta-amor.webp"
         ctaTexto="Ver productos"
         ctaHref="/#productos"
         waTexto="Hola Galdi, quiero encargar una torta para el Día de la Madre 🎂💐"
