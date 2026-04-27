@@ -1743,11 +1743,22 @@ const VALORES_TALLA_TORTAS = {
 };
 const PANQUEQUE_XL = {mat:20000, mdo:5190, energia:400, logistica:30, margen:23};
 
-// COSTOS MATERIALES POR TALLA — PROVISIONALES hasta confirmación de las socias
-let COSTOS_TALLA = {
-  'Tortas': {S:8000, M:12000, L:16000, XL:20000},
-  'Torta de Chocolate': {S:9378, M:14067, L:18733, XL:0},
-  'Pasteles & Tartas': {S:12000, M:18000, L:26000}
+const COSTOS_TALLA = {
+  'Tortas': {
+    S: { mat: 10000, mdo: 1298, energia: 400, logistica: 30, margen: 30 },
+    M: { mat: 14000, mdo: 2464, energia: 400, logistica: 30, margen: 30 },
+    L: { mat: 18000, mdo: 3445, energia: 400, logistica: 30, margen: 30 },
+  },
+  'Torta de Chocolate': {
+    S: { mat: 9530, mdo: 1298, energia: 400, logistica: 30, margen: 30 },
+    M: { mat: 14820, mdo: 2464, energia: 400, logistica: 30, margen: 30 },
+    L: { mat: 19390, mdo: 3445, energia: 400, logistica: 30, margen: 30 },
+  },
+  'Pasteles & Tartas': {
+    S: { mat: 12000, mdo: 800, energia: 300, logistica: 30, margen: 25 },
+    M: { mat: 18000, mdo: 1200, energia: 300, logistica: 30, margen: 25 },
+    L: { mat: 26000, mdo: 1500, energia: 300, logistica: 30, margen: 25 },
+  },
 };
 
 window.poblarProductos = () => {
