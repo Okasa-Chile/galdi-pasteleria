@@ -9,9 +9,6 @@ export default function BannerDiaMadre() {
       color: '#f5e6d3',
       letterSpacing: '0.03em',
       fontWeight: 400,
-      position: 'relative',
-      zIndex: 50,
-      marginTop: '90px',
     }}>
       <a
         href="/dia-de-la-madre"

@@ -15,9 +15,10 @@ import useScrollReveal from '@/hooks/useScrollReveal';
 export default function Home() {
   useScrollReveal();
   return (
-    <main>
+    <>
       <Header />
       <BannerDiaMadre />
+      <main style={{ paddingTop: '90px' }}>
       <Hero />
       <Catalogo />
       <Servicios />
@@ -26,6 +27,7 @@ export default function Home() {
       <Contacto />
       <Footer />
       <WhatsAppFloat />
-    </main>
+      </main>
+    </>
   );
 }
