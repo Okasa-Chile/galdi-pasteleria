@@ -2,7 +2,10 @@ export default function BannerDiaMadre() {
   return (
     <div style={{
       background: '#c4704f',
-      padding: '9px 16px',
+      paddingTop: '90px',
+      paddingBottom: '9px',
+      paddingLeft: '16px',
+      paddingRight: '16px',
       textAlign: 'center',
       fontFamily: 'var(--font-sans)',
       fontSize: '13px',

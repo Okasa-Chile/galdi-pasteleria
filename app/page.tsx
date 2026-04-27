@@ -18,7 +18,7 @@ export default function Home() {
     <>
       <Header />
       <BannerDiaMadre />
-      <main style={{ paddingTop: '90px' }}>
+      <main>
       <Hero />
       <Catalogo />
       <Servicios />
