@@ -17,17 +17,19 @@ export default function Home() {
   return (
     <>
       <Header />
-      <BannerDiaMadre />
-      <main>
-      <Hero />
-      <Catalogo />
-      <Servicios />
-      <Nosotras />
-      <FAQ />
-      <Contacto />
-      <Footer />
-      <WhatsAppFloat />
-      </main>
+      <div style={{ paddingTop: '90px' }}>
+        <BannerDiaMadre />
+        <main>
+          <Hero />
+          <Catalogo />
+          <Servicios />
+          <Nosotras />
+          <FAQ />
+          <Contacto />
+          <Footer />
+          <WhatsAppFloat />
+        </main>
+      </div>
     </>
   );
 }
