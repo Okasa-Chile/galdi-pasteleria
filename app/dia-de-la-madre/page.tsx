@@ -62,12 +62,12 @@ export default function DiaDeLaMadrePage() {
           {
             nombre: "Torta 3 Leches",
             detalle: "Húmeda, esponjosa y con crema chantilly. Un clásico irresistible para mamá.",
-            imagen: "/images/torta-3-leches.webp"
+            imagen: "/images/torta-tres-leches.webp"
           },
           {
             nombre: "Torta Panqueque",
             detalle: "Finas capas de panqueque con chocolate y frambuesa o manjar. Irresistible.",
-            imagen: "/images/torta-panqueques.webp"
+            imagen: "/images/torta-panqueques-dia-madre.webp"
           },
         ]}
       />

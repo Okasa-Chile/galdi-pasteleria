@@ -61,7 +61,10 @@
       "Bash(wait)",
       "Bash(cp -r out/. /tmp/out_backup/)",
       "Bash(cp public/gestion/index.html out/gestion/index.html)",
-      "Bash(claude plugins *)"
+      "Bash(claude plugins *)",
+      "PowerShell(Copy-Item *)",
+      "PowerShell(Get-ChildItem *)",
+      "PowerShell($env:USERPROFILE)"
     ]
   },
   "enableAllProjectMcpServers": true,
