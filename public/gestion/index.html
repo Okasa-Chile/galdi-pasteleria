@@ -649,7 +649,6 @@ async function fsLoad() {
       setSyncBadge('sync-prods','✓ Sincronizado con la nube','ok');
     } else {
       prods = DEFAULTS.map(p=>({...p,precio:cpx(p)}));
-      await fsSaveAllProds();
     }
     const snapV = await getDocs(collection(db,'galdi_ventas'));
     ventas = snapV.docs.map(d=>d.data());
