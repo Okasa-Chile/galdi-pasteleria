@@ -1,6 +1,7 @@
 'use client';
 
 import Header from '@/components/Header';
+import BannerDiaMadre from '@/components/BannerDiaMadre';
 import Hero from '@/components/Hero';
 import Catalogo from '@/components/Catalogo';
 import Servicios from '@/components/Servicios';
@@ -16,6 +17,7 @@ export default function Home() {
   return (
     <main>
       <Header />
+      <BannerDiaMadre />
       <Hero />
       <Catalogo />
       <Servicios />

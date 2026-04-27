@@ -84,4 +84,10 @@
     <priority>0.3</priority>
   </url>
 
+  <url>
+    <loc>https://galdi.cl/dia-de-la-madre</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>
