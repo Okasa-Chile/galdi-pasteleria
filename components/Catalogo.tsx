@@ -34,6 +34,7 @@ export const imagenes: Record<string, string> = {
   'Torta Panqueque':           '/images/torta-panqueques.webp',
   'Torta de Piña':             '/images/torta-pina-new.webp',
   'Torta de Hojarasca':        '/images/torta-hojarasca-new.webp',
+  'Torta Amor':                '/images/torta-amor-hero.webp',
   // Dulces & Alfajores
   'Berlines':                  '/images/Berlines.webp',
   'Alfajores de Manjar':       '/images/alfajores-manjar.webp',
@@ -88,6 +89,7 @@ const categorias = [
       { nombre: 'Panqueque',           detalle: 'Delicadas capas de panqueques con manjar entre cada una.' },
       { nombre: 'Torta de Piña',       detalle: 'Bizcocho esponjoso con piña natural, crema batida y un toque dulce que refresca en cada bocado.' },
       { nombre: 'Torta de Hojarasca', detalle: 'Delicadas capas de masa crocante unidas con manjar, un clásico chileno irresistible.' },
+      { nombre: 'Torta Amor',         detalle: 'Hojarasca, crema pastelera, frambuesas y manjar decorada con merengue. Nuestra torta especial de temporada.' },
     ],
   },
   {
