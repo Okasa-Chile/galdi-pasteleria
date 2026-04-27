@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 const slides = [
+  { src: '/images/torta-amor-hero.webp', alt: 'Torta Amor — Día de la Madre Galdi Pastelería Maipú' },
   { src: '/images/New_Hero_socias.webp', alt: 'Galdi — Pastelería artesanal' },
   { src: '/images/SlideshowPanes.webp', alt: 'Pan artesanal Galdi' },
   { src: '/images/prod-dulces.webp', alt: 'Dulces artesanales Galdi' },

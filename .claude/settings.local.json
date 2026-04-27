@@ -64,7 +64,8 @@
       "Bash(claude plugins *)",
       "PowerShell(Copy-Item *)",
       "PowerShell(Get-ChildItem *)",
-      "PowerShell($env:USERPROFILE)"
+      "PowerShell($env:USERPROFILE)",
+      "Bash(node *)"
     ]
   },
   "enableAllProjectMcpServers": true,
