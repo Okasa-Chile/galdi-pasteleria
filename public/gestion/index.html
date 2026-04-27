@@ -133,7 +133,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
       </div>
       <div class="cat-tabs" id="cat-tabs"></div>
       <table class="prod-table">
-        <thead><tr><th>Producto</th><th>Tipo</th><th>Unidad</th><th>Costo Neto</th><th>Precio Final</th><th>Margen</th><th></th></tr></thead>
+        <thead><tr><th>Producto</th><th>Tipo</th><th>Unidad</th><th>Costo Neto</th><th>Margen</th><th></th></tr></thead>
         <tbody id="tabla-cat"></tbody>
       </table>
     </div>
@@ -1546,7 +1546,6 @@ window.renderT = () => {
       <td><span class="tag tag-${p.tipo}">${p.tipo==='propio'?'Propio':'Reventa'}</span></td>
       <td>${p.unidad}</td>
       <td>${fmt(cn)}</td>
-      <td><strong>${fmt(p.precio)}</strong></td>
       <td style="color:${mr>=15?'#4a7c59':'#9b3a2a'}">${mr}%</td>
       <td><button class="btn btn-sm" style="background:transparent;color:var(--gold2);border:1px solid var(--border);" onclick="event.stopPropagation();abrirModal(${p.id})">✏️</button></td>
     </tr>`;
