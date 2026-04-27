@@ -1,7 +1,7 @@
 export default function BannerDiaMadre() {
   return (
     <div style={{
-      paddingTop: '90px',
+      paddingTop: '8px',
       paddingBottom: '10px',
       textAlign: 'center',
       fontFamily: 'var(--font-sans)',
