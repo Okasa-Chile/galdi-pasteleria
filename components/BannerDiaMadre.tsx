@@ -2,6 +2,7 @@ export default function BannerDiaMadre() {
   return (
     <div style={{
       background: '#c4704f',
+      marginTop: '90px',
       padding: '9px 16px',
       textAlign: 'center',
       fontFamily: 'var(--font-sans)',

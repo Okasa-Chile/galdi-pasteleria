@@ -17,7 +17,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <div style={{ paddingTop: '90px' }}>
+      <div>
         <BannerDiaMadre />
         <main>
           <Hero />
