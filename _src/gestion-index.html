@@ -398,7 +398,15 @@ async function fsLoad() {
   try {
     const snapP = await getDocs(collection(db,'galdi_productos'));
     if(!snapP.empty) {
-      prods = snapP.docs.map(d=>d.data());
+      prods = snapP.docs.map(d => {
+        const p = d.data();
+        p.costo     = Number(p.costo)    || 0;
+        p.mdo       = Number(p.mdo)      || 0;
+        p.energia   = Number(p.energia)  || 0;
+        p.logistica = Number(p.logistica)|| 30;
+        p.margen    = Number(p.margen)   || 0;
+        return p;
+      });
       prods.forEach(p=>{if(!p.precio)p.precio=cpx(p);});
       setSyncBadge('sync-prods','✓ Sincronizado con la nube','ok');
     } else {
