@@ -918,8 +918,7 @@ window.presTallaChanged = (tallaEl) => {
     const saved = prod.costosTalla?.[talla];
     const esPanquequeXL = prod.nombre === 'Torta Panqueque' && talla === 'XL' && !saved?.mat;
     const pxl = esPanquequeXL ? PANQUEQUE_XL : null;
-    const catKey = prod.nombre === 'Torta de Chocolate' ? 'Torta de Chocolate' : prod.cat;
-    const fb = pxl ? pxl : (COSTOS_TALLA[catKey]?.[talla] ?? null);
+    const fb = pxl ? pxl : getCostosTalla(prod, talla);
     if(pxl || saved || fb) {
       const mat      = pxl ? pxl.mat      : (saved?.mat      ?? fb?.mat      ?? 0);
       const mdo      = pxl ? pxl.mdo      : (saved?.mdo      ?? fb?.mdo      ?? prod.mdo);
@@ -1601,8 +1600,7 @@ window.aplicarCostoTalla = () => {
     recalc();
     return;
   }
-  const catKey = sel.nombre === 'Torta de Chocolate' ? 'Torta de Chocolate' : sel.cat;
-  const fb = COSTOS_TALLA[catKey]?.[talla] ?? null;
+  const fb = getCostosTalla(sel, talla);
   document.getElementById('c-mat').value  = guardado?.mat      ?? fb?.mat      ?? 0;
   document.getElementById('c-mdo').value  = guardado?.mdo      ?? fb?.mdo      ?? sel.mdo;
   document.getElementById('c-en').value   = guardado?.energia  ?? fb?.energia  ?? sel.energia;
@@ -1757,6 +1755,11 @@ const COSTOS_TALLA = {
   },
 };
 
+function getCostosTalla(prod, talla) {
+  const clave = COSTOS_TALLA[prod.nombre] || COSTOS_TALLA[prod.cat];
+  return clave?.[talla] || null;
+}
+
 window.poblarProductos = () => {
   const cat = document.getElementById('v-t').value;
   const wrapTalla = document.getElementById('wrap-talla-v');
@@ -1817,8 +1820,7 @@ window.calcularMonto = () => {
     const saved = selProdVenta.costosTalla?.[talla];
     const esPanquequeXL = selProdVenta.nombre === 'Torta Panqueque' && talla === 'XL' && !saved?.mat;
     const pxl = esPanquequeXL ? PANQUEQUE_XL : null;
-    const catKey = selProdVenta?.nombre === 'Torta de Chocolate' ? 'Torta de Chocolate' : selProdVenta.cat;
-    const fb = pxl ? pxl : (COSTOS_TALLA[catKey]?.[talla] ?? null);
+    const fb = pxl ? pxl : getCostosTalla(selProdVenta, talla);
     if(pxl || saved || fb) {
       const mat      = pxl ? pxl.mat      : (saved?.mat      ?? fb?.mat      ?? 0);
       const mdo      = pxl ? pxl.mdo      : (saved?.mdo      ?? fb?.mdo      ?? selProdVenta.mdo);
