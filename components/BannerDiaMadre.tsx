@@ -1,6 +1,3 @@
-'use client';
-import Link from 'next/link';
-
 export default function BannerDiaMadre() {
   return (
     <div style={{
@@ -13,12 +10,12 @@ export default function BannerDiaMadre() {
       letterSpacing: '0.03em',
       fontWeight: 400,
     }}>
-      <Link
+      <a
         href="/dia-de-la-madre"
-        style={{ color: '#f5e6d3', textDecoration: 'none' }}
+        style={{ color: '#f5e6d3', textDecoration: 'none', cursor: 'pointer' }}
       >
         🌸 <strong style={{ fontWeight: 500 }}>Día de la Madre</strong> — Tortas artesanales con delivery en Maipú · Encarga la tuya →
-      </Link>
+      </a>
     </div>
   );
 }
