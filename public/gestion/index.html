@@ -133,7 +133,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
       </div>
       <div class="cat-tabs" id="cat-tabs"></div>
       <table class="prod-table">
-        <thead><tr><th>Producto</th><th>Tipo</th><th>Unidad</th><th>Costo Neto</th><th>Margen</th><th></th></tr></thead>
+        <thead><tr><th>Producto</th><th>Tipo</th><th>Unidad</th><th>Margen</th><th></th></tr></thead>
         <tbody id="tabla-cat"></tbody>
       </table>
     </div>
@@ -1536,7 +1536,7 @@ window.selCat = (c,el) => {
 window.renderT = () => {
   const ps=prods.filter(p=>p.cat===catActiva);
   const tb=document.getElementById('tabla-cat');
-  if(!ps.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px;">Sin productos</td></tr>';return;}
+  if(!ps.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px;">Sin productos</td></tr>';return;}
   tb.innerHTML=ps.map(p=>{
     const cn=p.costo+p.energia+p.logistica+p.mdo;
     const mr=cn>0?Math.round(((p.precio/1.19)-cn)/cn*100):0;
@@ -1546,7 +1546,6 @@ window.renderT = () => {
       <td><strong>${p.nombre}</strong>${badgeTallas}</td>
       <td><span class="tag tag-${p.tipo}">${p.tipo==='propio'?'Propio':'Reventa'}</span></td>
       <td>${p.unidad}</td>
-      <td>${fmt(cn)}</td>
       <td style="color:${mr>=15?'#4a7c59':'#9b3a2a'}">${mr}%</td>
       <td><button class="btn btn-sm" style="background:transparent;color:var(--gold2);border:1px solid var(--border);" onclick="event.stopPropagation();abrirModal(${p.id})">✏️</button></td>
     </tr>`;
