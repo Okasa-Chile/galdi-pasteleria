@@ -1,5 +1,5 @@
 # AI_CONTEXT — Proyecto Galdi Pastelería
-> Registro de trabajo asistido por IA · Actualizado: 28 abril 2026
+> Registro de trabajo asistido por IA · Actualizado: 29 abril 2026
 
 ---
 
@@ -140,6 +140,8 @@ galdi-nextjs/
 - COSTOS_TALLA: estructura {mat, mdo, energia, logistica, margen} por talla
 - Key del carrito compuesta: `nombre·talla`
 - Talla XL exclusiva para Torta Panqueque
+- `cumpleanosSlides`: 8 slides (antes 10) — imágenes cumpleanos01-08.webp renovadas
+- `SeoPage.tsx`: incluye logo con link a `/` en el hero (afecta todas las páginas SEO)
 
 ---
 
@@ -204,6 +206,7 @@ galdi-nextjs/
 
 ## 📋 Historial de jornadas (resumen)
 
+- **29-04-2026** — Logo Galdi (link a /) agregado en hero de SeoPage.tsx (afecta todas las páginas SEO) · Logo agregado en hero de matrimonios-maipu/page.tsx · Carrusel cumpleaños renovado: 8 imágenes nuevas WebP 16:9 (cumpleanos01-08.webp)
 - **28-04-2026** — Apertura de Libro Galdi (CVE: RA6HY4w4AgG2) · Modificación estatuto iniciada en portal RES · Acta protocolizada Notaría Urenda (Repertorio 494) · Prompts marketing pan chicharrones y empanadas
 - **24-04-2026** — Link discreto /gestion en header implementado ✅
 - **15-04-2026** — costosTalla completo (todos los campos por talla) · calculadora inputs editables · modal Editar simplificado · talla XL Torta Panqueque
