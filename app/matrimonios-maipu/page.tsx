@@ -220,6 +220,15 @@ export default function MatrimoniosMaipuPage() {
           />
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(26,15,10,0.35), rgba(26,15,10,0.75))' }} />
           <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 5%' }}>
+            <a href="/" style={{ lineHeight: 0, marginBottom: '1.5rem' }}>
+              <Image
+                src="/images/Nuevologo.webp"
+                alt="Galdi — Pastelería Artesanal"
+                width={160}
+                height={58}
+                style={{ height: '48px', width: 'auto', filter: 'brightness(0) invert(1)', objectFit: 'contain' }}
+              />
+            </a>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '0.75rem' }}>
               Galdi · Eventos · Matrimonios
             </p>
