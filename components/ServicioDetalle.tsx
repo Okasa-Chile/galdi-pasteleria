@@ -103,8 +103,6 @@ const cumpleanosSlides = [
   '/images/eventos/cumpleanos06.webp',
   '/images/eventos/cumpleanos07.webp',
   '/images/eventos/cumpleanos08.webp',
-  '/images/eventos/cumpleanos09.webp',
-  '/images/eventos/cumpleanos10.webp',
 ];
 
 const corporativosSlides = [
