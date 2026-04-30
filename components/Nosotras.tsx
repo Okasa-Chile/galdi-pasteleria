@@ -85,7 +85,7 @@ export default function Nosotras() {
             lineHeight: 1.8,
             marginBottom: '1.25rem',
           }}>
-            Somos Jacqueline e Ingrid, dos hermanas de Maipú que encontraron en la pastelería artesanal su forma de decirle al mundo que el cariño se puede probar. Lo que comenzó como recetas familiares pasadas de generación en generación, hoy llega a su mesa con la misma dedicación de siempre.
+            Somos Jacqueline e Ingrid, dos hermanas del sector Las Palmas de Maipú que encontraron en la pastelería artesanal su forma de decirle al mundo que el cariño se puede probar. Lo que comenzó como recetas familiares pasadas de generación en generación, hoy llega a su mesa con la misma dedicación de siempre.
           </p>
           <p style={{
             fontFamily: 'var(--font-sans)',

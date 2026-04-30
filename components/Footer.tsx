@@ -80,7 +80,7 @@ export default function Footer() {
           margin: 0,
           lineHeight: 1.7,
         }}>
-          © 2026 Galdi · Pastelería Artesanal · Maipú, Chile<br />
+          © 2026 Galdi · Pastelería Artesanal · Las Palmas, Maipú<br />
           Gozo en cada bocado
         </p>
 
