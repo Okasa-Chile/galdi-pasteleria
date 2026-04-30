@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import SeoPage from '@/components/SeoPage';
 export const metadata: Metadata = {
   title: 'Empanadas en Maipú — Galdi Pastelería Artesanal',
-  description: 'Empanadas artesanales en Maipú: pino, napolitana, vegetariana, queso camarón y mariscos. Pedido mínimo 1 docena. Delivery y distribución a almacenes.',
+  description: 'Las mejores empanadas artesanales de Maipú: pino, napolitana, queso camarón y mariscos. Hechas a mano con recetas familiares. Pedido por WhatsApp, delivery disponible.',
   keywords: 'empanadas Maipú, empanadas artesanales Maipú, empanadas a domicilio Maipú, empanadas por docena Maipú',
   alternates: { canonical: 'https://galdi.cl/empanadas-maipu' },
 };
