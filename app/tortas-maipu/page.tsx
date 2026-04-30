@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: 'Tortas en Maipú — Galdi Pastelería Artesanal',
   description: 'Tortas artesanales por encargo en Maipú: 3 leches, chocolate, selva negra, hojarasca y más. Delivery en toda la comuna.',
   keywords: 'tortas Maipú, tortas por encargo Maipú, tortas artesanales Maipú, tortas a domicilio Maipú',
+  alternates: { canonical: 'https://galdi.cl/tortas-maipu' },
 };
 export default function Page() {
   return (

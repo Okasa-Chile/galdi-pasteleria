@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: 'Banquetería Cóctel en Maipú — Galdi',
   description: 'Bocados dulces y salados para cócteles y recepciones en Maipú. Presentación elegante lista para servir. Cotiza con Galdi.',
   keywords: 'cóctel Maipú, banquetería cóctel Maipú, bocados cóctel Maipú, catering cóctel Maipú',
+  alternates: { canonical: 'https://galdi.cl/coctel-maipu' },
 };
 export default function Page() {
   return (

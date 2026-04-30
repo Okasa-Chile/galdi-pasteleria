@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: 'Tortas y Dulces Cumpleaños en Maipú — Galdi',
   description: 'Tortas personalizadas, cupcakes y mesa de dulces para cumpleaños en Maipú. Pedidos con 48 hrs de anticipación. Delivery disponible.',
   keywords: 'torta cumpleaños Maipú, dulces cumpleaños Maipú, mesa dulces cumpleaños Maipú, pastelería cumpleaños Maipú',
+  alternates: { canonical: 'https://galdi.cl/cumpleanos-maipu' },
 };
 export default function Page() {
   return (

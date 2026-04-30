@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: 'Pan Artesanal en Maipú — Galdi Pastelería',
   description: 'Pan artesanal en Maipú: pan amasado, marraqueta, integral, dobladitas y más. Distribución fresca a almacenes y negocios de Maipú.',
   keywords: 'pan artesanal Maipú, panadería Maipú, pan amasado Maipú, distribución pan Maipú',
+  alternates: { canonical: 'https://galdi.cl/pan-artesanal-maipu' },
 };
 export default function Page() {
   return (

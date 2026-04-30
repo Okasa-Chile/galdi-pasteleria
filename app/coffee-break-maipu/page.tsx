@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: 'Coffee Break y Eventos Corporativos en Maipú — Galdi',
   description: 'Coffee break y celebraciones corporativas en Maipú con productos artesanales. Factura disponible para empresas. Cotiza con Galdi.',
   keywords: 'coffee break Maipú, eventos corporativos Maipú, catering empresas Maipú, banquetería corporativa Maipú',
+  alternates: { canonical: 'https://galdi.cl/coffee-break-maipu' },
 };
 
 export default function Page() {

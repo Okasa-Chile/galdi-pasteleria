@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: 'Delivery Pasteles y Tortas en Maipú — Galdi',
   description: 'Delivery de pasteles, tortas y dulces artesanales en Maipú. Recibe en tu puerta tortas, empanadas, queques y más. Pedido por WhatsApp.',
   keywords: 'delivery pasteles Maipú, delivery tortas Maipú, pastelería a domicilio Maipú, delivery dulces Maipú',
+  alternates: { canonical: 'https://galdi.cl/delivery-maipu' },
 };
 export default function Page() {
   return (
