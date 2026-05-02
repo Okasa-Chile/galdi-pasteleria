@@ -1414,7 +1414,7 @@ window.vistaPreviaPresupuesto = () => {
     <button onclick="window.print()" style="background:#C9A55A;color:#fff;border:none;padding:10px 28px;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;">🖨️ Imprimir / Guardar PDF</button>
   </div>
 
-  <script>window.onload = () => setTimeout(() => { window.print(); }, 800);<\/script>
+  <script>window.onload = () => { const qrCanvas = document.querySelector('#qr-container canvas'); if (qrCanvas) { const existingImg = document.querySelector('#qr-container img'); const qrImg = existingImg || document.createElement('img'); qrImg.src = qrCanvas.toDataURL('image/png'); qrImg.style.width = qrCanvas.style.width || '120px'; qrImg.style.height = qrCanvas.style.height || '120px'; qrImg.style.display = 'block'; if (!existingImg) { qrCanvas.parentNode.insertBefore(qrImg, qrCanvas.nextSibling); } qrCanvas.style.display = 'none'; } setTimeout(() => { window.print(); }, 800); };<\/script>
 </body>
 </html>`;
 
@@ -1615,7 +1615,7 @@ window.vistaPreviaDesdeHistorial = (docId) => {
     <button onclick="window.print()" style="background:#C9A55A;color:#fff;border:none;padding:10px 28px;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;">🖨️ Imprimir / Guardar PDF</button>
   </div>
 
-  <script>window.onload = () => setTimeout(() => { window.print(); }, 800);<\/script>
+  <script>window.onload = () => { const qrCanvas = document.querySelector('#qr-container canvas'); if (qrCanvas) { const existingImg = document.querySelector('#qr-container img'); const qrImg = existingImg || document.createElement('img'); qrImg.src = qrCanvas.toDataURL('image/png'); qrImg.style.width = qrCanvas.style.width || '120px'; qrImg.style.height = qrCanvas.style.height || '120px'; qrImg.style.display = 'block'; if (!existingImg) { qrCanvas.parentNode.insertBefore(qrImg, qrCanvas.nextSibling); } qrCanvas.style.display = 'none'; } setTimeout(() => { window.print(); }, 800); };<\/script>
 </body>
 </html>`;
 
