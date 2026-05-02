@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -13,11 +14,12 @@ interface Props {
   waTexto: string;
   breadcrumb: string;
   items?: { nombre: string; detalle: string; imagen: string }[];
+  extraContent?: React.ReactNode;
 }
 
 export default function SeoPage({
   titulo, subtitulo, descripcion, imagen,
-  ctaTexto, ctaHref, waTexto, breadcrumb, items,
+  ctaTexto, ctaHref, waTexto, breadcrumb, items, extraContent,
 }: Props) {
   const waUrl = `https://wa.me/56990991011?text=${encodeURIComponent(waTexto)}`;
 
@@ -85,8 +87,11 @@ export default function SeoPage({
           </a>
         </div>
 
+        {/* Contenido extra opcional */}
+        {extraContent}
+
         {/* Volver */}
-        <div style={{ textAlign: 'center' }}>
+        <div style={{ textAlign: 'center', marginTop: '3rem' }}>
           <Link href="/" style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', textDecoration: 'none' }}>
             ← Volver a Galdi
           </Link>
