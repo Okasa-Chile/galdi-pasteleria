@@ -503,8 +503,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
       </div>
       <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end;flex-wrap:wrap;">
         <button class="btn btn-gray" disabled style="opacity:0.5;cursor:not-allowed;">Guardar borrador</button>
+        <button id="btn-cancelar-edicion" class="btn btn-gray" onclick="cancelarEdicionPresupuesto()" style="display:none;">✕ Cancelar edición</button>
         <button class="btn btn-gray" onclick="vistaPreviaPresupuesto()" style="opacity:1;cursor:pointer;">🖨️ Vista previa</button>
-        <button class="btn" onclick="guardarPresupuesto()">Generar presupuesto</button>
+        <button class="btn" id="btn-guardar-presupuesto" onclick="guardarPresupuesto()">Generar presupuesto</button>
       </div>
     </div>
 
@@ -579,7 +580,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
 import { getAuth, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
-import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, deleteDoc, query, orderBy, serverTimestamp, limit } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, updateDoc, deleteDoc, query, orderBy, serverTimestamp, limit } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
 
 // ── CONFIG ────────────────────────────────────────────────────────────────
 const AUTORIZADOS = ['contacto@okasa.cl','ventas@galdi.cl','iaclaudioferrari@gmail.com','ingridgalvezd@gmail.com','jacquelinegalvezd@gmail.com'];
@@ -767,6 +768,7 @@ window.cargarNumeroPres = async () => {
 
 // ── TAB 5: PRESUPUESTOS — LINE & TOTAL FUNCTIONS ────────────────────────────
 const lineaProds = new Map(); // lineaId → objeto prod, para cálculo de precio por talla
+let presupuestoEditandoId = null;
 
 window.presAgregarLinea = () => {
   const id = Date.now().toString();
@@ -1069,20 +1071,33 @@ window.guardarPresupuesto = async () => {
     descuento,
     iva,
     total,
-    creadoEn: serverTimestamp(),
-    token: Math.random().toString(36).substring(2,10) + Math.random().toString(36).substring(2,10),
   };
 
   // Guardar en Firestore
+  const fueEdicion = !!presupuestoEditandoId;
   try {
-    await addDoc(collection(db, 'galdi_presupuestos'), presupuesto);
+    if (presupuestoEditandoId) {
+      const { numero: _numIgnorado, ...camposActualizables } = presupuesto;
+      await updateDoc(doc(db, 'galdi_presupuestos', presupuestoEditandoId), camposActualizables);
+    } else {
+      presupuesto.creadoEn = serverTimestamp();
+      presupuesto.token = Math.random().toString(36).substring(2,10) + Math.random().toString(36).substring(2,10);
+      await addDoc(collection(db, 'galdi_presupuestos'), presupuesto);
+    }
   } catch (e) {
     console.error('Error guardando presupuesto:', e);
     alert('Error al guardar el presupuesto. Intenta nuevamente.');
     return;
   }
 
-  alert('✓ Presupuesto ' + presupuesto.numero + ' guardado correctamente.');
+  alert('✓ Presupuesto ' + presupuesto.numero + (fueEdicion ? ' actualizado' : ' guardado') + ' correctamente.');
+
+  // Reset estado edición
+  presupuestoEditandoId = null;
+  const btnGuardar = document.getElementById('btn-guardar-presupuesto');
+  if (btnGuardar) btnGuardar.textContent = 'Generar presupuesto';
+  const btnCancelarEd = document.getElementById('btn-cancelar-edicion');
+  if (btnCancelarEd) btnCancelarEd.style.display = 'none';
 
   // Limpiar formulario
   ['pres-nombre','pres-telefono','pres-email','pres-obs','pres-valido-hasta'].forEach(id => {
@@ -1098,6 +1113,97 @@ window.guardarPresupuesto = async () => {
   document.getElementById('pres-empty-lineas').style.display = '';
   presRecalcTotales();
   await cargarNumeroPres();
+};
+
+window.editarPresupuesto = async (docId) => {
+  try {
+    const snap = await getDoc(doc(db, 'galdi_presupuestos', docId));
+    if (!snap.exists()) { alert('No se encontró el presupuesto.'); return; }
+    const data = snap.data();
+
+    // Campos de texto
+    document.getElementById('pres-numero').value    = data.numero        || '';
+    document.getElementById('pres-nombre').value    = data.cliente       || '';
+    document.getElementById('pres-telefono').value  = data.telefono      || '';
+    document.getElementById('pres-email').value     = data.email         || '';
+    document.getElementById('pres-direccion').value = data.direccion     || '';
+    document.getElementById('pres-obs').value       = data.observaciones || '';
+    document.getElementById('pres-valido-hasta').value  = data.validoHasta  || '';
+    document.getElementById('pres-fecha-evento').value  = data.fechaEvento  || '';
+
+    // Selects
+    const comunaEl = document.getElementById('pres-comuna');
+    if (comunaEl) comunaEl.value = data.comuna || '';
+    const tipoEl = document.getElementById('pres-tipo-evento');
+    if (tipoEl) tipoEl.value = data.tipoEvento || '';
+    const pagoEl = document.getElementById('pres-forma-pago');
+    if (pagoEl) pagoEl.value = data.formaPago || '';
+
+    // Descuento (presSetDescTipo resetea el valor, asignar después)
+    presSetDescTipo(data.descuentoTipo === 'fijo' ? 'fijo' : 'pct');
+    document.getElementById('pres-desc-valor').value = data.descuentoValor || 0;
+
+    // Items — reconstruir en modo manual
+    const container = document.getElementById('pres-lineas');
+    container.innerHTML = '';
+    const items = Array.isArray(data.items) ? data.items : [];
+    if (!items.length) {
+      document.getElementById('pres-header-lineas').style.display = 'none';
+      document.getElementById('pres-empty-lineas').style.display  = '';
+    } else {
+      items.forEach(item => {
+        presAgregarLinea();
+        const rows = container.querySelectorAll('.pres-linea');
+        const row  = rows[rows.length - 1];
+        const btnManual = row.querySelector('.pres-modo-btn[data-modo="manual"]');
+        if (btnManual) presSetModo(btnManual, 'manual');
+        const descInput = row.querySelector('.pres-desc-manual');
+        if (descInput) descInput.value = item.descripcion || '';
+        const cantInput = row.querySelector('.pres-cant');
+        if (cantInput) cantInput.value = item.cantidad || 1;
+        const precioInput = row.querySelector('.pres-precio');
+        if (precioInput) {
+          precioInput.value = item.precioUnit || 0;
+          presRecalcLinea(precioInput);
+        }
+      });
+    }
+    presRecalcTotales();
+
+    // Estado edición
+    presupuestoEditandoId = docId;
+    const btnGuardar = document.getElementById('btn-guardar-presupuesto');
+    if (btnGuardar) btnGuardar.textContent = 'Actualizar Presupuesto';
+    const btnCancelar = document.getElementById('btn-cancelar-edicion');
+    if (btnCancelar) btnCancelar.style.display = '';
+
+    // Scroll al formulario
+    document.getElementById('tab-presupuestos').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (e) {
+    console.error('Error cargando presupuesto para edición:', e);
+    alert('Error al cargar el presupuesto. Intenta nuevamente.');
+  }
+};
+
+window.cancelarEdicionPresupuesto = () => {
+  presupuestoEditandoId = null;
+  const btnGuardar = document.getElementById('btn-guardar-presupuesto');
+  if (btnGuardar) btnGuardar.textContent = 'Generar presupuesto';
+  const btnCancelar = document.getElementById('btn-cancelar-edicion');
+  if (btnCancelar) btnCancelar.style.display = 'none';
+  // Limpiar formulario
+  ['pres-nombre','pres-telefono','pres-email','pres-obs','pres-valido-hasta','pres-direccion'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  ['pres-fecha-evento','pres-tipo-evento','pres-forma-pago','pres-comuna'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('pres-desc-valor').value = 0;
+  presSetDescTipo('pct');
+  document.getElementById('pres-lineas').innerHTML = '';
+  document.getElementById('pres-header-lineas').style.display = 'none';
+  document.getElementById('pres-empty-lineas').style.display  = '';
+  presRecalcTotales();
 };
 
 window.vistaPreviaPresupuesto = () => {
@@ -1348,7 +1454,7 @@ window.cargarHistorialPresupuestos = async () => {
         <td>${data.cliente || '—'}</td>
         <td><strong>${fmtNum(data.total)}</strong></td>
         <td>${fmtTs(data.creadoEn)}</td>
-        <td><button class="btn btn-sm btn-gray" onclick="vistaPreviaDesdeHistorial('${d.id}')">🖨️ Reimprimir</button></td>
+        <td><button class="btn btn-sm btn-gray" onclick="vistaPreviaDesdeHistorial('${d.id}')">🖨️ Reimprimir</button> <button class="btn btn-sm" onclick="editarPresupuesto('${d.id}')">✏️ Editar</button></td>
       </tr>`;
     }).join('');
     // guardar los docs en memoria para acceso rápido desde vistaPreviaDesdeHistorial
