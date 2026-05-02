@@ -1321,10 +1321,6 @@ window.vistaPreviaPresupuesto = () => {
 <body>
 
   <!-- Encabezado -->
-  <div style="position:absolute;top:10px;right:10px;text-align:center;">
-    <div id="qr-container"></div>
-    <div style="font-size:8px;color:#aaa;margin-top:4px;">Escanea para validar este presupuesto</div>
-  </div>
   <table style="width:100%;margin-bottom:28px;">
     <tr>
       <td style="vertical-align:middle;">
@@ -1339,6 +1335,10 @@ window.vistaPreviaPresupuesto = () => {
         <div style="font-size:11px;color:#888;margin-top:4px;">Fecha de emisión: ${hoy}</div>
         ${validoHasta ? `<div style="font-size:11px;color:#888;">Válido hasta: ${fmtFecha(validoHasta)}</div>` : ''}
         ${formaPago ? `<div style="font-size:11px;color:#888;margin-top:2px;">Pago: ${formaPago.charAt(0).toUpperCase()+formaPago.slice(1)}</div>` : ''}
+        <div style="text-align:right;margin-top:8px;">
+          <div id="qr-container"></div>
+          <div style="font-size:8px;color:#aaa;margin-top:4px;">Escanea para validar</div>
+        </div>
       </td>
     </tr>
   </table>
@@ -1529,10 +1529,6 @@ window.vistaPreviaDesdeHistorial = (docId) => {
 </head>
 <body>
 
-  <div style="position:absolute;top:10px;right:10px;text-align:center;">
-    <div id="qr-container"></div>
-    <div style="font-size:8px;color:#aaa;margin-top:4px;">Escanea para validar este presupuesto</div>
-  </div>
   <table style="width:100%;margin-bottom:28px;">
     <tr>
       <td style="vertical-align:middle;">
@@ -1547,6 +1543,10 @@ window.vistaPreviaDesdeHistorial = (docId) => {
         <div style="font-size:11px;color:#888;margin-top:4px;">Fecha de emisión: ${hoy}</div>
         ${data.validoHasta ? `<div style="font-size:11px;color:#888;">Válido hasta: ${fmtFecha(data.validoHasta)}</div>` : ''}
         ${data.formaPago ? `<div style="font-size:11px;color:#888;margin-top:2px;">Pago: ${data.formaPago.charAt(0).toUpperCase()+data.formaPago.slice(1)}</div>` : ''}
+        <div style="text-align:right;margin-top:8px;">
+          <div id="qr-container"></div>
+          <div style="font-size:8px;color:#aaa;margin-top:4px;">Escanea para validar</div>
+        </div>
       </td>
     </tr>
   </table>
