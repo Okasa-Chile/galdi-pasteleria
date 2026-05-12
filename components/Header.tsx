@@ -102,7 +102,7 @@ export default function Header() {
         transition: 'background var(--transition), border-color var(--transition)',
       }}>
 
-        {/* Franja Día de la Madre */}
+        {/* Franja Día del Padre */}
         <div style={{
           background: '#c4704f',
           padding: '7px 16px',
@@ -112,8 +112,8 @@ export default function Header() {
           color: '#f5e6d3',
           letterSpacing: '0.04em',
         }}>
-          <a href="/dia-de-la-madre" style={{ color: '#f5e6d3', textDecoration: 'none', display: 'block' }}>
-            🌸 <strong style={{ fontWeight: 500 }}>Día de la Madre</strong> — Tortas artesanales con delivery en Maipú · Encarga la tuya →
+          <a href="/" style={{ color: '#f5e6d3', textDecoration: 'none', display: 'block' }}>
+            🎂 <strong style={{ fontWeight: 500 }}>Día del Padre</strong> — ¡Se viene el 22 de junio! Encarga tu torta artesanal con anticipación →
           </a>
         </div>
 
