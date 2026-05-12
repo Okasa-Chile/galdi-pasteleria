@@ -1,5 +1,5 @@
 # AI_CONTEXT — Proyecto Galdi Pastelería
-> Registro de trabajo asistido por IA · Actualizado: 29 abril 2026
+> Registro de trabajo asistido por IA · Actualizado: 12 mayo 2026
 
 ---
 
@@ -117,7 +117,7 @@ galdi-nextjs/
 - 10+ landing pages SEO con JSON-LD
 
 ### Google Business Profile
-- Reseñas actuales: **34** · Meta: **50**
+- Reseñas actuales: **53** (todas ⭐⭐⭐⭐⭐) · Meta: **50** ✅ superado
 - Áreas de servicio: Maipú, Cerrillos, Pudahuel
 - Descripción optimizada · Menu link → galdi.cl/productos
 
@@ -135,7 +135,7 @@ galdi-nextjs/
 | Tab 5 | ✅ | Presupuestos con QR + /validar-presupuesto |
 
 ### Características clave
-- Correlativo presupuestos: COT-G077+
+- Correlativo presupuestos: COT-G081+
 - QR único por presupuesto → galdi.cl/validar-presupuesto?token=XXX
 - COSTOS_TALLA: estructura {mat, mdo, energia, logistica, margen} por talla
 - Key del carrito compuesta: `nombre·talla`
@@ -178,6 +178,9 @@ galdi-nextjs/
 ### Técnicos
 - [ ] **Sistema cupones/descuentos** — prompt `.txt` preparado, no ejecutado aún
 - [ ] **Integración WhatsApp → /gestion** — pedidos entrantes con estado pendiente/confirmado/entregado (futuro)
+- [ ] **QR en PDF usando SVG en vez de canvas**
+- [ ] **Agenda de clientes en /gestion**
+- [x] **Funcionalidad edición presupuestos Tab 5** — botón Editar, Actualizar, Cancelar edición
 
 ### Administrativos / Externos
 - [ ] **Estatuto societario Galdi** — modificación portal RES en curso:
@@ -187,7 +190,7 @@ galdi-nextjs/
 - [ ] **Presupuesto matrimonio** — esperar consulta a Jacqueline sobre precios actualizados
 
 ### Marketing
-- 🔄 **Reseñas Google Business** — 34/50 (en progreso)
+- ✅ **Reseñas Google Business** — 53/50 · todas ⭐⭐⭐⭐⭐ (meta superada)
 
 ---
 
@@ -206,6 +209,7 @@ galdi-nextjs/
 
 ## 📋 Historial de jornadas (resumen)
 
+- **02-05-2026** — SEO: landing /dia-de-la-madre mejorada (keywords, FAQ schema, delivery RM) · Bloque SEO Día de la Madre agregado en homepage entre Nosotras y FAQ · Indexación solicitada en Search Console · Tab 5: funcionalidad de edición de presupuestos guardados (botón Editar, Actualizar, Cancelar edición) · QR eliminado de plantillas de impresión (problema canvas en PDF) · COT-G079 Cóctel Sebastián del Valle $350.000 · COT-G080 Rincón Dulce Sebastián del Valle $247.500 · COT-G081 lista de precios Excel generada para envío por email
 - **29-04-2026** — Logo Galdi (link a /) agregado en hero de SeoPage.tsx (afecta todas las páginas SEO) · Logo agregado en hero de matrimonios-maipu/page.tsx · Carrusel cumpleaños renovado: 8 imágenes nuevas WebP 16:9 (cumpleanos01-08.webp)
 - **28-04-2026** — Apertura de Libro Galdi (CVE: RA6HY4w4AgG2) · Modificación estatuto iniciada en portal RES · Acta protocolizada Notaría Urenda (Repertorio 494) · Prompts marketing pan chicharrones y empanadas
 - **24-04-2026** — Link discreto /gestion en header implementado ✅
