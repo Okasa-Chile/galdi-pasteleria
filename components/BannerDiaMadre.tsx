@@ -11,10 +11,10 @@ export default function BannerDiaMadre() {
       letterSpacing: '0.04em',
     }}>
       <a
-        href="/dia-de-la-madre"
+        href="/"
         style={{ color: '#f5e6d3', textDecoration: 'none', cursor: 'pointer', display: 'block' }}
       >
-        🌸 <strong style={{ fontWeight: 500 }}>Día de la Madre</strong> — Tortas artesanales con delivery en Maipú · Encarga la tuya →
+        🎂 <strong style={{ fontWeight: 500 }}>Día del Padre</strong> — ¡Se viene el 22 de junio! Encarga tu torta artesanal con anticipación →
       </a>
     </div>
   );
