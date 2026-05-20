@@ -312,12 +312,12 @@ function CatalogoInner() {
               >
                 {/* Visual */}
                 {imagenes[prod.nombre] ? (
-                  <div style={{ position: 'relative', height: 118, overflow: 'hidden', flexShrink: 0 }}>
+                  <div style={{ position: 'relative', height: 118, overflow: 'hidden', flexShrink: 0, background: prod.nombre === 'Arma tu Torta' ? '#fdf6ee' : 'transparent' }}>
                     <Image
                       src={imagenes[prod.nombre]}
                       alt={prod.nombre}
                       fill
-                      style={{ objectFit: 'cover' }}
+                      style={{ objectFit: prod.nombre === 'Arma tu Torta' ? 'contain' : 'cover' }}
                     />
                     <div style={{
                       position: 'absolute', inset: 0,
