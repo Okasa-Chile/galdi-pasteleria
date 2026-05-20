@@ -217,4 +217,46 @@ galdi-nextjs/
 - **13-04-2026** — Cierre sesión · favicon fix · GitHub Pages desactivado · banner fin de semana
 - **12-04-2026** — Tab 5 Presupuestos 100% · QR · /validar-presupuesto · Firestore rules
 - **11-04-2026** — GA4 instalado · FAQ.tsx · Tab 5 Phase 1+2 · fix incidente Gemini/mex
+- **20-05-2026** — Nueva página /arma-tu-torta · configurador paso a paso · links en catálogo, delivery, header y footer · sección promocional en home · imagen torta-personalizada.webp
 - **01-04-2026** — Seobility 92% · Rich Results validado
+
+---
+
+## Sesión 20-05-2026: Arma tu Torta + Fixes
+
+### Cambios realizados
+
+#### Nueva página /arma-tu-torta
+- Creado `app/arma-tu-torta/page.tsx` — ruta pública con metadata SEO
+- Creado `components/ArmaTuTorta.tsx` — configurador paso a paso con:
+  - Paso 1: Elección de base (Bizcocho, Hojarasca, Panqueque)
+  - Paso 2: Elección de relleno — selección múltiple hasta 3
+  - Paso 3: Elección de decoración — selección múltiple hasta 2
+  - Paso 4: Elección de tamaño (S/M/L/XL)
+  - Resumen final con CTA WhatsApp con mensaje pre-llenado
+- Diseño femenino pastel: fondo crema #fdf6ee, acentos rosa #f2c4ce y durazno #f7dcc8
+- Ilustraciones botánicas hand-drawn en cards (18 imágenes en public/images/arma-tu-torta/)
+- Flores decorativas integradas (4 archivos en public/images/arma-tu-torta/)
+- Card "Arma tu Torta" agregada en Catalogo.tsx con link a /arma-tu-torta
+- Card "Arma tu Torta" agregada en ServicioDetalle.tsx delivery con link a /arma-tu-torta
+- Link "Arma tu Torta" agregado en Header.tsx entre Productos y Servicios
+- Link "Arma tu Torta" agregado en Footer.tsx sección links SEO
+- Sección promocional en app/page.tsx reemplaza bloque Día de la Madre
+- Imagen torta-personalizada.webp en public/images/
+
+#### Fix imagen Torta Amor
+- Corregido components/Catalogo.tsx: Torta Amor apuntaba a torta-amor-hero.webp (torta de chocolate)
+- Ahora apunta correctamente a torta-amor.webp (hojarasca con merengue)
+
+#### Fix forma de pago Okasa
+- Actualizado COT-001-Ajustado.xlsx celda A30: forma de pago 50% al reservar / 50% al recibir informe
+- Actualizado scripts/generar_cotizacion.py: columna D ahora muestra % de descuento
+- COT-016 regenerada con descuento 10% aplicado y visible para cliente Alexandre Sanchez Wadie
+
+### Imágenes nuevas
+- public/images/arma-tu-torta/ — 18 ilustraciones botánicas WebP + 4 flores decorativas
+- public/images/torta-personalizada.webp — imagen card Arma tu Torta
+
+### Pendientes
+- Analizar métricas de /arma-tu-torta tras indexación en Google Search Console
+- Evaluar acceso más prominente para visitantes a /arma-tu-torta
