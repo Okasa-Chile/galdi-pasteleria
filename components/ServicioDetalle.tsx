@@ -48,6 +48,7 @@ const productosDelivery: Record<string, { nombre: string; imagen: string; unidad
     { nombre: 'Torta de Piña',      imagen: imagenes['Torta de Piña'],      unidad: 'un' },
     { nombre: 'Torta de Hojarasca', imagen: imagenes['Torta de Hojarasca'], unidad: 'un' },
     { nombre: 'Torta Amor',         imagen: imagenes['Torta Amor'],         unidad: 'un' },
+    { nombre: 'Arma tu Torta',      imagen: imagenes['Arma tu Torta'],      unidad: 'un' },
   ],
   'Pasteles': [
     { nombre: 'Pie de Limón Merengado', imagen: imagenes['Pie de Limón Merengado'], unidad: 'un' },

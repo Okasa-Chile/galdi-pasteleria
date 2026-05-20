@@ -48,3 +48,4 @@ repomix-output.xml
 .claude/worktrees/
 # Added by code-review-graph
 .code-review-graph/
+C*.log

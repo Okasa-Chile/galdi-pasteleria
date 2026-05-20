@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-const navItems = [
+const navItems: { label: string; id?: string; href?: string }[] = [
   { label: 'Productos', id: 'productos' },
+  { label: 'Arma tu Torta', href: '/arma-tu-torta' },
   { label: 'Servicios y Pedidos', id: 'servicios' },
   { label: 'Nuestra Historia', id: 'nosotras' },
   { label: 'Dudas Frecuentes', id: 'preguntas-frecuentes' },
@@ -152,8 +153,8 @@ export default function Header() {
           <nav className="header-nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: '2.5rem', listStyle: 'none' }}>
             {navItems.map((item) => (
               <a
-                key={item.id}
-                href={`#${item.id}`}
+                key={item.href ?? item.id}
+                href={item.href ?? `#${item.id}`}
                 className="header-nav-link"
               >
                 {item.label}
@@ -215,8 +216,8 @@ export default function Header() {
         }}>
           {navItems.map((item) => (
             <a
-              key={item.id}
-              href={`#${item.id}`}
+              key={item.href ?? item.id}
+              href={item.href ?? `#${item.id}`}
               onClick={() => setMenuOpen(false)}
               className="header-nav-link"
               style={{ fontSize: '1rem' }}
