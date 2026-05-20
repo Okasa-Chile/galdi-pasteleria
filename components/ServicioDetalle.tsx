@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { imagenes } from './Catalogo';
 
 // ─── Productos por servicio y tab ───────────────────────────────────────────
@@ -410,7 +411,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
               const enCarrito = carrito[carritoKey] ?? 0;
               const min = getMinimo(activeTab, prod.unidad, prod.nombre, id);
               const label = getLabelMinimo(activeTab, prod.unidad, prod.nombre, id);
-              return (
+              const card = (
                 <div key={prod.nombre} className="svc-prod-card">
                   {/* Imagen */}
                   <div style={{ position: 'relative', height: '260px' }}>
@@ -456,6 +457,11 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                   )}
                 </div>
               );
+              return prod.nombre === 'Arma tu Torta' ? (
+                <Link key={prod.nombre} href="/arma-tu-torta" style={{ textDecoration: 'none' }}>
+                  {card}
+                </Link>
+              ) : card;
             })}
           </div>
         )}

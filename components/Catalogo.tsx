@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import useScrollReveal from '@/hooks/useScrollReveal';
 
 const WA_SVG = (
@@ -304,62 +305,69 @@ function CatalogoInner() {
             gap: '1.5rem',
             background: 'rgba(26,15,10,0.07)',
           }}>
-            {categoriaActiva.productos.map((prod, i) => (
-              <article
-                key={prod.nombre}
-                className="cat-card-item"
-                style={{ animationDelay: delays[i] ?? '0s' }}
-              >
-                {/* Visual */}
-                {imagenes[prod.nombre] ? (
-                  <div style={{ position: 'relative', height: 118, overflow: 'hidden', flexShrink: 0, background: prod.nombre === 'Arma tu Torta' ? '#fdf6ee' : 'transparent' }}>
-                    <Image
-                      src={imagenes[prod.nombre]}
-                      alt={prod.nombre}
-                      fill
-                      style={{ objectFit: prod.nombre === 'Arma tu Torta' ? 'contain' : 'cover' }}
-                    />
+            {categoriaActiva.productos.map((prod, i) => {
+              const card = (
+                <article
+                  key={prod.nombre}
+                  className="cat-card-item"
+                  style={{ animationDelay: delays[i] ?? '0s' }}
+                >
+                  {/* Visual */}
+                  {imagenes[prod.nombre] ? (
+                    <div style={{ position: 'relative', height: 118, overflow: 'hidden', flexShrink: 0, background: prod.nombre === 'Arma tu Torta' ? '#fdf6ee' : 'transparent' }}>
+                      <Image
+                        src={imagenes[prod.nombre]}
+                        alt={prod.nombre}
+                        fill
+                        style={{ objectFit: prod.nombre === 'Arma tu Torta' ? 'contain' : 'cover' }}
+                      />
+                      <div style={{
+                        position: 'absolute', inset: 0,
+                        background: 'linear-gradient(to bottom, rgba(26,15,10,0.18) 0%, rgba(26,15,10,0.6) 100%)',
+                      }} />
+                    </div>
+                  ) : (
                     <div style={{
-                      position: 'absolute', inset: 0,
-                      background: 'linear-gradient(to bottom, rgba(26,15,10,0.18) 0%, rgba(26,15,10,0.6) 100%)',
+                      height: 118,
+                      flexShrink: 0,
+                      background: categoriaActiva.id === 'tortas'
+                        ? 'linear-gradient(135deg, #120608 0%, #3d0f0e 55%, #5c1812 100%)'
+                        : 'linear-gradient(135deg, #2a1605 0%, #5c3812 55%, #7a5222 100%)',
                     }} />
-                  </div>
-                ) : (
-                  <div style={{
-                    height: 118,
-                    flexShrink: 0,
-                    background: categoriaActiva.id === 'tortas'
-                      ? 'linear-gradient(135deg, #120608 0%, #3d0f0e 55%, #5c1812 100%)'
-                      : 'linear-gradient(135deg, #2a1605 0%, #5c3812 55%, #7a5222 100%)',
-                  }} />
-                )}
+                  )}
 
-                {/* Body */}
-                <div style={{ padding: '0.75rem 1.25rem 1rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                  <h3 style={{
-                    fontFamily: 'var(--font-serif)',
-                    fontSize: '1.18rem',
-                    fontWeight: 400,
-                    color: 'var(--cream-light)',
-                    marginBottom: '0.35rem',
-                    lineHeight: 1.3,
-                  }}>
-                    {prod.nombre}
-                  </h3>
-                  <p style={{
-                    fontSize: '0.75rem',
-                    letterSpacing: '0.01em',
-                    color: 'rgba(245,230,211,0.75)',
-                    lineHeight: 1.65,
-                    flex: 1,
-                    marginBottom: '1.1rem',
-                    fontFamily: 'var(--font-sans)',
-                  }}>
-                    {prod.detalle}
-                  </p>
-                </div>
-              </article>
-            ))}
+                  {/* Body */}
+                  <div style={{ padding: '0.75rem 1.25rem 1rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                    <h3 style={{
+                      fontFamily: 'var(--font-serif)',
+                      fontSize: '1.18rem',
+                      fontWeight: 400,
+                      color: 'var(--cream-light)',
+                      marginBottom: '0.35rem',
+                      lineHeight: 1.3,
+                    }}>
+                      {prod.nombre}
+                    </h3>
+                    <p style={{
+                      fontSize: '0.75rem',
+                      letterSpacing: '0.01em',
+                      color: 'rgba(245,230,211,0.75)',
+                      lineHeight: 1.65,
+                      flex: 1,
+                      marginBottom: '1.1rem',
+                      fontFamily: 'var(--font-sans)',
+                    }}>
+                      {prod.detalle}
+                    </p>
+                  </div>
+                </article>
+              );
+              return prod.nombre === 'Arma tu Torta' ? (
+                <Link key={prod.nombre} href="/arma-tu-torta" style={{ textDecoration: 'none' }}>
+                  {card}
+                </Link>
+              ) : card;
+            })}
           </div>
         </div>
 
