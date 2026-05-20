@@ -88,7 +88,9 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3007/arma-tu-torta)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3008/arma-tu-torta)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3009/arma-tu-torta)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3010/arma-tu-torta)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3010/arma-tu-torta)",
+      "Bash(git restore *)",
+      "Bash(xargs -r git restore --staged)"
     ]
   },
   "enableAllProjectMcpServers": true,

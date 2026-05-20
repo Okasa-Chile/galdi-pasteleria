@@ -38,7 +38,7 @@ const productosAlmacenes: Record<string, { nombre: string; imagen: string; unida
   ],
 };
 
-const productosDelivery: Record<string, { nombre: string; imagen: string; unidad: string }[]> = {
+const productosDelivery: Record<string, { nombre: string; imagen: string; unidad: string; href?: string }[]> = {
   'Tortas': [
     { nombre: 'Torta 3 Leches',     imagen: imagenes['Torta 3 Leches'],     unidad: 'un' },
     { nombre: 'Torta de Chocolate', imagen: imagenes['Torta de Chocolate'], unidad: 'un' },
@@ -48,7 +48,7 @@ const productosDelivery: Record<string, { nombre: string; imagen: string; unidad
     { nombre: 'Torta de Piña',      imagen: imagenes['Torta de Piña'],      unidad: 'un' },
     { nombre: 'Torta de Hojarasca', imagen: imagenes['Torta de Hojarasca'], unidad: 'un' },
     { nombre: 'Torta Amor',         imagen: imagenes['Torta Amor'],         unidad: 'un' },
-    { nombre: 'Arma tu Torta',      imagen: imagenes['Arma tu Torta'],      unidad: 'un' },
+    { nombre: 'Arma tu Torta',      imagen: '/images/torta-personalizada.webp', unidad: 'un', href: '/arma-tu-torta' },
   ],
   'Pasteles': [
     { nombre: 'Pie de Limón Merengado', imagen: imagenes['Pie de Limón Merengado'], unidad: 'un' },

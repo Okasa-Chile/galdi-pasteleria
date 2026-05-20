@@ -35,7 +35,7 @@ export const imagenes: Record<string, string> = {
   'Torta de Piña':             '/images/torta-pina-new.webp',
   'Torta de Hojarasca':        '/images/torta-hojarasca-new.webp',
   'Torta Amor':                '/images/torta-amor.webp',
-  'Arma tu Torta':             '/images/arma-tu-torta/base-bizcocho.webp',
+  'Arma tu Torta':             '/images/torta-personalizada.webp',
   // Dulces & Alfajores
   'Berlines':                  '/images/Berlines.webp',
   'Alfajores de Manjar':       '/images/alfajores-manjar.webp',
@@ -91,7 +91,7 @@ const categorias = [
       { nombre: 'Torta de Piña',       detalle: 'Bizcocho esponjoso con piña natural, crema batida y un toque dulce que refresca en cada bocado.' },
       { nombre: 'Torta de Hojarasca', detalle: 'Delicadas capas de masa crocante unidas con manjar, un clásico chileno irresistible.' },
       { nombre: 'Torta Amor',         detalle: 'Hojarasca, crema pastelera, frambuesas y manjar decorada con merengue. Nuestra torta especial de temporada.' },
-      { nombre: 'Arma tu Torta',      detalle: 'Diseña tu torta ideal: elige base, relleno, decoración y tamaño. Elaborada artesanalmente por encargo.' },
+      { nombre: 'Arma tu Torta',      detalle: 'Diseña tu torta ideal: elige base, relleno, decoración y tamaño. Elaborada artesanalmente por encargo.', href: '/arma-tu-torta' },
     ],
   },
   {
