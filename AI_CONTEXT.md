@@ -257,6 +257,23 @@ galdi-nextjs/
 - public/images/arma-tu-torta/ — 18 ilustraciones botánicas WebP + 4 flores decorativas
 - public/images/torta-personalizada.webp — imagen card Arma tu Torta
 
+#### SEO — Mejora de snippets
+- Mejorados title y description de 4 páginas con 0 clics en Search Console:
+  - app/empanadas-maipu/page.tsx
+  - app/matrimonios-maipu/page.tsx
+  - app/distribucion-maipu/page.tsx
+  - app/pan-artesanal-maipu/page.tsx
+- Títulos actualizados con formato: Keyword Principal · Diferenciador · Galdi
+- Descripciones con llamado a la acción directo
+- URLs enviadas a indexación manual en Google Search Console
+
+#### Stats Google Search Console (20-05-2026)
+- Impresiones 28 días: 1.440
+- Clics 28 días: 57
+- CTR medio: 4% (sobre promedio industria 2-3%)
+- Consultas activas: 81 keywords distintas
+- Keyword principal: "pasteleria maipu" (116 impresiones, 2 clics)
+
 ### Pendientes
 - Analizar métricas de /arma-tu-torta tras indexación en Google Search Console
 - Evaluar acceso más prominente para visitantes a /arma-tu-torta
