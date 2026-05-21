@@ -33,28 +33,28 @@ export default function Home() {
             {/* Decoración floral izquierda */}
             <div style={{
               position: 'absolute',
-              left: '-20px',
+              left: '-30px',
               top: '50%',
               transform: 'translateY(-50%)',
-              width: '160px',
-              height: '160px',
+              width: '220px',
+              height: '220px',
               opacity: 0.35,
               pointerEvents: 'none',
             }}>
-              <img src="/images/arma-tu-torta/flor-esquina-izq.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              <img src="/images/arma-tu-torta/flor-esquina-izq-transparent.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             {/* Decoración floral derecha */}
             <div style={{
               position: 'absolute',
-              right: '-20px',
+              right: '-30px',
               top: '50%',
               transform: 'translateY(-50%)',
-              width: '160px',
-              height: '160px',
+              width: '220px',
+              height: '220px',
               opacity: 0.35,
               pointerEvents: 'none',
             }}>
-              <img src="/images/arma-tu-torta/flor-esquina-der.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              <img src="/images/arma-tu-torta/flor-esquina-der-transparent.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
 
             <p style={{
