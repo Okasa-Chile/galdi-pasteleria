@@ -63,10 +63,3 @@ h1, h2, h3 {
 .reveal-delay-3 { transition-delay: 0.3s; }
 .reveal-delay-4 { transition-delay: 0.4s; }
 .reveal-delay-5 { transition-delay: 0.5s; }
-
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #faf4ec !important;
-    color: #1a0f0a !important;
-  }
-}
