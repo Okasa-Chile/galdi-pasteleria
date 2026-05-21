@@ -3,8 +3,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export const metadata: Metadata = {
-  title: 'Banquetería para Matrimonios en Maipú — Galdi Pastelería Artesanal',
-  description: '¿Buscas banquetería para tu matrimonio en Maipú? Torta de novios artesanal, mesa de dulces y bocados hechos en casa. Degustación previa sin costo. Cotiza por WhatsApp.',
+  title: 'Banquetería Matrimonios Maipú · Torta de Novios + Mesa de Dulces · Galdi',
+  description: 'Banquetería artesanal para matrimonios en Maipú: torta de novios personalizada, mesa de dulces, bocados salados y cena. Degustación previa sin costo. Cotiza sin compromiso.',
   keywords: 'banquetería matrimonios Maipú, torta de novios Maipú, mesa dulces matrimonio Maipú, bocados matrimonio Maipú, pastelería artesanal Maipú',
   alternates: { canonical: 'https://galdi.cl/matrimonios-maipu' },
 };

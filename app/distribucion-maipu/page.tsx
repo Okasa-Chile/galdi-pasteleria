@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import SeoPage from '@/components/SeoPage';
 export const metadata: Metadata = {
-  title: 'Distribución Panadería y Pastelería Maipú — Galdi',
-  description: 'Distribución de pan, queques, dulces y empanadas artesanales a almacenes y negocios de Maipú. Productos frescos con factura disponible.',
+  title: 'Panadería Artesanal Maipú · Pan Fresco a tu Almacén · Galdi',
+  description: 'Distribuimos pan amasado, queques, dulces y empanadas artesanales a almacenes y negocios de Maipú. Entrega fresca, precios por volumen y factura disponible.',
   keywords: 'distribución panadería Maipú, distribución pastelería Maipú, proveedor almacenes Maipú, pan mayorista Maipú',
   alternates: { canonical: 'https://galdi.cl/distribucion-maipu' },
 };
