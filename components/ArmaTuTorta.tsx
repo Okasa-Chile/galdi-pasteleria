@@ -58,11 +58,12 @@ const TAMANIOS = [
 
 // ── Subcomponente: Card opción ────────────────────────────────────────────────
 
-function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false }: {
+function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, priority = false }: {
   opcion: { id: string; nombre: string; imagen: string; desc: string };
   seleccionada: boolean;
   onSelect: () => void;
   deshabilitada?: boolean;
+  priority?: boolean;
 }) {
   return (
     <button
@@ -88,13 +89,13 @@ function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false }: {
     >
       <div style={{
         position: 'relative',
-        width: '180px',
-        height: '180px',
+        width: '100%',
+        height: 'clamp(160px, 30vw, 260px)',
         borderRadius: '12px',
         overflow: 'hidden',
         border: seleccionada ? `1.5px solid ${P.roseDark}` : `1.5px solid ${P.creamDark}`,
       }}>
-        <Image src={opcion.imagen} alt={opcion.nombre} fill style={{ objectFit: 'cover' }} />
+        <Image src={opcion.imagen} alt={opcion.nombre} fill style={{ objectFit: 'cover' }} priority={priority} />
       </div>
       <div>
         <p style={{
@@ -440,6 +441,7 @@ export default function ArmaTuTorta() {
                 opcion={b}
                 seleccionada={base === b.id}
                 onSelect={() => { setBase(b.id); setRellenos([]); setRellenosConf(false); setDecoraciones([]); setDecoConf(false); setTamanio(null); }}
+              priority={b.id === 'panqueque'}
               />
             ))}
           </div>
@@ -471,7 +473,7 @@ export default function ArmaTuTorta() {
 
         {/* PASO 2 — Rellenos */}
         <Paso numero={2} titulo="Elige el relleno" subtitulo="Puedes elegir hasta 3 sabores" completado={pasoActivo > 2} activo={pasoActivo === 2}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '0.75rem' }}>
             {RELLENOS.map(r => (
               <OpcionCard
                 key={r.id}
@@ -527,7 +529,7 @@ export default function ArmaTuTorta() {
 
         {/* PASO 3 — Decoraciones */}
         <Paso numero={3} titulo="Elige la decoración" subtitulo="Puedes elegir hasta 2 opciones" completado={pasoActivo > 3} activo={pasoActivo === 3}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '0.75rem' }}>
             {DECORACIONES.map(d => (
               <OpcionCard
                 key={d.id}
