@@ -51,6 +51,7 @@ export default function RootLayout({
   return (
     <html lang="es" className="light">
       <head>
+        <meta name="color-scheme" content="light only" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FoodEstablishment",
