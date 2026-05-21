@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function ArmaTuTortaPage() {
   return (
-    <main>
+    <main style={{ background: '#fdf6ee', minHeight: '100vh' }}>
       <ArmaTuTorta />
     </main>
   );
