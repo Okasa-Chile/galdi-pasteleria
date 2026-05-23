@@ -768,8 +768,22 @@ window.showTab = (id,el) => {
 // ── TAB 6: LISTA DE PRECIOS ──────────────────────────────────────────────
 window.renderPrecios = () => {
   const cats = [...new Set(prods.map(p => p.cat))];
-  let html = '';
 
+  function calcPrecioTalla(prod, talla) {
+    const saved = prod.costosTalla?.[talla];
+    const fb    = getCostosTalla(prod, talla);
+    if (!saved && !fb) return null;
+    const mat       = saved?.mat       ?? fb?.mat       ?? 0;
+    const mdo       = saved?.mdo       ?? fb?.mdo       ?? prod.mdo;
+    const energia   = saved?.energia   ?? fb?.energia   ?? prod.energia;
+    const logistica = saved?.logistica ?? fb?.logistica ?? prod.logistica;
+    const margen    = saved?.margen    ?? fb?.margen    ?? prod.margen;
+    const cn = mat + mdo + energia + logistica;
+    const u  = prod.tipo === 'propio' ? cn * (margen / 100) : 0;
+    return Math.round((cn + u) * 1.19);
+  }
+
+  let html = '';
   cats.forEach(cat => {
     const ps = prods.filter(p => p.cat === cat);
     if (!ps.length) return;
@@ -791,24 +805,28 @@ window.renderPrecios = () => {
             </tr>
           </thead>
           <tbody>
-            ${ps.map((p, i) => `
-              <tr style="background:${i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.02)'};">
+            ${ps.map((p, i) => {
+              const pS = calcPrecioTalla(p, 'S');
+              const pM = calcPrecioTalla(p, 'M');
+              const pL = calcPrecioTalla(p, 'L');
+              const tieneTallas = pS || pM || pL;
+              return `<tr style="background:${i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.02)'};">
                 <td style="padding:8px;font-size:13px;"><strong>${p.nombre}</strong></td>
                 <td style="padding:8px;font-size:12px;color:var(--muted);">${p.unidad}</td>
                 <td style="padding:8px;font-size:13px;text-align:right;">
-                  ${(p.precioS > 0 || p.precioM > 0 || p.precioL > 0) ? '—' : `<strong>${fmt(p.precio)}</strong>`}
+                  ${tieneTallas ? '—' : `<strong>${fmt(p.precio)}</strong>`}
                 </td>
                 <td style="padding:8px;font-size:13px;text-align:right;color:var(--green);">
-                  ${p.precioS > 0 ? fmt(p.precioS) : '—'}
+                  ${pS ? fmt(pS) : '—'}
                 </td>
                 <td style="padding:8px;font-size:13px;text-align:right;color:var(--green);">
-                  ${p.precioM > 0 ? fmt(p.precioM) : '—'}
+                  ${pM ? fmt(pM) : '—'}
                 </td>
                 <td style="padding:8px;font-size:13px;text-align:right;color:var(--green);">
-                  ${p.precioL > 0 ? fmt(p.precioL) : '—'}
+                  ${pL ? fmt(pL) : '—'}
                 </td>
-              </tr>
-            `).join('')}
+              </tr>`;
+            }).join('')}
           </tbody>
         </table>
       </div>
@@ -856,13 +874,31 @@ window.exportarPreciosPDF = () => {
 };
 
 window.exportarPreciosExcel = () => {
+  function calcPrecioTalla(prod, talla) {
+    const saved = prod.costosTalla?.[talla];
+    const fb    = getCostosTalla(prod, talla);
+    if (!saved && !fb) return null;
+    const mat       = saved?.mat       ?? fb?.mat       ?? 0;
+    const mdo       = saved?.mdo       ?? fb?.mdo       ?? prod.mdo;
+    const energia   = saved?.energia   ?? fb?.energia   ?? prod.energia;
+    const logistica = saved?.logistica ?? fb?.logistica ?? prod.logistica;
+    const margen    = saved?.margen    ?? fb?.margen    ?? prod.margen;
+    const cn = mat + mdo + energia + logistica;
+    const u  = prod.tipo === 'propio' ? cn * (margen / 100) : 0;
+    return Math.round((cn + u) * 1.19);
+  }
+
   const cats = [...new Set(prods.map(p => p.cat))];
   let csv = 'Categoría,Producto,Unidad,Precio,Talla S,Talla M,Talla L\n';
 
   cats.forEach(cat => {
     prods.filter(p => p.cat === cat).forEach(p => {
-      const precio = (p.precioS > 0 || p.precioM > 0 || p.precioL > 0) ? '' : p.precio;
-      csv += `"${cat}","${p.nombre}","${p.unidad}",${precio},${p.precioS||''},${p.precioM||''},${p.precioL||''}\n`;
+      const pS = calcPrecioTalla(p, 'S');
+      const pM = calcPrecioTalla(p, 'M');
+      const pL = calcPrecioTalla(p, 'L');
+      const tieneTallas = pS || pM || pL;
+      const precio = tieneTallas ? '' : p.precio;
+      csv += `"${cat}","${p.nombre}","${p.unidad}",${precio},${pS||''},${pM||''},${pL||''}\n`;
     });
   });
 
