@@ -119,6 +119,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
     <div class="tab" onclick="showTab('compras',this)">3 · Registro de Compras</div>
     <div class="tab" onclick="showTab('ventas',this)">4 · Registro de Ventas</div>
     <div class="tab" onclick="showTab('presupuestos',this)">5 · Presupuestos</div>
+    <div class="tab" onclick="showTab('precios',this)">6 · Lista de Precios</div>
   </div>
 
   <!-- TAB 1 -->
@@ -532,6 +533,21 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
     </div>
 
   </div>
+
+  <!-- TAB 6 -->
+  <div id="tab-precios" class="panel">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+        <div class="card-title" style="margin-bottom:0;">Lista de Precios</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-sm" onclick="exportarPreciosPDF()">⬇ PDF</button>
+          <button class="btn btn-sm" onclick="exportarPreciosExcel()">⬇ Excel</button>
+        </div>
+      </div>
+      <div id="tabla-precios-container"></div>
+    </div>
+  </div>
+
 </div>
 
 <!-- MODAL -->
@@ -742,6 +758,117 @@ window.showTab = (id,el) => {
   if(id==='compras')renderC();
   if(id==='simulador')calcMeta();
   if(id==='presupuestos'){cargarNumeroPres();cargarHistorialPresupuestos();}
+  if(id==='precios')renderPrecios();
+};
+
+// ── TAB 6: LISTA DE PRECIOS ──────────────────────────────────────────────
+window.renderPrecios = () => {
+  const cats = [...new Set(prods.map(p => p.cat))];
+  let html = '';
+
+  cats.forEach(cat => {
+    const ps = prods.filter(p => p.cat === cat);
+    if (!ps.length) return;
+
+    html += `
+      <div style="margin-bottom:24px;">
+        <div style="font-weight:600;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;
+                    color:var(--muted);padding:6px 0;border-bottom:1px solid var(--border);
+                    margin-bottom:8px;">${cat}</div>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;">
+              <th style="text-align:left;padding:6px 8px;font-weight:500;">Producto</th>
+              <th style="text-align:left;padding:6px 8px;font-weight:500;">Unidad</th>
+              <th style="text-align:right;padding:6px 8px;font-weight:500;">Precio</th>
+              <th style="text-align:right;padding:6px 8px;font-weight:500;">Talla S</th>
+              <th style="text-align:right;padding:6px 8px;font-weight:500;">Talla M</th>
+              <th style="text-align:right;padding:6px 8px;font-weight:500;">Talla L</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${ps.map((p, i) => `
+              <tr style="background:${i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.02)'};">
+                <td style="padding:8px;font-size:13px;"><strong>${p.nombre}</strong></td>
+                <td style="padding:8px;font-size:12px;color:var(--muted);">${p.unidad}</td>
+                <td style="padding:8px;font-size:13px;text-align:right;">
+                  ${(p.precioS || p.precioM || p.precioL) ? '—' : `<strong>${fmt(p.precio)}</strong>`}
+                </td>
+                <td style="padding:8px;font-size:13px;text-align:right;color:var(--green);">
+                  ${p.precioS ? fmt(p.precioS) : '—'}
+                </td>
+                <td style="padding:8px;font-size:13px;text-align:right;color:var(--green);">
+                  ${p.precioM ? fmt(p.precioM) : '—'}
+                </td>
+                <td style="padding:8px;font-size:13px;text-align:right;color:var(--green);">
+                  ${p.precioL ? fmt(p.precioL) : '—'}
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  });
+
+  document.getElementById('tabla-precios-container').innerHTML = html;
+};
+
+window.exportarPreciosPDF = () => {
+  const contenido = document.getElementById('tabla-precios-container').innerHTML;
+  const ventana = window.open('', '_blank');
+  ventana.document.write(`
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <title>Lista de Precios — Galdi</title>
+      <style>
+        body { font-family: Arial, sans-serif; padding: 32px; color: #1a0f0a; }
+        h1 { font-size: 20px; margin-bottom: 4px; }
+        p.sub { font-size: 12px; color: #888; margin-bottom: 24px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+        th { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;
+             color: #888; text-align: left; padding: 6px 8px;
+             border-bottom: 2px solid #C9A55A; }
+        td { font-size: 12px; padding: 7px 8px; border-bottom: 1px solid #eee; }
+        td:nth-child(3), td:nth-child(4), td:nth-child(5), td:nth-child(6) { text-align: right; }
+        th:nth-child(3), th:nth-child(4), th:nth-child(5), th:nth-child(6) { text-align: right; }
+        .cat-titulo { font-size: 11px; font-weight: bold; text-transform: uppercase;
+                      letter-spacing: 0.1em; color: #C9A55A; padding: 12px 0 4px;
+                      border-bottom: 1px solid #C9A55A; margin-bottom: 4px; }
+        @media print { body { padding: 16px; } }
+      </style>
+    </head>
+    <body>
+      <h1>Galdi Pastelería Artesanal</h1>
+      <p class="sub">Lista de precios — Generada el ${new Date().toLocaleDateString('es-CL')}</p>
+      ${contenido}
+      <script>window.onload = () => { window.print(); }<\/script>
+    </body>
+    </html>
+  `);
+  ventana.document.close();
+};
+
+window.exportarPreciosExcel = () => {
+  const cats = [...new Set(prods.map(p => p.cat))];
+  let csv = 'Categoría,Producto,Unidad,Precio,Talla S,Talla M,Talla L\n';
+
+  cats.forEach(cat => {
+    prods.filter(p => p.cat === cat).forEach(p => {
+      const precio = (p.precioS || p.precioM || p.precioL) ? '' : p.precio;
+      csv += `"${cat}","${p.nombre}","${p.unidad}",${precio},${p.precioS||''},${p.precioM||''},${p.precioL||''}\n`;
+    });
+  });
+
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `galdi-precios-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 };
 
 // ── TAB 5: PRESUPUESTOS ──────────────────────────────────────────────────

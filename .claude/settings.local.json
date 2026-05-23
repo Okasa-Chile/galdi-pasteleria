@@ -91,7 +91,15 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3010/arma-tu-torta)",
       "Bash(git restore *)",
       "Bash(xargs -r git restore --staged)",
-      "PowerShell(Get-Process *)"
+      "PowerShell(Get-Process *)",
+      "mcp__plugin_everything-claude-code_playwright__browser_resize",
+      "Bash(npm run *)",
+      "Bash(echo \"PID: $!\")",
+      "Bash(echo \"Servidor iniciado con PID: $!\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "PowerShell(netstat *)",
+      "Bash(netstat -tlnp)",
+      "Bash(curl -s -o /dev/null -w \"HTTP: %{http_code}\" http://localhost:3000)"
     ]
   },
   "enableAllProjectMcpServers": true,
