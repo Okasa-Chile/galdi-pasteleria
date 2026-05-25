@@ -88,7 +88,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
 .sync-badge{font-size:10px;color:var(--muted);text-align:right;margin-bottom:8px;}
 .sync-badge.ok{color:#4a7c59;}
 .sync-badge.err{color:#9b3a2a;}
-.pres-linea:last-child{border-bottom:none;}
+.pres-linea{cursor:grab;}.pres-linea:last-child{border-bottom:none;}.pres-linea.drag-over-top{border-top:2px solid var(--gold2) !important;}.pres-linea.drag-over-bot{border-bottom:2px solid var(--gold2) !important;}
 @media(max-width:600px){.grid-2,.grid-3,.resumen-grid{grid-template-columns:1fr;}.panel{padding:16px;}.tab{padding:10px 12px;font-size:10px;}#pres-header-lineas{display:none !important;}.pres-linea{grid-template-columns:1fr 1fr !important;grid-template-rows:auto auto auto !important;}}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -935,6 +935,7 @@ window.cargarNumeroPres = async () => {
 
 // ── TAB 5: PRESUPUESTOS — LINE & TOTAL FUNCTIONS ────────────────────────────
 const lineaProds = new Map(); // lineaId → objeto prod, para cálculo de precio por talla
+let _presDragEl = null;
 let presupuestoEditandoId = null;
 
 window.presAgregarLinea = () => {
@@ -959,6 +960,42 @@ window.presAgregarLinea = () => {
     '<input type="number" class="pres-precio" min="0" step="1" placeholder="0" oninput="presRecalcLinea(this)" style="width:100%;text-align:right;">' +
     '<input type="text" class="pres-subtotal-linea" readonly value="$0" style="width:100%;text-align:right;background:var(--sand);color:var(--brown);cursor:default;">' +
     '<button class="btn btn-sm btn-red" onclick="presEliminarLinea(this)" style="padding:6px 8px;font-size:13px;line-height:1;">&#10005;</button>';
+  // ── Drag & drop ────────────────────────────────────────────────────────────
+  div.draggable = true;
+  div.addEventListener('dragstart', e => {
+    _presDragEl = div;
+    e.dataTransfer.effectAllowed = 'move';
+    setTimeout(() => { div.style.opacity = '0.4'; }, 0);
+  });
+  div.addEventListener('dragend', () => {
+    div.style.opacity = '';
+    document.querySelectorAll('.pres-linea').forEach(r => {
+      r.classList.remove('drag-over-top', 'drag-over-bot');
+    });
+    _presDragEl = null;
+  });
+  div.addEventListener('dragover', e => {
+    e.preventDefault();
+    if (!_presDragEl || _presDragEl === div) return;
+    e.dataTransfer.dropEffect = 'move';
+    document.querySelectorAll('.pres-linea').forEach(r => r.classList.remove('drag-over-top', 'drag-over-bot'));
+    const midY = div.getBoundingClientRect().top + div.getBoundingClientRect().height / 2;
+    div.classList.add(e.clientY < midY ? 'drag-over-top' : 'drag-over-bot');
+  });
+  div.addEventListener('dragleave', e => {
+    if (!div.contains(e.relatedTarget)) {
+      div.classList.remove('drag-over-top', 'drag-over-bot');
+    }
+  });
+  div.addEventListener('drop', e => {
+    e.preventDefault();
+    if (!_presDragEl || _presDragEl === div) return;
+    const container = document.getElementById('pres-lineas');
+    const midY = div.getBoundingClientRect().top + div.getBoundingClientRect().height / 2;
+    container.insertBefore(_presDragEl, e.clientY < midY ? div : div.nextSibling);
+    div.classList.remove('drag-over-top', 'drag-over-bot');
+  });
+  // ───────────────────────────────────────────────────────────────────────────
   document.getElementById('pres-lineas').appendChild(div);
   document.getElementById('pres-header-lineas').style.display = 'grid';
   document.getElementById('pres-empty-lineas').style.display = 'none';
