@@ -2059,7 +2059,7 @@ window.autocompletarPrecio = () => {
   precioVentaActual = prod?.precio || 0;
   calcularMonto();
   const optXLv = document.getElementById('opt-xl-ventas');
-  if(optXLv) optXLv.style.display = prod?.nombre === 'Torta Panqueque' ? '' : 'none';
+  if(optXLv) optXLv.style.display = (prod?.nombre === 'Torta Panqueque' || prod?.nombre === 'Torta de Chocolate') ? '' : 'none';
 };
 
 window.calcularMonto = () => {

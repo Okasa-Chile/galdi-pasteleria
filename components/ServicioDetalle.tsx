@@ -425,7 +425,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                     </div>
                     {esTorta && (
                       <div style={{ display: 'flex', gap: '4px', flexShrink: 0, marginTop: '1px' }}>
-                        {(['S', 'M', 'L', ...(prod.nombre === 'Torta Panqueque' ? ['XL'] : [])] as const).map(t => (
+                        {(['S', 'M', 'L', ...(prod.nombre === 'Torta Panqueque' || prod.nombre === 'Torta de Chocolate' ? ['XL'] : [])] as const).map(t => (
                           <button
                             key={t}
                             className={`talla-btn${tallaSeleccionada === t ? ' sel' : ''}`}
