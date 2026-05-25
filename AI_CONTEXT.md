@@ -181,6 +181,10 @@ galdi-nextjs/
 - [ ] **QR en PDF usando SVG en vez de canvas**
 - [ ] **Agenda de clientes en /gestion**
 - [x] **Funcionalidad edición presupuestos Tab 5** — botón Editar, Actualizar, Cancelar edición
+- [ ] **Carrito de compras con pago Flow** — aprobado por socias 25-05-2026. Despacho: $3.000 cercanas / $5.000 lejanas. Comunas cercanas: Maipú, Cerrillos, Pudahuel, Estación Central, Padre Hurtado, Lo Prado. Retiro gratis en Maipú. Pago 100% anticipado.
+- [ ] **Precios catálogo público** — pendiente confirmación (estimado 26-05-2026)
+- [ ] **Crear cuenta Flow** — pendiente. Puede demorar 1-3 días hábiles en verificar.
+- [ ] **POS TUU** — en proceso de compra por Claudio
 
 ### Administrativos / Externos
 - [ ] **Estatuto societario Galdi** — modificación portal RES en curso:
@@ -209,6 +213,7 @@ galdi-nextjs/
 
 ## 📋 Historial de jornadas (resumen)
 
+- **25-05-2026** — Reunión socias: aprobado carrito de compras con pago online vía Flow · Método de pago físico TUU (POS en proceso de compra) · Despacho Gran Santiago: $3.000 zonas cercanas (Maipú, Cerrillos, Pudahuel, Estación Central, Padre Hurtado, Lo Prado) / $5.000 zonas lejanas (resto Gran Santiago) · Retiro gratis en Maipú · Pago online 100% anticipado · Pendiente: precios catálogo (mañana) · Pendiente: crear cuenta Flow
 - **21-05-2026 (tarde)** — Investigación dark mode móvil en /arma-tu-torta: problema confirmado exclusivo de Brave con "darken websites" activado (intercepta a nivel GPU, no superable desde CSS). Firefox se resuelve activando modo claro. globals.css revertido a versión limpia con color-scheme: light. Sin solución viable desde código.
 - **21-05-2026** — fix: flores decorativas bloque "Arma tu Torta" en homepage — fondo transparente con Pillow (umbral R>200/G>190/B>185) + tamaño aumentado 160px→220px · fix: arma-tu-torta/page.tsx móvil — hero overlay suavizado + grid 2 columnas + LCP priority imagen base-panqueque.webp
 - **02-05-2026** — SEO: landing /dia-de-la-madre mejorada (keywords, FAQ schema, delivery RM) · Bloque SEO Día de la Madre agregado en homepage entre Nosotras y FAQ · Indexación solicitada en Search Console · Tab 5: funcionalidad de edición de presupuestos guardados (botón Editar, Actualizar, Cancelar edición) · QR eliminado de plantillas de impresión (problema canvas en PDF) · COT-G079 Cóctel Sebastián del Valle $350.000 · COT-G080 Rincón Dulce Sebastián del Valle $247.500 · COT-G081 lista de precios Excel generada para envío por email
