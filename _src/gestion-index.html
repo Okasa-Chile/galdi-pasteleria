@@ -39,8 +39,8 @@ body{font-family:'Jost',sans-serif;background:#F9F3EC;min-height:100vh;}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
 label{font-size:11px;color:var(--muted);letter-spacing:.06em;display:block;margin-bottom:4px;}
-input[type=text],input[type=number],select{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:6px;font-family:'Jost',sans-serif;font-size:13px;color:var(--brown);background:var(--cream);}
-input:focus,select:focus{outline:none;border-color:var(--gold);}
+input[type=text],input[type=number],input[type=date],select{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:6px;font-family:'Jost',sans-serif;font-size:13px;color:var(--brown);background:var(--cream);}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
 .btn{background:var(--gold);color:#fff;border:none;padding:10px 20px;border-radius:6px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;font-weight:600;transition:background .2s;}
 .btn:hover{background:var(--gold2);}
 .btn-gray{background:var(--muted);}.btn-gray:hover{background:#7a5c3a;}
@@ -88,8 +88,10 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
 .sync-badge{font-size:10px;color:var(--muted);text-align:right;margin-bottom:8px;}
 .sync-badge.ok{color:#4a7c59;}
 .sync-badge.err{color:#9b3a2a;}
-@media(max-width:600px){.grid-2,.grid-3,.resumen-grid{grid-template-columns:1fr;}.panel{padding:16px;}.tab{padding:10px 12px;font-size:10px;}}
+.pres-linea:last-child{border-bottom:none;}
+@media(max-width:600px){.grid-2,.grid-3,.resumen-grid{grid-template-columns:1fr;}.panel{padding:16px;}.tab{padding:10px 12px;font-size:10px;}#pres-header-lineas{display:none !important;}.pres-linea{grid-template-columns:1fr 1fr !important;grid-template-rows:auto auto auto !important;}}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -116,6 +118,8 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
     <div class="tab" onclick="showTab('simulador',this)">2 · Simulador de Meta</div>
     <div class="tab" onclick="showTab('compras',this)">3 · Registro de Compras</div>
     <div class="tab" onclick="showTab('ventas',this)">4 · Registro de Ventas</div>
+    <div class="tab" onclick="showTab('presupuestos',this)">5 · Presupuestos</div>
+    <div class="tab" onclick="showTab('precios',this)">6 · Lista de Precios</div>
   </div>
 
   <!-- TAB 1 -->
@@ -130,12 +134,22 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
       </div>
       <div class="cat-tabs" id="cat-tabs"></div>
       <table class="prod-table">
-        <thead><tr><th>Producto</th><th>Tipo</th><th>Unidad</th><th>Precio Final</th><th>Margen</th><th></th></tr></thead>
+        <thead><tr><th>Producto</th><th>Tipo</th><th>Unidad</th><th>Margen</th><th></th></tr></thead>
         <tbody id="tabla-cat"></tbody>
       </table>
     </div>
     <div class="card" id="card-calc" style="display:none;">
       <div class="card-title" id="calc-tit">Calculadora</div>
+      <div id="wrap-talla-calc" style="display:none;margin-bottom:12px;">
+        <label>Tamaño</label>
+        <select id="calc-talla" onchange="aplicarCostoTalla()">
+          <option value="">— Elige tamaño —</option>
+          <option value="S">S — 8 a 10 personas</option>
+          <option value="M">M — 14 a 16 personas</option>
+          <option value="L">L — 20 a 22 personas</option>
+          <option value="XL" id="opt-xl-calc" style="display:none">XL — 25 personas</option>
+        </select>
+      </div>
       <div class="grid-2">
         <div><label id="lbl-mat">Costo materiales (neto)</label><input type="number" id="c-mat" oninput="recalc()"></div>
         <div id="wrap-mdo"><label>Mano de obra</label><input type="number" id="c-mdo" oninput="recalc()"></div>
@@ -218,7 +232,17 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
           </select>
         </div>
         <div><label>Producto</label><select id="v-d" onchange="autocompletarPrecio()"></select></div>
-        <div><label>Cantidad</label><input type="number" id="v-q" placeholder="ej: 2" min="1"></div>
+        <div id="wrap-talla-v" style="display:none;">
+          <label>Tamaño</label>
+          <select id="v-talla" onchange="calcularMonto()">
+            <option value="">— Sin talla —</option>
+            <option value="S">S — 8 a 10 personas</option>
+            <option value="M">M — 14 a 16 personas</option>
+            <option value="L">L — 20 a 22 personas</option>
+            <option value="XL" id="opt-xl-ventas" style="display:none">XL — 25 personas</option>
+          </select>
+        </div>
+        <div><label>Cantidad</label><input type="number" id="v-q" placeholder="ej: 2" min="1" style="max-width:80px" oninput="calcularMonto()"></div>
         <div><label>Monto total ($)</label><input type="number" id="v-m" placeholder="0"></div>
         <div><label>Cliente / Almacén</label><input type="text" id="v-c" placeholder="Opcional"></div>
         <div style="display:flex;align-items:flex-end;"><button class="btn" onclick="addVenta()">Registrar</button></div>
@@ -279,6 +303,251 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
       </table>
     </div>
   </div>
+
+  <!-- TAB 5 -->
+  <div id="tab-presupuestos" class="panel">
+
+    <!-- Card 1: Numero -->
+    <div class="card">
+      <div class="card-title">Presupuesto</div>
+      <div>
+        <label>N° Presupuesto</label>
+        <input type="text" id="pres-numero" readonly
+               style="background:var(--sand);color:var(--gold2);font-weight:600;letter-spacing:0.08em;cursor:default;">
+      </div>
+    </div>
+
+    <!-- Card 2: Cliente -->
+    <div class="card">
+      <div class="card-title">Datos del Cliente</div>
+      <div style="margin-bottom:14px;">
+        <label>Nombre del cliente *</label>
+        <input type="text" id="pres-nombre" placeholder="ej: María González">
+      </div>
+      <div class="grid-2">
+        <div>
+          <label>Teléfono</label>
+          <input type="text" id="pres-telefono" placeholder="9 9999 9999">
+        </div>
+        <div>
+          <label>Email</label>
+          <input type="text" id="pres-email" placeholder="ej: cliente@correo.cl">
+        </div>
+      </div>
+      <div style="margin-top:14px;">
+        <label>Dirección</label>
+        <input type="text" id="pres-direccion" placeholder="ej: Av. Principal 123, Depto 45">
+      </div>
+      <div style="margin-top:14px;">
+        <label>Comuna</label>
+        <select id="pres-comuna">
+          <option value="">— Seleccionar comuna —</option>
+          <option>Alhué</option>
+          <option>Buin</option>
+          <option>Calera de Tango</option>
+          <option>Cerrillos</option>
+          <option>Cerro Navia</option>
+          <option>Colina</option>
+          <option>Conchalí</option>
+          <option>Curacaví</option>
+          <option>El Bosque</option>
+          <option>El Monte</option>
+          <option>Estación Central</option>
+          <option>Huechuraba</option>
+          <option>Independencia</option>
+          <option>Isla de Maipo</option>
+          <option>La Cisterna</option>
+          <option>La Florida</option>
+          <option>La Granja</option>
+          <option>La Pintana</option>
+          <option>La Reina</option>
+          <option>Lampa</option>
+          <option>Las Condes</option>
+          <option>Lo Barnechea</option>
+          <option>Lo Espejo</option>
+          <option>Lo Prado</option>
+          <option>Macul</option>
+          <option>Maipú</option>
+          <option>María Pinto</option>
+          <option>Melipilla</option>
+          <option>Padre Hurtado</option>
+          <option>Paine</option>
+          <option>Peñaflor</option>
+          <option>Peñalolén</option>
+          <option>Pirque</option>
+          <option>Providencia</option>
+          <option>Pudahuel</option>
+          <option>Puente Alto</option>
+          <option>Quilicura</option>
+          <option>Quinta Normal</option>
+          <option>Recoleta</option>
+          <option>Renca</option>
+          <option>San Bernardo</option>
+          <option>San Joaquín</option>
+          <option>San José de Maipo</option>
+          <option>San Miguel</option>
+          <option>San Pedro</option>
+          <option>San Ramón</option>
+          <option>Santiago</option>
+          <option>Talagante</option>
+          <option>Tiltil</option>
+          <option>Vitacura</option>
+          <option>Ñuñoa</option>
+          <option>Otra región</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Card 3: Evento -->
+    <div class="card">
+      <div class="card-title">Datos del Evento</div>
+      <div class="grid-2">
+        <div>
+          <label>Fecha del evento</label>
+          <input type="date" id="pres-fecha-evento">
+        </div>
+        <div>
+          <label>Tipo de evento</label>
+          <select id="pres-tipo-evento">
+            <option value="">— Seleccionar tipo —</option>
+            <option value="tortas-pasteles">Tortas y Pasteles</option>
+            <option value="pan-artesanal">Pan Artesanal</option>
+            <option value="empanadas">Empanadas</option>
+            <option value="desayuno-once">Desayuno / Once</option>
+            <option value="evento-matrimonio">Evento / Matrimonio</option>
+            <option value="coctel">Cóctel</option>
+            <option value="coffee-break">Coffee Break</option>
+            <option value="cumpleanos">Cumpleaños</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: Detalle del Presupuesto -->
+    <div class="card" id="card-detalle">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div class="card-title" style="margin-bottom:0;">Detalle del presupuesto</div>
+        <button class="btn btn-sm" onclick="presAgregarLinea()">+ Agregar línea</button>
+      </div>
+      <div id="pres-header-lineas" style="display:none;grid-template-columns:110px 1fr 80px 110px 80px 36px;gap:8px;background:var(--sand);padding:7px 11px;border-radius:6px 6px 0 0;margin-bottom:0;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;">
+        <span>Modo</span>
+        <span>Descripción / Producto</span>
+        <span>Cant.</span>
+        <span>Precio unit.</span>
+        <span>Sub.</span>
+        <span></span>
+      </div>
+      <div id="pres-lineas"></div>
+      <div id="pres-empty-lineas" style="color:var(--muted);font-size:13px;text-align:center;padding:22px 0;">
+        Aún no hay ítems. Pulsa "+ Agregar línea" para comenzar a construir el presupuesto.
+      </div>
+    </div>
+
+    <!-- Card 5: Totales -->
+    <div class="card" id="card-totales">
+      <div class="card-title">Totales</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+        <label style="margin-bottom:0;">Descuento:</label>
+        <div style="display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:11px;">
+          <button id="pres-desc-tipo-pct" class="pres-desc-tipo active" onclick="presSetDescTipo('pct')" style="padding:5px 10px;border:none;cursor:pointer;background:var(--dark);color:var(--gold);font-family:'Jost',sans-serif;font-size:11px;font-weight:600;">%</button>
+          <button id="pres-desc-tipo-fijo" class="pres-desc-tipo" onclick="presSetDescTipo('fijo')" style="padding:5px 10px;border:none;cursor:pointer;background:#fff;color:var(--muted);font-family:'Jost',sans-serif;font-size:11px;">$ Fijo</button>
+        </div>
+        <input type="number" id="pres-desc-valor" min="0" value="0" placeholder="0" oninput="presRecalcTotales()" style="width:90px;text-align:right;">
+        <span id="pres-desc-simbolo" style="color:var(--muted);font-size:13px;">%</span>
+      </div>
+      <div class="result-box">
+        <div class="result-row">
+          <span class="lbl">Subtotal</span>
+          <span class="val" id="pres-val-subtotal">$0</span>
+        </div>
+        <div class="result-row" id="pres-row-descuento" style="display:none;">
+          <span class="lbl">Descuento</span>
+          <span class="val" id="pres-val-descuento" style="color:#f08070;">−$0</span>
+        </div>
+        <div class="result-row highlight">
+          <span class="lbl">Total</span>
+          <span class="val" id="pres-val-total">$0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 6: Observaciones -->
+    <div class="card">
+      <div class="card-title">Observaciones / Notas</div>
+      <div>
+        <label>Observaciones</label>
+        <textarea id="pres-obs" rows="3" placeholder="Notas internas, detalles especiales, restricciones alimentarias..."
+          style="width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:6px;font-family:'Jost',sans-serif;font-size:13px;color:var(--brown);background:var(--cream);resize:vertical;"></textarea>
+      </div>
+    </div>
+
+    <!-- Card 7: Condiciones -->
+    <div class="card">
+      <div class="card-title">Condiciones</div>
+      <div class="grid-2">
+        <div>
+          <label>Válido hasta</label>
+          <input type="date" id="pres-valido-hasta">
+        </div>
+        <div>
+          <label>Forma de pago sugerida</label>
+          <select id="pres-forma-pago">
+            <option value="">— Seleccionar —</option>
+            <option value="transferencia">Transferencia bancaria</option>
+            <option value="efectivo">Efectivo</option>
+            <option value="debito">Débito</option>
+            <option value="credito">Crédito</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end;flex-wrap:wrap;">
+        <button class="btn btn-gray" disabled style="opacity:0.5;cursor:not-allowed;">Guardar borrador</button>
+        <button id="btn-cancelar-edicion" class="btn btn-gray" onclick="cancelarEdicionPresupuesto()" style="display:none;">✕ Cancelar edición</button>
+        <button class="btn btn-gray" onclick="vistaPreviaPresupuesto()" style="opacity:1;cursor:pointer;">🖨️ Vista previa</button>
+        <button class="btn" id="btn-guardar-presupuesto" onclick="guardarPresupuesto()">Generar presupuesto</button>
+      </div>
+    </div>
+
+    <!-- Card 8: Historial de Presupuestos -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div class="card-title" style="margin-bottom:0;">Historial de Presupuestos</div>
+        <button class="btn btn-sm btn-gray" onclick="cargarHistorialPresupuestos()">↻ Actualizar</button>
+      </div>
+      <table class="ventas-table" id="tb-historial-pres">
+        <thead>
+          <tr>
+            <th>N° Presupuesto</th>
+            <th>Cliente</th>
+            <th>Total</th>
+            <th>Fecha</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tb-historial-pres-body">
+          <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- TAB 6 -->
+  <div id="tab-precios" class="panel">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+        <div class="card-title" style="margin-bottom:0;">Lista de Precios</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-sm" onclick="exportarPreciosPDF()">⬇ PDF</button>
+          <button class="btn btn-sm" onclick="exportarPreciosExcel()">⬇ Excel</button>
+        </div>
+      </div>
+      <div id="tabla-precios-container"></div>
+    </div>
+  </div>
+
 </div>
 
 <!-- MODAL -->
@@ -313,11 +582,6 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
             <option value="porción">Porción</option>
           </select>
         </div>
-        <div><label>Costo base neto ($)</label><input type="number" id="m-cost" placeholder="0"></div>
-        <div><label>Energía ($)</label><input type="number" id="m-en" placeholder="0"></div>
-        <div><label>Logística ($)</label><input type="number" id="m-log" value="30"></div>
-        <div><label>Mano de obra ($)</label><input type="number" id="m-mdo" placeholder="0"></div>
-        <div><label>Margen (%)</label><input type="number" id="m-mrg" placeholder="20"></div>
       </div>
       <div><label>Precio combate referencia</label><input type="text" id="m-comb" placeholder="ej: $1.800 / kg"></div>
     </div>
@@ -332,7 +596,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold);}
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
 import { getAuth, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
-import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, deleteDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, updateDoc, deleteDoc, query, orderBy, serverTimestamp, limit } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
 
 // ── CONFIG ────────────────────────────────────────────────────────────────
 const AUTORIZADOS = ['contacto@okasa.cl','ventas@galdi.cl','iaclaudioferrari@gmail.com','ingridgalvezd@gmail.com','jacquelinegalvezd@gmail.com'];
@@ -359,14 +623,14 @@ const DEFAULTS=[
   {id:10,nombre:'Kuchen de Nuez',cat:'Pasteles & Tartas',tipo:'propio',unidad:'unidad',costo:4000,energia:300,logistica:30,mdo:700,margen:25,combate:''},
   {id:11,nombre:'Banofee',cat:'Pasteles & Tartas',tipo:'propio',unidad:'unidad',costo:3800,energia:200,logistica:30,mdo:700,margen:25,combate:''},
   {id:12,nombre:'Tartaletas',cat:'Pasteles & Tartas',tipo:'propio',unidad:'docena',costo:3000,energia:250,logistica:30,mdo:600,margen:25,combate:''},
-  {id:13,nombre:'Torta 3 Leches',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6000,energia:400,logistica:30,mdo:1200,margen:30,combate:''},
+  {id:13,nombre:'Torta 3 Leches',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6000,energia:350,logistica:750,mdo:1232,margen:22,combate:''},
   {id:14,nombre:'Torta de Chocolate',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6500,energia:400,logistica:30,mdo:1200,margen:30,combate:''},
-  {id:15,nombre:'Torta Moka',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6500,energia:400,logistica:30,mdo:1200,margen:30,combate:''},
-  {id:16,nombre:'Torta Selva Negra',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:7000,energia:400,logistica:30,mdo:1300,margen:30,combate:''},
-  {id:17,nombre:'Torta de Piña',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6000,energia:400,logistica:30,mdo:1100,margen:30,combate:''},
-  {id:18,nombre:'Torta de Hojarasca',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:7500,energia:400,logistica:30,mdo:1500,margen:30,combate:''},
+  {id:15,nombre:'Torta Moka',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6500,energia:350,logistica:750,mdo:1232,margen:22,combate:''},
+  {id:16,nombre:'Torta Selva Negra',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:7000,energia:350,logistica:750,mdo:1232,margen:22,combate:''},
+  {id:17,nombre:'Torta de Piña',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6000,energia:350,logistica:750,mdo:1232,margen:22,combate:''},
+  {id:18,nombre:'Torta de Hojarasca',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:7500,energia:350,logistica:750,mdo:1232,margen:22,combate:''},
   {id:19,nombre:'Torta Panqueque',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:6500,energia:350,logistica:30,mdo:1200,margen:30,combate:''},
-  {id:20,nombre:'Torta Pavé',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:5500,energia:200,logistica:30,mdo:1000,margen:30,combate:''},
+  {id:20,nombre:'Torta Pavé',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:5500,energia:350,logistica:750,mdo:1232,margen:22,combate:''},
   {id:35,nombre:'Torta Amor',cat:'Tortas',tipo:'propio',unidad:'unidad',costo:7500,energia:400,logistica:30,mdo:1500,margen:30,combate:''},
   {id:21,nombre:'Alfajores de Maicena',cat:'Dulces & Alfajores',tipo:'propio',unidad:'docena',costo:2000,energia:150,logistica:30,mdo:400,margen:20,combate:''},
   {id:22,nombre:'Alfajores de Manjar',cat:'Dulces & Alfajores',tipo:'propio',unidad:'docena',costo:2200,energia:150,logistica:30,mdo:400,margen:20,combate:''},
@@ -382,7 +646,6 @@ const DEFAULTS=[
   {id:32,nombre:'Empanada Napolitana',cat:'Empanadas',tipo:'propio',unidad:'docena',costo:4000,energia:350,logistica:30,mdo:550,margen:20,combate:''},
   {id:33,nombre:'Empanada Vegetariana',cat:'Empanadas',tipo:'propio',unidad:'docena',costo:3500,energia:350,logistica:30,mdo:500,margen:20,combate:''},
   {id:34,nombre:'Empanada Queso Camarón',cat:'Empanadas',tipo:'propio',unidad:'docena',costo:5000,energia:350,logistica:30,mdo:650,margen:20,combate:''},
-  {id:35,nombre:'Empanada de Mariscos',cat:'Empanadas',tipo:'propio',unidad:'docena',costo:20000,energia:350,logistica:30,mdo:700,margen:20,combate:''},
 ];
 
 function cpx(p){const cn=p.costo+p.energia+p.logistica+p.mdo;const u=p.tipo==='propio'?cn*(p.margen/100):0;return Math.round((cn+u)*1.19);}
@@ -405,6 +668,10 @@ async function fsLoad() {
         p.energia   = Number(p.energia)  || 0;
         p.logistica = Number(p.logistica)|| 30;
         p.margen    = Number(p.margen)   || 0;
+        p.precioS   = Number(p.precioS)  || 0;
+        p.precioM   = Number(p.precioM)  || 0;
+        p.precioL   = Number(p.precioL)  || 0;
+        p.precioXL  = Number(p.precioXL) || 0;
         return p;
       });
       prods.forEach(p=>{if(!p.precio)p.precio=cpx(p);});
@@ -494,6 +761,1020 @@ window.showTab = (id,el) => {
   if(id==='ventas')renderV();
   if(id==='compras')renderC();
   if(id==='simulador')calcMeta();
+  if(id==='presupuestos'){cargarNumeroPres();cargarHistorialPresupuestos();}
+  if(id==='precios')renderPrecios();
+};
+
+// ── TAB 6: LISTA DE PRECIOS ──────────────────────────────────────────────
+window.renderPrecios = () => {
+  const cats = [...new Set(prods.map(p => p.cat))];
+
+  function calcPrecioTalla(prod, talla) {
+    const saved = prod.costosTalla?.[talla];
+    const fb    = getCostosTalla(prod, talla);
+    if (!saved && !fb) return null;
+    const mat       = saved?.mat       ?? fb?.mat       ?? 0;
+    const mdo       = saved?.mdo       ?? fb?.mdo       ?? prod.mdo;
+    const energia   = saved?.energia   ?? fb?.energia   ?? prod.energia;
+    const logistica = saved?.logistica ?? fb?.logistica ?? prod.logistica;
+    const margen    = saved?.margen    ?? fb?.margen    ?? prod.margen;
+    const cn = mat + mdo + energia + logistica;
+    const u  = prod.tipo === 'propio' ? cn * (margen / 100) : 0;
+    return Math.round((cn + u) * 1.19);
+  }
+
+  let html = '';
+  cats.forEach(cat => {
+    const ps = prods.filter(p => p.cat === cat);
+    if (!ps.length) return;
+
+    html += `
+      <div style="margin-bottom:24px;">
+        <div style="font-weight:600;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;
+                    color:var(--muted);padding:6px 0;border-bottom:1px solid var(--border);
+                    margin-bottom:8px;">${cat}</div>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;">
+              <th style="text-align:left;padding:6px 8px;font-weight:500;">Producto</th>
+              <th style="text-align:left;padding:6px 8px;font-weight:500;">Unidad</th>
+              <th style="text-align:right;padding:6px 8px;font-weight:500;">Precio</th>
+              <th style="text-align:right;padding:6px 8px;font-weight:500;">Talla S</th>
+              <th style="text-align:right;padding:6px 8px;font-weight:500;">Talla M</th>
+              <th style="text-align:right;padding:6px 8px;font-weight:500;">Talla L</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${ps.map((p, i) => {
+              const pS = calcPrecioTalla(p, 'S');
+              const pM = calcPrecioTalla(p, 'M');
+              const pL = calcPrecioTalla(p, 'L');
+              const tieneTallas = pS || pM || pL;
+              return `<tr style="background:${i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.02)'};">
+                <td style="padding:8px;font-size:13px;"><strong>${p.nombre}</strong></td>
+                <td style="padding:8px;font-size:12px;color:var(--muted);">${p.unidad}</td>
+                <td style="padding:8px;font-size:13px;text-align:right;">
+                  ${tieneTallas ? '—' : `<strong>${fmt(p.precio)}</strong>`}
+                </td>
+                <td style="padding:8px;font-size:13px;text-align:right;color:var(--green);">
+                  ${pS ? fmt(pS) : '—'}
+                </td>
+                <td style="padding:8px;font-size:13px;text-align:right;color:var(--green);">
+                  ${pM ? fmt(pM) : '—'}
+                </td>
+                <td style="padding:8px;font-size:13px;text-align:right;color:var(--green);">
+                  ${pL ? fmt(pL) : '—'}
+                </td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  });
+
+  document.getElementById('tabla-precios-container').innerHTML = html;
+};
+
+window.exportarPreciosPDF = () => {
+  const contenido = document.getElementById('tabla-precios-container').innerHTML;
+  const ventana = window.open('', '_blank');
+  ventana.document.write(`
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <title>Lista de Precios — Galdi</title>
+      <style>
+        body { font-family: Arial, sans-serif; padding: 32px; color: #1a0f0a; }
+        h1 { font-size: 20px; margin-bottom: 4px; }
+        p.sub { font-size: 12px; color: #888; margin-bottom: 24px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+        th { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;
+             color: #888; text-align: left; padding: 6px 8px;
+             border-bottom: 2px solid #C9A55A; }
+        td { font-size: 12px; padding: 7px 8px; border-bottom: 1px solid #eee; }
+        td:nth-child(3), td:nth-child(4), td:nth-child(5), td:nth-child(6) { text-align: right; }
+        th:nth-child(3), th:nth-child(4), th:nth-child(5), th:nth-child(6) { text-align: right; }
+        .cat-titulo { font-size: 11px; font-weight: bold; text-transform: uppercase;
+                      letter-spacing: 0.1em; color: #C9A55A; padding: 12px 0 4px;
+                      border-bottom: 1px solid #C9A55A; margin-bottom: 4px; }
+        @media print { body { padding: 16px; } }
+      </style>
+    </head>
+    <body>
+      <h1>Galdi Pastelería Artesanal</h1>
+      <p class="sub">Lista de precios — Generada el ${new Date().toLocaleDateString('es-CL')}</p>
+      ${contenido}
+      <script>window.onload = () => { window.print(); }<\/script>
+    </body>
+    </html>
+  `);
+  ventana.document.close();
+};
+
+window.exportarPreciosExcel = () => {
+  function calcPrecioTalla(prod, talla) {
+    const saved = prod.costosTalla?.[talla];
+    const fb    = getCostosTalla(prod, talla);
+    if (!saved && !fb) return null;
+    const mat       = saved?.mat       ?? fb?.mat       ?? 0;
+    const mdo       = saved?.mdo       ?? fb?.mdo       ?? prod.mdo;
+    const energia   = saved?.energia   ?? fb?.energia   ?? prod.energia;
+    const logistica = saved?.logistica ?? fb?.logistica ?? prod.logistica;
+    const margen    = saved?.margen    ?? fb?.margen    ?? prod.margen;
+    const cn = mat + mdo + energia + logistica;
+    const u  = prod.tipo === 'propio' ? cn * (margen / 100) : 0;
+    return Math.round((cn + u) * 1.19);
+  }
+
+  const cats = [...new Set(prods.map(p => p.cat))];
+  let csv = 'Categoría,Producto,Unidad,Precio,Talla S,Talla M,Talla L\n';
+
+  cats.forEach(cat => {
+    prods.filter(p => p.cat === cat).forEach(p => {
+      const pS = calcPrecioTalla(p, 'S');
+      const pM = calcPrecioTalla(p, 'M');
+      const pL = calcPrecioTalla(p, 'L');
+      const tieneTallas = pS || pM || pL;
+      const precio = tieneTallas ? '' : p.precio;
+      csv += `"${cat}","${p.nombre}","${p.unidad}",${precio},${pS||''},${pM||''},${pL||''}\n`;
+    });
+  });
+
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `galdi-precios-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+// ── TAB 5: PRESUPUESTOS ──────────────────────────────────────────────────
+window.cargarNumeroPres = async () => {
+  const el = document.getElementById('pres-numero');
+  if (!el) return;
+  try {
+    const snap = await getDocs(collection(db, 'galdi_presupuestos'));
+    let maxNum = 76; // default so first = 077
+    snap.docs.forEach(d => {
+      const data = d.data();
+      if (data.numero && typeof data.numero === 'string') {
+        const parsed = parseInt(data.numero.replace('COT-G', ''), 10);
+        if (!isNaN(parsed) && parsed > maxNum) maxNum = parsed;
+      }
+    });
+    const next = String(maxNum + 1).padStart(3, '0');
+    el.value = 'COT-G' + next;
+  } catch (e) {
+    console.error('Error cargando numero presupuesto:', e);
+    el.value = 'COT-G077';
+  }
+};
+
+// ── TAB 5: PRESUPUESTOS — LINE & TOTAL FUNCTIONS ────────────────────────────
+const lineaProds = new Map(); // lineaId → objeto prod, para cálculo de precio por talla
+let presupuestoEditandoId = null;
+
+window.presAgregarLinea = () => {
+  const id = Date.now().toString();
+  const cats = [...new Set(prods.map(p => p.cat || p.categoria))];
+  const catOpts = '<option value="">-- Categoría --</option>' + cats.map(c => '<option value="' + c + '">' + c + '</option>').join('');
+  const div = document.createElement('div');
+  div.className = 'pres-linea';
+  div.setAttribute('data-id', id);
+  div.setAttribute('style', 'display:grid;grid-template-columns:110px 1fr 80px 110px 80px 36px;gap:8px;align-items:center;padding:8px 11px;border-bottom:1px solid var(--border);');
+  div.innerHTML =
+    '<div class="pres-modo-toggle" style="display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:10px;">' +
+      '<button class="pres-modo-btn active" data-modo="catalogo" onclick="presSetModo(this,\'catalogo\')" style="flex:1;padding:5px 4px;border:none;cursor:pointer;background:var(--dark);color:var(--gold);font-family:\'Jost\',sans-serif;font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;">Cat</button>' +
+      '<button class="pres-modo-btn" data-modo="manual" onclick="presSetModo(this,\'manual\')" style="flex:1;padding:5px 4px;border:none;cursor:pointer;background:#fff;color:var(--muted);font-family:\'Jost\',sans-serif;font-size:10px;letter-spacing:.06em;text-transform:uppercase;">Man</button>' +
+    '</div>' +
+    '<div class="pres-desc-wrap" style="display:flex;flex-direction:column;gap:4px;">' +
+      '<select class="pres-cat-sel" onchange="presCargarProductos(this)" style="font-size:12px;">' + catOpts + '</select>' +
+      '<select class="pres-prod-sel" onchange="presAutocompletarPrecio(this)" disabled style="font-size:12px;background:var(--sand);color:var(--muted);cursor:not-allowed;"><option value="">-- Producto --</option></select>' +
+      '<select class="sel-talla-linea" onchange="presTallaChanged(this)" style="display:none;font-size:12px;"><option value="">— Talla —</option><option value="S">S — 8 a 10 p.</option><option value="M">M — 14 a 16 p.</option><option value="L">L — 20 a 22 p.</option><option value="XL" class="opt-xl-pres" style="display:none">XL — 25 p.</option></select>' +
+    '</div>' +
+    '<input type="number" class="pres-cant" min="1" value="1" oninput="presRecalcLinea(this)" style="width:100%;text-align:right;">' +
+    '<input type="number" class="pres-precio" min="0" step="1" placeholder="0" oninput="presRecalcLinea(this)" style="width:100%;text-align:right;">' +
+    '<input type="text" class="pres-subtotal-linea" readonly value="$0" style="width:100%;text-align:right;background:var(--sand);color:var(--brown);cursor:default;">' +
+    '<button class="btn btn-sm btn-red" onclick="presEliminarLinea(this)" style="padding:6px 8px;font-size:13px;line-height:1;">&#10005;</button>';
+  document.getElementById('pres-lineas').appendChild(div);
+  document.getElementById('pres-header-lineas').style.display = 'grid';
+  document.getElementById('pres-empty-lineas').style.display = 'none';
+  const firstSel = div.querySelector('.pres-cat-sel');
+  if (firstSel) firstSel.focus();
+};
+
+window.presEliminarLinea = (btn) => {
+  const row = btn.closest('.pres-linea');
+  lineaProds.delete(row.getAttribute('data-id'));
+  row.remove();
+  const container = document.getElementById('pres-lineas');
+  if (!container.children.length) {
+    document.getElementById('pres-header-lineas').style.display = 'none';
+    document.getElementById('pres-empty-lineas').style.display = '';
+  }
+  presRecalcTotales();
+};
+
+window.presSetModo = (btn, modo) => {
+  const row = btn.closest('.pres-linea');
+  row.querySelectorAll('.pres-modo-btn').forEach(b => {
+    b.classList.remove('active');
+    b.style.background = '#fff';
+    b.style.color = 'var(--muted)';
+    b.style.fontWeight = '400';
+  });
+  btn.classList.add('active');
+  btn.style.background = 'var(--dark)';
+  btn.style.color = 'var(--gold)';
+  btn.style.fontWeight = '600';
+  const wrap = row.querySelector('.pres-desc-wrap');
+  if (modo === 'catalogo') {
+    const cats = [...new Set(prods.map(p => p.cat || p.categoria))];
+    const catOpts = '<option value="">-- Categoría --</option>' + cats.map(c => '<option value="' + c + '">' + c + '</option>').join('');
+    wrap.style.display = 'flex';
+    wrap.style.flexDirection = 'column';
+    wrap.style.gap = '4px';
+    wrap.innerHTML =
+      '<select class="pres-cat-sel" onchange="presCargarProductos(this)" style="font-size:12px;">' + catOpts + '</select>' +
+      '<select class="pres-prod-sel" onchange="presAutocompletarPrecio(this)" disabled style="font-size:12px;background:var(--sand);color:var(--muted);cursor:not-allowed;"><option value="">-- Producto --</option></select>' +
+      '<select class="sel-talla-linea" onchange="presTallaChanged(this)" style="display:none;font-size:12px;"><option value="">— Talla —</option><option value="S">S — 8 a 10 p.</option><option value="M">M — 14 a 16 p.</option><option value="L">L — 20 a 22 p.</option><option value="XL" class="opt-xl-pres" style="display:none">XL — 25 p.</option></select>';
+  } else {
+    wrap.style.display = '';
+    wrap.style.flexDirection = '';
+    wrap.style.gap = '';
+    wrap.innerHTML = '<input type="text" class="pres-desc-manual" placeholder="Descripción del ítem" style="width:100%;font-size:13px;">';
+  }
+  const precioInput = row.querySelector('.pres-precio');
+  precioInput.value = '';
+  precioInput.readOnly = false;
+  precioInput.style.background = '';
+  precioInput.style.cursor = '';
+  row.querySelector('.pres-subtotal-linea').value = '$0';
+  presRecalcTotales();
+};
+
+window.presCargarProductos = (catSel) => {
+  const cat = catSel.value;
+  const wrap = catSel.closest('.pres-desc-wrap');
+  const prodSel = wrap.querySelector('.pres-prod-sel');
+  const tallaEl = wrap.querySelector('.sel-talla-linea');
+  const esTortaOPastel = (cat === 'Tortas' || cat === 'Pasteles & Tartas');
+  // Mostrar/ocultar talla al elegir categoría
+  if (tallaEl) {
+    tallaEl.style.display = esTortaOPastel ? '' : 'none';
+    tallaEl.value = '';
+    tallaEl.setAttribute('data-cat', cat);
+  }
+  if (!cat) {
+    prodSel.innerHTML = '<option value="">-- Producto --</option>';
+    prodSel.disabled = true;
+    prodSel.style.background = 'var(--sand)';
+    prodSel.style.color = 'var(--muted)';
+    prodSel.style.cursor = 'not-allowed';
+    return;
+  }
+  const filtrados = prods.filter(p => (p.cat || p.categoria) === cat);
+  prodSel.innerHTML = '<option value="">-- Producto --</option>' +
+    filtrados.map(p => '<option value="' + cpx(p) + '" data-cat="' + cat + '" data-original-nombre="' + p.nombre + '">' + p.nombre + '</option>').join('');
+  prodSel.disabled = false;
+  prodSel.style.background = '';
+  prodSel.style.color = '';
+  prodSel.style.cursor = '';
+};
+
+window.presAutocompletarPrecio = (prodSel) => {
+  const precio = prodSel.value;
+  const row = prodSel.closest('.pres-linea');
+  const lineaId = row.getAttribute('data-id');
+  const precioInput = row.querySelector('.pres-precio');
+  // Guardar referencia al producto para que presTallaChanged pueda recalcular
+  const selectedOpt = prodSel.options[prodSel.selectedIndex];
+  const nombreProd = selectedOpt?.getAttribute('data-original-nombre');
+  const cat = selectedOpt?.getAttribute('data-cat');
+  const prod = (nombreProd && cat)
+    ? prods.find(p => p.nombre === nombreProd && (p.cat || p.categoria) === cat)
+    : null;
+  if (prod) lineaProds.set(lineaId, prod);
+  else lineaProds.delete(lineaId);
+  const tallaEl = prodSel.closest('.pres-desc-wrap')?.querySelector('.sel-talla-linea');
+  const optXLpres = tallaEl?.querySelector('.opt-xl-pres');
+  if(optXLpres) optXLpres.style.display = prod?.nombre === 'Torta Panqueque' ? '' : 'none';
+  if (precio) {
+    precioInput.value = precio;
+    precioInput.readOnly = true;
+    precioInput.style.background = '#f0f0f0';
+    precioInput.style.cursor = 'not-allowed';
+  } else {
+    precioInput.value = '';
+    precioInput.readOnly = false;
+    precioInput.style.background = '';
+    precioInput.style.cursor = '';
+  }
+  presRecalcLinea(precioInput);
+};
+
+window.presTallaChanged = (tallaEl) => {
+  const cat = tallaEl.getAttribute('data-cat');
+  const talla = tallaEl.value;
+  const row = tallaEl.closest('.pres-linea');
+  const lineaId = row.getAttribute('data-id');
+  const precioInput = row.querySelector('.pres-precio');
+  const prod = lineaProds.get(lineaId);
+  if (prod && talla) {
+    const saved = prod.costosTalla?.[talla];
+    const esPanquequeXL = prod.nombre === 'Torta Panqueque' && talla === 'XL' && !saved?.mat;
+    const pxl = esPanquequeXL ? PANQUEQUE_XL : null;
+    const fb = pxl ? pxl : getCostosTalla(prod, talla);
+    if(pxl || saved || fb) {
+      const mat      = pxl ? pxl.mat      : (saved?.mat      ?? fb?.mat      ?? 0);
+      const mdo      = pxl ? pxl.mdo      : (saved?.mdo      ?? fb?.mdo      ?? prod.mdo);
+      const energia  = pxl ? pxl.energia  : (saved?.energia  ?? fb?.energia  ?? prod.energia);
+      const logistica= pxl ? pxl.logistica: (saved?.logistica ?? fb?.logistica ?? prod.logistica);
+      const margen   = pxl ? pxl.margen   : (saved?.margen   ?? fb?.margen   ?? prod.margen);
+      const cn = mat + mdo + energia + logistica;
+      const u = prod.tipo === 'propio' ? cn * (margen / 100) : 0;
+      const pf = Math.round((cn + u) * 1.19);
+      precioInput.removeAttribute('readonly');
+      precioInput.value = pf;
+      precioInput.setAttribute('readonly', '');
+      precioInput.style.background = '#f0f0f0';
+      precioInput.style.cursor = 'not-allowed';
+    }
+  }
+  // Sin talla o sin prod → mantener precio base de cpx(p)
+  presRecalcLinea(precioInput);
+};
+
+window.presRecalcLinea = (inputEl) => {
+  const row = inputEl.closest('.pres-linea');
+  const cant = parseFloat(row.querySelector('.pres-cant').value) || 0;
+  const precio = parseFloat(row.querySelector('.pres-precio').value) || 0;
+  const sub = cant * precio;
+  row.querySelector('.pres-subtotal-linea').value = fmt(sub);
+  presRecalcTotales();
+};
+
+window.presRecalcTotales = () => {
+  let subtotal = 0;
+  document.querySelectorAll('.pres-linea').forEach(row => {
+    const cant = parseFloat(row.querySelector('.pres-cant').value) || 0;
+    const precio = parseFloat(row.querySelector('.pres-precio').value) || 0;
+    subtotal += cant * precio;
+  });
+  const descValor = parseFloat(document.getElementById('pres-desc-valor').value) || 0;
+  const esPct = document.getElementById('pres-desc-tipo-pct').classList.contains('active');
+  let descuento = 0;
+  if (esPct) {
+    descuento = subtotal * (descValor / 100);
+  } else {
+    descuento = descValor;
+  }
+  descuento = Math.min(Math.max(descuento, 0), subtotal);
+  const total = subtotal - descuento;
+  document.getElementById('pres-val-subtotal').textContent = fmt(subtotal);
+  document.getElementById('pres-val-descuento').textContent = '−' + fmt(descuento);
+  document.getElementById('pres-val-total').textContent = fmt(total);
+  document.getElementById('pres-row-descuento').style.display = descuento > 0 ? '' : 'none';
+};
+
+window.presSetDescTipo = (tipo) => {
+  const btnPct = document.getElementById('pres-desc-tipo-pct');
+  const btnFijo = document.getElementById('pres-desc-tipo-fijo');
+  const simbolo = document.getElementById('pres-desc-simbolo');
+  const input = document.getElementById('pres-desc-valor');
+  if (tipo === 'pct') {
+    btnPct.classList.add('active');
+    btnPct.style.background = 'var(--dark)';
+    btnPct.style.color = 'var(--gold)';
+    btnPct.style.fontWeight = '600';
+    btnFijo.classList.remove('active');
+    btnFijo.style.background = '#fff';
+    btnFijo.style.color = 'var(--muted)';
+    btnFijo.style.fontWeight = '';
+    simbolo.textContent = '%';
+    input.setAttribute('max', '100');
+  } else {
+    btnFijo.classList.add('active');
+    btnFijo.style.background = 'var(--dark)';
+    btnFijo.style.color = 'var(--gold)';
+    btnFijo.style.fontWeight = '600';
+    btnPct.classList.remove('active');
+    btnPct.style.background = '#fff';
+    btnPct.style.color = 'var(--muted)';
+    btnPct.style.fontWeight = '';
+    simbolo.textContent = '$';
+    input.removeAttribute('max');
+  }
+  input.value = 0;
+  presRecalcTotales();
+};
+
+window.guardarPresupuesto = async () => {
+  // Validaciones
+  const cliente = document.getElementById('pres-nombre')?.value.trim();
+  if (!cliente) { alert('Ingresa el nombre del cliente antes de generar el presupuesto.'); return; }
+  const lineas = document.querySelectorAll('.pres-linea');
+  if (!lineas.length) { alert('Agrega al menos un ítem al presupuesto.'); return; }
+  const _telVal = document.getElementById('pres-telefono')?.value.trim() || '';
+  if (_telVal) {
+    const _telDigits = _telVal.replace(/[\s\-]/g, '');
+    if (!/^\d{8,9}$/.test(_telDigits)) { alert('El teléfono debe tener 8 o 9 dígitos'); return; }
+  }
+  const _emailVal = document.getElementById('pres-email')?.value.trim() || '';
+  if (_emailVal) {
+    const _at = _emailVal.indexOf('@');
+    if (_at < 0 || !_emailVal.slice(_at + 1).includes('.')) { alert('Ingresa un email válido (ej: nombre@gmail.com)'); return; }
+  }
+
+  // Leer ítems
+  const items = [];
+  for (const row of lineas) {
+    const cant = parseFloat(row.querySelector('.pres-cant')?.value) || 0;
+    const precioUnit = parseFloat(row.querySelector('.pres-precio')?.value) || 0;
+    const descManual = row.querySelector('.pres-desc-manual');
+    const prodSel = row.querySelector('.pres-prod-sel');
+    let descripcion = '';
+    if (descManual) {
+      descripcion = descManual.value.trim() || 'Sin descripción';
+    } else if (prodSel) {
+      const opt = prodSel.options[prodSel.selectedIndex];
+      const nombreBase = opt?.getAttribute('data-original-nombre') || opt?.text?.split(' — ')[0] || 'Producto';
+      const tallaLinea = row.querySelector('.sel-talla-linea');
+      const tallaVal = tallaLinea && tallaLinea.style.display !== 'none' ? tallaLinea.value : '';
+      descripcion = tallaVal ? `${nombreBase} (talla ${tallaVal})` : nombreBase;
+    }
+    items.push({ descripcion, cantidad: cant, precioUnit, subtotalLinea: cant * precioUnit });
+  }
+
+  // Calcular totales
+  const subtotal = items.reduce((a, i) => a + i.subtotalLinea, 0);
+  const descValor = parseFloat(document.getElementById('pres-desc-valor')?.value) || 0;
+  const esPct = document.getElementById('pres-desc-tipo-pct')?.classList.contains('active');
+  let descuento = esPct ? subtotal * (descValor / 100) : descValor;
+  descuento = Math.min(Math.max(descuento, 0), subtotal);
+  const total = subtotal - descuento;
+  const iva = Math.round(total / 1.19 * 0.19);
+
+  // Construir documento
+  const presupuesto = {
+    numero:       document.getElementById('pres-numero')?.value || '',
+    cliente,
+    telefono:     document.getElementById('pres-telefono')?.value.trim() || '',
+    email:        document.getElementById('pres-email')?.value.trim() || '',
+    direccion:    document.getElementById('pres-direccion')?.value.trim() || '',
+    comuna:       document.getElementById('pres-comuna')?.value.trim() || '',
+    fechaEvento:  document.getElementById('pres-fecha-evento')?.value || '',
+    tipoEvento:   document.getElementById('pres-tipo-evento')?.value || '',
+    observaciones: document.getElementById('pres-obs')?.value.trim() || '',
+    validoHasta:  document.getElementById('pres-valido-hasta')?.value || '',
+    formaPago:    document.getElementById('pres-forma-pago')?.value || '',
+    descuentoTipo: esPct ? 'porcentaje' : 'fijo',
+    descuentoValor: descValor,
+    items,
+    subtotal,
+    descuento,
+    iva,
+    total,
+  };
+
+  // Guardar en Firestore
+  const fueEdicion = !!presupuestoEditandoId;
+  try {
+    if (presupuestoEditandoId) {
+      const { numero: _numIgnorado, ...camposActualizables } = presupuesto;
+      await updateDoc(doc(db, 'galdi_presupuestos', presupuestoEditandoId), camposActualizables);
+    } else {
+      presupuesto.creadoEn = serverTimestamp();
+      presupuesto.token = Math.random().toString(36).substring(2,10) + Math.random().toString(36).substring(2,10);
+      await addDoc(collection(db, 'galdi_presupuestos'), presupuesto);
+    }
+  } catch (e) {
+    console.error('Error guardando presupuesto:', e);
+    alert('Error al guardar el presupuesto. Intenta nuevamente.');
+    return;
+  }
+
+  alert('✓ Presupuesto ' + presupuesto.numero + (fueEdicion ? ' actualizado' : ' guardado') + ' correctamente.');
+
+  // Reset estado edición
+  presupuestoEditandoId = null;
+  const btnGuardar = document.getElementById('btn-guardar-presupuesto');
+  if (btnGuardar) btnGuardar.textContent = 'Generar presupuesto';
+  const btnCancelarEd = document.getElementById('btn-cancelar-edicion');
+  if (btnCancelarEd) btnCancelarEd.style.display = 'none';
+
+  // Limpiar formulario
+  ['pres-nombre','pres-telefono','pres-email','pres-obs','pres-valido-hasta'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  ['pres-fecha-evento','pres-tipo-evento','pres-forma-pago'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('pres-desc-valor').value = 0;
+  presSetDescTipo('pct');
+  document.getElementById('pres-lineas').innerHTML = '';
+  document.getElementById('pres-header-lineas').style.display = 'none';
+  document.getElementById('pres-empty-lineas').style.display = '';
+  presRecalcTotales();
+  await cargarNumeroPres();
+};
+
+window.editarPresupuesto = async (docId) => {
+  try {
+    const snap = await getDoc(doc(db, 'galdi_presupuestos', docId));
+    if (!snap.exists()) { alert('No se encontró el presupuesto.'); return; }
+    const data = snap.data();
+
+    // Campos de texto
+    document.getElementById('pres-numero').value    = data.numero        || '';
+    document.getElementById('pres-nombre').value    = data.cliente       || '';
+    document.getElementById('pres-telefono').value  = data.telefono      || '';
+    document.getElementById('pres-email').value     = data.email         || '';
+    document.getElementById('pres-direccion').value = data.direccion     || '';
+    document.getElementById('pres-obs').value       = data.observaciones || '';
+    document.getElementById('pres-valido-hasta').value  = data.validoHasta  || '';
+    document.getElementById('pres-fecha-evento').value  = data.fechaEvento  || '';
+
+    // Selects
+    const comunaEl = document.getElementById('pres-comuna');
+    if (comunaEl) comunaEl.value = data.comuna || '';
+    const tipoEl = document.getElementById('pres-tipo-evento');
+    if (tipoEl) tipoEl.value = data.tipoEvento || '';
+    const pagoEl = document.getElementById('pres-forma-pago');
+    if (pagoEl) pagoEl.value = data.formaPago || '';
+
+    // Descuento (presSetDescTipo resetea el valor, asignar después)
+    presSetDescTipo(data.descuentoTipo === 'fijo' ? 'fijo' : 'pct');
+    document.getElementById('pres-desc-valor').value = data.descuentoValor || 0;
+
+    // Items — reconstruir en modo manual
+    const container = document.getElementById('pres-lineas');
+    container.innerHTML = '';
+    const items = Array.isArray(data.items) ? data.items : [];
+    if (!items.length) {
+      document.getElementById('pres-header-lineas').style.display = 'none';
+      document.getElementById('pres-empty-lineas').style.display  = '';
+    } else {
+      items.forEach(item => {
+        presAgregarLinea();
+        const rows = container.querySelectorAll('.pres-linea');
+        const row  = rows[rows.length - 1];
+        const btnManual = row.querySelector('.pres-modo-btn[data-modo="manual"]');
+        if (btnManual) presSetModo(btnManual, 'manual');
+        const descInput = row.querySelector('.pres-desc-manual');
+        if (descInput) descInput.value = item.descripcion || '';
+        const cantInput = row.querySelector('.pres-cant');
+        if (cantInput) cantInput.value = item.cantidad || 1;
+        const precioInput = row.querySelector('.pres-precio');
+        if (precioInput) {
+          precioInput.value = item.precioUnit || 0;
+          presRecalcLinea(precioInput);
+        }
+      });
+    }
+    presRecalcTotales();
+
+    // Estado edición
+    presupuestoEditandoId = docId;
+    const btnGuardar = document.getElementById('btn-guardar-presupuesto');
+    if (btnGuardar) btnGuardar.textContent = 'Actualizar Presupuesto';
+    const btnCancelar = document.getElementById('btn-cancelar-edicion');
+    if (btnCancelar) btnCancelar.style.display = '';
+
+    // Scroll al formulario
+    document.getElementById('tab-presupuestos').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (e) {
+    console.error('Error cargando presupuesto para edición:', e);
+    alert('Error al cargar el presupuesto. Intenta nuevamente.');
+  }
+};
+
+window.cancelarEdicionPresupuesto = () => {
+  presupuestoEditandoId = null;
+  const btnGuardar = document.getElementById('btn-guardar-presupuesto');
+  if (btnGuardar) btnGuardar.textContent = 'Generar presupuesto';
+  const btnCancelar = document.getElementById('btn-cancelar-edicion');
+  if (btnCancelar) btnCancelar.style.display = 'none';
+  // Limpiar formulario
+  ['pres-nombre','pres-telefono','pres-email','pres-obs','pres-valido-hasta','pres-direccion'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  ['pres-fecha-evento','pres-tipo-evento','pres-forma-pago','pres-comuna'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('pres-desc-valor').value = 0;
+  presSetDescTipo('pct');
+  document.getElementById('pres-lineas').innerHTML = '';
+  document.getElementById('pres-header-lineas').style.display = 'none';
+  document.getElementById('pres-empty-lineas').style.display  = '';
+  presRecalcTotales();
+};
+
+window.vistaPreviaPresupuesto = () => {
+  // Validaciones
+  const cliente = document.getElementById('pres-nombre')?.value.trim();
+  if (!cliente) { alert('Ingresa el nombre del cliente antes de generar la vista previa.'); return; }
+  const lineas = document.querySelectorAll('.pres-linea');
+  if (!lineas.length) { alert('Agrega al menos un ítem al presupuesto.'); return; }
+  const _telVal = document.getElementById('pres-telefono')?.value.trim() || '';
+  if (_telVal) {
+    const _telDigits = _telVal.replace(/[\s\-]/g, '');
+    if (!/^\d{8,9}$/.test(_telDigits)) { alert('El teléfono debe tener 8 o 9 dígitos'); return; }
+  }
+  const _emailVal = document.getElementById('pres-email')?.value.trim() || '';
+  if (_emailVal) {
+    const _at = _emailVal.indexOf('@');
+    if (_at < 0 || !_emailVal.slice(_at + 1).includes('.')) { alert('Ingresa un email válido (ej: nombre@gmail.com)'); return; }
+  }
+
+  // Leer campos
+  const numero      = document.getElementById('pres-numero')?.value || '';
+  const telefono    = document.getElementById('pres-telefono')?.value.trim() || '';
+  const email       = document.getElementById('pres-email')?.value.trim() || '';
+  const direccion   = document.getElementById('pres-direccion')?.value.trim() || '';
+  const comuna      = document.getElementById('pres-comuna')?.value.trim() || '';
+  const fechaEvento = document.getElementById('pres-fecha-evento')?.value || '';
+  const tipoEvento  = document.getElementById('pres-tipo-evento')?.value || '';
+  const obs         = document.getElementById('pres-obs')?.value.trim() || '';
+  const validoHasta = document.getElementById('pres-valido-hasta')?.value || '';
+  const formaPago   = document.getElementById('pres-forma-pago')?.value || '';
+  const hoy         = new Date().toLocaleDateString('es-CL', {day:'2-digit',month:'2-digit',year:'numeric'});
+
+  const fmtFecha = v => {
+    if (!v) return '—';
+    const [y,m,d] = v.split('-');
+    return d + '/' + m + '/' + y;
+  };
+
+  const fmtNum = n => '$' + Math.round(n).toLocaleString('es-CL');
+
+  // Leer ítems
+  const items = [];
+  for (const row of lineas) {
+    const cant = parseFloat(row.querySelector('.pres-cant')?.value) || 0;
+    const precioUnit = parseFloat(row.querySelector('.pres-precio')?.value) || 0;
+    const descManual = row.querySelector('.pres-desc-manual');
+    const prodSel = row.querySelector('.pres-prod-sel');
+    let descripcion = '';
+    if (descManual) {
+      descripcion = descManual.value.trim() || 'Sin descripción';
+    } else if (prodSel) {
+      const opt = prodSel.options[prodSel.selectedIndex];
+      const nombreBase = opt?.getAttribute('data-original-nombre') || opt?.text?.split(' — ')[0] || 'Producto';
+      const tallaLinea = row.querySelector('.sel-talla-linea');
+      const tallaVal = tallaLinea && tallaLinea.style.display !== 'none' ? tallaLinea.value : '';
+      descripcion = tallaVal ? `${nombreBase} (talla ${tallaVal})` : nombreBase;
+    }
+    items.push({ descripcion, cantidad: cant, precioUnit, subtotalLinea: cant * precioUnit });
+  }
+
+  // Calcular totales
+  const subtotal = items.reduce((a, i) => a + i.subtotalLinea, 0);
+  const descValor = parseFloat(document.getElementById('pres-desc-valor')?.value) || 0;
+  const esPct = document.getElementById('pres-desc-tipo-pct')?.classList.contains('active');
+  let descuento = esPct ? subtotal * (descValor / 100) : descValor;
+  descuento = Math.min(Math.max(descuento, 0), subtotal);
+  const total = subtotal - descuento;
+  const iva = Math.round(total / 1.19 * 0.19);
+  const neto = total - iva;
+
+  // Filas de ítems
+  const filasItems = items.map((it, i) => `
+    <tr style="background:${i % 2 === 0 ? '#fdf8f2' : '#fff'};">
+      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;">${it.descripcion}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:center;">${it.cantidad}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:right;">${fmtNum(it.precioUnit)}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
+    </tr>`).join('');
+
+  // Fila descuento (solo si aplica)
+  const filaDescuento = descuento > 0 ? `
+    <tr>
+      <td colspan="3" style="padding:7px 12px;text-align:right;color:#888;">Descuento${esPct ? ' (' + descValor + '%)' : ''}:</td>
+      <td style="padding:7px 12px;text-align:right;color:#c0392b;">− ${fmtNum(descuento)}</td>
+    </tr>` : '';
+
+  // Teléfono sin prefijo +56
+  const fmtTel = t => t ? t.replace(/^\+?56\s*/, '') : '';
+
+  // Filas info cliente extra
+  const extraCliente = [
+    telefono  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${fmtTel(telefono)}</td></tr>` : '',
+    email     ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${email}</td></tr>` : '',
+    direccion ? `<tr><td style="color:#888;padding:2px 0;">Dirección</td><td style="padding:2px 0;">${direccion}</td></tr>` : '',
+    comuna    ? `<tr><td style="color:#888;padding:2px 0;">Comuna</td><td style="padding:2px 0;">${comuna}</td></tr>` : '',
+  ].join('');
+
+  // Filas datos del evento
+  const extraEvento = [
+    tipoEvento  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Tipo de evento</td><td style="padding:2px 0;">${tipoEvento.charAt(0).toUpperCase()+tipoEvento.slice(1)}</td></tr>` : '',
+    fechaEvento ? `<tr><td style="color:#888;padding:2px 0;">Fecha del evento</td><td style="padding:2px 0;">${fmtFecha(fechaEvento)}</td></tr>` : '',
+  ].join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Presupuesto ${numero} — Galdi Pastelería</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:Arial,sans-serif; font-size:13px; color:#3D1F0A; background:#fff; padding:32px 40px; max-width:800px; margin:auto; position:relative; }
+    @media print { body { padding:12px 20px; } .no-print { display:none; } }
+  </style>
+</head>
+<body>
+
+  <!-- Encabezado -->
+  <table style="width:100%;margin-bottom:28px;">
+    <tr>
+      <td style="vertical-align:middle;">
+        <img src="https://galdi.cl/images/logo-ancho.webp" alt="Galdi" style="height:50px;">
+        <div style="font-size:12px;color:#3D1F0A;font-weight:600;margin-top:2px;">Pastelería Artesanal</div>
+        <div style="font-size:11px;color:#888;margin-top:6px;">RUT 78.378.827-6</div>
+        <div style="font-size:11px;color:#888;">galdi.cl · ventas@galdi.cl · +56 9 9099 1011</div>
+      </td>
+      <td style="text-align:right;vertical-align:top;">
+        <div style="background:#C9A55A;color:#fff;display:inline-block;padding:6px 18px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:0.1em;margin-bottom:6px;">PRESUPUESTO</div>
+        <div style="font-size:18px;font-weight:700;color:#3D1F0A;">${numero}</div>
+        <div style="font-size:11px;color:#888;margin-top:4px;">Fecha de emisión: ${hoy}</div>
+        ${validoHasta ? `<div style="font-size:11px;color:#888;">Válido hasta: ${fmtFecha(validoHasta)}</div>` : ''}
+        ${formaPago ? `<div style="font-size:11px;color:#888;margin-top:2px;">Pago: ${formaPago.charAt(0).toUpperCase()+formaPago.slice(1)}</div>` : ''}
+      </td>
+    </tr>
+  </table>
+
+  <!-- Divider -->
+  <div style="border-top:2px solid #C9A55A;margin-bottom:24px;"></div>
+
+  <!-- Datos cliente -->
+  <div style="background:#fdf8f2;border:1px solid #ede3d4;border-radius:6px;padding:14px 18px;margin-bottom:24px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#C9A55A;margin-bottom:8px;">Datos del Cliente</div>
+    <table style="font-size:13px;">
+      <tr><td style="color:#888;padding:2px 0;width:130px;">Nombre</td><td style="padding:2px 0;font-weight:600;">${cliente}</td></tr>
+      ${extraCliente}
+    </table>
+  </div>
+
+  <!-- Datos del evento -->
+  ${extraEvento ? `<div style="background:#fdf8f2;border:1px solid #ede3d4;border-radius:6px;padding:14px 18px;margin-bottom:24px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#C9A55A;margin-bottom:8px;">Datos del Evento</div>
+    <table style="font-size:13px;">${extraEvento}</table>
+  </div>` : ''}
+
+  <!-- Tabla de ítems -->
+  <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+    <thead>
+      <tr style="background:#3D1F0A;color:#fff;">
+        <th style="padding:10px 12px;text-align:left;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Descripción</th>
+        <th style="padding:10px 12px;text-align:center;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;width:70px;">Cant.</th>
+        <th style="padding:10px 12px;text-align:right;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;width:120px;">Precio unit.</th>
+        <th style="padding:10px 12px;text-align:right;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;width:120px;">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>${filasItems}</tbody>
+  </table>
+
+  <!-- Totales -->
+  <table style="width:100%;margin-bottom:24px;">
+    <tr>
+      <td style="width:60%"></td>
+      <td style="width:40%;">
+        <table style="width:100%;font-size:13px;border-top:1px solid #ede3d4;padding-top:8px;">
+          <tr>
+            <td style="padding:5px 12px;color:#888;">Neto (sin IVA):</td>
+            <td style="padding:5px 12px;text-align:right;">${fmtNum(neto)}</td>
+          </tr>
+          ${filaDescuento}
+          <tr>
+            <td style="padding:5px 12px;color:#888;">IVA (19%):</td>
+            <td style="padding:5px 12px;text-align:right;">${fmtNum(iva)}</td>
+          </tr>
+          <tr style="background:#3D1F0A;color:#fff;">
+            <td style="padding:10px 12px;font-weight:700;font-size:14px;border-radius:4px 0 0 4px;">TOTAL</td>
+            <td style="padding:10px 12px;text-align:right;font-weight:700;font-size:14px;border-radius:0 4px 4px 0;">${fmtNum(total)}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Observaciones -->
+  ${obs ? `<div style="border:1px solid #ede3d4;border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#666;"><strong style="color:#3D1F0A;">Observaciones:</strong> ${obs}</div>` : ''}
+
+  <!-- Pie -->
+  <div style="border-top:1px solid #ede3d4;padding-top:14px;font-size:11px;color:#aaa;text-align:center;">
+    ${validoHasta ? 'Presupuesto válido hasta el ' + fmtFecha(validoHasta) + '.' : 'Presupuesto sujeto a disponibilidad.'}
+    · Galdi Pastelería Artesanal · RUT 78.378.827-6 · Maipú, Santiago de Chile
+  </div>
+
+
+  <!-- Botón imprimir (no se imprime) -->
+  <div class="no-print" style="text-align:center;margin-top:16px;">
+    <button onclick="window.print()" style="background:#C9A55A;color:#fff;border:none;padding:10px 28px;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;">🖨️ Imprimir / Guardar PDF</button>
+  </div>
+
+  <script>window.onload = () => { window.print(); };<\/script>
+</body>
+</html>`;
+
+  const win = window.open('', '_blank', 'width=900,height=700,scrollbars=yes');
+  if (!win) { alert('El navegador bloqueó la ventana emergente. Permite pop-ups para este sitio.'); return; }
+  win.document.write(html);
+  win.document.close();
+};
+
+window.cargarHistorialPresupuestos = async () => {
+  const tbody = document.getElementById('tb-historial-pres-body');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">Cargando...</td></tr>';
+  try {
+    const q = query(collection(db, 'galdi_presupuestos'), orderBy('creadoEn', 'desc'));
+    const snap = await getDocs(q);
+    const docs = snap.docs.slice(0, 20);
+    if (!docs.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">Sin presupuestos guardados.</td></tr>';
+      return;
+    }
+    const fmtNum = n => '$' + Math.round(n || 0).toLocaleString('es-CL');
+    const fmtTs = ts => {
+      if (!ts) return '—';
+      const d = ts.toDate ? ts.toDate() : new Date(ts);
+      return d.toLocaleDateString('es-CL', {day:'2-digit', month:'2-digit', year:'numeric'});
+    };
+    tbody.innerHTML = docs.map(d => {
+      const data = d.data();
+      return `<tr>
+        <td><strong style="color:var(--gold2);">${data.numero || '—'}</strong></td>
+        <td>${data.cliente || '—'}</td>
+        <td><strong>${fmtNum(data.total)}</strong></td>
+        <td>${fmtTs(data.creadoEn)}</td>
+        <td><button class="btn btn-sm btn-gray" onclick="vistaPreviaDesdeHistorial('${d.id}')">🖨️ Reimprimir</button> <button class="btn btn-sm" onclick="editarPresupuesto('${d.id}')">✏️ Editar</button></td>
+      </tr>`;
+    }).join('');
+    // guardar los docs en memoria para acceso rápido desde vistaPreviaDesdeHistorial
+    window._historialPres = {};
+    docs.forEach(d => { window._historialPres[d.id] = d.data(); });
+  } catch (e) {
+    console.error('Error cargando historial:', e);
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">Error al cargar historial.</td></tr>';
+  }
+};
+
+window.vistaPreviaDesdeHistorial = (docId) => {
+  const data = window._historialPres?.[docId];
+  if (!data) { alert('No se encontraron datos para este presupuesto.'); return; }
+
+  const fmtNum = n => '$' + Math.round(n || 0).toLocaleString('es-CL');
+  const fmtFecha = v => {
+    if (!v) return '—';
+    if (v.toDate) {
+      const d = v.toDate();
+      return d.toLocaleDateString('es-CL', {day:'2-digit', month:'2-digit', year:'numeric'});
+    }
+    const [y,m,d] = v.split('-');
+    return (d||'') + '/' + (m||'') + '/' + (y||'');
+  };
+  const hoy = new Date().toLocaleDateString('es-CL', {day:'2-digit',month:'2-digit',year:'numeric'});
+
+  const items = Array.isArray(data.items) ? data.items : [];
+  const subtotal = data.subtotal || 0;
+  const descuento = data.descuento || 0;
+  const total = data.total || 0;
+  const iva = data.iva || Math.round(total / 1.19 * 0.19);
+  const neto = total - iva;
+
+  const filasItems = items.map((it, i) => `
+    <tr style="background:${i % 2 === 0 ? '#fdf8f2' : '#fff'};">
+      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;">${it.descripcion || '—'}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:center;">${it.cantidad}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:right;">${fmtNum(it.precioUnit)}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
+    </tr>`).join('');
+
+  const filaDescuento = descuento > 0 ? `
+    <tr>
+      <td colspan="3" style="padding:7px 12px;text-align:right;color:#888;">Descuento${data.descuentoTipo==='porcentaje' ? ' (' + data.descuentoValor + '%)' : ''}:</td>
+      <td style="padding:7px 12px;text-align:right;color:#c0392b;">− ${fmtNum(descuento)}</td>
+    </tr>` : '';
+
+  const fmtTel = t => t ? t.replace(/^\+?56\s*/, '') : '';
+
+  const extraCliente = [
+    data.telefono  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${fmtTel(data.telefono)}</td></tr>` : '',
+    data.email     ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${data.email}</td></tr>` : '',
+    data.direccion ? `<tr><td style="color:#888;padding:2px 0;">Dirección</td><td style="padding:2px 0;">${data.direccion}</td></tr>` : '',
+    data.comuna    ? `<tr><td style="color:#888;padding:2px 0;">Comuna</td><td style="padding:2px 0;">${data.comuna}</td></tr>` : '',
+  ].join('');
+
+  const extraEvento = [
+    data.tipoEvento  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Tipo de evento</td><td style="padding:2px 0;">${data.tipoEvento.charAt(0).toUpperCase()+data.tipoEvento.slice(1)}</td></tr>` : '',
+    data.fechaEvento ? `<tr><td style="color:#888;padding:2px 0;">Fecha del evento</td><td style="padding:2px 0;">${fmtFecha(data.fechaEvento)}</td></tr>` : '',
+  ].join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Presupuesto ${data.numero} — Galdi Pastelería</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:Arial,sans-serif; font-size:13px; color:#3D1F0A; background:#fff; padding:32px 40px; max-width:800px; margin:auto; position:relative; }
+    @media print { body { padding:12px 20px; } .no-print { display:none; } }
+  </style>
+</head>
+<body>
+
+  <table style="width:100%;margin-bottom:28px;">
+    <tr>
+      <td style="vertical-align:middle;">
+        <img src="https://galdi.cl/images/logo-ancho.webp" alt="Galdi" style="height:50px;">
+        <div style="font-size:12px;color:#3D1F0A;font-weight:600;margin-top:2px;">Pastelería Artesanal</div>
+        <div style="font-size:11px;color:#888;margin-top:6px;">RUT 78.378.827-6</div>
+        <div style="font-size:11px;color:#888;">galdi.cl · ventas@galdi.cl · +56 9 9099 1011</div>
+      </td>
+      <td style="text-align:right;vertical-align:top;">
+        <div style="background:#C9A55A;color:#fff;display:inline-block;padding:6px 18px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:0.1em;margin-bottom:6px;">PRESUPUESTO</div>
+        <div style="font-size:18px;font-weight:700;color:#3D1F0A;">${data.numero}</div>
+        <div style="font-size:11px;color:#888;margin-top:4px;">Fecha de emisión: ${hoy}</div>
+        ${data.validoHasta ? `<div style="font-size:11px;color:#888;">Válido hasta: ${fmtFecha(data.validoHasta)}</div>` : ''}
+        ${data.formaPago ? `<div style="font-size:11px;color:#888;margin-top:2px;">Pago: ${data.formaPago.charAt(0).toUpperCase()+data.formaPago.slice(1)}</div>` : ''}
+      </td>
+    </tr>
+  </table>
+
+  <div style="border-top:2px solid #C9A55A;margin-bottom:24px;"></div>
+
+  <div style="background:#fdf8f2;border:1px solid #ede3d4;border-radius:6px;padding:14px 18px;margin-bottom:24px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#C9A55A;margin-bottom:8px;">Datos del Cliente</div>
+    <table style="font-size:13px;">
+      <tr><td style="color:#888;padding:2px 0;width:130px;">Nombre</td><td style="padding:2px 0;font-weight:600;">${data.cliente}</td></tr>
+      ${extraCliente}
+    </table>
+  </div>
+
+  ${extraEvento ? `<div style="background:#fdf8f2;border:1px solid #ede3d4;border-radius:6px;padding:14px 18px;margin-bottom:24px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#C9A55A;margin-bottom:8px;">Datos del Evento</div>
+    <table style="font-size:13px;">${extraEvento}</table>
+  </div>` : ''}
+
+  <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+    <thead>
+      <tr style="background:#3D1F0A;color:#fff;">
+        <th style="padding:10px 12px;text-align:left;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Descripción</th>
+        <th style="padding:10px 12px;text-align:center;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;width:70px;">Cant.</th>
+        <th style="padding:10px 12px;text-align:right;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;width:120px;">Precio unit.</th>
+        <th style="padding:10px 12px;text-align:right;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;width:120px;">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>${filasItems}</tbody>
+  </table>
+
+  <table style="width:100%;margin-bottom:24px;">
+    <tr>
+      <td style="width:60%"></td>
+      <td style="width:40%;">
+        <table style="width:100%;font-size:13px;border-top:1px solid #ede3d4;padding-top:8px;">
+          <tr>
+            <td style="padding:5px 12px;color:#888;">Neto (sin IVA):</td>
+            <td style="padding:5px 12px;text-align:right;">${fmtNum(neto)}</td>
+          </tr>
+          ${filaDescuento}
+          <tr>
+            <td style="padding:5px 12px;color:#888;">IVA (19%):</td>
+            <td style="padding:5px 12px;text-align:right;">${fmtNum(iva)}</td>
+          </tr>
+          <tr style="background:#3D1F0A;color:#fff;">
+            <td style="padding:10px 12px;font-weight:700;font-size:14px;border-radius:4px 0 0 4px;">TOTAL</td>
+            <td style="padding:10px 12px;text-align:right;font-weight:700;font-size:14px;border-radius:0 4px 4px 0;">${fmtNum(total)}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  ${data.observaciones ? `<div style="border:1px solid #ede3d4;border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#666;"><strong style="color:#3D1F0A;">Observaciones:</strong> ${data.observaciones}</div>` : ''}
+
+  <div style="border-top:1px solid #ede3d4;padding-top:14px;font-size:11px;color:#aaa;text-align:center;">
+    ${data.validoHasta ? 'Presupuesto válido hasta el ' + fmtFecha(data.validoHasta) + '.' : 'Presupuesto sujeto a disponibilidad.'}
+    · Galdi Pastelería Artesanal · RUT 78.378.827-6 · Maipú, Santiago de Chile
+  </div>
+
+
+  <div class="no-print" style="text-align:center;margin-top:16px;">
+    <button onclick="window.print()" style="background:#C9A55A;color:#fff;border:none;padding:10px 28px;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;">🖨️ Imprimir / Guardar PDF</button>
+  </div>
+
+  <script>window.onload = () => { window.print(); };<\/script>
+</body>
+</html>`;
+
+  const win = window.open('', '_blank', 'width=900,height=700,scrollbars=yes');
+  if (!win) { alert('El navegador bloqueó la ventana emergente. Permite pop-ups para este sitio.'); return; }
+  win.document.write(html);
+  win.document.close();
 };
 
 // ── TAB 1: CATÁLOGO ───────────────────────────────────────────────────────
@@ -516,11 +1797,12 @@ window.renderT = () => {
   tb.innerHTML=ps.map(p=>{
     const cn=p.costo+p.energia+p.logistica+p.mdo;
     const mr=cn>0?Math.round(((p.precio/1.19)-cn)/cn*100):0;
+    const esTortaOPastel=(p.cat==='Tortas'||p.cat==='Pasteles & Tartas');
+    const badgeTallas=esTortaOPastel?`<div style="margin-top:4px;display:flex;gap:4px;" onclick="event.stopPropagation()">${(p.nombre==='Torta Panqueque'?['S','M','L','XL']:['S','M','L']).map(t=>`<span style="font-size:10px;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">${t}</span>`).join('')}</div>`:''
     return `<tr class="${sel?.id===p.id?'selected':''}" onclick="selProd(${p.id})" style="cursor:pointer;">
-      <td><strong>${p.nombre}</strong></td>
+      <td><strong>${p.nombre}</strong>${badgeTallas}</td>
       <td><span class="tag tag-${p.tipo}">${p.tipo==='propio'?'Propio':'Reventa'}</span></td>
       <td>${p.unidad}</td>
-      <td><strong>${fmt(p.precio)}</strong></td>
       <td style="color:${mr>=15?'#4a7c59':'#9b3a2a'}">${mr}%</td>
       <td><button class="btn btn-sm" style="background:transparent;color:var(--gold2);border:1px solid var(--border);" onclick="event.stopPropagation();abrirModal(${p.id})">✏️</button></td>
     </tr>`;
@@ -531,7 +1813,8 @@ window.selProd = (id) => {
   sel=prods.find(p=>p.id===id);if(!sel)return;
   document.getElementById('card-calc').style.display='block';
   document.getElementById('calc-tit').textContent='Calculadora — '+sel.nombre;
-  document.getElementById('c-mat').value=sel.costo;
+  const esTallaVariable=(sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas');
+  document.getElementById('c-mat').value=esTallaVariable?'':sel.costo;
   document.getElementById('c-mdo').value=sel.mdo;
   document.getElementById('c-en').value=sel.energia;
   document.getElementById('c-log').value=sel.logistica;
@@ -541,6 +1824,10 @@ window.selProd = (id) => {
   document.getElementById('wrap-mrg').style.display=sel.tipo==='propio'?'block':'none';
   document.getElementById('lbl-mat').textContent=sel.tipo==='propio'?'Costo materiales (neto)':'Precio compra proveedor (neto)';
   document.getElementById('r6').textContent=sel.combate||'—';
+  document.getElementById('wrap-talla-calc').style.display=esTallaVariable?'':'none';
+  document.getElementById('calc-talla').value='';
+  const optXLcalc = document.getElementById('opt-xl-calc');
+  if(optXLcalc) optXLcalc.style.display = sel.nombre==='Torta Panqueque' ? '' : 'none';
   recalc();renderT();
   document.getElementById('card-calc').scrollIntoView({behavior:'smooth',block:'nearest'});
 };
@@ -552,15 +1839,68 @@ window.recalc = () => {
   s('r1',fmt(cn));s('r2',sel.tipo==='propio'?fmt(u):'— (reventa)');s('r3',fmt(pn));s('r4',fmt(iv));s('r5',fmt(pf));
 };
 
+window.aplicarCostoTalla = () => {
+  if(!sel) return;
+  const talla = g('calc-talla');
+  if(!talla) return;
+  const guardado = sel.costosTalla?.[talla];
+  if(sel.nombre === 'Torta Panqueque' && talla === 'XL' && !guardado?.mat) {
+    document.getElementById('c-mat').value = PANQUEQUE_XL.mat;
+    document.getElementById('c-mdo').value = PANQUEQUE_XL.mdo;
+    document.getElementById('c-en').value  = PANQUEQUE_XL.energia;
+    document.getElementById('c-log').value = PANQUEQUE_XL.logistica;
+    document.getElementById('c-mrg').value = PANQUEQUE_XL.margen;
+    recalc();
+    return;
+  }
+  const fb = getCostosTalla(sel, talla);
+  document.getElementById('c-mat').value  = guardado?.mat      ?? fb?.mat      ?? 0;
+  document.getElementById('c-mdo').value  = guardado?.mdo      ?? fb?.mdo      ?? sel.mdo;
+  document.getElementById('c-en').value   = guardado?.energia  ?? fb?.energia  ?? sel.energia;
+  document.getElementById('c-log').value  = guardado?.logistica ?? fb?.logistica ?? sel.logistica;
+  document.getElementById('c-mrg').value  = guardado?.margen   ?? fb?.margen   ?? sel.margen;
+  recalc();
+};
+
 window.guardarPrecio = async () => {
-  if(!sel)return;
-  const idx=prods.findIndex(p=>p.id===sel.id);
-  prods[idx]={...prods[idx],costo:+g('c-mat'),mdo:+g('c-mdo'),energia:+g('c-en'),logistica:+g('c-log'),margen:+g('c-mrg')};
-  prods[idx].precio=cpx(prods[idx]);
-  sel=prods[idx];
+  if(!sel) return;
+  const idx = prods.findIndex(p=>p.id===sel.id);
+  const esTallaVariable = (sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas');
+  const talla = esTallaVariable ? g('calc-talla') : null;
+
+  if(esTallaVariable && !talla) {
+    alert('Elige un tamaño antes de guardar');
+    return;
+  }
+
+  if(talla) {
+    const costosTalla = {...(prods[idx].costosTalla || {})};
+    costosTalla[talla] = {
+      mat:      +g('c-mat'),
+      mdo:      +g('c-mdo'),
+      energia:  +g('c-en'),
+      logistica:+g('c-log'),
+      margen:   +g('c-mrg'),
+    };
+    prods[idx].costosTalla = costosTalla;
+  } else {
+    prods[idx] = {...prods[idx],
+      costo:    +g('c-mat'),
+      mdo:      +g('c-mdo'),
+      energia:  +g('c-en'),
+      logistica:+g('c-log'),
+      margen:   +g('c-mrg'),
+    };
+  }
+
+  prods[idx].precio = cpx(prods[idx]);
+  sel = prods[idx];
   await fsSaveProd(prods[idx]);
   renderT();
-  alert('✓ Precio guardado: '+fmt(prods[idx].precio)+' para '+prods[idx].nombre);
+  const msg = talla
+    ? `✓ Talla ${talla} guardada para ${prods[idx].nombre}`
+    : `✓ Precio guardado: ${fmt(prods[idx].precio)} para ${prods[idx].nombre}`;
+  alert(msg);
 };
 
 window.cerrarCalc = () => {sel=null;document.getElementById('card-calc').style.display='none';renderT();};
@@ -576,18 +1916,12 @@ window.abrirModal = (id) => {
     document.getElementById('m-cat').value=p.cat;
     document.getElementById('m-tipo').value=p.tipo;
     document.getElementById('m-uni').value=p.unidad;
-    document.getElementById('m-cost').value=p.costo;
-    document.getElementById('m-en').value=p.energia;
-    document.getElementById('m-log').value=p.logistica;
-    document.getElementById('m-mdo').value=p.mdo;
-    document.getElementById('m-mrg').value=p.margen;
     document.getElementById('m-comb').value=p.combate||'';
     btn.style.display='inline-block';
   } else {
     document.getElementById('m-tit').textContent='Nuevo Producto';
     document.getElementById('m-id').value='';
-    ['m-nom','m-cost','m-en','m-mdo','m-mrg','m-comb'].forEach(i=>document.getElementById(i).value='');
-    document.getElementById('m-log').value=30;document.getElementById('m-mrg').value=20;
+    ['m-nom','m-comb'].forEach(i=>document.getElementById(i).value='');
     btn.style.display='none';
   }
   document.getElementById('modal').classList.add('open');
@@ -596,17 +1930,18 @@ window.abrirModal = (id) => {
 window.saveProd = async () => {
   const id=document.getElementById('m-id').value;
   const existing = id ? prods.find(x=>x.id===+id) : null;
-  const p={
-    nombre:document.getElementById('m-nom').value.trim(),
-    cat:document.getElementById('m-cat').value,
-    tipo:document.getElementById('m-tipo').value,
-    unidad:document.getElementById('m-uni').value,
+  const p = {
+    nombre: document.getElementById('m-nom').value.trim(),
+    cat: document.getElementById('m-cat').value,
+    tipo: document.getElementById('m-tipo').value,
+    unidad: document.getElementById('m-uni').value,
+    combate: document.getElementById('m-comb').value.trim(),
     costo: document.getElementById('m-cost') ? (+document.getElementById('m-cost').value||0) : (existing?.costo||0),
     energia: document.getElementById('m-en') ? (+document.getElementById('m-en').value||0) : (existing?.energia||0),
     logistica: document.getElementById('m-log') ? (+document.getElementById('m-log').value||30) : (existing?.logistica||30),
     mdo: document.getElementById('m-mdo') ? (+document.getElementById('m-mdo').value||0) : (existing?.mdo||0),
-    margen: document.getElementById('m-mrg') ? (+document.getElementById('m-mrg').value||0) : (existing?.margen||0),
-    combate:document.getElementById('m-comb').value.trim()
+    margen: document.getElementById('m-mrg') ? (+document.getElementById('m-mrg').value||0) : (existing?.margen||20),
+    costosTalla: existing?.costosTalla || null,
   };
   if(!p.nombre){alert('Ingresa el nombre del producto');return;}
   p.precio=cpx(p);
@@ -639,8 +1974,57 @@ window.calcMeta = () => {
 };
 
 // ── TAB 3: VENTAS ─────────────────────────────────────────────────────────
+const PRECIOS_TORTA = {
+  '10': 15000,
+  '20': 20000,
+  '35': 28000,
+  '50': 38000,
+  '99': 55000,
+};
+
+const VALORES_TALLA_TORTAS = {
+  S:  {mdo:1232, energia:350, logistica:750, margen:22},
+  M:  {mdo:2398, energia:350, logistica:750, margen:22},
+  L:  {mdo:3396, energia:350, logistica:750, margen:23},
+  XL: {mdo:5190, energia:400, logistica:30,  margen:23}
+};
+const PANQUEQUE_XL = {mat:20000, mdo:5190, energia:400, logistica:30, margen:23};
+
+const COSTOS_TALLA = {
+  'Tortas': {
+    S: { mat: 10000, mdo: 1298, energia: 400, logistica: 30, margen: 30 },
+    M: { mat: 14000, mdo: 2464, energia: 400, logistica: 30, margen: 30 },
+    L: { mat: 18000, mdo: 3445, energia: 400, logistica: 30, margen: 30 },
+  },
+  'Torta de Chocolate': {
+    S: { mat: 9530, mdo: 1298, energia: 400, logistica: 30, margen: 30 },
+    M: { mat: 14820, mdo: 2464, energia: 400, logistica: 30, margen: 30 },
+    L: { mat: 19390, mdo: 3445, energia: 400, logistica: 30, margen: 30 },
+  },
+  'Pasteles & Tartas': {
+    S: { mat: 12000, mdo: 800, energia: 300, logistica: 30, margen: 25 },
+    M: { mat: 18000, mdo: 1200, energia: 300, logistica: 30, margen: 25 },
+    L: { mat: 26000, mdo: 1500, energia: 300, logistica: 30, margen: 25 },
+  },
+};
+
+function getCostosTalla(prod, talla) {
+  const clave = COSTOS_TALLA[prod.nombre] || COSTOS_TALLA[prod.cat];
+  return clave?.[talla] || null;
+}
+
 window.poblarProductos = () => {
   const cat = document.getElementById('v-t').value;
+  const wrapTalla = document.getElementById('wrap-talla-v');
+  const selTalla = document.getElementById('v-talla');
+  const esTortaOPastel = (cat === 'torta' || cat === 'pastel');
+  if (esTortaOPastel) {
+    wrapTalla.style.display = '';
+    selTalla.value = '';
+  } else {
+    wrapTalla.style.display = 'none';
+    selTalla.value = '';
+  }
   const sel = document.getElementById('v-d');
   if (!cat) {
     sel.innerHTML = '<option value="">— Elegir producto —</option>';
@@ -655,21 +2039,60 @@ window.poblarProductos = () => {
   const filtrados = prods.filter(p => (p.cat || p.categoria) === mapacat[cat]);
   sel.innerHTML = '<option value="">— Elegir producto —</option>' +
     (filtrados.length
-      ? filtrados.map(p => `<option value="${p.id}">${p.nombre} — ${fmt(p.precio)}</option>`).join('')
+      ? filtrados.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('')
       : '<option value="">Sin productos</option>');
   document.getElementById('v-m').value = '';
 };
 
+let precioVentaActual = 0;
+let selProdVenta = null;
+
 window.autocompletarPrecio = () => {
   const idSel = document.getElementById('v-d').value;
-  console.log('=== DEBUG precio ===');
-  console.log('idSel:', idSel, '| tipo:', typeof idSel);
-  console.log('prods cargados:', prods.length);
-  if(prods.length > 0) console.log('ejemplo id:', prods[0].id, '| tipo:', typeof prods[0].id);
   const prod = prods.find(p => String(p.id) === String(idSel));
-  console.log('prod encontrado:', prod);
-  if (prod && prod.precio) {
-    document.getElementById('v-m').value = prod.precio;
+  selProdVenta = prod || null;
+  precioVentaActual = prod?.precio || 0;
+  calcularMonto();
+  const optXLv = document.getElementById('opt-xl-ventas');
+  if(optXLv) optXLv.style.display = prod?.nombre === 'Torta Panqueque' ? '' : 'none';
+};
+
+window.calcularMonto = () => {
+  const cant = +document.getElementById('v-q')?.value || 1;
+  const talla = document.getElementById('v-talla')?.value;
+
+  // Si es producto con talla y no se eligió tamaño, limpiar monto
+  const esTallaVariable = selProdVenta && (selProdVenta.cat === 'Tortas' || selProdVenta.cat === 'Pasteles & Tartas');
+  if(esTallaVariable && !talla) {
+    document.getElementById('v-m').value = '';
+    return;
+  }
+
+  let precio = precioVentaActual;
+  if(talla && selProdVenta) {
+    const saved = selProdVenta.costosTalla?.[talla];
+    const esPanquequeXL = selProdVenta.nombre === 'Torta Panqueque' && talla === 'XL' && !saved?.mat;
+    const pxl = esPanquequeXL ? PANQUEQUE_XL : null;
+    const fb = pxl ? pxl : getCostosTalla(selProdVenta, talla);
+    if(pxl || saved || fb) {
+      const mat      = pxl ? pxl.mat      : (saved?.mat      ?? fb?.mat      ?? 0);
+      const mdo      = pxl ? pxl.mdo      : (saved?.mdo      ?? fb?.mdo      ?? selProdVenta.mdo);
+      const energia  = pxl ? pxl.energia  : (saved?.energia  ?? fb?.energia  ?? selProdVenta.energia);
+      const logistica= pxl ? pxl.logistica: (saved?.logistica ?? fb?.logistica ?? selProdVenta.logistica);
+      const margen   = pxl ? pxl.margen   : (saved?.margen   ?? fb?.margen   ?? selProdVenta.margen);
+      const cn = mat + mdo + energia + logistica;
+      const u = cn * (margen/100);
+      const pn = cn + u;
+      precio = Math.round(pn * 1.19);
+    }
+  }
+  if(precio > 0) document.getElementById('v-m').value = precio * cant;
+};
+
+window.autocompletarPrecioTorta = () => {
+  const personas = document.getElementById('v-personas').value;
+  if (personas && PRECIOS_TORTA[personas]) {
+    document.getElementById('v-m').value = PRECIOS_TORTA[personas];
   } else {
     document.getElementById('v-m').value = '';
   }
@@ -680,11 +2103,15 @@ window.addVenta = async () => {
   const selEl=document.getElementById('v-d');
   const d=selEl.options[selEl.selectedIndex]?.text.split(' — ')[0] || selEl.value;
   if(!f||!m){alert('Ingresa día y monto');return;}
-  const venta={id:Date.now(),fecha:f,tipo:t,desc:d,cantidad:parseInt(document.getElementById('v-q')?.value)||1,monto:m,cliente:c};
+  const wrapTallaEl=document.getElementById('wrap-talla-v');
+  const tallaEl=document.getElementById('v-talla');
+  const talla=(wrapTallaEl&&wrapTallaEl.style.display!=='none'&&tallaEl)?tallaEl.value||null:null;
+  const venta={id:Date.now(),fecha:f,tipo:t,desc:d,cantidad:parseInt(document.getElementById('v-q')?.value)||1,monto:m,cliente:c,...(talla?{talla}:{})};
   ventas.push(venta);
   setSyncBadge('sync-ventas','Guardando...','');
   await fsSaveVenta(venta);
   ['v-f','v-m','v-c'].forEach(i=>document.getElementById(i).value='');
+  if(tallaEl)tallaEl.value='';
   renderV();
 };
 
@@ -709,15 +2136,18 @@ window.renderV = () => {
   const lm={pan:'Pan',torta:'Torta',pastel:'Pastel',queque:'Queque',dulce:'Dulces',empanada:'Empanada',banqueteria:'Banquetería',otro:'Otro'};
   const tb=document.getElementById('tb-ventas');
   if(!ventas.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px;">Sin ventas registradas</td></tr>';return;}
-  tb.innerHTML=[...ventas].sort((a,b)=>b.id-a.id).map(v=>`<tr>
+  tb.innerHTML=[...ventas].sort((a,b)=>b.id-a.id).map(v=>{
+    const nombreMostrado=v.talla?`${v.desc||'—'} (${v.talla})`:v.desc||'—';
+    return `<tr>
     <td>Día ${v.fecha}</td>
     <td><span class="tag tag-propio">${lm[v.tipo]||v.tipo}</span></td>
-    <td>${v.desc||'—'}</td>
+    <td>${nombreMostrado}</td>
     <td>${v.cantidad||1}</td>
     <td>${v.cliente||'—'}</td>
     <td><strong>${fmt(v.monto)}</strong></td>
     <td><span style="cursor:pointer;color:var(--muted);font-size:18px;" onclick="delVenta(${v.id})">×</span></td>
-  </tr>`).join('');
+  </tr>`;
+  }).join('');
 };
 
 // ── TAB 3: COMPRAS ────────────────────────────────────────────────────────
