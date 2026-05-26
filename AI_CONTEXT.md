@@ -117,7 +117,7 @@ galdi-nextjs/
 - 10+ landing pages SEO con JSON-LD
 
 ### Google Business Profile
-- Reseñas actuales: **54** (todas ⭐⭐⭐⭐⭐) · Meta: **50** ✅ superado
+- Reseñas actuales: **54** (todas ⭐⭐⭐⭐⭐) · Meta: **100** 🎯 en progreso
 - Áreas de servicio: Maipú, Cerrillos, Pudahuel
 - Descripción optimizada · Menu link → galdi.cl/productos
 
