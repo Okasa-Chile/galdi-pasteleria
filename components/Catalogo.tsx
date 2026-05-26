@@ -109,10 +109,10 @@ const categorias = [
     id: 'queques',
     label: 'Queques & Muffins',
     productos: [
-      { nombre: 'Queque de Naranja', detalle: 'Esponjoso y perfumado, con toda la frescura cítrica de naranjas naturales.' },
-      { nombre: 'Queque Mármol',     detalle: 'Veteado de chocolate y vainilla, húmedo y esponjoso en cada corte.' },
-      { nombre: 'Queque Tradicional', detalle: 'Esponjoso y dorado, elaborado con la receta de siempre. Un clásico del horno artesanal que nunca falla.' },
-      { nombre: 'Muffins',           detalle: 'Pequeños bizcochos individuales en distintos sabores de temporada.' },
+      { nombre: 'Queque de Naranja',  tallas: ['S', 'M'], tamaños: ['S', 'M'], detalle: 'Esponjoso y perfumado, con toda la frescura cítrica de naranjas naturales.' },
+      { nombre: 'Queque Mármol',      tallas: ['S', 'M'], tamaños: ['S', 'M'], detalle: 'Veteado de chocolate y vainilla, húmedo y esponjoso en cada corte.' },
+      { nombre: 'Queque Tradicional', tallas: ['S', 'M'], tamaños: ['S', 'M'], detalle: 'Esponjoso y dorado, elaborado con la receta de siempre. Un clásico del horno artesanal que nunca falla.' },
+      { nombre: 'Muffins',            detalle: 'Pequeños bizcochos individuales en distintos sabores de temporada.' },
     ],
   },
   {
