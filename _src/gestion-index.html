@@ -45,7 +45,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
 .btn:hover{background:var(--gold2);}
 .btn-gray{background:var(--muted);}.btn-gray:hover{background:#7a5c3a;}
 .btn-red{background:#9b3a2a;}.btn-red:hover{background:#7a2a1a;}
-.btn-sm{padding:6px 14px;font-size:10px;}
+.btn-sm{padding:6px 14px;font-size:10px;}.btn-xs{padding:6px 10px !important;font-size:0.72rem !important;}
 .result-box{background:var(--dark);border-radius:8px;padding:18px 22px;color:#fff;margin-top:14px;}
 .result-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:13px;}
 .result-row:last-child{border-bottom:none;}
@@ -589,6 +589,16 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
       <button class="btn btn-sm btn-gray" onclick="document.getElementById('modal').classList.remove('open')">Cancelar</button>
       <button class="btn btn-sm btn-red" id="btn-elim" style="display:none;" onclick="elimProd()">Eliminar</button>
       <button class="btn btn-sm" onclick="saveProd()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ver Presupuesto (solo lectura) -->
+<div class="modal-overlay" id="modal-ver-pres" onclick="if(event.target.id==='modal-ver-pres')cerrarVerPres()">
+  <div class="modal" style="max-width:620px;">
+    <div id="modal-ver-pres-body"></div>
+    <div style="text-align:right;margin-top:18px;">
+      <button class="btn btn-gray" onclick="cerrarVerPres()">✕ Cerrar</button>
     </div>
   </div>
 </div>
@@ -1717,7 +1727,7 @@ window.cargarHistorialPresupuestos = async () => {
         <td>${data.cliente || '—'}</td>
         <td><strong>${fmtNum(data.total)}</strong></td>
         <td>${fmtTs(data.creadoEn)}</td>
-        <td><button class="btn btn-sm btn-gray" onclick="vistaPreviaDesdeHistorial('${d.id}')">🖨️ Reimprimir</button> <button class="btn btn-sm" onclick="editarPresupuesto('${d.id}')">✏️ Editar</button> <button class="btn btn-sm btn-gray" onclick="duplicarPresupuesto('${d.id}')">⧉ Duplicar</button></td>
+        <td style="white-space:nowrap;"><button class="btn btn-sm btn-xs btn-gray" onclick="verPresupuesto('${d.id}')">👁 Ver</button> <button class="btn btn-sm btn-xs btn-gray" onclick="vistaPreviaDesdeHistorial('${d.id}')">🖨️ Reimprimir</button> <button class="btn btn-sm btn-xs" onclick="editarPresupuesto('${d.id}')">✏️ Editar</button> <button class="btn btn-sm btn-xs btn-gray" onclick="duplicarPresupuesto('${d.id}')">⧉ Duplicar</button></td>
       </tr>`;
     }).join('');
     // guardar los docs en memoria para acceso rápido desde vistaPreviaDesdeHistorial
@@ -1727,6 +1737,90 @@ window.cargarHistorialPresupuestos = async () => {
     console.error('Error cargando historial:', e);
     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">Error al cargar historial.</td></tr>';
   }
+};
+
+window.cerrarVerPres = () => {
+  document.getElementById('modal-ver-pres').classList.remove('open');
+};
+
+window.verPresupuesto = (docId) => {
+  const data = window._historialPres?.[docId];
+  if (!data) { alert('No se encontraron datos para este presupuesto.'); return; }
+
+  const fmtNum = n => '$' + Math.round(n || 0).toLocaleString('es-CL');
+  const fmtFecha = v => {
+    if (!v) return '—';
+    if (v.toDate) return v.toDate().toLocaleDateString('es-CL', {day:'2-digit', month:'2-digit', year:'numeric'});
+    const [y, m, d] = v.split('-');
+    return `${d}/${m}/${y}`;
+  };
+  const campo = (label, val) => val ? `<div style="display:flex;gap:8px;font-size:13px;margin-bottom:4px;"><span style="color:var(--muted);min-width:110px;">${label}</span><span>${val}</span></div>` : '';
+
+  const items    = Array.isArray(data.items) ? data.items : [];
+  const subtotal = data.subtotal  || 0;
+  const descuento= data.descuento || 0;
+  const total    = data.total     || 0;
+
+  const filaDesc = descuento > 0 ? `
+    <tr><td colspan="3" style="padding:6px 10px;text-align:right;color:var(--muted);font-size:12px;">
+      Descuento${data.descuentoTipo==='porcentaje' ? ' ('+data.descuentoValor+'%)' : ''}:
+    </td><td style="padding:6px 10px;text-align:right;color:#c0392b;">−${fmtNum(descuento)}</td></tr>` : '';
+
+  document.getElementById('modal-ver-pres-body').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--brown);">${data.numero || '—'}</div>
+        <div style="font-size:11px;color:var(--muted);">Presupuesto</div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);text-align:right;">${data.creadoEn ? fmtFecha(data.creadoEn) : ''}</div>
+    </div>
+    <div style="border-top:2px solid var(--gold);margin-bottom:14px;"></div>
+
+    <div style="background:var(--sand);border-radius:6px;padding:12px 14px;margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold2);margin-bottom:8px;">Cliente</div>
+      ${campo('Nombre', data.cliente)}
+      ${campo('Teléfono', data.telefono)}
+      ${campo('Email', data.email)}
+      ${campo('Dirección', data.direccion)}
+      ${campo('Comuna', data.comuna)}
+      ${campo('Tipo evento', data.tipoEvento)}
+      ${campo('Fecha evento', data.fechaEvento ? fmtFecha(data.fechaEvento) : '')}
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px;">
+      <thead><tr style="background:var(--dark);color:var(--gold);">
+        <th style="padding:7px 10px;text-align:left;font-size:10px;letter-spacing:.08em;text-transform:uppercase;">Descripción</th>
+        <th style="padding:7px 10px;text-align:center;font-size:10px;letter-spacing:.08em;text-transform:uppercase;">Cant.</th>
+        <th style="padding:7px 10px;text-align:right;font-size:10px;letter-spacing:.08em;text-transform:uppercase;">Precio unit.</th>
+        <th style="padding:7px 10px;text-align:right;font-size:10px;letter-spacing:.08em;text-transform:uppercase;">Subtotal</th>
+      </tr></thead>
+      <tbody>${items.map((it, i) => `
+        <tr style="background:${i%2===0?'var(--cream)':'#fff'};">
+          <td style="padding:8px 10px;border-bottom:1px solid var(--border);">${it.descripcion||'—'}</td>
+          <td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:center;">${it.cantidad}</td>
+          <td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right;">${fmtNum(it.precioUnit)}</td>
+          <td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
+        </tr>`).join('')}
+      </tbody>
+      <tfoot>
+        ${descuento > 0 ? `<tr><td colspan="3" style="padding:6px 10px;text-align:right;color:var(--muted);font-size:12px;">Subtotal:</td><td style="padding:6px 10px;text-align:right;">${fmtNum(subtotal)}</td></tr>` : ''}
+        ${filaDesc}
+        <tr style="border-top:2px solid var(--gold);">
+          <td colspan="3" style="padding:8px 10px;text-align:right;font-weight:700;">TOTAL:</td>
+          <td style="padding:8px 10px;text-align:right;font-weight:700;font-size:15px;color:var(--gold2);">${fmtNum(total)}</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    ${(data.observaciones||data.formaPago||data.validoHasta) ? `
+    <div style="background:var(--sand);border-radius:6px;padding:12px 14px;font-size:12px;">
+      ${campo('Forma de pago', data.formaPago)}
+      ${campo('Válido hasta', data.validoHasta ? fmtFecha(data.validoHasta) : '')}
+      ${data.observaciones ? `<div style="margin-top:6px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;">Observaciones</div><div style="font-size:12px;color:var(--brown);margin-top:4px;">${data.observaciones}</div>` : ''}
+    </div>` : ''}
+  `;
+
+  document.getElementById('modal-ver-pres').classList.add('open');
 };
 
 window.vistaPreviaDesdeHistorial = (docId) => {
