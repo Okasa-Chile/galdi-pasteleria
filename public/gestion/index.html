@@ -238,7 +238,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
             <option value="">— Sin talla —</option>
             <option value="S">S — 8 a 10 personas</option>
             <option value="M">M — 14 a 16 personas</option>
-            <option value="L">L — 20 a 22 personas</option>
+            <option value="L" id="opt-l-ventas">L — 20 a 22 personas</option>
             <option value="XL" id="opt-xl-ventas" style="display:none">XL — 25 personas</option>
           </select>
         </div>
@@ -2223,9 +2223,14 @@ window.poblarProductos = () => {
   const wrapTalla = document.getElementById('wrap-talla-v');
   const selTalla = document.getElementById('v-talla');
   const esTortaOPastel = (cat === 'torta' || cat === 'pastel');
-  if (esTortaOPastel) {
+  const esQueque = (cat === 'queque');
+  const optLv  = document.getElementById('opt-l-ventas');
+  const optXLv2 = document.getElementById('opt-xl-ventas');
+  if (esTortaOPastel || esQueque) {
     wrapTalla.style.display = '';
     selTalla.value = '';
+    if (optLv)   optLv.style.display   = esQueque ? 'none' : '';
+    if (optXLv2) optXLv2.style.display = 'none';
   } else {
     wrapTalla.style.display = 'none';
     selTalla.value = '';
@@ -2267,7 +2272,7 @@ window.calcularMonto = () => {
   const talla = document.getElementById('v-talla')?.value;
 
   // Si es producto con talla y no se eligió tamaño, limpiar monto
-  const esTallaVariable = selProdVenta && (selProdVenta.cat === 'Tortas' || selProdVenta.cat === 'Pasteles & Tartas');
+  const esTallaVariable = selProdVenta && (selProdVenta.cat === 'Tortas' || selProdVenta.cat === 'Pasteles & Tartas' || selProdVenta.cat === 'Queques & Muffins');
   if(esTallaVariable && !talla) {
     document.getElementById('v-m').value = '';
     return;
