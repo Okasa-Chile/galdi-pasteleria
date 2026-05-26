@@ -2224,13 +2224,11 @@ window.poblarProductos = () => {
   const selTalla = document.getElementById('v-talla');
   const esTortaOPastel = (cat === 'torta' || cat === 'pastel');
   const esQueque = (cat === 'queque');
-  const optLv  = document.getElementById('opt-l-ventas');
-  const optXLv2 = document.getElementById('opt-xl-ventas');
+  const optL = document.getElementById('opt-l-ventas');
   if (esTortaOPastel || esQueque) {
     wrapTalla.style.display = '';
     selTalla.value = '';
-    if (optLv)   optLv.style.display   = esQueque ? 'none' : '';
-    if (optXLv2) optXLv2.style.display = 'none';
+    if (optL) optL.style.display = esQueque ? 'none' : '';
   } else {
     wrapTalla.style.display = 'none';
     selTalla.value = '';
