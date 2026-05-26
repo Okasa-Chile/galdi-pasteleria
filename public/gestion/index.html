@@ -1998,7 +1998,8 @@ window.renderT = () => {
     const cn=p.costo+p.energia+p.logistica+p.mdo;
     const mr=cn>0?Math.round(((p.precio/1.19)-cn)/cn*100):0;
     const esTortaOPastel=(p.cat==='Tortas'||p.cat==='Pasteles & Tartas');
-    const badgeTallas=esTortaOPastel?`<div style="margin-top:4px;display:flex;gap:4px;" onclick="event.stopPropagation()">${(p.nombre==='Torta Panqueque'?['S','M','L','XL']:['S','M','L']).map(t=>`<span style="font-size:10px;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">${t}</span>`).join('')}</div>`:''
+    const esQueque=(p.cat==='Queques & Muffins');
+    const badgeTallas=esTortaOPastel?`<div style="margin-top:4px;display:flex;gap:4px;" onclick="event.stopPropagation()">${(p.nombre==='Torta Panqueque'?['S','M','L','XL']:['S','M','L']).map(t=>`<span style="font-size:10px;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">${t}</span>`).join('')}</div>`:esQueque?`<div style="margin-top:4px;display:flex;gap:4px;" onclick="event.stopPropagation()">${['S','M'].map(t=>`<span style="font-size:10px;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">${t}</span>`).join('')}</div>`:''
     return `<tr class="${sel?.id===p.id?'selected':''}" onclick="selProd(${p.id})" style="cursor:pointer;">
       <td><strong>${p.nombre}</strong>${badgeTallas}</td>
       <td><span class="tag tag-${p.tipo}">${p.tipo==='propio'?'Propio':'Reventa'}</span></td>
@@ -2013,7 +2014,7 @@ window.selProd = (id) => {
   sel=prods.find(p=>p.id===id);if(!sel)return;
   document.getElementById('card-calc').style.display='block';
   document.getElementById('calc-tit').textContent='Calculadora — '+sel.nombre;
-  const esTallaVariable=(sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas');
+  const esTallaVariable=(sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas'||sel.cat==='Queques & Muffins');
   document.getElementById('c-mat').value=esTallaVariable?'':sel.costo;
   document.getElementById('c-mdo').value=sel.mdo;
   document.getElementById('c-en').value=sel.energia;
@@ -2026,7 +2027,10 @@ window.selProd = (id) => {
   document.getElementById('r6').textContent=sel.combate||'—';
   document.getElementById('wrap-talla-calc').style.display=esTallaVariable?'':'none';
   document.getElementById('calc-talla').value='';
+  const esQuequeCalc = sel.cat==='Queques & Muffins';
+  const optLcalc = document.querySelector('#calc-talla option[value="L"]');
   const optXLcalc = document.getElementById('opt-xl-calc');
+  if(optLcalc) optLcalc.style.display = esQuequeCalc ? 'none' : '';
   if(optXLcalc) optXLcalc.style.display = sel.nombre==='Torta Panqueque' ? '' : 'none';
   recalc();renderT();
   document.getElementById('card-calc').scrollIntoView({behavior:'smooth',block:'nearest'});
@@ -2065,7 +2069,7 @@ window.aplicarCostoTalla = () => {
 window.guardarPrecio = async () => {
   if(!sel) return;
   const idx = prods.findIndex(p=>p.id===sel.id);
-  const esTallaVariable = (sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas');
+  const esTallaVariable = (sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas'||sel.cat==='Queques & Muffins');
   const talla = esTallaVariable ? g('calc-talla') : null;
 
   if(esTallaVariable && !talla) {
