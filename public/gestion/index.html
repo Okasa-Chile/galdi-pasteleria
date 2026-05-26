@@ -2224,10 +2224,10 @@ window.poblarProductos = () => {
   const selTalla = document.getElementById('v-talla');
   const esTortaOPastel = (cat === 'torta' || cat === 'pastel');
   const esQueque = (cat === 'queque');
-  const optL = document.getElementById('opt-l-ventas');
   if (esTortaOPastel || esQueque) {
     wrapTalla.style.display = '';
     selTalla.value = '';
+    const optL = document.getElementById('opt-l-ventas');
     if (optL) optL.style.display = esQueque ? 'none' : '';
   } else {
     wrapTalla.style.display = 'none';
