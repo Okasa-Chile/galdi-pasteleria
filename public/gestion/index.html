@@ -242,6 +242,13 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
             <option value="XL" id="opt-xl-ventas" style="display:none">XL — 25 personas</option>
           </select>
         </div>
+        <div id="wrap-muffin-un" style="display:none;">
+          <label>Unidad</label>
+          <select id="v-muffin-un" onchange="calcularMonto()">
+            <option value="docena">1 docena (12 un.)</option>
+            <option value="media">6 unidades</option>
+          </select>
+        </div>
         <div><label>Cantidad</label><input type="number" id="v-q" placeholder="ej: 2" min="1" style="max-width:80px" oninput="calcularMonto()"></div>
         <div><label>Monto total ($)</label><input type="number" id="v-m" placeholder="0"></div>
         <div><label>Cliente / Almacén</label><input type="text" id="v-c" placeholder="Opcional"></div>
@@ -1998,7 +2005,7 @@ window.renderT = () => {
     const cn=p.costo+p.energia+p.logistica+p.mdo;
     const mr=cn>0?Math.round(((p.precio/1.19)-cn)/cn*100):0;
     const esTortaOPastel=(p.cat==='Tortas'||p.cat==='Pasteles & Tartas');
-    const esQueque=(p.cat==='Queques & Muffins');
+    const esQueque=(p.cat==='Queques & Muffins'&&p.nombre!=='Muffins');
     const badgeTallas=esTortaOPastel?`<div style="margin-top:4px;display:flex;gap:4px;" onclick="event.stopPropagation()">${(p.nombre==='Torta Panqueque'?['S','M','L','XL']:['S','M','L']).map(t=>`<span style="font-size:10px;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">${t}</span>`).join('')}</div>`:esQueque?`<div style="margin-top:4px;display:flex;gap:4px;" onclick="event.stopPropagation()">${['S','M'].map(t=>`<span style="font-size:10px;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">${t}</span>`).join('')}</div>`:''
     return `<tr class="${sel?.id===p.id?'selected':''}" onclick="selProd(${p.id})" style="cursor:pointer;">
       <td><strong>${p.nombre}</strong>${badgeTallas}</td>
@@ -2014,7 +2021,7 @@ window.selProd = (id) => {
   sel=prods.find(p=>p.id===id);if(!sel)return;
   document.getElementById('card-calc').style.display='block';
   document.getElementById('calc-tit').textContent='Calculadora — '+sel.nombre;
-  const esTallaVariable=(sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas'||sel.cat==='Queques & Muffins');
+  const esTallaVariable=(sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas'||(sel.cat==='Queques & Muffins'&&sel.nombre!=='Muffins'));
   document.getElementById('c-mat').value=esTallaVariable?'':sel.costo;
   document.getElementById('c-mdo').value=sel.mdo;
   document.getElementById('c-en').value=sel.energia;
@@ -2027,7 +2034,7 @@ window.selProd = (id) => {
   document.getElementById('r6').textContent=sel.combate||'—';
   document.getElementById('wrap-talla-calc').style.display=esTallaVariable?'':'none';
   document.getElementById('calc-talla').value='';
-  const esQuequeCalc = sel.cat==='Queques & Muffins';
+  const esQuequeCalc = sel.cat==='Queques & Muffins'&&sel.nombre!=='Muffins';
   const optLcalc = document.querySelector('#calc-talla option[value="L"]');
   const optXLcalc = document.getElementById('opt-xl-calc');
   if(optLcalc) optLcalc.style.display = esQuequeCalc ? 'none' : '';
@@ -2069,7 +2076,7 @@ window.aplicarCostoTalla = () => {
 window.guardarPrecio = async () => {
   if(!sel) return;
   const idx = prods.findIndex(p=>p.id===sel.id);
-  const esTallaVariable = (sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas'||sel.cat==='Queques & Muffins');
+  const esTallaVariable = (sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas'||(sel.cat==='Queques & Muffins'&&sel.nombre!=='Muffins'));
   const talla = esTallaVariable ? g('calc-talla') : null;
 
   if(esTallaVariable && !talla) {
@@ -2224,6 +2231,8 @@ function getCostosTalla(prod, talla) {
 
 window.poblarProductos = () => {
   const cat = document.getElementById('v-t').value;
+  const wrapMuffinUnPP = document.getElementById('wrap-muffin-un');
+  if (wrapMuffinUnPP) wrapMuffinUnPP.style.display = 'none';
   const wrapTalla = document.getElementById('wrap-talla-v');
   const selTalla = document.getElementById('v-talla');
   const esTortaOPastel = (cat === 'torta' || cat === 'pastel');
@@ -2264,6 +2273,18 @@ window.autocompletarPrecio = () => {
   const prod = prods.find(p => String(p.id) === String(idSel));
   selProdVenta = prod || null;
   precioVentaActual = prod?.precio || 0;
+  const esMuffin = prod?.nombre === 'Muffins';
+  const cat = document.getElementById('v-t').value;
+  const wrapTallaV = document.getElementById('wrap-talla-v');
+  const wrapMuffinUn = document.getElementById('wrap-muffin-un');
+  if (cat === 'queque' && wrapTallaV) {
+    wrapTallaV.style.display = esMuffin ? 'none' : '';
+    if (esMuffin) { const st=document.getElementById('v-talla'); if(st) st.value=''; }
+  }
+  if (wrapMuffinUn) {
+    wrapMuffinUn.style.display = esMuffin ? '' : 'none';
+    if (esMuffin) document.getElementById('v-muffin-un').value = 'docena';
+  }
   calcularMonto();
   const optXLv = document.getElementById('opt-xl-ventas');
   if(optXLv) optXLv.style.display = (prod?.nombre === 'Torta Panqueque' || prod?.nombre === 'Torta de Chocolate') ? '' : 'none';
@@ -2274,7 +2295,7 @@ window.calcularMonto = () => {
   const talla = document.getElementById('v-talla')?.value;
 
   // Si es producto con talla y no se eligió tamaño, limpiar monto
-  const esTallaVariable = selProdVenta && (selProdVenta.cat === 'Tortas' || selProdVenta.cat === 'Pasteles & Tartas' || selProdVenta.cat === 'Queques & Muffins');
+  const esTallaVariable = selProdVenta && (selProdVenta.cat === 'Tortas' || selProdVenta.cat === 'Pasteles & Tartas' || (selProdVenta.cat === 'Queques & Muffins' && selProdVenta.nombre !== 'Muffins'));
   if(esTallaVariable && !talla) {
     document.getElementById('v-m').value = '';
     return;
@@ -2298,6 +2319,11 @@ window.calcularMonto = () => {
       precio = Math.round(pn * 1.19);
     }
   }
+  const wrapMuffinUnCM = document.getElementById('wrap-muffin-un');
+  if (wrapMuffinUnCM && wrapMuffinUnCM.style.display !== 'none') {
+    const muffinUn = document.getElementById('v-muffin-un')?.value;
+    if (muffinUn === 'media') precio = Math.round(precio / 2);
+  }
   if(precio > 0) document.getElementById('v-m').value = precio * cant;
 };
 
@@ -2313,7 +2339,12 @@ window.autocompletarPrecioTorta = () => {
 window.addVenta = async () => {
   const f=document.getElementById('v-f').value,t=document.getElementById('v-t').value,m=+document.getElementById('v-m').value,c=document.getElementById('v-c').value;
   const selEl=document.getElementById('v-d');
-  const d=selEl.options[selEl.selectedIndex]?.text.split(' — ')[0] || selEl.value;
+  let d=selEl.options[selEl.selectedIndex]?.text.split(' — ')[0] || selEl.value;
+  const wrapMuffinUnAV=document.getElementById('wrap-muffin-un');
+  if(wrapMuffinUnAV&&wrapMuffinUnAV.style.display!=='none'){
+    const muffinUnAV=document.getElementById('v-muffin-un')?.value;
+    d+=muffinUnAV==='media'?' (6 un.)':' (docena)';
+  }
   if(!f||!m){alert('Ingresa día y monto');return;}
   const wrapTallaEl=document.getElementById('wrap-talla-v');
   const tallaEl=document.getElementById('v-talla');
