@@ -117,7 +117,7 @@ galdi-nextjs/
 - 10+ landing pages SEO con JSON-LD
 
 ### Google Business Profile
-- Reseñas actuales: **53** (todas ⭐⭐⭐⭐⭐) · Meta: **50** ✅ superado
+- Reseñas actuales: **54** (todas ⭐⭐⭐⭐⭐) · Meta: **50** ✅ superado
 - Áreas de servicio: Maipú, Cerrillos, Pudahuel
 - Descripción optimizada · Menu link → galdi.cl/productos
 
@@ -194,7 +194,7 @@ galdi-nextjs/
 - [ ] **Presupuesto matrimonio** — esperar consulta a Jacqueline sobre precios actualizados
 
 ### Marketing
-- ✅ **Reseñas Google Business** — 53/50 · todas ⭐⭐⭐⭐⭐ (meta superada)
+- ✅ **Reseñas Google Business** — 54/50 · todas ⭐⭐⭐⭐⭐ (meta superada)
 
 ---
 
