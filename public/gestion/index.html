@@ -1121,6 +1121,22 @@ window.presCargarProductos = (catSel) => {
     tallaEl.value = '';
     tallaEl.setAttribute('data-cat', cat);
   }
+  // Baño de chocolate para queques
+  const esBanoDisponible = (cat === 'Queques & Muffins');
+  const wrapBano = wrap.querySelector('.bano-choco-wrap') || (() => {
+    const div = document.createElement('div');
+    div.className = 'bano-choco-wrap';
+    div.style.marginTop = '4px';
+    wrap.appendChild(div);
+    return div;
+  })();
+  if (esBanoDisponible) {
+    wrapBano.style.display = '';
+    wrapBano.innerHTML = '<label style="font-size:12px;"><input type="checkbox" class="chk-bano-choco" onchange="presBanoChanged(this)"> Bañado en chocolate (+$1.500)</label>';
+  } else {
+    wrapBano.style.display = 'none';
+    wrapBano.innerHTML = '';
+  }
   if (!cat) {
     prodSel.innerHTML = '<option value="">-- Producto --</option>';
     prodSel.disabled = true;
@@ -1156,11 +1172,15 @@ window.presAutocompletarPrecio = (prodSel) => {
   const optXLpres = tallaEl?.querySelector('.opt-xl-pres');
   if(optXLpres) optXLpres.style.display = prod?.nombre === 'Torta Panqueque' ? '' : 'none';
   if (precio) {
-    precioInput.value = precio;
+    precioInput.setAttribute('data-precio-base', precio);
+    const chkBano = row.querySelector('.chk-bano-choco');
+    const banoExtra = chkBano?.checked ? COSTO_BANO_CHOCOLATE : 0;
+    precioInput.value = parseFloat(precio) + banoExtra;
     precioInput.readOnly = true;
     precioInput.style.background = '#f0f0f0';
     precioInput.style.cursor = 'not-allowed';
   } else {
+    precioInput.removeAttribute('data-precio-base');
     precioInput.value = '';
     precioInput.readOnly = false;
     precioInput.style.background = '';
@@ -1190,14 +1210,32 @@ window.presTallaChanged = (tallaEl) => {
       const cn = mat + mdo + energia + logistica;
       const u = prod.tipo === 'propio' ? cn * (margen / 100) : 0;
       const pf = Math.round((cn + u) * 1.19);
+      precioInput.setAttribute('data-precio-base', pf);
+      const chkBanoTalla = row.querySelector('.chk-bano-choco');
+      const banoExtraTalla = chkBanoTalla?.checked ? COSTO_BANO_CHOCOLATE : 0;
       precioInput.removeAttribute('readonly');
-      precioInput.value = pf;
+      precioInput.value = pf + banoExtraTalla;
       precioInput.setAttribute('readonly', '');
       precioInput.style.background = '#f0f0f0';
       precioInput.style.cursor = 'not-allowed';
     }
   }
   // Sin talla o sin prod → mantener precio base de cpx(p)
+  presRecalcLinea(precioInput);
+};
+
+window.presBanoChanged = (chk) => {
+  const row = chk.closest('.pres-linea');
+  const precioInput = row.querySelector('.pres-precio');
+  const base = parseFloat(precioInput.getAttribute('data-precio-base') ?? precioInput.value) || 0;
+  if (base > 0) {
+    const final = base + (chk.checked ? COSTO_BANO_CHOCOLATE : 0);
+    precioInput.removeAttribute('readonly');
+    precioInput.value = final;
+    precioInput.setAttribute('readonly', '');
+    precioInput.style.background = '#f0f0f0';
+    precioInput.style.cursor = 'not-allowed';
+  }
   presRecalcLinea(precioInput);
 };
 
@@ -1297,7 +1335,9 @@ window.guardarPresupuesto = async () => {
       const nombreBase = opt?.getAttribute('data-original-nombre') || opt?.text?.split(' — ')[0] || 'Producto';
       const tallaLinea = row.querySelector('.sel-talla-linea');
       const tallaVal = tallaLinea && tallaLinea.style.display !== 'none' ? tallaLinea.value : '';
-      descripcion = tallaVal ? `${nombreBase} (talla ${tallaVal})` : nombreBase;
+      const chkBanoPres = row.querySelector('.chk-bano-choco');
+      const banoDescPres = chkBanoPres?.checked ? ' (bañado en chocolate)' : '';
+      descripcion = tallaVal ? `${nombreBase} (talla ${tallaVal})${banoDescPres}` : `${nombreBase}${banoDescPres}`;
     }
     items.push({ descripcion, cantidad: cant, precioUnit, subtotalLinea: cant * precioUnit });
   }
@@ -1588,7 +1628,9 @@ window.vistaPreviaPresupuesto = () => {
       const nombreBase = opt?.getAttribute('data-original-nombre') || opt?.text?.split(' — ')[0] || 'Producto';
       const tallaLinea = row.querySelector('.sel-talla-linea');
       const tallaVal = tallaLinea && tallaLinea.style.display !== 'none' ? tallaLinea.value : '';
-      descripcion = tallaVal ? `${nombreBase} (talla ${tallaVal})` : nombreBase;
+      const chkBanoPres = row.querySelector('.chk-bano-choco');
+      const banoDescPres = chkBanoPres?.checked ? ' (bañado en chocolate)' : '';
+      descripcion = tallaVal ? `${nombreBase} (talla ${tallaVal})${banoDescPres}` : `${nombreBase}${banoDescPres}`;
     }
     items.push({ descripcion, cantidad: cant, precioUnit, subtotalLinea: cant * precioUnit });
   }
