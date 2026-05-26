@@ -823,11 +823,27 @@ window.renderPrecios = () => {
           </thead>
           <tbody>
             ${ps.map((p, i) => {
+              const bg = `background:${i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.02)'}`;
+              if (p.nombre === 'Muffins') {
+                const cn = p.costo + p.mdo + p.energia + p.logistica;
+                const precioDocena = p.precio > 0 ? p.precio : Math.round((cn + cn * (p.margen / 100)) * 1.19);
+                const precio6Un = Math.round(precioDocena / 2);
+                return `
+                  <tr style="${bg};">
+                    <td rowspan="2" style="padding:8px;font-size:13px;vertical-align:middle;"><strong>${p.nombre}</strong></td>
+                    <td style="padding:8px;font-size:12px;color:var(--muted);">6 unidades</td>
+                    <td colspan="4" style="padding:8px;font-size:13px;text-align:right;color:var(--green);"><strong>${fmt(precio6Un)}</strong></td>
+                  </tr>
+                  <tr style="${bg};">
+                    <td style="padding:8px;font-size:12px;color:var(--muted);">Docena (12 un.)</td>
+                    <td colspan="4" style="padding:8px;font-size:13px;text-align:right;color:var(--green);"><strong>${fmt(precioDocena)}</strong></td>
+                  </tr>`;
+              }
               const pS = calcPrecioTalla(p, 'S');
               const pM = calcPrecioTalla(p, 'M');
               const pL = calcPrecioTalla(p, 'L');
               const tieneTallas = pS || pM || pL;
-              return `<tr style="background:${i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.02)'};">
+              return `<tr style="${bg};">
                 <td style="padding:8px;font-size:13px;"><strong>${p.nombre}</strong></td>
                 <td style="padding:8px;font-size:12px;color:var(--muted);">${p.unidad}</td>
                 <td style="padding:8px;font-size:13px;text-align:right;">
