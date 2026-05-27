@@ -7,14 +7,6 @@ import ServicioDetalle from './ServicioDetalle';
 
 const servicios = [
   {
-    id: 'b2b',
-    nombre: 'Distribución Almacenes',
-    desc: 'Abastecemos negocios, cafeterías y restaurantes con productos frescos y consistentes.',
-    imagen: '/images/svc-b2b.webp',
-    wa: 'https://wa.me/56990991011?text=Hola%20Galdi%2C%20quiero%20información%20sobre%20distribución%20B2B',
-    icono: '🏪',
-  },
-  {
     id: 'eventos',
     nombre: 'Eventos',
     desc: 'Banquetería artesanal para matrimonios, cumpleaños y celebraciones corporativas.',
