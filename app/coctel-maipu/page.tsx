@@ -27,7 +27,7 @@ export default function Page() {
         descripcion="Preparamos banquetería para cócteles y recepciones en Maipú: bocados dulces, salados y pasteles artesanales con una presentación elegante que impresiona a tus invitados."
         imagen="/images/eventos-coctel.webp"
         ctaTexto="Ver banquetería cóctel"
-        ctaHref="/?servicio=eventos&tab=Cóctel"
+        ctaHref="/?servicio=eventos&tab=C%C3%B3ctel"
         waTexto="Hola Galdi, quiero información sobre banquetería para un cóctel"
         breadcrumb="Galdi · Eventos · Cóctel"
       />

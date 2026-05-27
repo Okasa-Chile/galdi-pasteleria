@@ -46,6 +46,7 @@ export default function FAQ() {
       style={{
         background: '#F9F3EC',
         padding: '5rem 5%',
+        scrollMarginTop: '110px',
       }}
     >
       <style>{`

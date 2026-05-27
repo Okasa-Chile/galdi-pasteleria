@@ -14,8 +14,9 @@ export default function Nosotras() {
 
   return (
     <section id="nosotras" style={{
-      padding: '7rem 5%',
+      padding: '2rem 5%',
       background: 'var(--cream)',
+      scrollMarginTop: '130px',
     }}>
       <div className="reveal" style={{
         maxWidth: '1300px',

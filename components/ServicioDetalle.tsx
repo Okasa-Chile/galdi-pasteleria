@@ -285,10 +285,13 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
   };
 
   return (
-    <div style={pageMode
-      ? { position: 'relative', display: 'flex', flexDirection: 'column', minHeight: '100vh' }
-      : { position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', flexDirection: 'column', animation: 'svcFadeIn 0.5s cubic-bezier(0.25,0.46,0.45,0.94) both' }
-    }>
+    <div
+      id={pageMode ? 'productos' : undefined}
+      style={pageMode
+        ? { position: 'relative', display: 'flex', flexDirection: 'column', minHeight: '100vh', scrollMarginTop: '110px' }
+        : { position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', flexDirection: 'column', animation: 'svcFadeIn 0.5s cubic-bezier(0.25,0.46,0.45,0.94) both' }
+      }
+    >
       <style>{`
         @keyframes svcFadeIn {
           from { opacity: 0; transform: scale(1.04); }
@@ -328,21 +331,19 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
       <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column' }}>
 
         {/* Fila superior: logo + nombre + cerrar */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 5%' }}>
-          {pageMode ? (
-            <img src="/images/Nuevologo.webp" alt="Galdi" style={{ height: '52px', width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
-          ) : (
+        {pageMode ? (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem 5%' }}>
+            <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.2rem, 3vw, 2rem)', fontWeight: 300, color: 'var(--cream)', letterSpacing: '0.08em' }}>{nombre}</span>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 5%' }}>
             <button onClick={() => { onClose(); document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' }); }} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
               <img src="/images/Nuevologo.webp" alt="Galdi" style={{ height: '52px', width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
             </button>
-          )}
-          <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.2rem, 3vw, 2rem)', fontWeight: 300, color: 'var(--cream)' }}>{nombre}</span>
-          {pageMode ? (
-            <div style={{ width: '2.2rem' }} />
-          ) : (
+            <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.2rem, 3vw, 2rem)', fontWeight: 300, color: 'var(--cream)' }}>{nombre}</span>
             <button onClick={() => { onClose(); document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' }); }} style={{ background: 'rgba(26,15,10,0.4)', backdropFilter: 'blur(6px)', border: '1px solid rgba(245,230,211,0.25)', color: 'var(--cream)', width: '2.2rem', height: '2.2rem', borderRadius: '50%', fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Barra de tabs */}
         <div style={{ display: 'flex', borderBottom: '1px solid rgba(245,230,211,0.15)', overflowX: 'auto', paddingLeft: '5%' }}>

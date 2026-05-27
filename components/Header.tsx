@@ -5,8 +5,8 @@ import Image from 'next/image';
 
 const navItems: { label: string; id?: string; href?: string }[] = [
   { label: 'Productos', id: 'productos' },
-  { label: 'Arma tu Torta', href: '/arma-tu-torta' },
-  { label: 'Servicios y Pedidos', id: 'servicios' },
+  { label: 'Arma tu Torta', id: 'arma-tu-torta' },
+  { label: 'Servicios y Eventos', id: 'servicios' },
   { label: 'Nuestra Historia', id: 'nosotras' },
   { label: 'Dudas Frecuentes', id: 'preguntas-frecuentes' },
   { label: 'Contacto y Delivery', id: 'contacto' },

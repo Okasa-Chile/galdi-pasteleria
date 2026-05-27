@@ -26,7 +26,7 @@ export default function Contacto() {
     `}</style>
     <section id="contacto" style={{
       padding: '2.5rem 5%',
-      scrollMarginTop: '80px',
+      scrollMarginTop: '110px',
       background: '#3d2010',
     }}>
       <div style={{
