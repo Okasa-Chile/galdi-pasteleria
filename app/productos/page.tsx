@@ -3,12 +3,12 @@
 import Image from 'next/image';
 
 const categorias = [
-  { id: 'pan',       label: 'Pan Artesanal',      imagen: '/images/pan-amasado-new.webp', desc: 'Pan amasado, marraqueta, integral, dobladitas y más. Amasado a mano con receta familiar.' },
   { id: 'pasteles',  label: 'Pasteles & Tartas',   imagen: '/images/prod-pie.webp',        desc: 'Pie de limón, kuchenes, banofee y tartaletas. Perfectos para cualquier ocasión.' },
   { id: 'tortas',    label: 'Tortas por Encargo',  imagen: '/images/Torta 3 Leches.webp', desc: '3 leches, chocolate, selva negra, hojarasca y más. Elaboradas por encargo con ingredientes frescos.' },
   { id: 'dulces',    label: 'Dulces & Alfajores',  imagen: '/images/Berlines.webp',        desc: 'Berlines, chilenitos, alfajores y pasteles rectangulares. Recetas chilenas tradicionales.' },
   { id: 'queques',   label: 'Queques & Muffins',   imagen: '/images/muffins.webp',         desc: 'Queque de naranja, mármol, tradicional y muffins surtidos. Esponjosos y artesanales.' },
   { id: 'empanadas', label: 'Empanadas',           imagen: '/images/empanada-pino.webp',   desc: 'Pino, napolitana, vegetariana, queso camarón y mariscos. Pedido mínimo 1 docena.' },
+  { id: 'pan',       label: 'Pan Artesanal',       imagen: '/images/pan-amasado-new.webp', desc: 'Pan amasado, tortilla con chicharrones y ciabatta. Amasado a mano con receta familiar.' },
 ];
 
 export default function Page() {

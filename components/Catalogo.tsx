@@ -58,18 +58,6 @@ export const imagenes: Record<string, string> = {
 
 const categorias = [
   {
-    id: 'pan',
-    label: 'Pan Artesanal',
-    productos: [
-      { nombre: 'Pan Amasado',               detalle: 'Nuestro pan de siempre, amasado a mano con harina selecta y el cariño que solo da la receta familiar. 16 unidades de 100g.' },
-      { nombre: 'Tortilla con Chicharrones', detalle: 'Masa tierna enriquecida con chicharrones dorados, perfecta para el desayuno o la once en familia.' },
-      { nombre: 'Pan Integral',              detalle: 'Elaborado con cereales integrales seleccionados, nutritivo y auténticamente artesanal de principio a fin.' },
-      { nombre: 'Pan Frica',                 detalle: 'Pan esponjoso y dorado, opcionalmente coronado con sésamo tostado para un toque crujiente especial.' },
-      { nombre: 'Dobladitas',                detalle: 'Rollitos de masa suave y tierna, ideales para el desayuno y once familiar.' },
-      { nombre: 'Marraqueta',                detalle: 'El pan chileno por excelencia. Corteza crujiente, miga suave y aroma inconfundible, hecho a mano.' },
-    ],
-  },
-  {
     id: 'pasteles',
     label: 'Pasteles & Tartas',
     productos: [
@@ -127,12 +115,21 @@ const categorias = [
       { nombre: 'Empanada de Mariscos', detalle: 'Generosa mezcla de mariscos frescos sazonados con especias, envuelta en masa artesanal dorada y crocante.' },
     ],
   },
+  {
+    id: 'pan',
+    label: 'Pan Artesanal',
+    productos: [
+      { nombre: 'Pan Amasado',               detalle: 'Nuestro pan de siempre, amasado a mano con harina selecta y el cariño que solo da la receta familiar. 16 unidades de 100g.' },
+      { nombre: 'Tortilla con Chicharrones', detalle: 'Masa tierna enriquecida con chicharrones dorados, perfecta para el desayuno o la once en familia.' },
+      { nombre: 'Ciabatta',                  detalle: 'Pan italiano de corteza crujiente y miga alveolada, elaborado artesanalmente con masa madre.' },
+    ],
+  },
 ];
 
 const delays = ['0s', '0.06s', '0.12s', '0.18s', '0.24s', '0.30s'];
 
 function CatalogoInner() {
-  const [activeTab, setActiveTab] = useState('pan');
+  const [activeTab, setActiveTab] = useState('pasteles');
 
   useEffect(() => {
     const target = sessionStorage.getItem('scrollTo');

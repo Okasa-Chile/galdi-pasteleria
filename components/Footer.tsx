@@ -124,7 +124,6 @@ export default function Footer() {
                 { label: 'Tortas en Maipú', href: '/tortas-maipu' },
                 { label: 'Pan artesanal Maipú', href: '/pan-artesanal-maipu' },
                 { label: 'Delivery Maipú', href: '/delivery-maipu' },
-                { label: 'Distribución almacenes', href: '/distribucion-maipu' },
                 { label: 'Matrimonios Maipú', href: '/matrimonios-maipu' },
                 { label: 'Cóctel Maipú', href: '/coctel-maipu' },
                 { label: 'Cumpleaños Maipú', href: '/cumpleanos-maipu' },
