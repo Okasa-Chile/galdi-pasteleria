@@ -156,13 +156,14 @@ interface Props {
   imagen: string;
   initialTab?: string;
   onClose: () => void;
+  pageMode?: boolean;
 }
 
 type Carrito = Record<string, number>;
 
 // ─── Componente principal ────────────────────────────────────────────────────
 
-export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClose }: Props) {
+export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClose, pageMode = false }: Props) {
 
   const tabsAlmacenes = Object.keys(productosAlmacenes);
   const tabsDelivery  = Object.keys(productosDelivery);
@@ -181,9 +182,10 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
   const [slideIndex, setSlideIndex] = useState(0);
 
   useEffect(() => {
+    if (pageMode) return;
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = ''; };
-  }, []);
+  }, [pageMode]);
 
   // Cambia imagen de fondo en Eventos al cambiar tab
   useEffect(() => {
@@ -283,7 +285,10 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
   };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', flexDirection: 'column', animation: 'svcFadeIn 0.5s cubic-bezier(0.25,0.46,0.45,0.94) both' }}>
+    <div style={pageMode
+      ? { position: 'relative', display: 'flex', flexDirection: 'column', minHeight: '100vh' }
+      : { position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', flexDirection: 'column', animation: 'svcFadeIn 0.5s cubic-bezier(0.25,0.46,0.45,0.94) both' }
+    }>
       <style>{`
         @keyframes svcFadeIn {
           from { opacity: 0; transform: scale(1.04); }
@@ -324,11 +329,19 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
 
         {/* Fila superior: logo + nombre + cerrar */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 5%' }}>
-          <button onClick={() => { onClose(); document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' }); }} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+          {pageMode ? (
             <img src="/images/Nuevologo.webp" alt="Galdi" style={{ height: '52px', width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
-          </button>
+          ) : (
+            <button onClick={() => { onClose(); document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' }); }} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+              <img src="/images/Nuevologo.webp" alt="Galdi" style={{ height: '52px', width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+            </button>
+          )}
           <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.2rem, 3vw, 2rem)', fontWeight: 300, color: 'var(--cream)' }}>{nombre}</span>
-          <button onClick={() => { onClose(); document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' }); }} style={{ background: 'rgba(26,15,10,0.4)', backdropFilter: 'blur(6px)', border: '1px solid rgba(245,230,211,0.25)', color: 'var(--cream)', width: '2.2rem', height: '2.2rem', borderRadius: '50%', fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+          {pageMode ? (
+            <div style={{ width: '2.2rem' }} />
+          ) : (
+            <button onClick={() => { onClose(); document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' }); }} style={{ background: 'rgba(26,15,10,0.4)', backdropFilter: 'blur(6px)', border: '1px solid rgba(245,230,211,0.25)', color: 'var(--cream)', width: '2.2rem', height: '2.2rem', borderRadius: '50%', fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+          )}
         </div>
 
         {/* Barra de tabs */}
