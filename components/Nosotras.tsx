@@ -1,20 +1,14 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
-
-const valores = [
-  { icono: '🌾', label: '100% Artesanal' },
-  { icono: '🏠', label: 'Hecho en casa' },
-  { icono: '❤️', label: 'Recetas familiares' },
-];
+import ResenasGoogle from './ResenasGoogle';
 
 export default function Nosotras() {
-  const [hovered, setHovered] = useState<number | null>(null);
 
   return (
+    <>
     <section id="nosotras" style={{
-      padding: '2rem 5%',
+      padding: '2rem 5% 0',
       background: 'var(--cream)',
       scrollMarginTop: '130px',
     }}>
@@ -44,7 +38,7 @@ export default function Nosotras() {
         </div>
 
         {/* Columna derecha — Texto */}
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', paddingTop: '1rem' }}>
           {/* Eyebrow */}
           <p style={{
             fontFamily: 'var(--font-sans)',
@@ -134,47 +128,11 @@ export default function Nosotras() {
             Nuestro proceso artesanal comienza con la elección de los ingredientes: harina sin blanquear, mantequilla real, huevos frescos y azúcar sin refinar donde la receta lo permite. No usamos mezclas industriales ni saborizantes artificiales — cada masa se trabaja a mano, cada relleno se cocina en el momento y cada torta se decora con paciencia. Ese compromiso con la calidad no es marketing: es la única forma en que sabemos hacer las cosas. Y es también nuestra forma de cuidar a Maipú, la comuna que nos vio crecer y a la que hoy servimos con orgullo y con lo mejor que tenemos.
           </p>
 
-          {/* Íconos de valores */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '0.75rem',
-          }}>
-            {valores.map((v, i) => (
-              <div
-                key={i}
-                onMouseEnter={() => setHovered(i)}
-                onMouseLeave={() => setHovered(null)}
-                style={{
-                  background: 'rgba(61,32,16,0.12)',
-                  padding: '1rem',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(61,32,16,0.15)',
-                  textAlign: 'center',
-                  cursor: 'default',
-                  opacity: hovered === i ? 0.75 : 1,
-                  transition: 'opacity 0.4s ease',
-                }}
-              >
-                <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>
-                  {v.icono}
-                </div>
-                <p style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: '0.75rem',
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  color: '#8B5E3C',
-                  margin: 0,
-                }}>
-                  {v.label}
-                </p>
-              </div>
-            ))}
-          </div>
         </div>
 
       </div>
+      <ResenasGoogle />
     </section>
+    </>
   );
 }
