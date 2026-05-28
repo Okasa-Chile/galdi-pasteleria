@@ -1,5 +1,5 @@
 # AI_CONTEXT — Proyecto Galdi Pastelería
-> Registro de trabajo asistido por IA · Actualizado: 12 mayo 2026
+> Registro de trabajo asistido por IA · Actualizado: 27 mayo 2026
 
 ---
 
@@ -13,7 +13,7 @@
 | **Tipo de negocio** | Pastelería artesanal y catering |
 | **Desarrollador** | Claudio (GitHub: `Okasa-Chile`) |
 | **Repositorio** | `Okasa-Chile/galdi-pasteleria` (rama `main`, público) |
-| **Firebase Project** | `galdi-web` (plan Spark) |
+| **Firebase Project** | `galdi-web` (plan Blaze) |
 | **Firebase Site** | `galdi-web.web.app` |
 | **URL Producción** | `https://galdi.cl` |
 | **Stack** | Next.js 16 · TypeScript · Tailwind CSS v4 · shadcn/ui v4 |
@@ -284,3 +284,65 @@ galdi-nextjs/
 ### Pendientes
 - Analizar métricas de /arma-tu-torta tras indexación en Google Search Console
 - Evaluar acceso más prominente para visitantes a /arma-tu-torta
+
+---
+
+## Sesión 27-05-2026
+
+### Cambios realizados
+
+#### Homepage (app/page.tsx)
+- Nueva estructura: Hero → ServicioDetalle delivery (pageMode) → Franja Eventos → Nosotras → Arma tu Torta (bloque inline) → FAQ → Contacto → Footer
+- Eliminados: Catalogo.tsx y Servicios.tsx del homepage
+- Agregado: EventosOverlay.tsx para manejar `?servicio=eventos` via useSearchParams
+
+#### Franja Eventos
+- Nueva sección con 4 paneles diagonales: Matrimonios, Cóctel, Cumpleaños, Corporativos
+- Links a `/?servicio=eventos&tab=X` (abre overlay, no página SEO)
+- Título elegante "Hacemos especiales tus momentos"
+
+#### /productos (app/productos/page.tsx)
+- Reemplazado por ServicioDetalle con pageMode=true (id="delivery")
+- Muestra catálogo completo con carrito WhatsApp y 6 tabs incluyendo Pan
+- Header link "Productos" hace scroll a #productos en homepage
+
+#### ServicioDetalle.tsx
+- Nueva prop `pageMode: boolean`
+- En pageMode: position relative, sin bloqueo de scroll, sin botón cerrar, sin logo
+- `id="productos"` cuando pageMode=true, `scrollMarginTop: '110px'`
+- Tab Pan agregado a productosDelivery (Pan Amasado, Tortilla con Chicharrones, Ciabatta)
+
+#### Reseñas Google Business
+- Nuevo componente: `components/ResenasGoogle.tsx`
+- Cloud Function: `functions/src/index.ts` → `placesReviews`
+- URL producción: `https://us-central1-galdi-web.cloudfunctions.net/placesReviews`
+- Place ID Galdi: `ChIJf7l5N6LDYpYR6uNj83Fqd9g` (actualizado — el anterior estaba vencido)
+- Firebase plan actualizado a Blaze (requerido para Cloud Functions)
+- Places API habilitada en proyecto galdi-web
+- API Key servidor (sin restricción de referer): `AIzaSyBhM3t8G0NeXX8JiC0CEfsDcOExwQFFXh4`
+- Reseñas integradas dentro del `<section>` de Nosotras.tsx
+
+#### /gestion
+- Talla XL dinámica: aparece en catálogo, calculadora y lista de precios para cualquier producto con XL en COSTOS_TALLA
+- Pan Artesanal reducido a 3 productos: Pan Amasado, Tortilla con Chicharrones, Ciabatta
+
+#### Eliminaciones
+- `/distribucion-maipu` redirige a `/`
+- Servicio "Distribución Almacenes" eliminado de Servicios.tsx y Footer.tsx
+- Sección Catalogo.tsx eliminada del homepage
+- `app/api/resenas/route.ts` eliminado (incompatible con `output: export`)
+
+#### Header
+- "Servicios y Pedidos" → "Servicios y Eventos"
+- "Productos" hace scroll a `#productos` (anchor, no navegación)
+- Todos los anchors con `scrollMarginTop: '130px'`
+
+#### Nosotras.tsx
+- Eliminados los 3 badges (100% Artesanal, Hecho en Casa, Recetas Familiares)
+- ResenasGoogle integrado dentro del `<section>` raíz
+- Padding ajustado a `'2rem 5% 0'`
+
+### Pendientes
+- Carrito con Flow (28-05-2026)
+- Fase 3a Okasa: restricción HTTP referrer API Key Gemini
+- Imagen Ciabatta (provisional: usa pan-amasado-new.webp)
