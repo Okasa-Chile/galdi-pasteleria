@@ -70,6 +70,17 @@ const productosDelivery: Record<string, { nombre: string; imagen: string; unidad
     { nombre: 'Queso Camarón',        imagen: imagenes['Queso Camarón'],        unidad: 'docena' },
     { nombre: 'Empanada de Mariscos', imagen: imagenes['Empanada de Mariscos'], unidad: 'docena' },
   ],
+  'Dulces': [
+    { nombre: 'Berlines',               imagen: imagenes['Berlines'],               unidad: 'docena' },
+    { nombre: 'Alfajores de Chocolate', imagen: imagenes['Alfajores de Chocolate'], unidad: 'docena' },
+    { nombre: 'Chilenitos',             imagen: imagenes['Chilenitos'],             unidad: 'docena' },
+    { nombre: 'Pasteles Rectangulares', imagen: imagenes['Pasteles Rectangulares'], unidad: 'docena' },
+  ],
+  'Pan': [
+    { nombre: 'Pan Amasado',               imagen: imagenes['Pan Amasado'],               unidad: 'unidad' },
+    { nombre: 'Tortilla con Chicharrones', imagen: imagenes['Tortilla con Chicharrones'], unidad: 'unidad' },
+    { nombre: 'Ciabatta',                  imagen: imagenes['Pan Amasado'],               unidad: 'unidad' },
+  ],
 };
 
 const eventosData: Record<string, { imagen: string; desc: string }> = {
