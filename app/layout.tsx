@@ -54,27 +54,45 @@ export default function RootLayout({
         <meta name="color-scheme" content="light only" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "FoodEstablishment",
-          "name": "Galdi Pastelería Artesanal",
-          "description": "Pastelería artesanal en Maipú. Tortas, pasteles, pan y empanadas hechos con cariño. Distribución a almacenes, eventos y delivery en toda la comuna.",
+          "@type": ["Bakery", "LocalBusiness"],
+          "name": "Galdi SPA - Pastelería, Panadería, Eventos",
+          "description": "Pastelería y panadería artesanal en Maipú. Tortas, pan amasado, empanadas y banquetería para eventos. Delivery en Maipú y Gran Santiago.",
           "url": "https://galdi.cl",
           "telephone": "+56990991011",
           "email": "ventas@galdi.cl",
-          "address": { "@type": "PostalAddress", "streetAddress": "Pasaje Marcos Echenique 809", "addressLocality": "Maipú", "addressRegion": "Región Metropolitana", "addressCountry": "CL" },
-          "servesCuisine": "Chilean",
-          "areaServed": "Maipú",
-          "sameAs": "https://share.google/s9CQErdNSBOZ8y15P",
-          "hasOfferCatalog": {
-            "@type": "OfferCatalog",
-            "name": "Productos Galdi",
-            "itemListElement": [
-              { "@type": "Offer", "itemOffered": { "@type": "FoodService", "name": "Empanadas artesanales" } },
-              { "@type": "Offer", "itemOffered": { "@type": "FoodService", "name": "Tortas por encargo" } },
-              { "@type": "Offer", "itemOffered": { "@type": "FoodService", "name": "Pan artesanal" } },
-              { "@type": "Offer", "itemOffered": { "@type": "FoodService", "name": "Delivery Maipú" } },
-              { "@type": "Offer", "itemOffered": { "@type": "FoodService", "name": "Banquetería eventos" } }
-            ]
-          }
+          "priceRange": "$$",
+          "servesCuisine": "Pastelería Artesanal Chilena",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Pasaje Marcos Echenique N° 809",
+            "addressLocality": "Las Palmas, Maipú",
+            "addressRegion": "Región Metropolitana",
+            "postalCode": "9293891",
+            "addressCountry": "CL"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": -33.4776144,
+            "longitude": -70.7521309
+          },
+          "openingHoursSpecification": [{
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+            "opens": "09:00",
+            "closes": "19:00"
+          }],
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "5.0",
+            "reviewCount": "54",
+            "bestRating": "5",
+            "worstRating": "1"
+          },
+          "sameAs": [
+            "https://www.instagram.com/galdi_banqueteria/",
+            "https://www.google.com/maps?cid=15591011647306482666"
+          ],
+          "areaServed": ["Maipú","Cerrillos","Pudahuel","Estación Central","Padre Hurtado","Lo Prado"]
         })}} />
       </head>
       <body>
