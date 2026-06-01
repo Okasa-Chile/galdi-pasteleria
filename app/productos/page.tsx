@@ -10,7 +10,7 @@ export default function ProductosPage() {
       <Header />
       <ServicioDetalle
         id="delivery"
-        nombre="Nuestros Productos"
+        nombre="Productos Artesanales Galdi · Maipú"
         imagen="/images/svc-delivery.webp"
         pageMode={true}
         onClose={() => {}}

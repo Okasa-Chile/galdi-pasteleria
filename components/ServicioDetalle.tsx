@@ -344,7 +344,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
         {/* Fila superior: logo + nombre + cerrar */}
         {pageMode ? (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem 5%' }}>
-            <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.2rem, 3vw, 2rem)', fontWeight: 300, color: 'var(--cream)', letterSpacing: '0.08em' }}>{nombre}</span>
+            <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.2rem, 3vw, 2rem)', fontWeight: 300, color: 'var(--cream)', letterSpacing: '0.08em', margin: 0 }}>{nombre}</h1>
           </div>
         ) : (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 5%' }}>
