@@ -57,6 +57,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 _Última actualización: 12 de mayo, 2026_
 
+### Rutas locales
+- Galdi: C:\OKasa\Web\galdi-nextjs
+- Okasa: C:\OKasa\Web\okasa-proyecto
+
 ## Advertencias de desarrollo
 
 **Banner/AnnouncementBar:** El texto del banner superior NO está en `BannerDiaMadre.tsx` — está hardcodeado en `components/Header.tsx` línea ~116. Siempre modificar `Header.tsx` para cambiar el texto del banner de producción.
