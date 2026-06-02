@@ -1,4 +1,5 @@
 import { onRequest } from 'firebase-functions/v2/https';
+import * as crypto from 'crypto';
 
 const PLACE_ID = 'ChIJf7l5N6LDYpYR6uNj83Fqd9g';
 
@@ -32,6 +33,112 @@ export const placesReviews = onRequest(
       res.json(resenas);
     } catch {
       res.status(500).json({ error: 'Error fetching reviews' });
+    }
+  }
+);
+
+// ─── Flow ─────────────────────────────────────────────────────────────────────
+
+const FLOW_API_URL = 'https://www.flow.cl/api';
+
+function firmarFlow(params: Record<string, string>, secret: string): string {
+  const keys = Object.keys(params).sort();
+  const cadena = keys.map(k => `${k}${params[k]}`).join('');
+  return crypto.createHmac('sha256', secret).update(cadena).digest('hex');
+}
+
+export const flowCrearOrden = onRequest(
+  { region: 'us-central1', cors: ALLOWED_ORIGINS, invoker: 'public', secrets: ['FLOW_API_KEY', 'FLOW_SECRET_KEY'] },
+  async (req, res) => {
+    if (req.method !== 'POST') {
+      res.status(405).json({ error: 'Método no permitido' });
+      return;
+    }
+    try {
+      const apiKey = process.env.FLOW_API_KEY;
+      const secret = process.env.FLOW_SECRET_KEY;
+      if (!apiKey || !secret) {
+        res.status(500).json({ error: 'Credenciales Flow no configuradas' });
+        return;
+      }
+
+      const { orden, monto, email, descripcion } = req.body;
+
+      const params: Record<string, string> = {
+        apiKey,
+        commerceOrder: orden,
+        subject:       descripcion,
+        currency:      'CLP',
+        amount:        String(monto),
+        email,
+        urlConfirmation: 'https://us-central1-galdi-web.cloudfunctions.net/flowConfirmar',
+        urlReturn:     'https://galdi.cl/pago-exitoso',
+      };
+      params.s = firmarFlow(params, secret);
+
+      const form = new URLSearchParams(params);
+      const response = await fetch(`${FLOW_API_URL}/payment/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: form.toString(),
+      });
+
+      const data = await response.json() as { url?: string; token?: string; message?: string };
+
+      if (!data.url || !data.token) {
+        res.status(502).json({ error: 'Flow no retornó URL', detalle: data });
+        return;
+      }
+
+      res.json({ urlPago: `${data.url}?token=${data.token}`, token: data.token });
+
+    } catch (err) {
+      res.status(500).json({ error: 'Error interno', detalle: String(err) });
+    }
+  }
+);
+
+export const flowConfirmar = onRequest(
+  { region: 'us-central1', cors: ALLOWED_ORIGINS, invoker: 'public', secrets: ['FLOW_API_KEY', 'FLOW_SECRET_KEY'] },
+  async (req, res) => {
+    try {
+      const apiKey = process.env.FLOW_API_KEY;
+      const secret = process.env.FLOW_SECRET_KEY;
+      if (!apiKey || !secret) {
+        res.status(500).json({ error: 'Credenciales Flow no configuradas' });
+        return;
+      }
+
+      const token = req.body.token || req.query.token as string;
+      if (!token) {
+        res.status(400).json({ error: 'Token no recibido' });
+        return;
+      }
+
+      const params: Record<string, string> = { apiKey, token };
+      params.s = firmarFlow(params, secret);
+
+      const response = await fetch(
+        `${FLOW_API_URL}/payment/getStatus?${new URLSearchParams(params)}`,
+        { method: 'GET' }
+      );
+
+      const pago = await response.json() as {
+        status?: number;
+        commerceOrder?: string;
+        amount?: number;
+        email?: string;
+      };
+
+      if (pago.status === 2) {
+        console.log('✅ Pago confirmado:', pago.commerceOrder, pago.amount, pago.email);
+        // TODO: guardar pedido en Firestore + notificar a Galdi
+      }
+
+      res.json({ ok: true, status: pago.status });
+
+    } catch (err) {
+      res.status(500).json({ error: 'Error interno', detalle: String(err) });
     }
   }
 );
