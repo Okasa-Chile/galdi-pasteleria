@@ -181,10 +181,12 @@ galdi-nextjs/
 - [ ] **QR en PDF usando SVG en vez de canvas**
 - [ ] **Agenda de clientes en /gestion**
 - [x] **Funcionalidad edición presupuestos Tab 5** — botón Editar, Actualizar, Cancelar edición
-- [ ] **Carrito de compras con pago Flow** — aprobado por socias 25-05-2026. Despacho: $3.000 cercanas / $5.000 lejanas. Comunas cercanas: Maipú, Cerrillos, Pudahuel, Estación Central, Padre Hurtado, Lo Prado. Retiro gratis en Maipú. Pago 100% anticipado.
+- [x] **Carrito de compras con pago Flow** — backend completo (flowCrearOrden + flowConfirmar como Cloud Functions). Despacho: $3.000 cercanas / $5.000 lejanas. Comunas cercanas: Maipú, Cerrillos, Pudahuel, Estación Central, Padre Hurtado, Lo Prado. Retiro gratis en Maipú. Pago 100% anticipado.
 - [ ] **Precios catálogo público** — pendiente confirmación (estimado 26-05-2026)
 - [ ] **Crear cuenta Flow** — pendiente. Puede demorar 1-3 días hábiles en verificar.
 - [ ] **POS TUU** — en proceso de compra por Claudio
+- [ ] **Carrito frontend** — componente con productos, cantidades, selector comuna y botón Pagar con Flow
+- [ ] **flowConfirmar → guardar pedido en Firestore al confirmar pago + notificar a Galdi por WhatsApp**
 
 ### Administrativos / Externos
 - [ ] **Estatuto societario Galdi** — modificación portal RES en curso:
@@ -321,6 +323,23 @@ galdi-nextjs/
 - Places API habilitada en proyecto galdi-web
 - API Key servidor (sin restricción de referer): `AIzaSyBhM3t8G0NeXX8JiC0CEfsDcOExwQFFXh4`
 - Reseñas integradas dentro del `<section>` de Nosotras.tsx
+
+### Cloud Functions Flow (01-06-2026)
+- `flowCrearOrden` → https://us-central1-galdi-web.cloudfunctions.net/flowCrearOrden
+  Recibe: `{ orden, monto, email, descripcion }`
+  Retorna: `{ urlPago, token }`
+
+- `flowConfirmar` → https://us-central1-galdi-web.cloudfunctions.net/flowConfirmar
+  Webhook que Flow llama al confirmar pago (status 2 = pagado)
+  TODO: guardar pedido en Firestore + notificar a Galdi
+
+### Secrets configurados en Google Secret Manager
+- `FLOW_API_KEY` (project: galdi-web, version 1)
+- `FLOW_SECRET_KEY` (project: galdi-web, version 1)
+
+### Página nueva
+- `/pago-exitoso` → `app/pago-exitoso/page.tsx` (noindex)
+  Página de confirmación tras pago exitoso con Flow
 
 #### /gestion
 - Talla XL dinámica: aparece en catálogo, calculadora y lista de precios para cualquier producto con XL en COSTOS_TALLA
