@@ -90,4 +90,11 @@
     <priority>0.8</priority>
   </url>
 
+  <url>
+    <loc>https://galdi.cl/dia-del-padre</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>

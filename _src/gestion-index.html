@@ -149,6 +149,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
           <option value="L">L — 20 a 22 personas</option>
           <option value="XL" id="opt-xl-calc" style="display:none">XL — 25 personas</option>
         </select>
+        <div id="info-bano-calc" style="display:none;font-size:11px;color:var(--muted);margin-top:4px;">
+          Opción baño chocolate: +$1.500 sobre cualquier tamaño
+        </div>
       </div>
       <div class="grid-2">
         <div><label id="lbl-mat">Costo materiales (neto)</label><input type="number" id="c-mat" oninput="recalc()"></div>
@@ -238,9 +241,22 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
             <option value="">— Sin talla —</option>
             <option value="S">S — 8 a 10 personas</option>
             <option value="M">M — 14 a 16 personas</option>
-            <option value="L">L — 20 a 22 personas</option>
+            <option value="L" id="opt-l-ventas">L — 20 a 22 personas</option>
             <option value="XL" id="opt-xl-ventas" style="display:none">XL — 25 personas</option>
           </select>
+        </div>
+        <div id="wrap-muffin-un" style="display:none;">
+          <label>Unidad</label>
+          <select id="v-muffin-un" onchange="calcularMonto()">
+            <option value="docena">1 docena (12 un.)</option>
+            <option value="media">6 unidades</option>
+          </select>
+        </div>
+        <div id="wrap-bano-v" style="display:none;">
+          <label>
+            <input type="checkbox" id="v-bano" onchange="calcularMonto()">
+            Bañado en chocolate (+$1.500)
+          </label>
         </div>
         <div><label>Cantidad</label><input type="number" id="v-q" placeholder="ej: 2" min="1" style="max-width:80px" oninput="calcularMonto()"></div>
         <div><label>Monto total ($)</label><input type="number" id="v-m" placeholder="0"></div>
@@ -623,11 +639,7 @@ const provider = new GoogleAuthProvider();
 const DEFAULTS=[
   {id:1,nombre:'Pan Amasado',cat:'Pan Artesanal',tipo:'propio',unidad:'kg',costo:1100,energia:135,logistica:30,mdo:50,margen:15,combate:'$1.800 / kg'},
   {id:2,nombre:'Tortilla con Chicharrones',cat:'Pan Artesanal',tipo:'propio',unidad:'unidad',costo:1200,energia:135,logistica:30,mdo:50,margen:15,combate:'mín. 2 unidades'},
-  {id:3,nombre:'Pan Integral',cat:'Pan Artesanal',tipo:'propio',unidad:'kg',costo:1150,energia:135,logistica:30,mdo:50,margen:15,combate:''},
-  {id:4,nombre:'Pan Frica',cat:'Pan Artesanal',tipo:'propio',unidad:'kg',costo:1100,energia:135,logistica:30,mdo:50,margen:15,combate:''},
-  {id:5,nombre:'Hallullas',cat:'Pan Artesanal',tipo:'propio',unidad:'kg',costo:1050,energia:135,logistica:30,mdo:50,margen:15,combate:''},
-  {id:6,nombre:'Dobladitas',cat:'Pan Artesanal',tipo:'propio',unidad:'docena',costo:800,energia:135,logistica:30,mdo:50,margen:15,combate:''},
-  {id:7,nombre:'Marraqueta',cat:'Pan Artesanal',tipo:'reventa',unidad:'kg',costo:1555,energia:40,logistica:30,mdo:0,margen:0,combate:'$1.880 / kg'},
+  {id:36,nombre:'Ciabatta',cat:'Pan Artesanal',tipo:'propio',unidad:'unidad',costo:1800,energia:150,logistica:30,mdo:200,margen:20,combate:''},
   {id:8,nombre:'Pie de Limón Merengado',cat:'Pasteles & Tartas',tipo:'propio',unidad:'unidad',costo:4500,energia:300,logistica:30,mdo:800,margen:25,combate:''},
   {id:9,nombre:'Kuchen Sureño',cat:'Pasteles & Tartas',tipo:'propio',unidad:'unidad',costo:3500,energia:300,logistica:30,mdo:700,margen:25,combate:''},
   {id:10,nombre:'Kuchen de Nuez',cat:'Pasteles & Tartas',tipo:'propio',unidad:'unidad',costo:4000,energia:300,logistica:30,mdo:700,margen:25,combate:''},
@@ -812,15 +824,34 @@ window.renderPrecios = () => {
               <th style="text-align:right;padding:6px 8px;font-weight:500;">Talla S</th>
               <th style="text-align:right;padding:6px 8px;font-weight:500;">Talla M</th>
               <th style="text-align:right;padding:6px 8px;font-weight:500;">Talla L</th>
+              <th style="text-align:right;padding:6px 8px;font-weight:500;">Talla XL</th>
             </tr>
           </thead>
           <tbody>
             ${ps.map((p, i) => {
+              const bg = `background:${i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.02)'}`;
+              if (p.nombre === 'Muffins') {
+                const cn = p.costo + p.mdo + p.energia + p.logistica;
+                const precioDocena = p.precio > 0 ? p.precio : Math.round((cn + cn * (p.margen / 100)) * 1.19);
+                const precio6Un = Math.round(precioDocena / 2);
+                return `
+                  <tr style="${bg};">
+                    <td rowspan="2" style="padding:8px;font-size:13px;vertical-align:middle;"><strong>${p.nombre}</strong></td>
+                    <td style="padding:8px;font-size:12px;color:var(--muted);">6 unidades</td>
+                    <td colspan="5" style="padding:8px;font-size:13px;text-align:right;color:var(--green);"><strong>${fmt(precio6Un)}</strong></td>
+                  </tr>
+                  <tr style="${bg};">
+                    <td style="padding:8px;font-size:12px;color:var(--muted);">Docena (12 un.)</td>
+                    <td colspan="5" style="padding:8px;font-size:13px;text-align:right;color:var(--green);"><strong>${fmt(precioDocena)}</strong></td>
+                  </tr>`;
+              }
               const pS = calcPrecioTalla(p, 'S');
               const pM = calcPrecioTalla(p, 'M');
               const pL = calcPrecioTalla(p, 'L');
-              const tieneTallas = pS || pM || pL;
-              return `<tr style="background:${i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.02)'};">
+              const pXL = calcPrecioTalla(p, 'XL');
+              const tieneTallas = pS || pM || pL || pXL;
+              const esQuequeLP = p.cat === 'Queques & Muffins' && p.nombre !== 'Muffins';
+              const filaMain = `<tr style="${bg};">
                 <td style="padding:8px;font-size:13px;"><strong>${p.nombre}</strong></td>
                 <td style="padding:8px;font-size:12px;color:var(--muted);">${p.unidad}</td>
                 <td style="padding:8px;font-size:13px;text-align:right;">
@@ -835,7 +866,24 @@ window.renderPrecios = () => {
                 <td style="padding:8px;font-size:13px;text-align:right;color:var(--green);">
                   ${pL ? fmt(pL) : '—'}
                 </td>
+                <td style="padding:8px;font-size:13px;text-align:right;color:var(--green);">
+                  ${pXL ? fmt(pXL) : '—'}
+                </td>
               </tr>`;
+              const filaBano = esQuequeLP && tieneTallas ? `<tr style="background:rgba(201,165,90,0.06);">
+                <td style="padding:4px 8px;font-size:11px;color:var(--muted);">+ Baño chocolate</td>
+                <td style="padding:4px 8px;font-size:11px;color:var(--muted);"></td>
+                <td style="padding:4px 8px;font-size:11px;text-align:right;color:var(--muted);">—</td>
+                <td style="padding:4px 8px;font-size:11px;text-align:right;color:var(--gold2);">
+                  ${pS ? fmt(pS + COSTO_BANO_CHOCOLATE) : '—'}
+                </td>
+                <td style="padding:4px 8px;font-size:11px;text-align:right;color:var(--gold2);">
+                  ${pM ? fmt(pM + COSTO_BANO_CHOCOLATE) : '—'}
+                </td>
+                <td style="padding:4px 8px;font-size:11px;text-align:right;color:var(--gold2);">—</td>
+                <td style="padding:4px 8px;font-size:11px;text-align:right;color:var(--gold2);">—</td>
+              </tr>` : '';
+              return filaMain + filaBano;
             }).join('')}
           </tbody>
         </table>
@@ -899,16 +947,17 @@ window.exportarPreciosExcel = () => {
   }
 
   const cats = [...new Set(prods.map(p => p.cat))];
-  let csv = 'Categoría,Producto,Unidad,Precio,Talla S,Talla M,Talla L\n';
+  let csv = 'Categoría,Producto,Unidad,Precio,Talla S,Talla M,Talla L,Talla XL\n';
 
   cats.forEach(cat => {
     prods.filter(p => p.cat === cat).forEach(p => {
       const pS = calcPrecioTalla(p, 'S');
       const pM = calcPrecioTalla(p, 'M');
       const pL = calcPrecioTalla(p, 'L');
-      const tieneTallas = pS || pM || pL;
+      const pXL = calcPrecioTalla(p, 'XL');
+      const tieneTallas = pS || pM || pL || pXL;
       const precio = tieneTallas ? '' : p.precio;
-      csv += `"${cat}","${p.nombre}","${p.unidad}",${precio},${pS||''},${pM||''},${pL||''}\n`;
+      csv += `"${cat}","${p.nombre}","${p.unidad}",${precio},${pS||''},${pM||''},${pL||''},${pXL||''}\n`;
     });
   });
 
@@ -1075,6 +1124,22 @@ window.presCargarProductos = (catSel) => {
     tallaEl.value = '';
     tallaEl.setAttribute('data-cat', cat);
   }
+  // Baño de chocolate para queques
+  const esBanoDisponible = (cat === 'Queques & Muffins');
+  const wrapBano = wrap.querySelector('.bano-choco-wrap') || (() => {
+    const div = document.createElement('div');
+    div.className = 'bano-choco-wrap';
+    div.style.marginTop = '4px';
+    wrap.appendChild(div);
+    return div;
+  })();
+  if (esBanoDisponible) {
+    wrapBano.style.display = '';
+    wrapBano.innerHTML = '<label style="font-size:12px;"><input type="checkbox" class="chk-bano-choco" onchange="presBanoChanged(this)"> Bañado en chocolate (+$1.500)</label>';
+  } else {
+    wrapBano.style.display = 'none';
+    wrapBano.innerHTML = '';
+  }
   if (!cat) {
     prodSel.innerHTML = '<option value="">-- Producto --</option>';
     prodSel.disabled = true;
@@ -1110,11 +1175,15 @@ window.presAutocompletarPrecio = (prodSel) => {
   const optXLpres = tallaEl?.querySelector('.opt-xl-pres');
   if(optXLpres) optXLpres.style.display = prod?.nombre === 'Torta Panqueque' ? '' : 'none';
   if (precio) {
-    precioInput.value = precio;
+    precioInput.setAttribute('data-precio-base', precio);
+    const chkBano = row.querySelector('.chk-bano-choco');
+    const banoExtra = chkBano?.checked ? COSTO_BANO_CHOCOLATE : 0;
+    precioInput.value = parseFloat(precio) + banoExtra;
     precioInput.readOnly = true;
     precioInput.style.background = '#f0f0f0';
     precioInput.style.cursor = 'not-allowed';
   } else {
+    precioInput.removeAttribute('data-precio-base');
     precioInput.value = '';
     precioInput.readOnly = false;
     precioInput.style.background = '';
@@ -1144,14 +1213,32 @@ window.presTallaChanged = (tallaEl) => {
       const cn = mat + mdo + energia + logistica;
       const u = prod.tipo === 'propio' ? cn * (margen / 100) : 0;
       const pf = Math.round((cn + u) * 1.19);
+      precioInput.setAttribute('data-precio-base', pf);
+      const chkBanoTalla = row.querySelector('.chk-bano-choco');
+      const banoExtraTalla = chkBanoTalla?.checked ? COSTO_BANO_CHOCOLATE : 0;
       precioInput.removeAttribute('readonly');
-      precioInput.value = pf;
+      precioInput.value = pf + banoExtraTalla;
       precioInput.setAttribute('readonly', '');
       precioInput.style.background = '#f0f0f0';
       precioInput.style.cursor = 'not-allowed';
     }
   }
   // Sin talla o sin prod → mantener precio base de cpx(p)
+  presRecalcLinea(precioInput);
+};
+
+window.presBanoChanged = (chk) => {
+  const row = chk.closest('.pres-linea');
+  const precioInput = row.querySelector('.pres-precio');
+  const base = parseFloat(precioInput.getAttribute('data-precio-base') ?? precioInput.value) || 0;
+  if (base > 0) {
+    const final = base + (chk.checked ? COSTO_BANO_CHOCOLATE : 0);
+    precioInput.removeAttribute('readonly');
+    precioInput.value = final;
+    precioInput.setAttribute('readonly', '');
+    precioInput.style.background = '#f0f0f0';
+    precioInput.style.cursor = 'not-allowed';
+  }
   presRecalcLinea(precioInput);
 };
 
@@ -1251,7 +1338,9 @@ window.guardarPresupuesto = async () => {
       const nombreBase = opt?.getAttribute('data-original-nombre') || opt?.text?.split(' — ')[0] || 'Producto';
       const tallaLinea = row.querySelector('.sel-talla-linea');
       const tallaVal = tallaLinea && tallaLinea.style.display !== 'none' ? tallaLinea.value : '';
-      descripcion = tallaVal ? `${nombreBase} (talla ${tallaVal})` : nombreBase;
+      const chkBanoPres = row.querySelector('.chk-bano-choco');
+      const banoDescPres = chkBanoPres?.checked ? ' (bañado en chocolate)' : '';
+      descripcion = tallaVal ? `${nombreBase} (talla ${tallaVal})${banoDescPres}` : `${nombreBase}${banoDescPres}`;
     }
     items.push({ descripcion, cantidad: cant, precioUnit, subtotalLinea: cant * precioUnit });
   }
@@ -1542,7 +1631,9 @@ window.vistaPreviaPresupuesto = () => {
       const nombreBase = opt?.getAttribute('data-original-nombre') || opt?.text?.split(' — ')[0] || 'Producto';
       const tallaLinea = row.querySelector('.sel-talla-linea');
       const tallaVal = tallaLinea && tallaLinea.style.display !== 'none' ? tallaLinea.value : '';
-      descripcion = tallaVal ? `${nombreBase} (talla ${tallaVal})` : nombreBase;
+      const chkBanoPres = row.querySelector('.chk-bano-choco');
+      const banoDescPres = chkBanoPres?.checked ? ' (bañado en chocolate)' : '';
+      descripcion = tallaVal ? `${nombreBase} (talla ${tallaVal})${banoDescPres}` : `${nombreBase}${banoDescPres}`;
     }
     items.push({ descripcion, cantidad: cant, precioUnit, subtotalLinea: cant * precioUnit });
   }
@@ -1998,7 +2089,9 @@ window.renderT = () => {
     const cn=p.costo+p.energia+p.logistica+p.mdo;
     const mr=cn>0?Math.round(((p.precio/1.19)-cn)/cn*100):0;
     const esTortaOPastel=(p.cat==='Tortas'||p.cat==='Pasteles & Tartas');
-    const badgeTallas=esTortaOPastel?`<div style="margin-top:4px;display:flex;gap:4px;" onclick="event.stopPropagation()">${(p.nombre==='Torta Panqueque'?['S','M','L','XL']:['S','M','L']).map(t=>`<span style="font-size:10px;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">${t}</span>`).join('')}</div>`:''
+    const esQueque=(p.cat==='Queques & Muffins'&&p.nombre!=='Muffins');
+    const tallasDisp = esTortaOPastel ? (['S','M','L'].concat(!!(COSTOS_TALLA[p.nombre]?.XL || p.nombre==='Torta Panqueque') ? ['XL'] : [])) : [];
+    const badgeTallas=esTortaOPastel?`<div style="margin-top:4px;display:flex;gap:4px;" onclick="event.stopPropagation()">${tallasDisp.map(t=>`<span style="font-size:10px;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">${t}</span>`).join('')}</div>`:esQueque?`<div style="margin-top:4px;display:flex;gap:4px;" onclick="event.stopPropagation()">${['S','M'].map(t=>`<span style="font-size:10px;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">${t}</span>`).join('')}</div>`:''
     return `<tr class="${sel?.id===p.id?'selected':''}" onclick="selProd(${p.id})" style="cursor:pointer;">
       <td><strong>${p.nombre}</strong>${badgeTallas}</td>
       <td><span class="tag tag-${p.tipo}">${p.tipo==='propio'?'Propio':'Reventa'}</span></td>
@@ -2013,7 +2106,7 @@ window.selProd = (id) => {
   sel=prods.find(p=>p.id===id);if(!sel)return;
   document.getElementById('card-calc').style.display='block';
   document.getElementById('calc-tit').textContent='Calculadora — '+sel.nombre;
-  const esTallaVariable=(sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas');
+  const esTallaVariable=(sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas'||(sel.cat==='Queques & Muffins'&&sel.nombre!=='Muffins'));
   document.getElementById('c-mat').value=esTallaVariable?'':sel.costo;
   document.getElementById('c-mdo').value=sel.mdo;
   document.getElementById('c-en').value=sel.energia;
@@ -2026,8 +2119,14 @@ window.selProd = (id) => {
   document.getElementById('r6').textContent=sel.combate||'—';
   document.getElementById('wrap-talla-calc').style.display=esTallaVariable?'':'none';
   document.getElementById('calc-talla').value='';
+  const esQuequeCalc = sel.cat==='Queques & Muffins'&&sel.nombre!=='Muffins';
+  const optLcalc = document.querySelector('#calc-talla option[value="L"]');
   const optXLcalc = document.getElementById('opt-xl-calc');
-  if(optXLcalc) optXLcalc.style.display = sel.nombre==='Torta Panqueque' ? '' : 'none';
+  if(optLcalc) optLcalc.style.display = esQuequeCalc ? 'none' : '';
+  const tieneXL = !!(COSTOS_TALLA[sel.nombre]?.XL || COSTOS_TALLA[sel.cat]?.XL || sel.nombre === 'Torta Panqueque');
+  if(optXLcalc) optXLcalc.style.display = tieneXL ? '' : 'none';
+  const infoBanoCalc = document.getElementById('info-bano-calc');
+  if(infoBanoCalc) infoBanoCalc.style.display = esQuequeCalc ? '' : 'none';
   recalc();renderT();
   document.getElementById('card-calc').scrollIntoView({behavior:'smooth',block:'nearest'});
 };
@@ -2065,7 +2164,7 @@ window.aplicarCostoTalla = () => {
 window.guardarPrecio = async () => {
   if(!sel) return;
   const idx = prods.findIndex(p=>p.id===sel.id);
-  const esTallaVariable = (sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas');
+  const esTallaVariable = (sel.cat==='Tortas'||sel.cat==='Pasteles & Tartas'||(sel.cat==='Queques & Muffins'&&sel.nombre!=='Muffins'));
   const talla = esTallaVariable ? g('calc-talla') : null;
 
   if(esTallaVariable && !talla) {
@@ -2189,6 +2288,7 @@ const VALORES_TALLA_TORTAS = {
   XL: {mdo:5190, energia:400, logistica:30,  margen:23}
 };
 const PANQUEQUE_XL = {mat:20000, mdo:5190, energia:400, logistica:30, margen:23};
+const COSTO_BANO_CHOCOLATE = 1500;
 
 const COSTOS_TALLA = {
   'Tortas': {
@@ -2220,12 +2320,19 @@ function getCostosTalla(prod, talla) {
 
 window.poblarProductos = () => {
   const cat = document.getElementById('v-t').value;
+  const wrapMuffinUnPP = document.getElementById('wrap-muffin-un');
+  if (wrapMuffinUnPP) wrapMuffinUnPP.style.display = 'none';
+  const wrapBanoVPP = document.getElementById('wrap-bano-v');
+  if (wrapBanoVPP) { wrapBanoVPP.style.display = 'none'; document.getElementById('v-bano').checked = false; }
   const wrapTalla = document.getElementById('wrap-talla-v');
   const selTalla = document.getElementById('v-talla');
   const esTortaOPastel = (cat === 'torta' || cat === 'pastel');
-  if (esTortaOPastel) {
+  const esQueque = (cat === 'queque');
+  if (esTortaOPastel || esQueque) {
     wrapTalla.style.display = '';
     selTalla.value = '';
+    const optL = document.getElementById('opt-l-ventas');
+    if (optL) optL.style.display = esQueque ? 'none' : '';
   } else {
     wrapTalla.style.display = 'none';
     selTalla.value = '';
@@ -2257,6 +2364,24 @@ window.autocompletarPrecio = () => {
   const prod = prods.find(p => String(p.id) === String(idSel));
   selProdVenta = prod || null;
   precioVentaActual = prod?.precio || 0;
+  const esMuffin = prod?.nombre === 'Muffins';
+  const cat = document.getElementById('v-t').value;
+  const wrapTallaV = document.getElementById('wrap-talla-v');
+  const wrapMuffinUn = document.getElementById('wrap-muffin-un');
+  if (cat === 'queque' && wrapTallaV) {
+    wrapTallaV.style.display = esMuffin ? 'none' : '';
+    if (esMuffin) { const st=document.getElementById('v-talla'); if(st) st.value=''; }
+  }
+  if (wrapMuffinUn) {
+    wrapMuffinUn.style.display = esMuffin ? '' : 'none';
+    if (esMuffin) document.getElementById('v-muffin-un').value = 'docena';
+  }
+  const esBanoDisponible = cat === 'queque' && !esMuffin && !!prod;
+  const wrapBanoV = document.getElementById('wrap-bano-v');
+  if (wrapBanoV) {
+    wrapBanoV.style.display = esBanoDisponible ? '' : 'none';
+    if (!esBanoDisponible) document.getElementById('v-bano').checked = false;
+  }
   calcularMonto();
   const optXLv = document.getElementById('opt-xl-ventas');
   if(optXLv) optXLv.style.display = (prod?.nombre === 'Torta Panqueque' || prod?.nombre === 'Torta de Chocolate') ? '' : 'none';
@@ -2267,7 +2392,7 @@ window.calcularMonto = () => {
   const talla = document.getElementById('v-talla')?.value;
 
   // Si es producto con talla y no se eligió tamaño, limpiar monto
-  const esTallaVariable = selProdVenta && (selProdVenta.cat === 'Tortas' || selProdVenta.cat === 'Pasteles & Tartas');
+  const esTallaVariable = selProdVenta && (selProdVenta.cat === 'Tortas' || selProdVenta.cat === 'Pasteles & Tartas' || (selProdVenta.cat === 'Queques & Muffins' && selProdVenta.nombre !== 'Muffins'));
   if(esTallaVariable && !talla) {
     document.getElementById('v-m').value = '';
     return;
@@ -2291,6 +2416,14 @@ window.calcularMonto = () => {
       precio = Math.round(pn * 1.19);
     }
   }
+  const wrapMuffinUnCM = document.getElementById('wrap-muffin-un');
+  if (wrapMuffinUnCM && wrapMuffinUnCM.style.display !== 'none') {
+    const muffinUn = document.getElementById('v-muffin-un')?.value;
+    if (muffinUn === 'media') precio = Math.round(precio / 2);
+  }
+  const bano = document.getElementById('v-bano')?.checked;
+  const esQuequeVenta = selProdVenta?.cat === 'Queques & Muffins' && selProdVenta?.nombre !== 'Muffins';
+  if (bano && esQuequeVenta) precio += COSTO_BANO_CHOCOLATE;
   if(precio > 0) document.getElementById('v-m').value = precio * cant;
 };
 
@@ -2306,7 +2439,16 @@ window.autocompletarPrecioTorta = () => {
 window.addVenta = async () => {
   const f=document.getElementById('v-f').value,t=document.getElementById('v-t').value,m=+document.getElementById('v-m').value,c=document.getElementById('v-c').value;
   const selEl=document.getElementById('v-d');
-  const d=selEl.options[selEl.selectedIndex]?.text.split(' — ')[0] || selEl.value;
+  let d=selEl.options[selEl.selectedIndex]?.text.split(' — ')[0] || selEl.value;
+  const wrapMuffinUnAV=document.getElementById('wrap-muffin-un');
+  if(wrapMuffinUnAV&&wrapMuffinUnAV.style.display!=='none'){
+    const muffinUnAV=document.getElementById('v-muffin-un')?.value;
+    d+=muffinUnAV==='media'?' (6 un.)':' (docena)';
+  }
+  const wrapBanoAV=document.getElementById('wrap-bano-v');
+  if(wrapBanoAV&&wrapBanoAV.style.display!=='none'&&document.getElementById('v-bano')?.checked){
+    d+=' (bañado en chocolate)';
+  }
   if(!f||!m){alert('Ingresa día y monto');return;}
   const wrapTallaEl=document.getElementById('wrap-talla-v');
   const tallaEl=document.getElementById('v-talla');

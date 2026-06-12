@@ -113,7 +113,7 @@ export default function Header() {
           color: '#f5e6d3',
           letterSpacing: '0.04em',
         }}>
-          <a href="/" style={{ color: '#f5e6d3', textDecoration: 'none', display: 'block' }}>
+          <a href="/dia-del-padre" style={{ color: '#f5e6d3', textDecoration: 'none', display: 'block' }}>
             🎂 <strong style={{ fontWeight: 500 }}>Día del Padre</strong> — ¡Se viene el 22 de junio! Encarga tu torta artesanal con anticipación →
           </a>
         </div>

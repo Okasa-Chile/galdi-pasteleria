@@ -78,6 +78,45 @@ export default function Home() {
         </div>
       </section>
       <Nosotras />
+      {/* ── Bloque Día del Padre ── */}
+      <section style={{
+        background: 'linear-gradient(135deg, #3d1f0e 0%, #5a2d0c 50%, #3d1f0e 100%)',
+        padding: 'clamp(2.5rem, 5vw, 4rem) 5%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        textAlign: 'center',
+        gap: '1.25rem',
+      }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.67rem', letterSpacing: '0.32em', textTransform: 'uppercase', color: 'var(--gold)' }}>
+          22 de junio
+        </p>
+        <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.6rem, 4vw, 2.6rem)', fontWeight: 300, color: 'var(--cream)', lineHeight: 1.25, margin: 0 }}>
+          Día del Padre
+        </h2>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '1rem', color: 'rgba(245,230,211,0.8)', maxWidth: '520px', lineHeight: 1.7, margin: 0 }}>
+          Torta Panqueque, Moka o 3 Leches. Hecha el mismo día. Encarga con 48 horas de anticipación.
+        </p>
+        <a
+          href="/dia-del-padre"
+          style={{
+            display: 'inline-block',
+            marginTop: '0.5rem',
+            padding: '0.85rem 2.5rem',
+            background: 'var(--gold)',
+            color: '#1a0f0a',
+            fontFamily: 'var(--font-sans)',
+            fontSize: '0.8rem',
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            textDecoration: 'none',
+            borderRadius: '2px',
+            fontWeight: 500,
+          }}
+        >
+          Ver tortas →
+        </a>
+      </section>
       {/* Bloque Arma tu Torta */}
       <section id="arma-tu-torta" style={{
         background: 'linear-gradient(160deg, #fdf6ee 0%, #f7dcc8 50%, #f2c4ce 100%)',
