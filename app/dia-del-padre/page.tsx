@@ -79,7 +79,7 @@ export default function DiaDElPadrePage() {
       <SeoPage
         titulo="Tortas para el Día del Padre"
         subtitulo="Encarga con tiempo y llega con algo bueno de verdad"
-        descripcion="El 22 de junio se acerca. En Galdi hacemos tortas por encargo en Maipú: Panqueque, Chocolate, 3 Leches. Sin conservantes, hechas el mismo día de entrega. Pedidos por WhatsApp."
+        descripcion="El 21 de junio se acerca. En Galdi hacemos tortas por encargo en Maipú: Panqueque, Chocolate, 3 Leches. Sin conservantes, hechas el mismo día de entrega. Pedidos por WhatsApp."
         imagen="/images/torta-chocolate-hero.webp"
         ctaTexto="Ver productos"
         ctaHref="/#productos"

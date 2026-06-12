@@ -129,6 +129,7 @@ export default function Footer() {
                 { label: 'Cumpleaños Maipú', href: '/cumpleanos-maipu' },
                 { label: 'Coffee Break Maipú', href: '/coffee-break-maipu' },
                 { label: 'Día de la Madre', href: '/dia-de-la-madre' },
+                { label: 'Día del Padre', href: '/dia-del-padre' },
                 { label: 'Arma tu Torta', href: '/arma-tu-torta' },
               ].map((link) => (
                 <a key={link.href} href={link.href} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'rgba(245,230,211,0.55)', textDecoration: 'none', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>

@@ -89,7 +89,7 @@ export default function Home() {
         gap: '1.25rem',
       }}>
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.67rem', letterSpacing: '0.32em', textTransform: 'uppercase', color: 'var(--gold)' }}>
-          22 de junio
+          21 de junio
         </p>
         <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.6rem, 4vw, 2.6rem)', fontWeight: 300, color: 'var(--cream)', lineHeight: 1.25, margin: 0 }}>
           Día del Padre
