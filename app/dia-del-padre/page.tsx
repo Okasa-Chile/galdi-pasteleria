@@ -3,7 +3,7 @@ import SeoPage from '@/components/SeoPage';
 
 export const metadata: Metadata = {
   title: 'Tortas para el Día del Padre en Maipú | Galdi Pastelería',
-  description: 'Tortas artesanales para el Día del Padre con delivery en Maipú. Torta Panqueque, Moka y 3 Leches. Pedidos por WhatsApp +56 9 9099 1011.',
+  description: 'Tortas artesanales para el Día del Padre con delivery en Maipú. Torta Panqueque, Chocolate y 3 Leches. Pedidos por WhatsApp +56 9 9099 1011.',
   keywords: 'tortas día del padre maipú, pastelería día del padre maipú, torta para papá maipú, delivery tortas maipú, tortas personalizadas maipú',
   alternates: { canonical: 'https://galdi.cl/dia-del-padre' },
   openGraph: {
@@ -38,7 +38,7 @@ export default function DiaDElPadrePage() {
               "name": "Tortas Día del Padre",
               "itemListElement": [
                 { "@type": "Offer", "itemOffered": { "@type": "MenuItem", "name": "Torta Panqueque" } },
-                { "@type": "Offer", "itemOffered": { "@type": "MenuItem", "name": "Torta Moka" } },
+                { "@type": "Offer", "itemOffered": { "@type": "MenuItem", "name": "Torta de Chocolate" } },
                 { "@type": "Offer", "itemOffered": { "@type": "MenuItem", "name": "Torta 3 Leches" } }
               ]
             }
@@ -65,7 +65,7 @@ export default function DiaDElPadrePage() {
               {
                 "@type": "Question",
                 "name": "¿Qué tortas tienen disponibles para el Día del Padre?",
-                "acceptedAnswer": { "@type": "Answer", "text": "Torta Panqueque (capas con manjar o chocolate), Torta Moka (bizcocho con crema de café) y Torta 3 Leches. Todas artesanales, hechas en Maipú." }
+                "acceptedAnswer": { "@type": "Answer", "text": "Torta Panqueque (capas con manjar o chocolate), Torta de Chocolate (bizcocho con cobertura de chocolate) y Torta 3 Leches. Todas artesanales, hechas en Maipú." }
               },
               {
                 "@type": "Question",
@@ -79,8 +79,8 @@ export default function DiaDElPadrePage() {
       <SeoPage
         titulo="Tortas para el Día del Padre"
         subtitulo="Encarga con tiempo y llega con algo bueno de verdad"
-        descripcion="El 22 de junio se acerca. En Galdi hacemos tortas por encargo en Maipú: Panqueque, Moka, 3 Leches. Sin conservantes, hechas el mismo día de entrega. Pedidos por WhatsApp."
-        imagen="/images/torta-panqueques.webp"
+        descripcion="El 22 de junio se acerca. En Galdi hacemos tortas por encargo en Maipú: Panqueque, Chocolate, 3 Leches. Sin conservantes, hechas el mismo día de entrega. Pedidos por WhatsApp."
+        imagen="/images/torta-chocolate-hero.webp"
         ctaTexto="Ver productos"
         ctaHref="/#productos"
         waTexto="Hola Galdi, quiero encargar una torta para el Día del Padre 🎂👔"
@@ -92,9 +92,9 @@ export default function DiaDElPadrePage() {
             imagen: "/images/torta-panqueques-ejemplo.webp"
           },
           {
-            nombre: "Torta Moka",
-            detalle: "Bizcocho húmedo con crema de café y manjar. Para los papás que prefieren algo menos dulce.",
-            imagen: "/images/torta-moka.webp"
+            nombre: "Torta de Chocolate",
+            detalle: "Bizcocho húmedo con cobertura y relleno de chocolate. Un clásico para los papás que no fallan.",
+            imagen: "/images/torta-chocolate.webp"
           },
           {
             nombre: "Torta 3 Leches",
