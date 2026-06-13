@@ -14,9 +14,10 @@ service cloud.firestore {
         ];
     }
 
-    // Productos Galdi: solo usuarios autorizados
+    // Productos Galdi: lectura pública (catálogo /productos), escritura solo autorizados
     match /galdi_productos/{docId} {
-      allow read, write: if esAutorizado();
+      allow read: if true;
+      allow write: if esAutorizado();
     }
 
     // Ventas Galdi: solo usuarios autorizados
