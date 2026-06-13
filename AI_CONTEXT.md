@@ -188,6 +188,7 @@ galdi-nextjs/
 - [ ] **Crear cuenta Flow** — pendiente. Puede demorar 1-3 días hábiles en verificar.
 - [ ] **POS TUU** — en proceso de compra por Claudio
 - [ ] **Carrito frontend** — componente con productos, cantidades, selector comuna y botón Pagar con Flow
+- [ ] **Precio dinámico por talla seleccionada** — al seleccionar talla en la card, mostrar solo el precio de esa talla (en vez de todas las tallas a la vez). Limpio y elegante.
 - [ ] **flowConfirmar → guardar pedido en Firestore al confirmar pago + notificar a Galdi por WhatsApp**
 
 ### Administrativos / Externos
