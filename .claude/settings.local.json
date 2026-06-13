@@ -99,7 +99,14 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
       "PowerShell(netstat *)",
       "Bash(netstat -tlnp)",
-      "Bash(curl -s -o /dev/null -w \"HTTP: %{http_code}\" http://localhost:3000)"
+      "Bash(curl -s -o /dev/null -w \"HTTP: %{http_code}\" http://localhost:3000)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/gestion/)",
+      "Bash(curl *)",
+      "Bash(git checkout *)",
+      "Bash(gcloud run services add-iam-policy-binding *)",
+      "PowerShell(gcloud run services add-iam-policy-binding *)",
+      "PowerShell(cd C:\\\\OKasa\\\\Web\\\\galdi-nextjs; Start-Process powershell -ArgumentList '-NoExit', '-Command', 'npm run dev' -WindowStyle Normal)",
+      "Bash(git reset *)"
     ]
   },
   "enableAllProjectMcpServers": true,

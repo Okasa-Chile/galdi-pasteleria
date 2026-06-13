@@ -4,10 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { imagenes } from './Catalogo';
+import { usePreciosGaldi } from '@/hooks/usePreciosGaldi';
 
 // ─── Productos por servicio y tab ───────────────────────────────────────────
 
-const productosAlmacenes: Record<string, { nombre: string; imagen: string; unidad: string }[]> = {
+const productosAlmacenes: Record<string, { nombre: string; nombreVisible?: string; imagen: string; unidad: string }[]> = {
   'Pan': [
     { nombre: 'Pan Amasado',               imagen: imagenes['Pan Amasado'],               unidad: 'kg' },
     { nombre: 'Tortilla con Chicharrones', imagen: imagenes['Tortilla con Chicharrones'], unidad: 'unidad' },
@@ -31,20 +32,20 @@ const productosAlmacenes: Record<string, { nombre: string; imagen: string; unida
     { nombre: 'Chilenitos',             imagen: imagenes['Chilenitos'],             unidad: 'docena' },
   ],
   'Empanadas': [
-    { nombre: 'Pino',          imagen: imagenes['Pino'],          unidad: 'docena' },
-    { nombre: 'Napolitana',    imagen: imagenes['Napolitana'],    unidad: 'docena' },
-    { nombre: 'Vegetariana',   imagen: imagenes['Vegetariana'],   unidad: 'docena' },
-    { nombre: 'Queso Camarón',       imagen: imagenes['Queso Camarón'],       unidad: 'docena' },
-    { nombre: 'Empanada de Mariscos', imagen: imagenes['Empanada de Mariscos'], unidad: 'docena' },
+    { nombre: 'Empanada de Pino',       nombreVisible: 'Pino',          imagen: imagenes['Pino'],                    unidad: 'docena' },
+    { nombre: 'Empanada Napolitana',    nombreVisible: 'Napolitana',    imagen: imagenes['Napolitana'],              unidad: 'docena' },
+    { nombre: 'Empanada Vegetariana',   nombreVisible: 'Vegetariana',   imagen: imagenes['Vegetariana'],             unidad: 'docena' },
+    { nombre: 'Empanada Queso Camarón', nombreVisible: 'Queso Camarón', imagen: imagenes['Queso Camarón'],           unidad: 'docena' },
+    { nombre: 'Empanada de Mariscos',                                   imagen: imagenes['Empanada de Mariscos'],    unidad: 'docena' },
   ],
 };
 
-const productosDelivery: Record<string, { nombre: string; imagen: string; unidad: string; href?: string }[]> = {
+const productosDelivery: Record<string, { nombre: string; nombreVisible?: string; imagen: string; unidad: string; href?: string }[]> = {
   'Tortas': [
     { nombre: 'Torta 3 Leches',     imagen: imagenes['Torta 3 Leches'],     unidad: 'un' },
     { nombre: 'Torta de Chocolate', imagen: imagenes['Torta de Chocolate'], unidad: 'un' },
-    { nombre: 'Moca / Pralinée',    imagen: imagenes['Moca / Pralinée'],    unidad: 'un' },
-    { nombre: 'Selva Negra',        imagen: imagenes['Selva Negra'],        unidad: 'un' },
+    { nombre: 'Torta Moka',        nombreVisible: 'Moka / Pralinée', imagen: imagenes['Moca / Pralinée'],    unidad: 'un' },
+    { nombre: 'Torta Selva Negra', nombreVisible: 'Selva Negra',     imagen: imagenes['Selva Negra'],        unidad: 'un' },
     { nombre: 'Torta Panqueque',    imagen: imagenes['Torta Panqueque'],    unidad: 'un' },
     { nombre: 'Torta de Piña',      imagen: imagenes['Torta de Piña'],      unidad: 'un' },
     { nombre: 'Torta de Hojarasca', imagen: imagenes['Torta de Hojarasca'], unidad: 'un' },
@@ -64,11 +65,11 @@ const productosDelivery: Record<string, { nombre: string; imagen: string; unidad
     { nombre: 'Queque Tradicional', imagen: imagenes['Queque Tradicional'], unidad: 'un' },
   ],
   'Empanadas': [
-    { nombre: 'Pino',          imagen: imagenes['Pino'],          unidad: 'docena' },
-    { nombre: 'Napolitana',    imagen: imagenes['Napolitana'],    unidad: 'docena' },
-    { nombre: 'Vegetariana',   imagen: imagenes['Vegetariana'],   unidad: 'docena' },
-    { nombre: 'Queso Camarón',        imagen: imagenes['Queso Camarón'],        unidad: 'docena' },
-    { nombre: 'Empanada de Mariscos', imagen: imagenes['Empanada de Mariscos'], unidad: 'docena' },
+    { nombre: 'Empanada de Pino',       nombreVisible: 'Pino',          imagen: imagenes['Pino'],                 unidad: 'docena' },
+    { nombre: 'Empanada Napolitana',    nombreVisible: 'Napolitana',    imagen: imagenes['Napolitana'],           unidad: 'docena' },
+    { nombre: 'Empanada Vegetariana',   nombreVisible: 'Vegetariana',   imagen: imagenes['Vegetariana'],          unidad: 'docena' },
+    { nombre: 'Empanada Queso Camarón', nombreVisible: 'Queso Camarón', imagen: imagenes['Queso Camarón'],        unidad: 'docena' },
+    { nombre: 'Empanada de Mariscos',                                   imagen: imagenes['Empanada de Mariscos'], unidad: 'docena' },
   ],
   'Dulces': [
     { nombre: 'Berlines',               imagen: imagenes['Berlines'],               unidad: 'docena' },
@@ -185,6 +186,8 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
     id === 'delivery' ? tabsDelivery  :
     tabsEventos;
 
+  const { precios } = usePreciosGaldi();
+
   const [activeTab, setActiveTab] = useState(initialTab ?? tabs[0]);
   const [carrito, setCarrito]     = useState<Carrito>({});
   const [tallaActiva, setTallaActiva] = useState<Record<string, 'S'|'M'|'L'|'XL'>>({});
@@ -255,6 +258,20 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
   }
 
   const totalItems = Object.keys(carrito).length;
+
+  const fmt = (n: number) => n > 0 ? '$' + n.toLocaleString('es-CL') : '—';
+
+  const totalMonto = Object.entries(carrito).reduce((sum, [key, cantidad]) => {
+    const partes = key.split(' · ');
+    const nomProd = partes[0];
+    const talla = partes[1] as 'S' | 'M' | 'L' | 'XL' | undefined;
+    const p = precios[nomProd];
+    if (!p) return sum;
+    const precio = talla
+      ? (talla === 'S' ? p.precioS : talla === 'M' ? p.precioM : talla === 'L' ? p.precioL : p.precioXL) ?? 0
+      : p.precio;
+    return sum + precio * cantidad;
+  }, 0);
 
   function enviarWhatsApp() {
     // Validar mínimo 9 kg total de pan
@@ -445,7 +462,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                   {/* Nombre + mínimo + selector talla */}
                   <div style={{ padding: '0.4rem 0.5rem 0.3rem', flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '6px' }}>
                     <div>
-                      <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: 'var(--cream)', fontWeight: 500, margin: 0, lineHeight: 1.3 }}>{prod.nombre}</p>
+                      <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: 'var(--cream)', fontWeight: 500, margin: 0, lineHeight: 1.3 }}>{prod.nombreVisible ?? prod.nombre}</p>
                       <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.6rem', color: 'rgba(212,168,83,0.7)', margin: '0.15rem 0 0', letterSpacing: '0.05em' }}>{label}</p>
                     </div>
                     {esTorta && (
@@ -460,6 +477,28 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                       </div>
                     )}
                   </div>
+                  {/* Precio Firestore */}
+                  {(() => {
+                    const p = precios[prod.nombre];
+                    if (!p) return null;
+                    const tieneTallas = p.precioS || p.precioM || p.precioL;
+                    if (tieneTallas) {
+                      return (
+                        <div style={{ padding: '0.3rem 0.5rem', borderTop: '1px solid rgba(212,168,83,0.1)' }}>
+                          {p.precioS  && <span style={{ fontSize: '0.6rem', color: 'rgba(212,168,83,0.8)', marginRight: '0.4rem' }}>S {fmt(p.precioS)}</span>}
+                          {p.precioM  && <span style={{ fontSize: '0.6rem', color: 'rgba(212,168,83,0.8)', marginRight: '0.4rem' }}>M {fmt(p.precioM)}</span>}
+                          {p.precioL  && <span style={{ fontSize: '0.6rem', color: 'rgba(212,168,83,0.8)', marginRight: '0.4rem' }}>L {fmt(p.precioL)}</span>}
+                          {p.precioXL && <span style={{ fontSize: '0.6rem', color: 'rgba(212,168,83,0.8)' }}>XL {fmt(p.precioXL)}</span>}
+                        </div>
+                      );
+                    }
+                    return (
+                      <div style={{ padding: '0.2rem 0.5rem', borderTop: '1px solid rgba(212,168,83,0.1)' }}>
+                        <span style={{ fontSize: '0.65rem', color: 'var(--gold)', fontWeight: 500 }}>{fmt(p.precio)}</span>
+                        <span style={{ fontSize: '0.55rem', color: 'rgba(212,168,83,0.6)', marginLeft: '3px' }}>/ {p.unidad}</span>
+                      </div>
+                    );
+                  })()}
                   {/* Botón agregar / contador */}
                   {esTorta && !tallaSeleccionada ? (
                     <button className="svc-btn-add" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
@@ -550,7 +589,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
           {/* Barra inferior */}
           <div className="svc-whatsapp-bar" style={{ cursor: 'pointer' }}>
             <span onClick={() => setMostrarResumen(true)} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'var(--cream)', letterSpacing: '0.08em', flex: 1 }}>
-              🛒 {totalItems} producto{totalItems > 1 ? 's' : ''} · Ver pedido
+              🛒 {totalItems} producto{totalItems > 1 ? 's' : ''} · {fmt(totalMonto)} · Ver pedido
             </span>
             <button onClick={() => setCarrito({})} style={{ background: 'none', border: '1px solid rgba(245,100,100,0.4)', color: 'rgba(245,150,150,0.9)', fontFamily: 'var(--font-sans)', fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.3rem 0.6rem', cursor: 'pointer', marginRight: '0.75rem' }}>Vaciar</button>
             <span onClick={() => setMostrarResumen(true)} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'var(--gold)', letterSpacing: '0.08em', cursor: 'pointer' }}>
