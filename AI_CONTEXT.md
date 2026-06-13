@@ -1,5 +1,5 @@
 # AI_CONTEXT — Proyecto Galdi Pastelería
-> Registro de trabajo asistido por IA · Actualizado: 27 mayo 2026
+> Registro de trabajo asistido por IA · Actualizado: 12 junio 2026
 
 ---
 
@@ -88,11 +88,13 @@ galdi-nextjs/
   │   ├── coctel-maipu/
   │   ├── cumpleanos-maipu/
   │   └── coffee-break-maipu/
+  ├── hooks/
+  │   └── usePreciosGaldi.ts     ← lee galdi_productos Firestore, retorna Record<nombre, PrecioProducto>
   ├── components/
   │   ├── Header.tsx             ← fijo, scroll, logo, nav, hamburguesa, 🔒 /gestion discreto
   │   ├── Hero.tsx               ← slideshow 6 slides
   │   ├── Catalogo.tsx           ← grid productos con tallas S/M/L
-  │   ├── ServicioDetalle.tsx    ← overlay servicios con tabs
+  │   ├── ServicioDetalle.tsx    ← overlay servicios con tabs · precios live Firestore · nombreVisible pattern
   │   ├── FAQ.tsx                ← acordeón, id="preguntas-frecuentes"
   │   ├── Nosotras.tsx
   │   └── Footer.tsx
@@ -182,7 +184,7 @@ galdi-nextjs/
 - [ ] **Agenda de clientes en /gestion**
 - [x] **Funcionalidad edición presupuestos Tab 5** — botón Editar, Actualizar, Cancelar edición
 - [x] **Carrito de compras con pago Flow** — backend completo (flowCrearOrden + flowConfirmar como Cloud Functions). Despacho: $3.000 cercanas / $5.000 lejanas. Comunas cercanas: Maipú, Cerrillos, Pudahuel, Estación Central, Padre Hurtado, Lo Prado. Retiro gratis en Maipú. Pago 100% anticipado.
-- [ ] **Precios catálogo público** — pendiente confirmación (estimado 26-05-2026)
+- [x] **Precios catálogo público (Fase A)** — hook usePreciosGaldi.ts + precios por talla S/M/L/XL en cards de /productos. Tallas Firestore corregidas 12-06-2026.
 - [ ] **Crear cuenta Flow** — pendiente. Puede demorar 1-3 días hábiles en verificar.
 - [ ] **POS TUU** — en proceso de compra por Claudio
 - [ ] **Carrito frontend** — componente con productos, cantidades, selector comuna y botón Pagar con Flow
@@ -215,6 +217,7 @@ galdi-nextjs/
 
 ## 📋 Historial de jornadas (resumen)
 
+- **12-06-2026** — Fase A completa: hook usePreciosGaldi.ts · precios por talla S/M/L/XL en catálogo /productos · nombreVisible pattern para nombres Firestore vs display · tallas corregidas en Firestore (10 tortas) · fix fecha "21 de junio" Día del Padre en Header/Banner/page · nueva página /dia-del-padre con JSON-LD y imagen torta-chocolate-hero.webp · SEO /productos: title, description y H1 invisible
 - **25-05-2026** — Reunión socias: aprobado carrito de compras con pago online vía Flow · Método de pago físico TUU (POS en proceso de compra) · Despacho Gran Santiago: $3.000 zonas cercanas (Maipú, Cerrillos, Pudahuel, Estación Central, Padre Hurtado, Lo Prado) / $5.000 zonas lejanas (resto Gran Santiago) · Retiro gratis en Maipú · Pago online 100% anticipado · Pendiente: precios catálogo (mañana) · Pendiente: crear cuenta Flow
 - **21-05-2026 (tarde)** — Investigación dark mode móvil en /arma-tu-torta: problema confirmado exclusivo de Brave con "darken websites" activado (intercepta a nivel GPU, no superable desde CSS). Firefox se resuelve activando modo claro. globals.css revertido a versión limpia con color-scheme: light. Sin solución viable desde código.
 - **21-05-2026** — fix: flores decorativas bloque "Arma tu Torta" en homepage — fondo transparente con Pillow (umbral R>200/G>190/B>185) + tamaño aumentado 160px→220px · fix: arma-tu-torta/page.tsx móvil — hero overlay suavizado + grid 2 columnas + LCP priority imagen base-panqueque.webp
@@ -365,3 +368,43 @@ galdi-nextjs/
 - Carrito con Flow (28-05-2026)
 - Fase 3a Okasa: restricción HTTP referrer API Key Gemini
 - Imagen Ciabatta (provisional: usa pan-amasado-new.webp)
+
+---
+
+## Sesión 12-06-2026: Fase A Precios + Día del Padre
+
+### Fase A — Precios Firestore en catálogo público
+
+#### hook `hooks/usePreciosGaldi.ts`
+- Lee colección `galdi_productos` desde Firestore client-side
+- Retorna `Record<string, PrecioProducto>` indexado por campo `nombre`
+- Interface `PrecioProducto`: nombre, precio, precioS?, precioM?, precioL?, precioXL?, unidad
+
+#### `components/ServicioDetalle.tsx` — nombreVisible pattern
+- Tipo interno tiene `nombreVisible?: string` en ambos Record types (almacenes y delivery)
+- `nombre` = clave exacta Firestore para lookup de precios y key de carrito
+- `nombreVisible` = texto visible en la card (cuando difiere del nombre Firestore)
+- 6 productos con nombreVisible: Torta Moka ("Moka / Pralinée"), Torta Selva Negra ("Selva Negra"), 4 empanadas (Pino, Napolitana, Vegetariana, Queso Camarón)
+- Bloque precios IIFE en cada card: muestra tallas S/M/L/XL si existen, precio unitario si no
+- `totalMonto` en barra inferior: suma precio×cantidad usando carritoKey con talla
+- Formato barra: `🛒 N producto(s) · $XX.XXX · Ver pedido`
+
+#### Tallas Firestore corregidas (12-06-2026)
+- Script fix-tallas.js ejecutado con ADC (no serviceAccountKey.json)
+- 10 tortas actualizadas con precioS/M/L/XL reales
+- XL en $0 → hook convierte a `undefined` → no aparece en catálogo
+
+### Nueva página /dia-del-padre
+- `app/dia-del-padre/page.tsx` — 3 tortas: Panqueque, Torta de Chocolate, 3 Leches
+- Imagen: `public/images/torta-chocolate-hero.webp` (78.8 KB, 1400×781, quality=50)
+- JSON-LD: FoodEstablishment + FAQPage
+- Fecha: **21 de junio** (corregida en Header.tsx, BannerDiaMadre.tsx, page.tsx, app/page.tsx)
+- Enlazada desde Header franja, homepage bloque, Footer SEO links, sitemap.xml
+
+### SEO /productos
+- `app/productos/layout.tsx`: title "Pasteles, Tortas y Pan Artesanal en Maipú · Galdi", description actualizada, canonical
+- `app/productos/page.tsx`: H1 invisible con CSS clip/overflow, ServicioDetalle nombre="Nuestros Productos"
+
+### Notas técnicas
+- `serviceAccountKey.json` NO existe en `functions/` — usar `admin.initializeApp({projectId:'galdi-web'})` con ADC
+- `git add .` siempre requiere `git reset HEAD functions/node_modules/ functions/package-lock.json app/pago-exitoso/` después
