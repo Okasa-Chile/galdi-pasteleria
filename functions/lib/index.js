@@ -37,13 +37,14 @@ function firmarFlow(params, secret) {
     return crypto.createHmac('sha256', secret).update(cadena).digest('hex');
 }
 exports.flowCrearOrden = (0, https_1.onRequest)({ region: 'us-central1', cors: ALLOWED_ORIGINS, invoker: 'public', secrets: ['FLOW_API_KEY', 'FLOW_SECRET_KEY'] }, async (req, res) => {
+    var _a, _b;
     if (req.method !== 'POST') {
         res.status(405).json({ error: 'Método no permitido' });
         return;
     }
     try {
-        const apiKey = process.env.FLOW_API_KEY;
-        const secret = process.env.FLOW_SECRET_KEY;
+        const apiKey = (_a = process.env.FLOW_API_KEY) === null || _a === void 0 ? void 0 : _a.trim();
+        const secret = (_b = process.env.FLOW_SECRET_KEY) === null || _b === void 0 ? void 0 : _b.trim();
         if (!apiKey || !secret) {
             res.status(500).json({ error: 'Credenciales Flow no configuradas' });
             return;
@@ -96,7 +97,22 @@ exports.flowConfirmar = (0, https_1.onRequest)({ region: 'us-central1', cors: AL
         const pago = await response.json();
         if (pago.status === 2) {
             console.log('✅ Pago confirmado:', pago.commerceOrder, pago.amount, pago.email);
-            // TODO: guardar pedido en Firestore + notificar a Galdi
+            // Guardar pedido confirmado en Firestore
+            try {
+                const { getFirestore, FieldValue } = await Promise.resolve().then(() => require('firebase-admin/firestore'));
+                const db = getFirestore();
+                await db.collection('galdi_pedidos').add({
+                    commerceOrder: pago.commerceOrder,
+                    monto: pago.amount,
+                    email: pago.email,
+                    estado: 'pagado',
+                    fecha: FieldValue.serverTimestamp(),
+                });
+                console.log('[flowConfirmar] Pedido guardado:', pago.commerceOrder);
+            }
+            catch (dbErr) {
+                console.error('[flowConfirmar] Error guardando pedido:', dbErr);
+            }
         }
         res.json({ ok: true, status: pago.status });
     }

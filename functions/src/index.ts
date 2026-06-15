@@ -55,8 +55,8 @@ export const flowCrearOrden = onRequest(
       return;
     }
     try {
-      const apiKey = process.env.FLOW_API_KEY;
-      const secret = process.env.FLOW_SECRET_KEY;
+      const apiKey = process.env.FLOW_API_KEY?.trim();
+      const secret = process.env.FLOW_SECRET_KEY?.trim();
       if (!apiKey || !secret) {
         res.status(500).json({ error: 'Credenciales Flow no configuradas' });
         return;
@@ -83,7 +83,7 @@ export const flowCrearOrden = onRequest(
         body: form.toString(),
       });
 
-      const data = await response.json() as { url?: string; token?: string; message?: string };
+      const data = await response.json() as { url?: string; token?: string; message?: string; code?: number };
 
       if (!data.url || !data.token) {
         res.status(502).json({ error: 'Flow no retornó URL', detalle: data });
