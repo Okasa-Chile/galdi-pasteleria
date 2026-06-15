@@ -79,9 +79,10 @@ exports.flowCrearOrden = (0, https_1.onRequest)({ region: 'us-central1', cors: A
     }
 });
 exports.flowConfirmar = (0, https_1.onRequest)({ region: 'us-central1', cors: ALLOWED_ORIGINS, invoker: 'public', secrets: ['FLOW_API_KEY', 'FLOW_SECRET_KEY'] }, async (req, res) => {
+    var _a, _b;
     try {
-        const apiKey = process.env.FLOW_API_KEY;
-        const secret = process.env.FLOW_SECRET_KEY;
+        const apiKey = (_a = process.env.FLOW_API_KEY) === null || _a === void 0 ? void 0 : _a.trim();
+        const secret = (_b = process.env.FLOW_SECRET_KEY) === null || _b === void 0 ? void 0 : _b.trim();
         if (!apiKey || !secret) {
             res.status(500).json({ error: 'Credenciales Flow no configuradas' });
             return;
