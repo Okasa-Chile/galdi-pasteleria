@@ -409,3 +409,33 @@ galdi-nextjs/
 ### Notas técnicas
 - `serviceAccountKey.json` NO existe en `functions/` — usar `admin.initializeApp({projectId:'galdi-web'})` con ADC
 - `git add .` siempre requiere `git reset HEAD functions/node_modules/ functions/package-lock.json app/pago-exitoso/` después
+
+---
+
+## Sesión 15-06-2026
+
+### Cambios realizados
+
+#### SEO /dia-del-padre — cobertura multi-comuna
+- `metadata.keywords` expandido con Pudahuel, Cerrillos, Padre Hurtado, Estación Central, Santiago
+- `metadata.description` actualizado mencionando las 5 comunas adicionales
+- FAQPage JSON-LD expandido de 4 a 9 preguntas (una por cada comuna + generales)
+- Sección visual `#cobertura-comunas` agregada en `extraContent` con tabla de precios de despacho
+- Deploy + GSC indexación solicitada
+
+#### flowConfirmar — TODO completado
+- `functions/src/index.ts`: bloque Firestore implementado en `if (pago.status === 2)`
+- Pedidos pagados se guardan en colección `galdi_pedidos` con: commerceOrder, monto, email, estado, fecha
+- Deploy `firebase deploy --only functions` exitoso — 3 funciones actualizadas
+
+#### Limpieza del repo
+- 30+ carpetas de agentes IA removidas del índice Git (.adal, .augment, skills/, etc.)
+- 3.721 archivos eliminados, 828.750 líneas menos
+- 10 imágenes obsoletas con mayúsculas/espacios eliminadas (reemplazadas por versiones kebab-case)
+- `.gitignore` actualizado con todas las carpetas de agentes
+
+### Pendientes activos
+- [ ] Carrito Flow frontend (siguiente prioridad)
+- [ ] Footer: label "Tortas Día del Padre" actualizado (pendiente deploy conjunto)
+- [ ] Enriquecer 4 landing pages geolocalizadas Galdi con más contenido
+- [ ] 7 enlaces internos a /tortas-maipu (P3.1 del brief SEO)
