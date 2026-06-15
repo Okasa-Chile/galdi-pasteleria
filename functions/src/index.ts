@@ -132,7 +132,21 @@ export const flowConfirmar = onRequest(
 
       if (pago.status === 2) {
         console.log('✅ Pago confirmado:', pago.commerceOrder, pago.amount, pago.email);
-        // TODO: guardar pedido en Firestore + notificar a Galdi
+        // Guardar pedido confirmado en Firestore
+        try {
+          const { getFirestore, FieldValue } = await import('firebase-admin/firestore');
+          const db = getFirestore();
+          await db.collection('galdi_pedidos').add({
+            commerceOrder: pago.commerceOrder,
+            monto:         pago.amount,
+            email:         pago.email,
+            estado:        'pagado',
+            fecha:         FieldValue.serverTimestamp(),
+          });
+          console.log('[flowConfirmar] Pedido guardado:', pago.commerceOrder);
+        } catch (dbErr) {
+          console.error('[flowConfirmar] Error guardando pedido:', dbErr);
+        }
       }
 
       res.json({ ok: true, status: pago.status });
