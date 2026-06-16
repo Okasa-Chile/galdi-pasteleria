@@ -119,7 +119,7 @@ function ValidarContent() {
       {/* Encabezado */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28, flexWrap: 'wrap', gap: 16 }}>
         <div>
-          <Image src="/images/logo-ancho.webp" alt="Galdi" width={140} height={48} style={{ objectFit: 'contain' }} />
+          <Image src="/images/logo-ancho.webp" alt="Galdi" width={200} height={70} style={{ objectFit: 'contain' }} />
           <p style={{ fontSize: 12, color: '#3D1F0A', fontWeight: 600, marginTop: 4 }}>Pastelería Artesanal</p>
           <p style={{ fontSize: 11, color: '#888' }}>RUT 78.378.827-6</p>
           <p style={{ fontSize: 11, color: '#888' }}>ventas@galdi.cl · +56 9 9099 1011</p>
