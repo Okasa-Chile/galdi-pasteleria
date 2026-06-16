@@ -375,7 +375,12 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
           cursor: pointer;
           flex-shrink: 0;
           position: relative;
-          transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1), letter-spacing 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), text-shadow 0.4s ease;
+          min-width: 120px;
+          text-align: center;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1), text-shadow 0.4s ease;
         }
         .svc-tab::before {
           content: '';
@@ -403,15 +408,12 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
         }
         .svc-tab:hover {
           color: rgba(245,230,211,0.95);
-          letter-spacing: 0.2em;
         }
         .svc-tab:hover::before {
           width: 40%;
         }
         .svc-tab.active {
           color: var(--gold);
-          letter-spacing: 0.24em;
-          transform: translateY(-2px);
           text-shadow: 0 0 12px rgba(212,168,83,0.35);
         }
         .svc-tab.active::before {

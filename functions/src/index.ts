@@ -134,6 +134,8 @@ export const flowConfirmar = onRequest(
         console.log('✅ Pago confirmado:', pago.commerceOrder, pago.amount, pago.email);
         // Guardar pedido confirmado en Firestore
         try {
+          const { initializeApp, getApps } = await import('firebase-admin/app');
+          if (getApps().length === 0) initializeApp();
           const { getFirestore, FieldValue } = await import('firebase-admin/firestore');
           const db = getFirestore();
           await db.collection('galdi_pedidos').add({
