@@ -417,25 +417,78 @@ galdi-nextjs/
 ### Cambios realizados
 
 #### SEO /dia-del-padre — cobertura multi-comuna
-- `metadata.keywords` expandido con Pudahuel, Cerrillos, Padre Hurtado, Estación Central, Santiago
-- `metadata.description` actualizado mencionando las 5 comunas adicionales
-- FAQPage JSON-LD expandido de 4 a 9 preguntas (una por cada comuna + generales)
-- Sección visual `#cobertura-comunas` agregada en `extraContent` con tabla de precios de despacho
-- Deploy + GSC indexación solicitada
+- metadata.keywords expandido con Pudahuel, Cerrillos, Padre Hurtado, Estación Central, Santiago
+- FAQPage JSON-LD expandido de 4 a 9 preguntas (una por comuna + generales)
+- Sección visual #cobertura-comunas en extraContent con tabla de precios de despacho
 
-#### flowConfirmar — TODO completado
-- `functions/src/index.ts`: bloque Firestore implementado en `if (pago.status === 2)`
-- Pedidos pagados se guardan en colección `galdi_pedidos` con: commerceOrder, monto, email, estado, fecha
-- Deploy `firebase deploy --only functions` exitoso — 3 funciones actualizadas
+#### flowConfirmar
+- functions/src/index.ts: bloque Firestore implementado, pedidos pagados se guardan en galdi_pedidos
+- .trim() agregado en lectura de FLOW_API_KEY y FLOW_SECRET_KEY (problema raíz: whitespace en secrets)
+- Credenciales Flow actualizadas en Secret Manager
 
-#### Limpieza del repo
+#### Carrito Flow frontend
+- app/carrito/page.tsx (nuevo) + app/carrito/layout.tsx (noindex)
+- Formulario completo: nombre, email, teléfono, comuna, dirección, fecha entrega (24h mínimo)
+- Cálculo automático de despacho por comuna ($0 retiro / $3.000 cercanas / $5.000 lejanas)
+- Validación email + teléfono chileno
+- Botón "Pagar con Flow" → llama flowCrearOrden → redirect a urlPago
+
+#### ServicioDetalle.tsx — múltiples mejoras
+- Sincronización carrito → sessionStorage en cada cambio + evento custom galdi:carrito-actualizado
+- paddingTop 75px en pageMode (fix: tabs quedaban tapadas por header global)
+- Tabs premium: cubic-bezier, glow dorado en activa, expansión letter-spacing
+- Talla seleccionada: pulse animation con halo dorado doble
+- Precio dinámico por talla seleccionada (no muestra todas las tallas si está elegida una)
+- Deseleccionar talla al hacer clic de nuevo en la misma
+- Pasteles y Queques ahora con selector S/M/L (igual que Tortas)
+- Modal carrito rediseñado: 720px, imágenes 64x64, total dorado grande, 2 botones (Flow + WhatsApp)
+- Barra inferior con icono SVG carrito + badge animado
+
+#### Header.tsx
+- Reemplazado botón "Cotizar" por "Carrito" con SVG icon
+- Badge dinámico con totalItems (lee sessionStorage + escucha eventos)
+- Aplicado en desktop y mobile
+
+#### Footer.tsx
+- Label "Día del Padre" → "Tortas Día del Padre"
+
+#### Firestore
+- Pasteles & Tartas: precioS=$12.000, precioM=$15.000, precioL=$18.000 (5 productos)
+- Queques: precioS=$4.000, precioM=$6.000 (3 productos)
+- Empanadas: estructura copiada de Empanada de Mariscos (4 productos)
+
+#### ArmaTuTorta.tsx
+- Precios por tamaño: S $22k / M $30k / L $42k / XL $55k
+- Opción "Sin azúcar" con alulosa: +$4k / +$6k / +$10k / +$15k
+- Toggle elegante con descripción
+- Bloque "Valor total" con precio destacado en resumen
+- WhatsApp incluye precio referencial + nota sin azúcar
+
+#### Limpieza repo
 - 30+ carpetas de agentes IA removidas del índice Git (.adal, .augment, skills/, etc.)
-- 3.721 archivos eliminados, 828.750 líneas menos
-- 10 imágenes obsoletas con mayúsculas/espacios eliminadas (reemplazadas por versiones kebab-case)
-- `.gitignore` actualizado con todas las carpetas de agentes
+- 3.721 archivos eliminados (~828.750 líneas)
+- 10 imágenes obsoletas con mayúsculas/espacios eliminadas
+- functions/node_modules/ excluido del repo (5.959 archivos desindexados)
+- .gitignore actualizado con todas las exclusiones
 
-### Pendientes activos
-- [ ] Carrito Flow frontend (siguiente prioridad)
-- [ ] Footer: label "Tortas Día del Padre" actualizado (pendiente deploy conjunto)
-- [ ] Enriquecer 4 landing pages geolocalizadas Galdi con más contenido
-- [ ] 7 enlaces internos a /tortas-maipu (P3.1 del brief SEO)
+#### Posicionamiento competitivo Arma tu Torta sin azúcar
+- vs Ruyed (alulosa, Providencia): -10% a -13% más accesibles
+- vs Riesco/Mozart (premium): bien posicionados en segmento medio-alto
+- Sin competencia directa en Maipú
+- Diferenciador: personalización total (Ruyed solo pre-diseñadas)
+
+### Estado actual del proyecto
+- Todas las URLs en https://galdi.cl funcionando
+- Carrito Flow end-to-end operativo
+- /dia-del-padre rankeando (deadline: domingo 21 junio — 6 días)
+- 313 archivos en producción
+
+### Pendientes para sesiones futuras
+- [ ] Comunicar endulzante "alulosa" en página /arma-tu-torta como diferenciador
+- [ ] Considerar agregar /sin-azucar como landing SEO específica (oportunidad de mercado)
+- [ ] 5 deep-analysis blog posts Okasa (workflow Gemini)
+- [ ] Enriquecer 4 landing pages geolocalizadas Okasa
+- [ ] Re-evaluar /distribucion-maipu (404 vs redirect a /productos)
+- [ ] Internal linking a /tortas-maipu (7 enlaces) según brief SEO
+- [ ] H1 duplicado homepage Galdi
+- [ ] Auditar header anchors vs URLs reales
