@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { imagenes } from './Catalogo';
 import { usePreciosGaldi } from '@/hooks/usePreciosGaldi';
 
@@ -194,12 +195,41 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
   const [eventoImg, setEventoImg] = useState(eventosData[tabs[0]]?.imagen ?? imagen);
   const [mostrarResumen, setMostrarResumen] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     if (pageMode) return;
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = ''; };
   }, [pageMode]);
+
+  // Sincronizar carrito a sessionStorage en cada cambio + disparar evento global
+  useEffect(() => {
+    const itemsCarrito = Object.entries(carrito).map(([key, cantidad]) => {
+      const partes = key.split(' · ');
+      const nomProd = partes[0];
+      const tallaProd = partes[1] as 'S'|'M'|'L'|'XL' | undefined;
+      const todosLosProductos = [
+        ...Object.values(productosAlmacenes).flat(),
+        ...Object.values(productosDelivery).flat(),
+      ];
+      const prod = todosLosProductos.find(p => p.nombre === nomProd);
+      const precioInfo = precios[nomProd];
+      const precio = tallaProd
+        ? (precioInfo?.[`precio${tallaProd}` as keyof typeof precioInfo] as number ?? precioInfo?.precio ?? 0)
+        : (precioInfo?.precio ?? 0);
+      const esEmpanadasDelivery = productosDelivery['Empanadas']?.some(p => p.nombre === nomProd) && id === 'delivery';
+      const unidad = esEmpanadasDelivery ? 'unidad' : (prod?.unidad ?? 'un');
+      const nombreVisible = prod && 'nombreVisible' in prod && (prod as { nombreVisible?: string }).nombreVisible
+        ? (prod as { nombreVisible?: string }).nombreVisible!
+        : nomProd;
+      return { nombre: nomProd, nombreVisible, talla: tallaProd, precio, cantidad, unidad };
+    });
+    try {
+      sessionStorage.setItem('galdi_carrito', JSON.stringify(itemsCarrito));
+      window.dispatchEvent(new Event('galdi:carrito-actualizado'));
+    } catch { /* nada */ }
+  }, [carrito, precios, id]);
 
   // Cambia imagen de fondo en Eventos al cambiar tab
   useEffect(() => {
@@ -305,6 +335,10 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
     window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
   }
 
+  function irACarrito() {
+    router.push('/carrito');
+  }
+
   const DESC_TALLA: Record<string, string> = {
     S: 'S — 8 a 10 personas',
     M: 'M — 14 a 16 personas',
@@ -316,7 +350,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
     <div
       id={pageMode ? 'productos' : undefined}
       style={pageMode
-        ? { position: 'relative', display: 'flex', flexDirection: 'column', minHeight: '100vh', scrollMarginTop: '110px' }
+        ? { position: 'relative', display: 'flex', flexDirection: 'column', minHeight: '100vh', scrollMarginTop: '110px', paddingTop: '75px' }
         : { position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', flexDirection: 'column', animation: 'svcFadeIn 0.5s cubic-bezier(0.25,0.46,0.45,0.94) both' }
       }
     >
@@ -325,23 +359,242 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
           from { opacity: 0; transform: scale(1.04); }
           to   { opacity: 1; transform: scale(1); }
         }
-        .svc-tab { background: none; border: none; border-bottom: 2px solid transparent; color: rgba(245,230,211,0.5); font-family: var(--font-sans); font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; padding: 0.75rem 1.1rem; cursor: pointer; flex-shrink: 0; transition: color 0.25s, border-color 0.25s; }
-        .svc-tab.active { color: var(--cream); border-bottom: 2px solid var(--gold); }
-        .svc-tab:hover { color: rgba(245,230,211,0.85); }
+        @keyframes svcPrecioIn {
+          from { opacity: 0; transform: translateY(-4px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .svc-tab {
+          background: none;
+          border: none;
+          color: rgba(245,230,211,0.55);
+          font-family: var(--font-sans);
+          font-size: 0.82rem;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          padding: 0.9rem 1.4rem 1.1rem;
+          cursor: pointer;
+          flex-shrink: 0;
+          position: relative;
+          transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1), letter-spacing 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), text-shadow 0.4s ease;
+        }
+        .svc-tab::before {
+          content: '';
+          position: absolute;
+          left: 50%;
+          bottom: 0;
+          width: 0;
+          height: 2px;
+          background: linear-gradient(90deg, transparent 0%, var(--gold) 50%, transparent 100%);
+          transform: translateX(-50%);
+          transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .svc-tab::after {
+          content: '';
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 0;
+          height: 0;
+          background: radial-gradient(circle, rgba(212,168,83,0.15) 0%, transparent 70%);
+          transform: translate(-50%, -50%);
+          transition: width 0.5s ease, height 0.5s ease;
+          pointer-events: none;
+          z-index: -1;
+        }
+        .svc-tab:hover {
+          color: rgba(245,230,211,0.95);
+          letter-spacing: 0.2em;
+        }
+        .svc-tab:hover::before {
+          width: 40%;
+        }
+        .svc-tab.active {
+          color: var(--gold);
+          letter-spacing: 0.24em;
+          transform: translateY(-2px);
+          text-shadow: 0 0 12px rgba(212,168,83,0.35);
+        }
+        .svc-tab.active::before {
+          width: 80%;
+          height: 2px;
+          background: linear-gradient(90deg, transparent 0%, var(--gold) 50%, transparent 100%);
+          box-shadow: 0 0 8px rgba(212,168,83,0.4);
+        }
+        .svc-tab.active::after {
+          width: 120%;
+          height: 200%;
+        }
         .svc-prod-card { background: rgba(26,15,10,0.55); backdrop-filter: blur(4px); border: 1px solid rgba(212,168,83,0.15); display: flex; flex-direction: column; overflow: hidden; transition: border-color 0.25s; }
         .svc-prod-card:hover { border-color: rgba(212,168,83,0.4); }
         .svc-btn-add { background: #f0c040; border: none; color: #1a0f0a; font-weight: 600; font-family: var(--font-sans); font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.5rem; cursor: pointer; width: 100%; transition: background 0.2s; }
         .svc-btn-add:hover { background: var(--terracota); color: var(--cream); }
         .svc-counter { display: flex; align-items: center; justify-content: space-between; background: rgba(212,168,83,0.15); padding: 0.3rem 0.5rem; }
         .svc-counter button { background: none; border: 1px solid rgba(212,168,83,0.4); color: var(--gold); width: 1.4rem; height: 1.4rem; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; }
-        .svc-whatsapp-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(26,15,10,0.95); backdrop-filter: blur(8px); border-top: 1px solid rgba(212,168,83,0.2); padding: 0.75rem 5%; display: flex; align-items: center; justify-content: space-between; z-index: 10001; }
+        .svc-whatsapp-bar {
+          position: fixed; bottom: 0; left: 0; right: 0;
+          background: linear-gradient(180deg, rgba(26,15,10,0.92) 0%, rgba(26,15,10,0.98) 100%);
+          backdrop-filter: blur(12px);
+          border-top: 2px solid var(--gold);
+          padding: 1rem 5%;
+          display: flex; align-items: center; justify-content: space-between;
+          gap: 1rem;
+          z-index: 10001;
+          box-shadow: 0 -8px 32px rgba(0,0,0,0.4);
+        }
+        .svc-cart-btn {
+          display: flex; align-items: center; gap: 0.7rem;
+          background: var(--gold);
+          color: var(--dark);
+          border: none;
+          padding: 0.7rem 1.4rem;
+          border-radius: 8px;
+          font-family: var(--font-sans);
+          font-size: 0.78rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          box-shadow: 0 4px 16px rgba(212,168,83,0.35);
+          flex: 1;
+          justify-content: center;
+        }
+        .svc-cart-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(212,168,83,0.55);
+        }
+        .svc-cart-icon-wrap {
+          position: relative;
+          width: 24px; height: 24px;
+          display: flex; align-items: center; justify-content: center;
+        }
+        .svc-cart-badge {
+          position: absolute;
+          top: -6px; right: -8px;
+          background: var(--terracota);
+          color: #fff;
+          font-size: 0.6rem;
+          font-weight: 700;
+          width: 18px; height: 18px;
+          border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          border: 2px solid var(--dark);
+          animation: badgePop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes badgePop {
+          0%   { transform: scale(0); }
+          60%  { transform: scale(1.3); }
+          100% { transform: scale(1); }
+        }
+        .svc-vaciar-btn {
+          background: transparent;
+          border: 1px solid rgba(245,100,100,0.4);
+          color: rgba(245,150,150,0.9);
+          font-family: var(--font-sans);
+          font-size: 0.65rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          padding: 0.55rem 0.9rem;
+          cursor: pointer;
+          border-radius: 6px;
+          transition: background 0.2s, color 0.2s;
+          flex-shrink: 0;
+        }
+        .svc-vaciar-btn:hover {
+          background: rgba(245,100,100,0.15);
+          color: rgba(255,180,180,1);
+        }
         .svc-resumen-overlay { position: fixed; inset: 0; background: rgba(26,15,10,0.7); backdrop-filter: blur(4px); z-index: 10002; display: flex; align-items: flex-start; padding-top: 4vh; justify-content: center; }
-        .svc-resumen-panel { background: #2a1205; border: 1px solid rgba(212,168,83,0.25); border-bottom: none; width: 100%; max-width: 560px; padding: 1.5rem; border-radius: 12px 12px 0 0; animation: slideUp 0.3s ease; }
+        .svc-resumen-panel {
+          background: #2a1205;
+          border: 1px solid rgba(212,168,83,0.25);
+          border-bottom: none;
+          width: 100%;
+          max-width: 720px;
+          padding: 1.75rem;
+          border-radius: 14px 14px 0 0;
+          animation: slideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+          max-height: 88vh;
+          overflow-y: auto;
+        }
+        .svc-resumen-item-card {
+          display: flex;
+          align-items: center;
+          gap: 0.9rem;
+          padding: 0.8rem 0;
+          border-bottom: 1px solid rgba(212,168,83,0.12);
+        }
+        .svc-resumen-item-img {
+          width: 64px;
+          height: 64px;
+          border-radius: 6px;
+          overflow: hidden;
+          flex-shrink: 0;
+          border: 1px solid rgba(212,168,83,0.2);
+          position: relative;
+        }
+        .svc-resumen-item-info {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 0.2rem;
+          min-width: 0;
+        }
+        .svc-resumen-item-nombre {
+          font-family: var(--font-sans);
+          font-size: 0.85rem;
+          color: var(--cream);
+          font-weight: 500;
+        }
+        .svc-resumen-item-cant {
+          font-family: var(--font-sans);
+          font-size: 0.95rem;
+          color: var(--gold);
+          font-weight: 600;
+          flex-shrink: 0;
+        }
         @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .svc-resumen-item { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid rgba(212,168,83,0.1); font-family: var(--font-sans); font-size: 0.8rem; color: var(--cream); }
-        .talla-btn { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--gold); background: transparent; color: var(--gold); font-size: 9px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s; padding: 0; line-height: 1; }
-        .talla-btn.sel { background: var(--gold); color: var(--dark); }
-        .talla-btn:hover { background: var(--gold); color: var(--dark); }
+        .talla-btn {
+          position: relative;
+          width: 26px;
+          height: 26px;
+          border-radius: 50%;
+          border: 1.5px solid var(--gold);
+          background: transparent;
+          color: var(--gold);
+          font-size: 10px;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+          padding: 0;
+          line-height: 1;
+        }
+        .talla-btn:hover {
+          background: rgba(212,168,83,0.15);
+          color: var(--cream);
+          transform: scale(1.08);
+        }
+        .talla-btn.sel {
+          background: var(--gold);
+          color: var(--dark);
+          transform: scale(1.18);
+          box-shadow: 0 0 0 3px rgba(212,168,83,0.25), 0 0 14px rgba(212,168,83,0.55);
+          animation: tallaPulse 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .talla-btn.sel:hover {
+          background: var(--gold);
+          color: var(--dark);
+          transform: scale(1.18);
+        }
+        @keyframes tallaPulse {
+          0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(212,168,83,0.6); }
+          50%  { transform: scale(1.28); box-shadow: 0 0 0 8px rgba(212,168,83,0.15); }
+          100% { transform: scale(1.18); box-shadow: 0 0 0 3px rgba(212,168,83,0.25), 0 0 14px rgba(212,168,83,0.55); }
+        }
         .talla-personas { font-size: 9px; color: rgba(201,165,90,0.8); text-align: center; padding: 4px 0 6px; letter-spacing: 0.04em; min-height: 18px; }
       `}</style>
 
@@ -360,7 +613,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
 
         {/* Fila superior: logo + nombre + cerrar */}
         {pageMode ? (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem 5%' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2.5rem 5% 1.5rem' }}>
             <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.2rem, 3vw, 2rem)', fontWeight: 300, color: 'var(--cream)', letterSpacing: '0.08em', margin: 0 }}>{nombre}</h1>
           </div>
         ) : (
@@ -447,7 +700,9 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
         {(id === 'b2b' || id === 'delivery') && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.75rem', marginTop: '1rem' }}>
             {productos.map(prod => {
-              const esTorta = id === 'delivery' && activeTab === 'Tortas';
+              const tabsConTalla = ['Tortas', 'Pasteles', 'Queques'];
+              const esConTallas = id === 'delivery' && tabsConTalla.includes(activeTab);
+              const esTorta = esConTallas; // alias para no romper otras referencias en el componente
               const tallaSeleccionada = tallaActiva[prod.nombre];
               const carritoKey = esTorta && tallaSeleccionada ? `${prod.nombre} · ${tallaSeleccionada}` : prod.nombre;
               const enCarrito = carrito[carritoKey] ?? 0;
@@ -467,11 +722,25 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                     </div>
                     {esTorta && (
                       <div style={{ display: 'flex', gap: '4px', flexShrink: 0, marginTop: '1px' }}>
-                        {(['S', 'M', 'L', ...(prod.nombre === 'Torta Panqueque' || prod.nombre === 'Torta de Chocolate' ? ['XL'] : [])] as const).map(t => (
+                        {(() => {
+                          let tallas: ('S'|'M'|'L'|'XL')[];
+                          if (activeTab === 'Queques') tallas = ['S', 'M'];
+                          else if (activeTab === 'Pasteles') tallas = ['S', 'M', 'L'];
+                          else tallas = ['S', 'M', 'L', ...(prod.nombre === 'Torta Panqueque' || prod.nombre === 'Torta de Chocolate' ? ['XL' as const] : [])];
+                          return tallas;
+                        })().map(t => (
                           <button
                             key={t}
                             className={`talla-btn${tallaSeleccionada === t ? ' sel' : ''}`}
-                            onClick={() => setTallaActiva(prev => ({ ...prev, [prod.nombre]: t as 'S'|'M'|'L'|'XL' }))}
+                            onClick={() => setTallaActiva(prev => {
+                              const actual = prev[prod.nombre];
+                              if (actual === t) {
+                                const copia = { ...prev };
+                                delete copia[prod.nombre];
+                                return copia;
+                              }
+                              return { ...prev, [prod.nombre]: t as 'S'|'M'|'L'|'XL' };
+                            })}
                           >{t}</button>
                         ))}
                       </div>
@@ -481,21 +750,57 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                   {(() => {
                     const p = precios[prod.nombre];
                     if (!p) return null;
-                    const tieneTallas = p.precioS || p.precioM || p.precioL;
-                    if (tieneTallas) {
+                    const tieneTallas = p.precioS || p.precioM || p.precioL || p.precioXL;
+
+                    // Torta con talla seleccionada: solo precio centrado de esa talla
+                    if (esTorta && tallaSeleccionada && tieneTallas) {
+                      const precioTalla = p[`precio${tallaSeleccionada}` as 'precioS'|'precioM'|'precioL'|'precioXL'];
+                      if (!precioTalla) return null;
                       return (
-                        <div style={{ padding: '0.3rem 0.5rem', borderTop: '1px solid rgba(212,168,83,0.1)' }}>
-                          {p.precioS  && <span style={{ fontSize: '0.6rem', color: 'rgba(212,168,83,0.8)', marginRight: '0.4rem' }}>S {fmt(p.precioS)}</span>}
-                          {p.precioM  && <span style={{ fontSize: '0.6rem', color: 'rgba(212,168,83,0.8)', marginRight: '0.4rem' }}>M {fmt(p.precioM)}</span>}
-                          {p.precioL  && <span style={{ fontSize: '0.6rem', color: 'rgba(212,168,83,0.8)', marginRight: '0.4rem' }}>L {fmt(p.precioL)}</span>}
-                          {p.precioXL && <span style={{ fontSize: '0.6rem', color: 'rgba(212,168,83,0.8)' }}>XL {fmt(p.precioXL)}</span>}
+                        <div
+                          key={`precio-${tallaSeleccionada}`}
+                          style={{
+                            padding: '0.55rem 0.6rem',
+                            borderTop: '1px solid rgba(212,168,83,0.15)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: '0.15rem',
+                            animation: 'svcPrecioIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both',
+                          }}
+                        >
+                          <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.55rem', color: 'rgba(212,168,83,0.7)', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+                            Talla {tallaSeleccionada}
+                          </span>
+                          <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.95rem', color: 'var(--gold)', fontWeight: 600, letterSpacing: '0.02em', textShadow: '0 0 10px rgba(212,168,83,0.25)' }}>
+                            {fmt(precioTalla)}
+                          </span>
                         </div>
                       );
                     }
+
+                    // Torta sin talla seleccionada: ocultar precios (no mostrar nada)
+                    if (esTorta && tieneTallas) {
+                      return null;
+                    }
+
+                    // Producto con tallas pero no es torta: lista referencial centrada
+                    if (tieneTallas) {
+                      return (
+                        <div style={{ padding: '0.3rem 0.5rem', borderTop: '1px solid rgba(212,168,83,0.1)', display: 'flex', flexWrap: 'wrap', gap: '0.4rem', justifyContent: 'center' }}>
+                          {p.precioS  && <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.62rem', color: 'rgba(212,168,83,0.75)' }}>S {fmt(p.precioS)}</span>}
+                          {p.precioM  && <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.62rem', color: 'rgba(212,168,83,0.75)' }}>M {fmt(p.precioM)}</span>}
+                          {p.precioL  && <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.62rem', color: 'rgba(212,168,83,0.75)' }}>L {fmt(p.precioL)}</span>}
+                          {p.precioXL && <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.62rem', color: 'rgba(212,168,83,0.75)' }}>XL {fmt(p.precioXL)}</span>}
+                        </div>
+                      );
+                    }
+
+                    // Producto sin tallas: precio único centrado
                     return (
-                      <div style={{ padding: '0.2rem 0.5rem', borderTop: '1px solid rgba(212,168,83,0.1)' }}>
-                        <span style={{ fontSize: '0.65rem', color: 'var(--gold)', fontWeight: 500 }}>{fmt(p.precio)}</span>
-                        <span style={{ fontSize: '0.55rem', color: 'rgba(212,168,83,0.6)', marginLeft: '3px' }}>/ {p.unidad}</span>
+                      <div style={{ padding: '0.4rem 0.5rem', borderTop: '1px solid rgba(212,168,83,0.1)', textAlign: 'center' }}>
+                        <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.88rem', color: 'var(--gold)', fontWeight: 600 }}>{fmt(p.precio)}</span>
+                        <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.6rem', color: 'rgba(212,168,83,0.6)', marginLeft: '4px' }}>/ {p.unidad}</span>
                       </div>
                     );
                   })()}
@@ -539,15 +844,22 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
             <div className="svc-resumen-overlay" onClick={() => setMostrarResumen(false)}>
               <div className="svc-resumen-panel" onClick={e => e.stopPropagation()}>
                 {/* Header */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', color: 'var(--cream)', fontWeight: 300 }}>Tu pedido</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', paddingBottom: '0.9rem', borderBottom: '1px solid rgba(212,168,83,0.2)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="9" cy="21" r="1"/>
+                      <circle cx="20" cy="21" r="1"/>
+                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.4rem', color: 'var(--cream)', fontWeight: 300 }}>Mi Carrito</span>
+                  </div>
                   <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                    <button onClick={() => { setCarrito({}); setMostrarResumen(false); }} style={{ background: 'none', border: '1px solid rgba(245,100,100,0.5)', color: 'rgba(245,150,150,0.9)', fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.3rem 0.6rem', cursor: 'pointer', fontFamily: 'var(--font-sans)' }}>Vaciar</button>
-                    <button onClick={() => setMostrarResumen(false)} style={{ background: 'none', border: 'none', color: 'rgba(245,230,211,0.6)', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
+                    <button onClick={() => { setCarrito({}); setMostrarResumen(false); }} style={{ background: 'transparent', border: '1px solid rgba(245,100,100,0.5)', color: 'rgba(245,150,150,0.9)', fontSize: '0.65rem', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '0.4rem 0.75rem', cursor: 'pointer', fontFamily: 'var(--font-sans)', borderRadius: '5px' }}>Vaciar</button>
+                    <button onClick={() => setMostrarResumen(false)} style={{ background: 'none', border: 'none', color: 'rgba(245,230,211,0.6)', fontSize: '1.4rem', cursor: 'pointer', lineHeight: 1 }}>✕</button>
                   </div>
                 </div>
                 {/* Lista de productos */}
-                <div style={{ marginBottom: '1.25rem', maxHeight: '55vh', overflowY: 'auto' }}>
+                <div style={{ marginBottom: '1.4rem', maxHeight: '50vh', overflowY: 'auto' }}>
                   {Object.entries(carrito).map(([key, cantidad]) => {
                     const partes = key.split(' · ');
                     const nomProd = partes[0];
@@ -557,44 +869,75 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                       ...Object.values(productosDelivery).flat(),
                     ];
                     const prod = todosLosProductos.find(p => p.nombre === nomProd);
+                    const nombreVisible = prod && 'nombreVisible' in prod && (prod as { nombreVisible?: string }).nombreVisible
+                      ? (prod as { nombreVisible?: string }).nombreVisible!
+                      : nomProd;
                     const esEmpanadasDelivery = productosDelivery['Empanadas']?.some(p => p.nombre === nomProd) && id === 'delivery';
                     const unidad = esEmpanadasDelivery ? 'unidad' : (prod?.unidad ?? 'un');
+                    const precioInfo = precios[nomProd];
+                    const precioUnit = tallaProd && precioInfo
+                      ? (precioInfo[`precio${tallaProd}` as 'precioS'|'precioM'|'precioL'|'precioXL'] ?? precioInfo.precio ?? 0)
+                      : (precioInfo?.precio ?? 0);
+                    const subtotal = precioUnit * cantidad;
                     return (
-                      <div key={key} className="svc-resumen-item">
-                        <div>
-                          <span>🛒 {nomProd}</span>
+                      <div key={key} className="svc-resumen-item-card">
+                        {prod?.imagen && (
+                          <div className="svc-resumen-item-img">
+                            <Image src={prod.imagen} alt={nombreVisible} fill style={{ objectFit: 'cover' }} />
+                          </div>
+                        )}
+                        <div className="svc-resumen-item-info">
+                          <span className="svc-resumen-item-nombre">{nombreVisible}</span>
                           {tallaProd && (
-                            <div style={{ marginTop: '2px' }}>
-                              <span style={{ background: 'var(--gold)', color: 'var(--dark)', fontSize: '0.6rem', fontWeight: 700, padding: '1px 5px', borderRadius: '3px', letterSpacing: '0.05em' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                              <span style={{ background: 'var(--gold)', color: 'var(--dark)', fontSize: '0.6rem', fontWeight: 700, padding: '2px 6px', borderRadius: '3px', letterSpacing: '0.08em' }}>
                                 {tallaProd}
                               </span>
-                              <span style={{ fontSize: '0.65rem', color: 'rgba(201,165,90,0.8)', marginLeft: '4px' }}>
+                              <span style={{ fontSize: '0.68rem', color: 'rgba(201,165,90,0.8)' }}>
                                 {DESC_TALLA[tallaProd].split(' — ')[1] ?? DESC_TALLA[tallaProd]}
                               </span>
                             </div>
                           )}
+                          <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'rgba(245,230,211,0.6)' }}>
+                            {cantidad} {pluralizar(cantidad, unidad)} {precioUnit > 0 && `· ${fmt(precioUnit)} c/u`}
+                          </span>
                         </div>
-                        <span style={{ color: 'var(--gold)', fontWeight: 500 }}>{cantidad} {pluralizar(cantidad, unidad)}</span>
+                        <span className="svc-resumen-item-cant">{precioUnit > 0 ? fmt(subtotal) : `${cantidad} ${pluralizar(cantidad, unidad)}`}</span>
                       </div>
                     );
                   })}
                 </div>
-                {/* Botón enviar */}
-                <button onClick={() => { enviarWhatsApp(); setMostrarResumen(false); }} style={{ width: '100%', background: '#25D366', border: 'none', color: '#fff', fontFamily: 'var(--font-sans)', fontSize: '0.78rem', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', borderRadius: '4px' }}>
-                  Enviar pedido por WhatsApp
+                {/* Total */}
+                {totalMonto > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1.25rem', paddingTop: '0.9rem', borderTop: '1px solid rgba(212,168,83,0.2)' }}>
+                    <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.78rem', color: 'rgba(245,230,211,0.7)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Total</span>
+                    <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', color: 'var(--gold)', fontWeight: 600 }}>{fmt(totalMonto)}</span>
+                  </div>
+                )}
+                {/* Botones acción */}
+                <button onClick={() => { irACarrito(); setMostrarResumen(false); }} style={{ width: '100%', background: '#d4a853', border: 'none', color: '#1a0f0a', fontFamily: 'var(--font-sans)', fontSize: '0.82rem', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', borderRadius: '6px', fontWeight: 700, marginBottom: '0.65rem' }}>
+                  Pagar online con Flow →
+                </button>
+                <button onClick={() => { enviarWhatsApp(); setMostrarResumen(false); }} style={{ width: '100%', background: 'transparent', border: '1px solid #25D366', color: '#25D366', fontFamily: 'var(--font-sans)', fontSize: '0.78rem', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', borderRadius: '6px' }}>
+                  Cotizar por WhatsApp
                 </button>
               </div>
             </div>
           )}
           {/* Barra inferior */}
-          <div className="svc-whatsapp-bar" style={{ cursor: 'pointer' }}>
-            <span onClick={() => setMostrarResumen(true)} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'var(--cream)', letterSpacing: '0.08em', flex: 1 }}>
-              🛒 {totalItems} producto{totalItems > 1 ? 's' : ''} · {fmt(totalMonto)} · Ver pedido
-            </span>
-            <button onClick={() => setCarrito({})} style={{ background: 'none', border: '1px solid rgba(245,100,100,0.4)', color: 'rgba(245,150,150,0.9)', fontFamily: 'var(--font-sans)', fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.3rem 0.6rem', cursor: 'pointer', marginRight: '0.75rem' }}>Vaciar</button>
-            <span onClick={() => setMostrarResumen(true)} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'var(--gold)', letterSpacing: '0.08em', cursor: 'pointer' }}>
-              Ver resumen →
-            </span>
+          <div className="svc-whatsapp-bar">
+            <button className="svc-vaciar-btn" onClick={() => setCarrito({})}>Vaciar</button>
+            <button className="svc-cart-btn" onClick={() => setMostrarResumen(true)}>
+              <span className="svc-cart-icon-wrap">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="9" cy="21" r="1"/>
+                  <circle cx="20" cy="21" r="1"/>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                </svg>
+                <span className="svc-cart-badge">{totalItems}</span>
+              </span>
+              <span>Mi Carrito · {fmt(totalMonto)}</span>
+            </button>
           </div>
         </>
       )}

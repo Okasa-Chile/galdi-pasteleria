@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const navItems: { label: string; id?: string; href?: string }[] = [
   { label: 'Productos', id: 'productos' },
@@ -15,6 +16,28 @@ const navItems: { label: string; id?: string; href?: string }[] = [
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [totalItemsCarrito, setTotalItemsCarrito] = useState(0);
+
+  useEffect(() => {
+    const leerCarrito = () => {
+      try {
+        const raw = sessionStorage.getItem('galdi_carrito');
+        if (!raw) { setTotalItemsCarrito(0); return; }
+        const items: Array<{ cantidad: number }> = JSON.parse(raw);
+        const total = items.reduce((acc, it) => acc + (it.cantidad ?? 0), 0);
+        setTotalItemsCarrito(total);
+      } catch {
+        setTotalItemsCarrito(0);
+      }
+    };
+    leerCarrito();
+    window.addEventListener('galdi:carrito-actualizado', leerCarrito);
+    window.addEventListener('storage', leerCarrito);
+    return () => {
+      window.removeEventListener('galdi:carrito-actualizado', leerCarrito);
+      window.removeEventListener('storage', leerCarrito);
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 55);
@@ -65,6 +88,45 @@ export default function Header() {
         .nav-cta:hover {
           background: var(--gold) !important;
           color: var(--brown-dark) !important;
+        }
+        .nav-cta-cart {
+          position: relative;
+          display: inline-flex !important;
+          align-items: center;
+          gap: 0.5rem;
+        }
+        .nav-cta-cart svg {
+          width: 16px;
+          height: 16px;
+          stroke: currentColor;
+          stroke-width: 2.2;
+          fill: none;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+        .cart-badge {
+          position: absolute;
+          top: -8px;
+          right: -10px;
+          background: var(--terracota, #c4704f);
+          color: #fff;
+          font-size: 0.6rem;
+          font-weight: 700;
+          min-width: 18px;
+          height: 18px;
+          padding: 0 5px;
+          border-radius: 999px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 2px solid rgba(26,15,10,0.93);
+          animation: cartBadgePop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          letter-spacing: 0;
+        }
+        @keyframes cartBadgePop {
+          0%   { transform: scale(0); }
+          60%  { transform: scale(1.3); }
+          100% { transform: scale(1); }
         }
         .menu-toggle {
           display: none;
@@ -175,12 +237,21 @@ export default function Header() {
             >
               🔒
             </a>
-            <a
-              href="#servicios"
-              className="header-nav-link nav-cta"
+            <Link
+              href="/carrito"
+              className="header-nav-link nav-cta nav-cta-cart"
+              aria-label="Ver carrito"
             >
-              Cotizar
-            </a>
+              <svg viewBox="0 0 24 24">
+                <circle cx="9" cy="21" r="1"/>
+                <circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              <span>Carrito</span>
+              {totalItemsCarrito > 0 && (
+                <span className="cart-badge">{totalItemsCarrito}</span>
+              )}
+            </Link>
           </nav>
 
           {/* Hamburguesa */}
@@ -225,15 +296,22 @@ export default function Header() {
               {item.label}
             </a>
           ))}
-          <a
-            href="https://wa.me/56990991011?text=Hola%20Galdi!%20Me%20gustar%C3%ADa%20cotizar"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="header-nav-link nav-cta"
+          <Link
+            href="/carrito"
+            className="header-nav-link nav-cta nav-cta-cart"
             onClick={() => setMenuOpen(false)}
+            aria-label="Ver carrito"
           >
-            Cotizar
-          </a>
+            <svg viewBox="0 0 24 24">
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span>Carrito</span>
+            {totalItemsCarrito > 0 && (
+              <span className="cart-badge">{totalItemsCarrito}</span>
+            )}
+          </Link>
         </div>
       )}
     </>

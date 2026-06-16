@@ -106,7 +106,21 @@
       "Bash(gcloud run services add-iam-policy-binding *)",
       "PowerShell(gcloud run services add-iam-policy-binding *)",
       "PowerShell(cd C:\\\\OKasa\\\\Web\\\\galdi-nextjs; Start-Process powershell -ArgumentList '-NoExit', '-Command', 'npm run dev' -WindowStyle Normal)",
-      "Bash(git reset *)"
+      "Bash(git reset *)",
+      "PowerShell($r = Invoke-WebRequest -Uri \"http://localhost:3000/dia-del-padre\" -UseBasicParsing; \"Status: $\\($r.StatusCode\\)\"; $r.Content.Length; if \\($r.Content -match \"cobertura-comunas\"\\) { \"OK: div#cobertura-comunas presente\" } else { \"ERROR: div no encontrado\" }; if \\($r.Content -match \"Reparto en Maip\"\\) { \"OK: H2 cobertura presente\" }; if \\($r.Content -match \"Pudahuel\"\\) { \"OK: Pudahuel presente\" }; if \\($r.Content -match \"FAQPage\"\\) { \"OK: FAQPage en schema\" })",
+      "PowerShell($r = Invoke-WebRequest -Uri \"http://localhost:3000\" -UseBasicParsing; if \\($r.Content -match \"Tortas D\"\\) { \"OK: 'Tortas Día del Padre' presente en el HTML\" } else { \"No encontrado\" })",
+      "Bash(git rm *)",
+      "PowerShell(Start-Process \"http://localhost:3000/test-cors\")",
+      "PowerShell(firebase functions:log *)",
+      "PowerShell(gcloud logging read *)",
+      "PowerShell(curl.exe -s -X POST \"https://us-central1-galdi-web.cloudfunctions.net/flowCrearOrden\" -H \"Content-Type: application/json\" -d '{\"orden\":\"TEST-003\",\"monto\":1000,\"email\":\"test@galdi.cl\",\"descripcion\":\"Test curl\"}' -w \"\\\\n\\\\nHTTP_STATUS: %{http_code}\")",
+      "PowerShell(curl.exe -s -X POST \"https://us-central1-galdi-web.cloudfunctions.net/flowCrearOrden\" -H \"Content-Type: application/json\" -d $jsonBody -w \"`nHTTP_STATUS: %{http_code}\")",
+      "PowerShell($jsonBody = '{\"orden\":\"TEST-003\",\"monto\":1000,\"email\":\"test@galdi.cl\",\"descripcion\":\"Test curl\"}')",
+      "PowerShell(gcloud logging read \"resource.type=cloud_run_revision AND resource.labels.service_name=flowcrearorden AND timestamp>=\"\"2026-06-15T19:04:00Z\"\"\" --limit=50 --format=json --project=galdi-web 2>&1 | python -c \"import sys,json; logs=json.load\\(sys.stdin\\); [print\\(l.get\\('timestamp',''\\), l.get\\('textPayload',''\\), l.get\\('httpRequest',{}\\).get\\('status',''\\)\\) for l in logs if l.get\\('textPayload'\\) or l.get\\('httpRequest'\\)]\")",
+      "PowerShell(gcloud run services describe *)",
+      "PowerShell(Start-Process \"http://localhost:3000/carrito\")",
+      "PowerShell(Start-Process powershell -ArgumentList \"-NoProfile -Command `\"cd 'C:\\\\OKasa\\\\Web\\\\galdi-nextjs'; npx tsc --noEmit 2>&1`\"\")",
+      "PowerShell(cd C:\\\\OKasa\\\\Web\\\\galdi-nextjs; $s1 = \"scripts/fix-precios-pasteles-queques.js\"; $s2 = \"scripts/copiar-empanada-mariscos.js\"; if \\(Test-Path $s1\\) { Remove-Item $s1; \"Eliminado: $s1\" } else { \"No existe: $s1\" }; if \\(Test-Path $s2\\) { Remove-Item $s2; \"Eliminado: $s2\" } else { \"No existe: $s2\" })"
     ]
   },
   "enableAllProjectMcpServers": true,

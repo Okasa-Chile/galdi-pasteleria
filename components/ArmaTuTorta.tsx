@@ -50,11 +50,13 @@ const DECORACIONES = [
 ];
 
 const TAMANIOS = [
-  { id: 'S',  nombre: 'S',  desc: '6 a 8 porciones',   detalle: 'Celebraciones íntimas.' },
-  { id: 'M',  nombre: 'M',  desc: '10 a 12 porciones', detalle: 'Reuniones familiares.' },
-  { id: 'L',  nombre: 'L',  desc: '16 a 20 porciones', detalle: 'Eventos medianos.' },
-  { id: 'XL', nombre: 'XL', desc: '25 a 30 porciones', detalle: 'Grandes celebraciones.' },
+  { id: 'S',  nombre: 'S',  desc: '6 a 8 porciones',   detalle: 'Celebraciones íntimas.',  precio: 22000, precioSinAzucar: 26000 },
+  { id: 'M',  nombre: 'M',  desc: '10 a 12 porciones', detalle: 'Reuniones familiares.',   precio: 30000, precioSinAzucar: 36000 },
+  { id: 'L',  nombre: 'L',  desc: '16 a 20 porciones', detalle: 'Eventos medianos.',       precio: 42000, precioSinAzucar: 52000 },
+  { id: 'XL', nombre: 'XL', desc: '25 a 30 porciones', detalle: 'Grandes celebraciones.',  precio: 55000, precioSinAzucar: 70000 },
 ];
+
+const fmtPrecio = (n: number) => '$' + n.toLocaleString('es-CL');
 
 // ── Subcomponente: Card opción ────────────────────────────────────────────────
 
@@ -282,6 +284,7 @@ export default function ArmaTuTorta() {
   const [decoraciones, setDecoraciones]         = useState<string[]>([]);
   const [decoracionesConfirmadas, setDecoConf]  = useState(false);
   const [tamanio, setTamanio]                   = useState<string | null>(null);
+  const [sinAzucar, setSinAzucar]               = useState(false);
 
   const pasoActivo =
     !base                     ? 1 :
@@ -293,6 +296,10 @@ export default function ArmaTuTorta() {
   const rellenosSeleccionados     = RELLENOS.filter(r => rellenos.includes(r.id));
   const decoracionesSeleccionadas = DECORACIONES.filter(d => decoraciones.includes(d.id));
   const tamanioSeleccionado       = TAMANIOS.find(t => t.id === tamanio);
+
+  const precioFinal = tamanioSeleccionado
+    ? (sinAzucar ? tamanioSeleccionado.precioSinAzucar : tamanioSeleccionado.precio)
+    : 0;
 
   function toggleRelleno(id: string) {
     setRellenos(prev =>
@@ -315,8 +322,10 @@ export default function ArmaTuTorta() {
     `🍰 Base: ${baseSeleccionada?.nombre ?? ''}\n` +
     `🍯 Relleno: ${rellenosSeleccionados.map(r => r.nombre).join(', ')}\n` +
     `✨ Decoración: ${decoracionesSeleccionadas.map(d => d.nombre).join(', ')}\n` +
-    `📏 Tamaño: ${tamanioSeleccionado?.nombre ?? ''} (${tamanioSeleccionado?.desc ?? ''})\n\n` +
-    `¿Me pueden cotizar? 🙏`
+    `📏 Tamaño: ${tamanioSeleccionado?.nombre ?? ''} (${tamanioSeleccionado?.desc ?? ''})\n` +
+    (sinAzucar ? `🌿 Versión sin azúcar (alulosa)\n` : '') +
+    `\n💰 Valor referencial: ${fmtPrecio(precioFinal)}\n\n` +
+    `¿Me confirman disponibilidad y fecha de entrega?`
   );
 
   return (
@@ -598,6 +607,52 @@ export default function ArmaTuTorta() {
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', color: P.brownLight, marginTop: '0.75rem', fontStyle: 'italic' }}>
             * Las porciones son aproximadas y varían según el corte.
           </p>
+
+          {/* Toggle sin azúcar */}
+          <div
+            onClick={() => setSinAzucar(!sinAzucar)}
+            style={{
+              marginTop: '1.25rem',
+              padding: '1rem 1.1rem',
+              borderRadius: '14px',
+              border: sinAzucar ? `2px solid ${P.roseDark}` : `1.5px solid ${P.creamDark}`,
+              background: sinAzucar ? `linear-gradient(135deg, ${P.rose}22, ${P.peach}22)` : P.white,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.85rem',
+              transition: 'all 0.25s ease',
+              boxShadow: sinAzucar ? `0 2px 12px ${P.rose}33` : 'none',
+            }}
+          >
+            <div style={{
+              width: '22px',
+              height: '22px',
+              borderRadius: '6px',
+              border: sinAzucar ? `2px solid ${P.roseDark}` : `1.5px solid ${P.brownLight}`,
+              background: sinAzucar ? P.roseDark : 'transparent',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              transition: 'all 0.2s ease',
+            }}>
+              {sinAzucar && <span style={{ color: P.white, fontSize: '0.85rem', fontWeight: 700, lineHeight: 1 }}>✓</span>}
+            </div>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontFamily: 'var(--font-serif)', fontSize: '0.95rem', color: P.brown, margin: 0, fontWeight: sinAzucar ? 600 : 400 }}>
+                🌿 Sin azúcar
+                {tamanioSeleccionado && (
+                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: P.roseDark, marginLeft: '0.5rem', fontWeight: 600 }}>
+                    +{fmtPrecio(tamanioSeleccionado.precioSinAzucar - tamanioSeleccionado.precio)}
+                  </span>
+                )}
+              </p>
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: P.brownLight, margin: '0.2rem 0 0', lineHeight: 1.5 }}>
+                Endulzado con alulosa, el endulzante más noble. Apto para diabéticos y dietas bajas en azúcar.
+              </p>
+            </div>
+          </div>
         </Paso>
 
         {/* ── Resumen final ── */}
@@ -676,9 +731,30 @@ export default function ArmaTuTorta() {
               </p>
             </div>
 
-            <p style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)', fontWeight: 300, color: P.brownMid, textAlign: 'center', marginBottom: '1.5rem' }}>
-              El valor se cotiza según tu combinación elegida.
-            </p>
+            {/* Bloque precio destacado */}
+            <div style={{
+              background: `linear-gradient(135deg, ${P.rose}22, ${P.peach}22)`,
+              border: `1.5px solid ${P.roseDark}55`,
+              borderRadius: '14px',
+              padding: '1.5rem 1.25rem',
+              textAlign: 'center',
+              marginBottom: '1.5rem',
+            }}>
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: P.roseDark, margin: '0 0 0.5rem', fontWeight: 600 }}>
+                Valor total
+              </p>
+              <p style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2rem, 6vw, 2.8rem)', fontWeight: 500, color: P.brown, margin: 0, lineHeight: 1.1, letterSpacing: '0.01em' }}>
+                {fmtPrecio(precioFinal)}
+              </p>
+              {sinAzucar && (
+                <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: P.roseDark, margin: '0.5rem 0 0', fontStyle: 'italic' }}>
+                  🌿 Incluye opción sin azúcar (alulosa)
+                </p>
+              )}
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', color: P.brownLight, margin: '0.75rem 0 0', lineHeight: 1.6 }}>
+                Precio referencial. Combinaciones premium pueden tener un pequeño ajuste — te lo confirmamos por WhatsApp.
+              </p>
+            </div>
 
             <a
               href={`https://wa.me/56990991011?text=${mensajeWsp}`}
