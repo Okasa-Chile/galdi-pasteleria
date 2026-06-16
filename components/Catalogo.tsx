@@ -237,9 +237,10 @@ function CatalogoInner() {
           font-size: 0.48rem;
           color: var(--terracota);
         }
+        .cat-tabs-wrapper::-webkit-scrollbar { display: none; }
       `}</style>
 
-      <section id="productos" style={{ padding: '1rem 0 3rem', background: '#f5ede3', scrollMarginTop: '90px' }}>
+      <section id="productos" style={{ padding: '1rem 0 3rem', background: '#f5ede3', scrollMarginTop: '116px' }}>
 
         {/* Header */}
         <div style={{ textAlign: 'center', padding: '0 5%', marginBottom: '0.5rem' }}>
@@ -266,13 +267,14 @@ function CatalogoInner() {
         </div>
 
         {/* Tabs */}
-        <div style={{
+        <div className="cat-tabs-wrapper" style={{
           overflowX: 'auto',
           padding: '0 5%',
           borderBottom: '1px solid rgba(26,15,10,0.14)',
           scrollbarWidth: 'none',
+          msOverflowStyle: 'none' as React.CSSProperties['msOverflowStyle'],
           position: 'sticky',
-          top: '90px',
+          top: '116px',
           zIndex: 100,
           backgroundColor: 'var(--cream)',
         }}>

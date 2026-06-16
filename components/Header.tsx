@@ -51,9 +51,9 @@ export default function Header() {
         .header-nav-link {
           color: var(--cream);
           text-decoration: none;
-          font-size: 0.78rem;
+          font-size: 0.73rem;
           font-weight: 400;
-          letter-spacing: 0.14em;
+          letter-spacing: 0.11em;
           text-transform: uppercase;
           position: relative;
           transition: color var(--transition);
@@ -182,8 +182,8 @@ export default function Header() {
 
         {/* Nav row */}
         <div style={{
-          padding: scrolled ? '0.7rem 5%' : '15px 40px',
-          minHeight: '90px',
+          padding: '0.7rem 5%',
+          minHeight: '65px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -200,7 +200,7 @@ export default function Header() {
               width={250}
               height={90}
               style={{
-                height: scrolled ? '52px' : '65px',
+                height: '52px',
                 width: 'auto',
                 maxWidth: '250px',
                 objectFit: 'contain',
@@ -212,7 +212,7 @@ export default function Header() {
           </a>
 
           {/* Nav desktop */}
-          <nav className="header-nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: '2.5rem', listStyle: 'none' }}>
+          <nav className="header-nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: '1.8rem', listStyle: 'none' }}>
             {navItems.map((item) => (
               <a
                 key={item.href ?? item.id}

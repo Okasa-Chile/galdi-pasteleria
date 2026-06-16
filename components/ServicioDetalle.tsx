@@ -350,7 +350,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
     <div
       id={pageMode ? 'productos' : undefined}
       style={pageMode
-        ? { position: 'relative', display: 'flex', flexDirection: 'column', minHeight: '100vh', scrollMarginTop: '110px', paddingTop: '75px' }
+        ? { position: 'relative', display: 'block', minHeight: '100vh', scrollMarginTop: '116px', paddingTop: '116px' }
         : { position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', flexDirection: 'column', animation: 'svcFadeIn 0.5s cubic-bezier(0.25,0.46,0.45,0.94) both' }
       }
     >
@@ -596,6 +596,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
           100% { transform: scale(1.18); box-shadow: 0 0 0 3px rgba(212,168,83,0.25), 0 0 14px rgba(212,168,83,0.55); }
         }
         .talla-personas { font-size: 9px; color: rgba(201,165,90,0.8); text-align: center; padding: 4px 0 6px; letter-spacing: 0.04em; min-height: 18px; }
+        div[style*="overflowX: auto"]::-webkit-scrollbar { display: none; }
       `}</style>
 
       {/* ── Imagen de fondo ── */}
@@ -608,15 +609,9 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
       {/* Gradiente */}
       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(26,15,10,0.6) 0%, rgba(26,15,10,0.5) 40%, rgba(26,15,10,0.92) 100%)' }} />
 
-      {/* ── Header: logo + tabs + cerrar ── */}
-      <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column' }}>
-
-        {/* Fila superior: logo + nombre + cerrar */}
-        {pageMode ? (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2.5rem 5% 1.5rem' }}>
-            <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.2rem, 3vw, 2rem)', fontWeight: 300, color: 'var(--cream)', letterSpacing: '0.08em', margin: 0 }}>{nombre}</h1>
-          </div>
-        ) : (
+      {/* ── Header: logo + nombre + cerrar (solo modo overlay) ── */}
+      {!pageMode && (
+        <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 5%' }}>
             <button onClick={() => { onClose(); document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' }); }} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
               <img src="/images/Nuevologo.webp" alt="Galdi" style={{ height: '52px', width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
@@ -624,18 +619,45 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
             <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.2rem, 3vw, 2rem)', fontWeight: 300, color: 'var(--cream)' }}>{nombre}</span>
             <button onClick={() => { onClose(); document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' }); }} style={{ background: 'rgba(26,15,10,0.4)', backdropFilter: 'blur(6px)', border: '1px solid rgba(245,230,211,0.25)', color: 'var(--cream)', width: '2.2rem', height: '2.2rem', borderRadius: '50%', fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
           </div>
-        )}
+          <div style={{ display: 'flex', borderBottom: '1px solid rgba(245,230,211,0.15)', overflowX: 'auto', scrollbarWidth: 'none', paddingLeft: '5%' }}>
+            {tabs.map(t => (
+              <button key={t} onClick={() => setActiveTab(t)} className={`svc-tab${t === activeTab ? ' active' : ''}`}>{t}</button>
+            ))}
+          </div>
+        </div>
+      )}
 
-        {/* Barra de tabs */}
-        <div style={{ display: 'flex', borderBottom: '1px solid rgba(245,230,211,0.15)', overflowX: 'auto', paddingLeft: '5%' }}>
+      {/* ── Título (solo pageMode) ── */}
+      {pageMode && (
+        <div style={{ position: 'relative', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem 5% 1rem' }}>
+          <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.2rem, 3vw, 2rem)', fontWeight: 300, color: 'var(--cream)', letterSpacing: '0.08em', margin: 0 }}>{nombre}</h1>
+        </div>
+      )}
+
+      {/* ── Tabs sticky (solo pageMode) — hijo directo del root para que sticky funcione ── */}
+      {pageMode && (
+        <div style={{
+          position: 'sticky',
+          top: '120px',
+          zIndex: 499,
+          display: 'flex',
+          borderBottom: '1px solid rgba(245,230,211,0.15)',
+          overflowX: 'auto',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none' as React.CSSProperties['msOverflowStyle'],
+          paddingLeft: '5%',
+          backgroundColor: 'rgba(26,15,10,0.92)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+        }}>
           {tabs.map(t => (
             <button key={t} onClick={() => setActiveTab(t)} className={`svc-tab${t === activeTab ? ' active' : ''}`}>{t}</button>
           ))}
         </div>
-      </div>
+      )}
 
       {/* ── Contenido scrolleable ── */}
-      <div style={{ position: 'relative', zIndex: 10, flex: 1, overflowY: 'auto', padding: '0.5rem 5%', paddingBottom: totalItems > 0 ? '5rem' : '1.5rem' }}>
+      <div style={{ position: 'relative', zIndex: 10, flex: 1, overflowY: pageMode ? 'visible' : 'auto', overflowX: 'hidden', padding: '0.5rem 5%', paddingBottom: totalItems > 0 ? '5rem' : '1.5rem' }}>
 
         {/* EVENTOS — descripción + imagen ambiente */}
         {id === 'eventos' && (
