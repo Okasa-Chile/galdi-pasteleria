@@ -99,7 +99,7 @@ export const flowCrearOrden = onRequest(
 );
 
 export const flowConfirmar = onRequest(
-  { region: 'us-central1', cors: ALLOWED_ORIGINS, invoker: 'public', secrets: ['FLOW_API_KEY', 'FLOW_SECRET_KEY'] },
+  { region: 'us-central1', cors: ALLOWED_ORIGINS, invoker: 'public', secrets: ['FLOW_API_KEY', 'FLOW_SECRET_KEY', 'ZOHO_USER', 'ZOHO_PASS'] },
   async (req, res) => {
     try {
       const apiKey = process.env.FLOW_API_KEY?.trim();
@@ -146,6 +146,29 @@ export const flowConfirmar = onRequest(
           console.log('[flowConfirmar] Pedido guardado:', pago.commerceOrder);
         } catch (dbErr) {
           console.error('[flowConfirmar] Error guardando pedido:', dbErr);
+        }
+        try {
+          const nodemailer = await import('nodemailer');
+          const transporter = nodemailer.createTransport({
+            host: 'smtp.zoho.com',
+            port: 465,
+            secure: true,
+            auth: {
+              user: process.env.ZOHO_USER,
+              pass: process.env.ZOHO_PASS,
+            },
+          });
+          const descripcion = pago.commerceOrder ?? 'sin referencia';
+          const monto = pago.amount?.toLocaleString('es-CL') ?? '0';
+          await transporter.sendMail({
+            from: '"Galdi Pastelería" <ventas@galdi.cl>',
+            to: 'ventas@galdi.cl, ingridgalvezd@gmail.com, jacquelinegalvezd@gmail.com, claudioferrarila@gmail.com',
+            subject: `🛒 Nuevo pedido confirmado — ${descripcion}`,
+            text: `Se confirmó un nuevo pedido en galdi.cl\n\nOrden: ${descripcion}\nMonto: $${monto} CLP\nEmail cliente: ${pago.email ?? 'no registrado'}\n\nRevisa el panel en galdi.cl/gestion`,
+          });
+          console.log('[flowConfirmar] Email de notificación enviado.');
+        } catch (mailErr) {
+          console.error('[flowConfirmar] Error enviando email:', mailErr);
         }
       }
 

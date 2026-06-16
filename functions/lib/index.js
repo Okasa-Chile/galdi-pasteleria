@@ -78,8 +78,8 @@ exports.flowCrearOrden = (0, https_1.onRequest)({ region: 'us-central1', cors: A
         res.status(500).json({ error: 'Error interno', detalle: String(err) });
     }
 });
-exports.flowConfirmar = (0, https_1.onRequest)({ region: 'us-central1', cors: ALLOWED_ORIGINS, invoker: 'public', secrets: ['FLOW_API_KEY', 'FLOW_SECRET_KEY'] }, async (req, res) => {
-    var _a, _b;
+exports.flowConfirmar = (0, https_1.onRequest)({ region: 'us-central1', cors: ALLOWED_ORIGINS, invoker: 'public', secrets: ['FLOW_API_KEY', 'FLOW_SECRET_KEY', 'ZOHO_USER', 'ZOHO_PASS'] }, async (req, res) => {
+    var _a, _b, _c, _d, _e, _f;
     try {
         const apiKey = (_a = process.env.FLOW_API_KEY) === null || _a === void 0 ? void 0 : _a.trim();
         const secret = (_b = process.env.FLOW_SECRET_KEY) === null || _b === void 0 ? void 0 : _b.trim();
@@ -113,6 +113,30 @@ exports.flowConfirmar = (0, https_1.onRequest)({ region: 'us-central1', cors: AL
             }
             catch (dbErr) {
                 console.error('[flowConfirmar] Error guardando pedido:', dbErr);
+            }
+            try {
+                const nodemailer = await Promise.resolve().then(() => require('nodemailer'));
+                const transporter = nodemailer.createTransport({
+                    host: 'smtp.zoho.com',
+                    port: 465,
+                    secure: true,
+                    auth: {
+                        user: process.env.ZOHO_USER,
+                        pass: process.env.ZOHO_PASS,
+                    },
+                });
+                const descripcion = (_c = pago.commerceOrder) !== null && _c !== void 0 ? _c : 'sin referencia';
+                const monto = (_e = (_d = pago.amount) === null || _d === void 0 ? void 0 : _d.toLocaleString('es-CL')) !== null && _e !== void 0 ? _e : '0';
+                await transporter.sendMail({
+                    from: '"Galdi Pastelería" <ventas@galdi.cl>',
+                    to: 'ventas@galdi.cl, ingridgalvezd@gmail.com, jacquelinegalvezd@gmail.com, claudioferrarila@gmail.com',
+                    subject: `🛒 Nuevo pedido confirmado — ${descripcion}`,
+                    text: `Se confirmó un nuevo pedido en galdi.cl\n\nOrden: ${descripcion}\nMonto: $${monto} CLP\nEmail cliente: ${(_f = pago.email) !== null && _f !== void 0 ? _f : 'no registrado'}\n\nRevisa el panel en galdi.cl/gestion`,
+                });
+                console.log('[flowConfirmar] Email de notificación enviado.');
+            }
+            catch (mailErr) {
+                console.error('[flowConfirmar] Error enviando email:', mailErr);
             }
         }
         res.json({ ok: true, status: pago.status });

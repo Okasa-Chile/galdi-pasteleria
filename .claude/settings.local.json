@@ -120,7 +120,15 @@
       "PowerShell(gcloud run services describe *)",
       "PowerShell(Start-Process \"http://localhost:3000/carrito\")",
       "PowerShell(Start-Process powershell -ArgumentList \"-NoProfile -Command `\"cd 'C:\\\\OKasa\\\\Web\\\\galdi-nextjs'; npx tsc --noEmit 2>&1`\"\")",
-      "PowerShell(cd C:\\\\OKasa\\\\Web\\\\galdi-nextjs; $s1 = \"scripts/fix-precios-pasteles-queques.js\"; $s2 = \"scripts/copiar-empanada-mariscos.js\"; if \\(Test-Path $s1\\) { Remove-Item $s1; \"Eliminado: $s1\" } else { \"No existe: $s1\" }; if \\(Test-Path $s2\\) { Remove-Item $s2; \"Eliminado: $s2\" } else { \"No existe: $s2\" })"
+      "PowerShell(cd C:\\\\OKasa\\\\Web\\\\galdi-nextjs; $s1 = \"scripts/fix-precios-pasteles-queques.js\"; $s2 = \"scripts/copiar-empanada-mariscos.js\"; if \\(Test-Path $s1\\) { Remove-Item $s1; \"Eliminado: $s1\" } else { \"No existe: $s1\" }; if \\(Test-Path $s2\\) { Remove-Item $s2; \"Eliminado: $s2\" } else { \"No existe: $s2\" })",
+      "PowerShell(cd C:\\\\OKasa\\\\Web\\\\galdi-nextjs; git status --short 2>&1 | Select-String \"node_modules\" | Select-Object -First 5; echo \"---\"; git status --short 2>&1 | Where-Object { $_ -notmatch \"node_modules\" } | Select-Object -First 30)",
+      "PowerShell(git rm *)",
+      "PowerShell(cd C:\\\\OKasa\\\\Web\\\\galdi-nextjs; git status --short 2>&1 | Where-Object { $_ -notmatch \"node_modules\" })",
+      "PowerShell(pip install *)",
+      "PowerShell(Start-Process \"C:\\\\OKasa\\\\Web\\\\galdi-nextjs\\\\public\\\\images\\\\logo-ancho.webp\")",
+      "PowerShell(gcloud secrets create ZOHO_USER *)",
+      "PowerShell(gcloud secrets create ZOHO_PASS *)",
+      "PowerShell(Invoke-WebRequest -Uri \"https://us-central1-galdi-web.cloudfunctions.net/flowConfirmar\" -Method POST -ContentType \"application/x-www-form-urlencoded\" -Body \"token=FAKE-TOKEN-PRUEBA\" -UseBasicParsing)"
     ]
   },
   "enableAllProjectMcpServers": true,
