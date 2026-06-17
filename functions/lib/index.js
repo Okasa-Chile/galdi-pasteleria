@@ -100,6 +100,9 @@ exports.flowConfirmar = (0, https_1.onRequest)({ region: 'us-central1', cors: AL
             console.log('✅ Pago confirmado:', pago.commerceOrder, pago.amount, pago.email);
             // Guardar pedido confirmado en Firestore
             try {
+                const { initializeApp, getApps } = await Promise.resolve().then(() => require('firebase-admin/app'));
+                if (getApps().length === 0)
+                    initializeApp();
                 const { getFirestore, FieldValue } = await Promise.resolve().then(() => require('firebase-admin/firestore'));
                 const db = getFirestore();
                 await db.collection('galdi_pedidos').add({

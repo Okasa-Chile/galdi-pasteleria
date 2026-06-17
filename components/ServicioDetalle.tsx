@@ -287,6 +287,14 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
     });
   }
 
+  function eliminarItem(key: string) {
+    setCarrito(prev => {
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+  }
+
   const totalItems = Object.keys(carrito).length;
 
   const fmt = (n: number) => n > 0 ? '$' + n.toLocaleString('es-CL') : '—';
@@ -927,6 +935,21 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                           </span>
                         </div>
                         <span className="svc-resumen-item-cant">{precioUnit > 0 ? fmt(subtotal) : `${cantidad} ${pluralizar(cantidad, unidad)}`}</span>
+                        <button
+                          onClick={() => eliminarItem(key)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: 'rgba(245,150,150,0.7)',
+                            fontSize: '1.1rem',
+                            cursor: 'pointer',
+                            padding: '0 0.25rem',
+                            lineHeight: 1,
+                            flexShrink: 0,
+                            marginLeft: 'auto',
+                          }}
+                          title="Eliminar"
+                        >×</button>
                       </div>
                     );
                   })}
