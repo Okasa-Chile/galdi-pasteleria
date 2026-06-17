@@ -483,6 +483,13 @@ galdi-nextjs/
 - /dia-del-padre rankeando (deadline: domingo 21 junio — 6 días)
 - 313 archivos en producción
 
+### Sesión 16-06-2026
+
+#### ServicioDetalle.tsx — botón eliminar ítem carrito
+- Función eliminarItem(key) agregada tras quitar()
+- Botón × por ítem en modal resumen, color rgba(245,150,150,0.7), marginLeft auto
+- Permite eliminar un producto individual sin vaciar todo el carrito
+
 ### Pendientes para sesiones futuras
 - [ ] Comunicar endulzante "alulosa" en página /arma-tu-torta como diferenciador
 - [ ] Considerar agregar /sin-azucar como landing SEO específica (oportunidad de mercado)
