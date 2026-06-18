@@ -1009,6 +1009,7 @@ window.presAgregarLinea = () => {
     '<div class="pres-modo-toggle" style="display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:10px;">' +
       '<button class="pres-modo-btn active" data-modo="catalogo" onclick="presSetModo(this,\'catalogo\')" style="flex:1;padding:5px 4px;border:none;cursor:pointer;background:var(--dark);color:var(--gold);font-family:\'Jost\',sans-serif;font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;">Cat</button>' +
       '<button class="pres-modo-btn" data-modo="manual" onclick="presSetModo(this,\'manual\')" style="flex:1;padding:5px 4px;border:none;cursor:pointer;background:#fff;color:var(--muted);font-family:\'Jost\',sans-serif;font-size:10px;letter-spacing:.06em;text-transform:uppercase;">Man</button>' +
+      '<button class="pres-modo-btn" data-modo="pack" onclick="presSetModo(this,\'pack\')" style="flex:1;padding:5px 4px;border:none;cursor:pointer;background:#fff;color:var(--muted);font-family:\'Jost\',sans-serif;font-size:10px;letter-spacing:.06em;text-transform:uppercase;">Pack</button>' +
     '</div>' +
     '<div class="pres-desc-wrap" style="display:flex;flex-direction:column;gap:4px;">' +
       '<select class="pres-cat-sel" onchange="presCargarProductos(this)" style="font-size:12px;">' + catOpts + '</select>' +
@@ -1074,6 +1075,18 @@ window.presEliminarLinea = (btn) => {
   presRecalcTotales();
 };
 
+window.presAgregarProductoPack = (btn) => {
+  const packItems = btn.closest('.pres-desc-wrap').querySelector('.pres-pack-items');
+  const fila = document.createElement('div');
+  fila.style.cssText = 'display:flex;gap:6px;align-items:center;';
+  fila.innerHTML =
+    '<input type="text" class="pack-prod-nombre" placeholder="Producto" style="flex:1;font-size:12px;">' +
+    '<input type="number" class="pack-prod-cant" min="1" value="1" style="width:60px;font-size:12px;text-align:right;" title="Cantidad por pack">' +
+    '<span style="font-size:10px;color:var(--muted);white-space:nowrap;">x pack</span>' +
+    '<button type="button" onclick="this.closest(\'div\').remove()" style="background:none;border:none;color:#9b3a2a;cursor:pointer;font-size:14px;line-height:1;padding:2px 4px;">&#10005;</button>';
+  packItems.appendChild(fila);
+};
+
 window.presSetModo = (btn, modo) => {
   const row = btn.closest('.pres-linea');
   row.querySelectorAll('.pres-modo-btn').forEach(b => {
@@ -1086,6 +1099,10 @@ window.presSetModo = (btn, modo) => {
   btn.style.background = 'var(--dark)';
   btn.style.color = 'var(--gold)';
   btn.style.fontWeight = '600';
+  const cantEl = row.querySelector('.pres-cant');
+  const precioEl = row.querySelector('.pres-precio');
+  if (cantEl) cantEl.style.display = '';
+  if (precioEl) precioEl.style.display = '';
   const wrap = row.querySelector('.pres-desc-wrap');
   if (modo === 'catalogo') {
     const cats = [...new Set(prods.map(p => p.cat || p.categoria))];
@@ -1097,11 +1114,31 @@ window.presSetModo = (btn, modo) => {
       '<select class="pres-cat-sel" onchange="presCargarProductos(this)" style="font-size:12px;">' + catOpts + '</select>' +
       '<select class="pres-prod-sel" onchange="presAutocompletarPrecio(this)" disabled style="font-size:12px;background:var(--sand);color:var(--muted);cursor:not-allowed;"><option value="">-- Producto --</option></select>' +
       '<select class="sel-talla-linea" onchange="presTallaChanged(this)" style="display:none;font-size:12px;"><option value="">— Talla —</option><option value="S">S — 8 a 10 p.</option><option value="M">M — 14 a 16 p.</option><option value="L">L — 20 a 22 p.</option><option value="XL" class="opt-xl-pres" style="display:none">XL — 25 p.</option></select>';
-  } else {
+  } else if (modo === 'manual') {
     wrap.style.display = '';
     wrap.style.flexDirection = '';
     wrap.style.gap = '';
     wrap.innerHTML = '<input type="text" class="pres-desc-manual" placeholder="Descripción del ítem" style="width:100%;font-size:13px;">';
+  } else if (modo === 'pack') {
+    cantEl.style.display = 'none';
+    precioEl.style.display = 'none';
+    wrap.style.display = 'flex';
+    wrap.style.flexDirection = 'column';
+    wrap.style.gap = '6px';
+    wrap.innerHTML =
+      '<input type="text" class="pres-pack-nombre" placeholder="Nombre del pack (ej: Pack Coffee Break A)" style="font-size:13px;">' +
+      '<div class="pres-pack-items" style="display:flex;flex-direction:column;gap:4px;"></div>' +
+      '<button type="button" onclick="presAgregarProductoPack(this)" style="background:none;border:1px dashed var(--gold);color:var(--gold2);padding:4px 10px;border-radius:5px;font-size:11px;cursor:pointer;align-self:flex-start;">+ Agregar producto al pack</button>' +
+      '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">' +
+        '<span style="font-size:11px;color:var(--muted);">Personas/packs:</span>' +
+        '<input type="number" class="pres-pack-personas" min="1" value="1" oninput="presRecalcLinea(this)" style="width:75px;text-align:right;">' +
+        '<span style="font-size:11px;color:var(--muted);">Precio pack ($):</span>' +
+        '<input type="number" class="pres-pack-precio" min="0" step="1" placeholder="0" oninput="presRecalcLinea(this)" style="width:100px;text-align:right;">' +
+      '</div>';
+    presAgregarProductoPack(wrap.querySelector('button'));
+    row.querySelector('.pres-subtotal-linea').value = '$0';
+    presRecalcTotales();
+    return;
   }
   const precioInput = row.querySelector('.pres-precio');
   precioInput.value = '';
@@ -1244,8 +1281,15 @@ window.presBanoChanged = (chk) => {
 
 window.presRecalcLinea = (inputEl) => {
   const row = inputEl.closest('.pres-linea');
-  const cant = parseFloat(row.querySelector('.pres-cant').value) || 0;
-  const precio = parseFloat(row.querySelector('.pres-precio').value) || 0;
+  const modoActivo = row.querySelector('.pres-modo-btn.active')?.dataset.modo;
+  let cant, precio;
+  if (modoActivo === 'pack') {
+    cant = parseFloat(row.querySelector('.pres-pack-personas')?.value) || 0;
+    precio = parseFloat(row.querySelector('.pres-pack-precio')?.value) || 0;
+  } else {
+    cant = parseFloat(row.querySelector('.pres-cant').value) || 0;
+    precio = parseFloat(row.querySelector('.pres-precio').value) || 0;
+  }
   const sub = cant * precio;
   row.querySelector('.pres-subtotal-linea').value = fmt(sub);
   presRecalcTotales();
@@ -1254,8 +1298,15 @@ window.presRecalcLinea = (inputEl) => {
 window.presRecalcTotales = () => {
   let subtotal = 0;
   document.querySelectorAll('.pres-linea').forEach(row => {
-    const cant = parseFloat(row.querySelector('.pres-cant').value) || 0;
-    const precio = parseFloat(row.querySelector('.pres-precio').value) || 0;
+    const modoActivo = row.querySelector('.pres-modo-btn.active')?.dataset.modo;
+    let cant, precio;
+    if (modoActivo === 'pack') {
+      cant = parseFloat(row.querySelector('.pres-pack-personas')?.value) || 0;
+      precio = parseFloat(row.querySelector('.pres-pack-precio')?.value) || 0;
+    } else {
+      cant = parseFloat(row.querySelector('.pres-cant').value) || 0;
+      precio = parseFloat(row.querySelector('.pres-precio').value) || 0;
+    }
     subtotal += cant * precio;
   });
   const descValor = parseFloat(document.getElementById('pres-desc-valor').value) || 0;
@@ -1326,6 +1377,26 @@ window.guardarPresupuesto = async () => {
   // Leer ítems
   const items = [];
   for (const row of lineas) {
+    const modoActivo = row.querySelector('.pres-modo-btn.active')?.dataset.modo;
+    if (modoActivo === 'pack') {
+      const nombrePack = row.querySelector('.pres-pack-nombre')?.value.trim() || 'Pack';
+      const cantidadPersonas = parseFloat(row.querySelector('.pres-pack-personas')?.value) || 0;
+      const precioPack = parseFloat(row.querySelector('.pres-pack-precio')?.value) || 0;
+      const filasProd = row.querySelectorAll('.pres-pack-items > div');
+      if (!filasProd.length) { alert('El pack "' + nombrePack + '" debe tener al menos un producto.'); return; }
+      if (cantidadPersonas <= 0) { alert('El pack "' + nombrePack + '" requiere cantidad de personas/packs mayor a 0.'); return; }
+      if (precioPack <= 0) { alert('El pack "' + nombrePack + '" requiere un precio mayor a 0.'); return; }
+      const productosPack = [];
+      filasProd.forEach(f => {
+        const nombre = f.querySelector('.pack-prod-nombre')?.value.trim() || '';
+        const cantPorPack = parseFloat(f.querySelector('.pack-prod-cant')?.value) || 1;
+        productosPack.push({ nombre, cantidadPorPack: cantPorPack });
+      });
+      items.push({ tipo: 'pack', nombrePack, productosPack, cantidadPersonas, precioPack,
+        cantidad: cantidadPersonas, precioUnit: precioPack, descripcion: nombrePack,
+        subtotalLinea: cantidadPersonas * precioPack });
+      continue;
+    }
     const cant = parseFloat(row.querySelector('.pres-cant')?.value) || 0;
     const precioUnit = parseFloat(row.querySelector('.pres-precio')?.value) || 0;
     const descManual = row.querySelector('.pres-desc-manual');
@@ -1458,16 +1529,44 @@ window.editarPresupuesto = async (docId) => {
         presAgregarLinea();
         const rows = container.querySelectorAll('.pres-linea');
         const row  = rows[rows.length - 1];
-        const btnManual = row.querySelector('.pres-modo-btn[data-modo="manual"]');
-        if (btnManual) presSetModo(btnManual, 'manual');
-        const descInput = row.querySelector('.pres-desc-manual');
-        if (descInput) descInput.value = item.descripcion || '';
-        const cantInput = row.querySelector('.pres-cant');
-        if (cantInput) cantInput.value = item.cantidad || 1;
-        const precioInput = row.querySelector('.pres-precio');
-        if (precioInput) {
-          precioInput.value = item.precioUnit || 0;
-          presRecalcLinea(precioInput);
+        if (item.tipo === 'pack') {
+          const btnPack = row.querySelector('.pres-modo-btn[data-modo="pack"]');
+          if (btnPack) presSetModo(btnPack, 'pack');
+          const nombreInput = row.querySelector('.pres-pack-nombre');
+          if (nombreInput) nombreInput.value = item.nombrePack || '';
+          const packItemsEl = row.querySelector('.pres-pack-items');
+          if (packItemsEl) {
+            packItemsEl.innerHTML = '';
+            (item.productosPack || []).forEach(p => {
+              const fila = document.createElement('div');
+              fila.style.cssText = 'display:flex;gap:6px;align-items:center;';
+              fila.innerHTML =
+                '<input type="text" class="pack-prod-nombre" placeholder="Producto" style="flex:1;font-size:12px;" value="' + (p.nombre||'').replace(/"/g,'&quot;') + '">' +
+                '<input type="number" class="pack-prod-cant" min="1" value="' + (p.cantidadPorPack||1) + '" style="width:60px;font-size:12px;text-align:right;" title="Cantidad por pack">' +
+                '<span style="font-size:10px;color:var(--muted);white-space:nowrap;">x pack</span>' +
+                '<button type="button" onclick="this.closest(\'div\').remove()" style="background:none;border:none;color:#9b3a2a;cursor:pointer;font-size:14px;line-height:1;padding:2px 4px;">&#10005;</button>';
+              packItemsEl.appendChild(fila);
+            });
+          }
+          const personasInput = row.querySelector('.pres-pack-personas');
+          if (personasInput) personasInput.value = item.cantidadPersonas || 1;
+          const precioPackInput = row.querySelector('.pres-pack-precio');
+          if (precioPackInput) {
+            precioPackInput.value = item.precioPack || 0;
+            presRecalcLinea(precioPackInput);
+          }
+        } else {
+          const btnManual = row.querySelector('.pres-modo-btn[data-modo="manual"]');
+          if (btnManual) presSetModo(btnManual, 'manual');
+          const descInput = row.querySelector('.pres-desc-manual');
+          if (descInput) descInput.value = item.descripcion || '';
+          const cantInput = row.querySelector('.pres-cant');
+          if (cantInput) cantInput.value = item.cantidad || 1;
+          const precioInput = row.querySelector('.pres-precio');
+          if (precioInput) {
+            precioInput.value = item.precioUnit || 0;
+            presRecalcLinea(precioInput);
+          }
         }
       });
     }
@@ -1527,16 +1626,44 @@ window.duplicarPresupuesto = async (docId) => {
         presAgregarLinea();
         const rows = container.querySelectorAll('.pres-linea');
         const row  = rows[rows.length - 1];
-        const btnManual = row.querySelector('.pres-modo-btn[data-modo="manual"]');
-        if (btnManual) presSetModo(btnManual, 'manual');
-        const descInput = row.querySelector('.pres-desc-manual');
-        if (descInput) descInput.value = item.descripcion || '';
-        const cantInput = row.querySelector('.pres-cant');
-        if (cantInput) cantInput.value = item.cantidad || 1;
-        const precioInput = row.querySelector('.pres-precio');
-        if (precioInput) {
-          precioInput.value = item.precioUnit || 0;
-          presRecalcLinea(precioInput);
+        if (item.tipo === 'pack') {
+          const btnPack = row.querySelector('.pres-modo-btn[data-modo="pack"]');
+          if (btnPack) presSetModo(btnPack, 'pack');
+          const nombreInput = row.querySelector('.pres-pack-nombre');
+          if (nombreInput) nombreInput.value = item.nombrePack || '';
+          const packItemsEl = row.querySelector('.pres-pack-items');
+          if (packItemsEl) {
+            packItemsEl.innerHTML = '';
+            (item.productosPack || []).forEach(p => {
+              const fila = document.createElement('div');
+              fila.style.cssText = 'display:flex;gap:6px;align-items:center;';
+              fila.innerHTML =
+                '<input type="text" class="pack-prod-nombre" placeholder="Producto" style="flex:1;font-size:12px;" value="' + (p.nombre||'').replace(/"/g,'&quot;') + '">' +
+                '<input type="number" class="pack-prod-cant" min="1" value="' + (p.cantidadPorPack||1) + '" style="width:60px;font-size:12px;text-align:right;" title="Cantidad por pack">' +
+                '<span style="font-size:10px;color:var(--muted);white-space:nowrap;">x pack</span>' +
+                '<button type="button" onclick="this.closest(\'div\').remove()" style="background:none;border:none;color:#9b3a2a;cursor:pointer;font-size:14px;line-height:1;padding:2px 4px;">&#10005;</button>';
+              packItemsEl.appendChild(fila);
+            });
+          }
+          const personasInput = row.querySelector('.pres-pack-personas');
+          if (personasInput) personasInput.value = item.cantidadPersonas || 1;
+          const precioPackInput = row.querySelector('.pres-pack-precio');
+          if (precioPackInput) {
+            precioPackInput.value = item.precioPack || 0;
+            presRecalcLinea(precioPackInput);
+          }
+        } else {
+          const btnManual = row.querySelector('.pres-modo-btn[data-modo="manual"]');
+          if (btnManual) presSetModo(btnManual, 'manual');
+          const descInput = row.querySelector('.pres-desc-manual');
+          if (descInput) descInput.value = item.descripcion || '';
+          const cantInput = row.querySelector('.pres-cant');
+          if (cantInput) cantInput.value = item.cantidad || 1;
+          const precioInput = row.querySelector('.pres-precio');
+          if (precioInput) {
+            precioInput.value = item.precioUnit || 0;
+            presRecalcLinea(precioInput);
+          }
         }
       });
     }
@@ -1619,6 +1746,22 @@ window.vistaPreviaPresupuesto = () => {
   // Leer ítems
   const items = [];
   for (const row of lineas) {
+    const modoActivo = row.querySelector('.pres-modo-btn.active')?.dataset.modo;
+    if (modoActivo === 'pack') {
+      const nombrePack = row.querySelector('.pres-pack-nombre')?.value.trim() || 'Pack';
+      const cantidadPersonas = parseFloat(row.querySelector('.pres-pack-personas')?.value) || 0;
+      const precioPack = parseFloat(row.querySelector('.pres-pack-precio')?.value) || 0;
+      const productosPack = [];
+      row.querySelectorAll('.pres-pack-items > div').forEach(f => {
+        const nombre = f.querySelector('.pack-prod-nombre')?.value.trim() || '';
+        const cantPorPack = parseFloat(f.querySelector('.pack-prod-cant')?.value) || 1;
+        productosPack.push({ nombre, cantidadPorPack: cantPorPack });
+      });
+      items.push({ tipo: 'pack', nombrePack, productosPack, cantidadPersonas, precioPack,
+        cantidad: cantidadPersonas, precioUnit: precioPack, descripcion: nombrePack,
+        subtotalLinea: cantidadPersonas * precioPack });
+      continue;
+    }
     const cant = parseFloat(row.querySelector('.pres-cant')?.value) || 0;
     const precioUnit = parseFloat(row.querySelector('.pres-precio')?.value) || 0;
     const descManual = row.querySelector('.pres-desc-manual');
@@ -1649,13 +1792,26 @@ window.vistaPreviaPresupuesto = () => {
   const neto = total - iva;
 
   // Filas de ítems
-  const filasItems = items.map((it, i) => `
-    <tr style="background:${i % 2 === 0 ? '#fdf8f2' : '#fff'};">
-      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;">${it.descripcion}</td>
-      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:center;">${it.cantidad}</td>
-      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:right;">${fmtNum(it.precioUnit)}</td>
-      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
-    </tr>`).join('');
+  const filasItems = items.map((it, i) => {
+    const bg = i % 2 === 0 ? '#fdf8f2' : '#fff';
+    const cs = 'padding:9px 12px;border-bottom:1px solid #ede3d4;';
+    if (it.tipo === 'pack') {
+      const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${p.nombre} x${p.cantidadPorPack}`).join(' &nbsp; ');
+      return `<tr style="background:${bg};">
+        <td style="${cs}"><strong>${it.nombrePack}</strong>${detalle?`<br><span style="font-size:11px;color:#888;">${detalle}</span>`:''}
+        </td>
+        <td style="${cs};text-align:center;">${it.cantidadPersonas}</td>
+        <td style="${cs};text-align:right;">${fmtNum(it.precioPack)}</td>
+        <td style="${cs};text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
+      </tr>`;
+    }
+    return `<tr style="background:${bg};">
+      <td style="${cs}">${it.descripcion}</td>
+      <td style="${cs};text-align:center;">${it.cantidad}</td>
+      <td style="${cs};text-align:right;">${fmtNum(it.precioUnit)}</td>
+      <td style="${cs};text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
+    </tr>`;
+  }).join('');
 
   // Fila descuento (solo si aplica)
   const filaDescuento = descuento > 0 ? `
@@ -1885,13 +2041,26 @@ window.verPresupuesto = (docId) => {
         <th style="padding:7px 10px;text-align:right;font-size:10px;letter-spacing:.08em;text-transform:uppercase;">Precio unit.</th>
         <th style="padding:7px 10px;text-align:right;font-size:10px;letter-spacing:.08em;text-transform:uppercase;">Subtotal</th>
       </tr></thead>
-      <tbody>${items.map((it, i) => `
-        <tr style="background:${i%2===0?'var(--cream)':'#fff'};">
-          <td style="padding:8px 10px;border-bottom:1px solid var(--border);">${it.descripcion||'—'}</td>
-          <td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:center;">${it.cantidad}</td>
-          <td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right;">${fmtNum(it.precioUnit)}</td>
-          <td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
-        </tr>`).join('')}
+      <tbody>${items.map((it, i) => {
+        const bg = i%2===0?'var(--cream)':'#fff';
+        const cs = 'padding:8px 10px;border-bottom:1px solid var(--border);';
+        if (it.tipo === 'pack') {
+          const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${p.nombre} x${p.cantidadPorPack}`).join(' &nbsp; ');
+          return `<tr style="background:${bg};">
+            <td style="${cs}"><strong>${it.nombrePack||it.descripcion||'—'}</strong>${detalle?`<br><span style="font-size:11px;color:var(--muted);">${detalle}</span>`:''}
+            </td>
+            <td style="${cs};text-align:center;">${it.cantidadPersonas||it.cantidad}</td>
+            <td style="${cs};text-align:right;">${fmtNum(it.precioPack||it.precioUnit)}</td>
+            <td style="${cs};text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
+          </tr>`;
+        }
+        return `<tr style="background:${bg};">
+          <td style="${cs}">${it.descripcion||'—'}</td>
+          <td style="${cs};text-align:center;">${it.cantidad}</td>
+          <td style="${cs};text-align:right;">${fmtNum(it.precioUnit)}</td>
+          <td style="${cs};text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
+        </tr>`;
+      }).join('')}
       </tbody>
       <tfoot>
         ${descuento > 0 ? `<tr><td colspan="3" style="padding:6px 10px;text-align:right;color:var(--muted);font-size:12px;">Subtotal:</td><td style="padding:6px 10px;text-align:right;">${fmtNum(subtotal)}</td></tr>` : ''}
@@ -1937,13 +2106,26 @@ window.vistaPreviaDesdeHistorial = (docId) => {
   const iva = data.iva || Math.round(total / 1.19 * 0.19);
   const neto = total - iva;
 
-  const filasItems = items.map((it, i) => `
-    <tr style="background:${i % 2 === 0 ? '#fdf8f2' : '#fff'};">
-      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;">${it.descripcion || '—'}</td>
-      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:center;">${it.cantidad}</td>
-      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:right;">${fmtNum(it.precioUnit)}</td>
-      <td style="padding:9px 12px;border-bottom:1px solid #ede3d4;text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
-    </tr>`).join('');
+  const filasItems = items.map((it, i) => {
+    const bg = i % 2 === 0 ? '#fdf8f2' : '#fff';
+    const cs = 'padding:9px 12px;border-bottom:1px solid #ede3d4;';
+    if (it.tipo === 'pack') {
+      const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${p.nombre} x${p.cantidadPorPack}`).join(' &nbsp; ');
+      return `<tr style="background:${bg};">
+        <td style="${cs}"><strong>${it.nombrePack||it.descripcion||'—'}</strong>${detalle?`<br><span style="font-size:11px;color:#888;">${detalle}</span>`:''}
+        </td>
+        <td style="${cs};text-align:center;">${it.cantidadPersonas||it.cantidad}</td>
+        <td style="${cs};text-align:right;">${fmtNum(it.precioPack||it.precioUnit)}</td>
+        <td style="${cs};text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
+      </tr>`;
+    }
+    return `<tr style="background:${bg};">
+      <td style="${cs}">${it.descripcion || '—'}</td>
+      <td style="${cs};text-align:center;">${it.cantidad}</td>
+      <td style="${cs};text-align:right;">${fmtNum(it.precioUnit)}</td>
+      <td style="${cs};text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
+    </tr>`;
+  }).join('');
 
   const filaDescuento = descuento > 0 ? `
     <tr>
