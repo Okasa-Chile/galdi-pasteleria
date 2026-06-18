@@ -1797,7 +1797,7 @@ window.vistaPreviaPresupuesto = () => {
     const bg = i % 2 === 0 ? '#fdf8f2' : '#fff';
     const cs = 'padding:9px 12px;border-bottom:1px solid #ede3d4;';
     if (it.tipo === 'pack') {
-      const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${p.nombre} x${p.cantidadPorPack}`).join(' &nbsp; ');
+      const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${p.nombre} x${p.cantidadPorPack}`).join('<br>');
       return `<tr style="background:${bg};">
         <td style="${cs}"><strong>${it.nombrePack}</strong>${detalle?`<br><span style="font-size:11px;color:#888;">${detalle}</span>`:''}
         </td>
@@ -2046,7 +2046,7 @@ window.verPresupuesto = (docId) => {
         const bg = i%2===0?'var(--cream)':'#fff';
         const cs = 'padding:8px 10px;border-bottom:1px solid var(--border);';
         if (it.tipo === 'pack') {
-          const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${p.nombre} x${p.cantidadPorPack}`).join(' &nbsp; ');
+          const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${p.nombre} x${p.cantidadPorPack}`).join('<br>');
           return `<tr style="background:${bg};">
             <td style="${cs}"><strong>${it.nombrePack||it.descripcion||'—'}</strong>${detalle?`<br><span style="font-size:11px;color:var(--muted);">${detalle}</span>`:''}
             </td>
@@ -2111,7 +2111,7 @@ window.vistaPreviaDesdeHistorial = (docId) => {
     const bg = i % 2 === 0 ? '#fdf8f2' : '#fff';
     const cs = 'padding:9px 12px;border-bottom:1px solid #ede3d4;';
     if (it.tipo === 'pack') {
-      const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${p.nombre} x${p.cantidadPorPack}`).join(' &nbsp; ');
+      const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${p.nombre} x${p.cantidadPorPack}`).join('<br>');
       return `<tr style="background:${bg};">
         <td style="${cs}"><strong>${it.nombrePack||it.descripcion||'—'}</strong>${detalle?`<br><span style="font-size:11px;color:#888;">${detalle}</span>`:''}
         </td>
