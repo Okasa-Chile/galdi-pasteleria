@@ -640,7 +640,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
       {/* ── Título (solo pageMode) ── */}
       {pageMode && (
         <div style={{ position: 'relative', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem 5% 1rem' }}>
-          <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.2rem, 3vw, 2rem)', fontWeight: 300, color: 'var(--cream)', letterSpacing: '0.08em', margin: 0 }}>{nombre}</h1>
+          <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.2rem, 3vw, 2rem)', fontWeight: 300, color: 'var(--cream)', letterSpacing: '0.08em', margin: 0 }}>{nombre}</h2>
         </div>
       )}
 
