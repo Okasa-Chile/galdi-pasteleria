@@ -64,3 +64,46 @@ _Última actualización: 12 de mayo, 2026_
 ## Advertencias de desarrollo
 
 **Banner/AnnouncementBar:** El texto del banner superior NO está en `BannerDiaMadre.tsx` — está hardcodeado en `components/Header.tsx` línea ~116. Siempre modificar `Header.tsx` para cambiar el texto del banner de producción.
+
+## Jornada 24-06-2026
+
+### Cambios realizados
+
+#### Eliminación referencias Día del Padre
+- Removida franja Día del Padre de `components/Header.tsx` (bloque background #c4704f con link a /dia-del-padre)
+- Removido bloque completo de `components/BannerDiaMadre.tsx`
+- Removida sección "Bloque Día del Padre" de `app/page.tsx`
+
+#### Catálogo galdi_productos — 21 productos nuevos
+Productos agregados sin tocar existentes (costos en 0, solo precio de venta):
+
+**Cóctel Salado** (12 productos, unidad: 'unidad'):
+- Mechada Premium $700 · Mechada Clásica $650 · Mechada Tradicional $600
+- Brochetas Mixtas $800 · Empanadas Cóctel $650 · Brochetas de Camarón $600
+- Mini Pizzas $600 · Brochetas Serrano $550 · Bolitas de Carne/Cucharitas Ceviche $500
+- Canapés Surtidos $450 · Brochetas Frescas $400 · Sopaipillitas con Pebre $300
+
+**Cóctel Dulce** (5 productos, unidad: 'unidad'):
+- Cheesecake $470 · Pastelitos Surtidos $450 · Muffins Surtidos Cóctel $450
+- Brochetas de Frutas $400 · Galletas Artesanales $350
+
+**Tablas** (4 productos, unidad: 'unidad'):
+- Tabla Tradicional 5p $28.900 · Tabla Tradicional 10p $48.900
+- Tabla Carnes y Picoteo 5p $42.900 · Tabla Carnes y Picoteo 10p $69.900
+
+Nota: precios originales del PDF Lista de Precios 2026 estaban "por ciento" — se convirtieron a precio unitario para permitir cotizaciones flexibles (50, 75, 120 unidades).
+
+#### Fix cotizaciones — bug $36
+Problema: productos nuevos con `costo:0` mostraban precio $36 en cotizaciones porque:
+1. `fsLoad()` sobreescribía `logistica:0` con `30` (`Number(p.logistica) || 30`)
+2. Dropdown usaba `cpx(p)` ignorando el `precio` ya guardado en Firestore
+3. Cálculo: `(0+0+30+0) * 1.19 = $35.7 ≈ $36`
+
+Fix aplicado en `public/gestion/index.html`:
+- `p.logistica = p.logistica !== undefined ? Number(p.logistica) : 30` (respeta 0 explícito)
+- Dropdown: `value="' + (p.precio || cpx(p)) + '"` (usa precio guardado, fallback a cpx)
+
+### Aprendizajes
+- Productos sin estructura de costos (solo precio de venta) son válidos para acelerar cotizaciones
+- `Number(x) || default` falla cuando x es 0 — usar `x !== undefined ? Number(x) : default`
+- Lista de Precios PDF (para clientes) debe sincronizarse con galdi_productos (fuente de verdad)
