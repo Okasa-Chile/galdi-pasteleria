@@ -688,7 +688,7 @@ async function fsLoad() {
         p.costo     = Number(p.costo)    || 0;
         p.mdo       = Number(p.mdo)      || 0;
         p.energia   = Number(p.energia)  || 0;
-        p.logistica = Number(p.logistica)|| 30;
+        p.logistica = p.logistica !== undefined ? Number(p.logistica) : 30;
         p.margen    = Number(p.margen)   || 0;
         p.precioS   = Number(p.precioS)  || 0;
         p.precioM   = Number(p.precioM)  || 0;
@@ -1188,7 +1188,7 @@ window.presCargarProductos = (catSel) => {
   }
   const filtrados = prods.filter(p => (p.cat || p.categoria) === cat);
   prodSel.innerHTML = '<option value="">-- Producto --</option>' +
-    filtrados.map(p => '<option value="' + (cpx(p) || p.precio || 0) + '" data-cat="' + cat + '" data-original-nombre="' + p.nombre + '">' + p.nombre + '</option>').join('');
+    filtrados.map(p => '<option value="' + (p.precio || cpx(p)) + '" data-cat="' + cat + '" data-original-nombre="' + p.nombre + '">' + p.nombre + '</option>').join('');
   prodSel.disabled = false;
   prodSel.style.background = '';
   prodSel.style.color = '';
