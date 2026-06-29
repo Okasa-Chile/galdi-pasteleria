@@ -107,3 +107,16 @@ Fix aplicado en `public/gestion/index.html`:
 - Productos sin estructura de costos (solo precio de venta) son válidos para acelerar cotizaciones
 - `Number(x) || default` falla cuando x es 0 — usar `x !== undefined ? Number(x) : default`
 - Lista de Precios PDF (para clientes) debe sincronizarse con galdi_productos (fuente de verdad)
+
+## Jornada 24-06-2026
+
+**Completado:**
+- ✅ 21 productos nuevos cargados en Firestore (galdi_productos):
+  - 12 productos Cóctel Salado
+  - 5 productos Cóctel Dulce
+  - 4 Tablas
+  - Solo precio de venta (sin costo). Cóctel se vende por unidad.
+- ✅ fix: Bug $36 corregido en public/gestion/index.html
+  - logística respeta valor 0 explícito
+  - dropdown usa p.precio con fallback a cpx(p)
+- ✅ Integración Flow.cl confirmada operativa end-to-end
