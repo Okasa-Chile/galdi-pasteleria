@@ -24,7 +24,7 @@ const faqs = [
   },
   {
     q: '¿Qué productos incluye el coffee break de Galdi?',
-    a: 'Nuestro coffee break incluye queques artesanales (naranja, mármol, yogurt, vainilla), muffins (arándano, chocolate, vainilla), mini empanadas, alfajores de maicena, tartaletas de fruta fresca, canapés y opciones saladas. El menú se adapta a las necesidades de tu evento.',
+    a: 'Nuestro coffee break incluye mini sandwiches (pollo, jamón queso, vegetales), mini empanadas (pino, queso, queso champiñón), mini tartaletas (pie de limón, kuchen de manzana, kuchen sureño, kuchen de nuez), alfajores de maicena y bebidas calientes. El menú se adapta a las necesidades de tu evento.',
   },
   {
     q: '¿Pueden personalizar el menú del coffee break?',
@@ -40,7 +40,7 @@ const jsonLd = {
       '@id': 'https://galdi.cl/#business',
       name: 'Galdi Pastelería Artesanal',
       description:
-        'Pastelería artesanal en Maipú especializada en coffee break para empresas: queques, muffins, empanadas, bocados dulces y salados elaborados el mismo día. Factura electrónica disponible.',
+        'Pastelería artesanal en Maipú especializada en coffee break para empresas: mini sandwiches, mini empanadas, mini tartaletas, alfajores y bebidas calientes elaborados el mismo día. Factura electrónica disponible.',
       url: 'https://galdi.cl/coffee-break-maipu',
       telephone: '+56990991011',
       email: 'ventas@galdi.cl',
@@ -68,18 +68,45 @@ const jsonLd = {
             '@type': 'Offer',
             itemOffered: {
               '@type': 'Service',
-              name: 'Coffee Break Dulce',
+              name: 'Mini Sandwiches',
               description:
-                'Queques artesanales de naranja, mármol, yogurt y vainilla, muffins de arándano y chocolate, alfajores de maicena, tartaletas de fruta fresca y bocados dulces sin conservantes artificiales.',
+                'Sandwiches artesanales con pan suave, rellenos de pollo, jamón queso y vegetales frescos.',
             },
           },
           {
             '@type': 'Offer',
             itemOffered: {
               '@type': 'Service',
-              name: 'Coffee Break Mixto',
+              name: 'Mini Empanadas',
               description:
-                'Combinación de bocados dulces y salados: queques, muffins, mini empanadas de pino y queso, canapés, sandwiches artesanales y crostinis con queso crema y salmón.',
+                'De pino, queso y queso champiñón. Horneadas el mismo día del evento.',
+            },
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Mini Tartaletas',
+              description:
+                'Variedad de pie de limón, kuchen de manzana, kuchen sureño y kuchen de nuez.',
+            },
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Alfajores',
+              description:
+                'Alfajores de maicena rellenos de manjar, hechos el mismo día.',
+            },
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Bebidas Calientes',
+              description:
+                'Café, té y chocolate caliente servidos durante el evento.',
             },
           },
         ],
@@ -112,34 +139,29 @@ const jsonLd = {
 
 const servicios = [
   {
-    titulo: 'Queques Artesanales',
+    titulo: 'Mini Sandwiches',
     descripcion:
-      'De naranja, mármol, yogurt y vainilla, elaborados diariamente sin conservantes ni mezclas industriales.',
-  },
-  {
-    titulo: 'Muffins',
-    descripcion:
-      'De arándano, chocolate y vainilla. Presentación individual lista para servir en tu evento.',
+      'Sandwiches artesanales con pan suave, rellenos de pollo, jamón queso y vegetales frescos.',
   },
   {
     titulo: 'Mini Empanadas',
     descripcion:
-      'De pino, queso y champiñón. Mínimo 12 unidades por variedad. Horneadas el mismo día del evento.',
+      'De pino, queso y queso champiñón. Horneadas el mismo día del evento.',
   },
   {
-    titulo: 'Bocados Dulces',
+    titulo: 'Mini Tartaletas',
     descripcion:
-      'Alfajores de maicena, tartaletas de fruta fresca, brownies y mini cheesecakes artesanales.',
+      'Variedad de pie de limón, kuchen de manzana, kuchen sureño y kuchen de nuez.',
   },
   {
-    titulo: 'Bocados Salados',
+    titulo: 'Alfajores',
     descripcion:
-      'Canapés, sandwiches artesanales y crostinis con queso crema y salmón para complementar el coffee break.',
+      'Alfajores de maicena rellenos de manjar, hechos el mismo día.',
   },
   {
-    titulo: 'Infusiones y Bebidas',
+    titulo: 'Bebidas Calientes',
     descripcion:
-      'Coordinamos café, té e infusiones según los requerimientos de tu empresa o evento.',
+      'Café, té y chocolate caliente servidos durante el evento.',
   },
 ];
 
@@ -208,9 +230,9 @@ export default function CoffeeBreakMaipuPage() {
           <p style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1rem, 2vw, 1.2rem)', fontWeight: 300, color: '#3d2010', lineHeight: 1.9, marginBottom: '3.5rem', textAlign: 'center' }}>
             Galdi es una pastelería artesanal ubicada en Pasaje Marcos Echenique 809, Maipú,
             Región Metropolitana. Ofrece servicio de coffee break para empresas, colegios y
-            eventos corporativos con productos elaborados el mismo día: queques, muffins,
-            mini empanadas, bocados dulces y salados. Factura electrónica disponible. Entrega
-            en Maipú y comunas cercanas.
+            eventos corporativos con productos elaborados el mismo día: mini sandwiches,
+            mini empanadas, mini tartaletas, alfajores y bebidas calientes. Factura electrónica disponible.
+            Entrega en Maipú y comunas cercanas.
           </p>
 
           {/* Qué incluye */}
@@ -223,8 +245,8 @@ export default function CoffeeBreakMaipuPage() {
             </h2>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#5a3520', lineHeight: 1.75, marginBottom: '1.75rem' }}>
               Organizamos coffee breaks para empresas, colegios y eventos corporativos en Maipú
-              con productos elaborados el mismo día. Nuestro servicio incluye queques artesanales,
-              muffins, mini empanadas, bocados dulces y salados preparados con ingredientes frescos
+              con productos elaborados el mismo día. Nuestro servicio incluye mini sandwiches,
+              mini empanadas, mini tartaletas y alfajores preparados con ingredientes frescos
               y sin conservantes artificiales. Cada pedido se presenta de forma prolija, lista para
               servir, con embalaje adecuado para transporte. Coordinamos entrega a domicilio en
               Maipú y comunas cercanas, con puntualidad garantizada para que tu evento comience
