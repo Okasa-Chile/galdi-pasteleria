@@ -79,7 +79,7 @@ exports.flowCrearOrden = (0, https_1.onRequest)({ region: 'us-central1', cors: A
     }
 });
 exports.flowConfirmar = (0, https_1.onRequest)({ region: 'us-central1', cors: ALLOWED_ORIGINS, invoker: 'public', secrets: ['FLOW_API_KEY', 'FLOW_SECRET_KEY', 'ZOHO_USER', 'ZOHO_PASS'] }, async (req, res) => {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     try {
         const apiKey = (_a = process.env.FLOW_API_KEY) === null || _a === void 0 ? void 0 : _a.trim();
         const secret = (_b = process.env.FLOW_SECRET_KEY) === null || _b === void 0 ? void 0 : _b.trim();
@@ -106,9 +106,9 @@ exports.flowConfirmar = (0, https_1.onRequest)({ region: 'us-central1', cors: AL
                 const { getFirestore, FieldValue } = await Promise.resolve().then(() => require('firebase-admin/firestore'));
                 const db = getFirestore();
                 await db.collection('galdi_pedidos').add({
-                    commerceOrder: pago.commerceOrder,
-                    monto: pago.amount,
-                    email: pago.email,
+                    commerceOrder: (_c = pago.commerceOrder) !== null && _c !== void 0 ? _c : 'no registrado',
+                    monto: (_d = pago.amount) !== null && _d !== void 0 ? _d : 0,
+                    email: (_e = pago.email) !== null && _e !== void 0 ? _e : 'no registrado',
                     estado: 'pagado',
                     fecha: FieldValue.serverTimestamp(),
                 });
@@ -128,13 +128,13 @@ exports.flowConfirmar = (0, https_1.onRequest)({ region: 'us-central1', cors: AL
                         pass: process.env.ZOHO_PASS,
                     },
                 });
-                const descripcion = (_c = pago.commerceOrder) !== null && _c !== void 0 ? _c : 'sin referencia';
-                const monto = (_e = (_d = pago.amount) === null || _d === void 0 ? void 0 : _d.toLocaleString('es-CL')) !== null && _e !== void 0 ? _e : '0';
+                const descripcion = (_f = pago.commerceOrder) !== null && _f !== void 0 ? _f : 'sin referencia';
+                const monto = (_h = (_g = pago.amount) === null || _g === void 0 ? void 0 : _g.toLocaleString('es-CL')) !== null && _h !== void 0 ? _h : '0';
                 await transporter.sendMail({
                     from: '"Galdi Pastelería" <ventas@galdi.cl>',
                     to: 'ventas@galdi.cl, ingridgalvezd@gmail.com, jacquelinegalvezd@gmail.com, claudioferrarila@gmail.com',
                     subject: `🛒 Nuevo pedido confirmado — ${descripcion}`,
-                    text: `Se confirmó un nuevo pedido en galdi.cl\n\nOrden: ${descripcion}\nMonto: $${monto} CLP\nEmail cliente: ${(_f = pago.email) !== null && _f !== void 0 ? _f : 'no registrado'}\n\nRevisa el panel en galdi.cl/gestion`,
+                    text: `Se confirmó un nuevo pedido en galdi.cl\n\nOrden: ${descripcion}\nMonto: $${monto} CLP\nEmail cliente: ${(_j = pago.email) !== null && _j !== void 0 ? _j : 'no registrado'}\n\nRevisa el panel en galdi.cl/gestion`,
                 });
                 console.log('[flowConfirmar] Email de notificación enviado.');
             }

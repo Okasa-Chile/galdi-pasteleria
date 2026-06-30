@@ -139,9 +139,9 @@ export const flowConfirmar = onRequest(
           const { getFirestore, FieldValue } = await import('firebase-admin/firestore');
           const db = getFirestore();
           await db.collection('galdi_pedidos').add({
-            commerceOrder: pago.commerceOrder,
-            monto:         pago.amount,
-            email:         pago.email,
+            commerceOrder: pago.commerceOrder ?? 'no registrado',
+            monto:         pago.amount ?? 0,
+            email:         pago.email ?? 'no registrado',
             estado:        'pagado',
             fecha:         FieldValue.serverTimestamp(),
           });
