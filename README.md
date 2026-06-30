@@ -573,3 +573,32 @@ npm run start   # preview producción local
 ### Advertencias de desarrollo
 
 **Banner/AnnouncementBar:** El texto del banner superior NO está en `BannerDiaMadre.tsx` — está hardcodeado en `components/Header.tsx` línea ~116. Siempre modificar `Header.tsx` para cambiar el texto del banner de producción.
+
+---
+
+## Jornada 30-06-2026
+
+**Completado:**
+- ✅ feat: /coffee-break-maipu expandida con página custom SEO
+  (reemplaza SeoPage genérico)
+  - Schema: LocalBusiness + Bakery, FAQPage (5 preguntas), BreadcrumbList
+  - Productos ajustados a formato corporativo real: mini sandwiches,
+    mini empanadas (pino/queso/queso champiñón), mini tartaletas
+    (pie de limón, kuchen de manzana, kuchen sureño, kuchen de nuez),
+    alfajores, bebidas calientes (café/té/chocolate)
+  - Commit 1c293f0 + ajustes posteriores de productos
+
+- ✅ feat: /coctel-maipu expandida con página custom SEO
+  (reemplaza SeoPage genérico, mismo patrón que coffee-break)
+  - Schema: LocalBusiness + Bakery, FAQPage (5 preguntas), BreadcrumbList
+  - Grid de 7 bocados: canapés, tapaditos, mini empanadas,
+    brochetas de fruta, brochetas de carne, postres individuales,
+    bocados especiales
+  - Enfoque diferenciado: recepciones/eventos sociales (matrimonios,
+    cumpleaños, aniversarios) vs. coffee-break (corporativo)
+
+**Patrón establecido para próximas expansiones SEO:**
+Páginas aún en SeoPage genérico (thin-content, candidatas a
+expandir con el mismo patrón): revisar cumpleanos-maipu,
+tortas-maipu, empanadas-maipu, pan-artesanal-maipu,
+delivery-maipu, distribucion-maipu.
