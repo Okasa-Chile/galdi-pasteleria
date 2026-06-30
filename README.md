@@ -602,3 +602,54 @@ Páginas aún en SeoPage genérico (thin-content, candidatas a
 expandir con el mismo patrón): revisar cumpleanos-maipu,
 tortas-maipu, empanadas-maipu, pan-artesanal-maipu,
 delivery-maipu, distribucion-maipu.
+
+---
+
+## Jornada 30-06-2026 (continuación) — Reposicionamiento SEO
+
+**Contexto:** Datos de Search Console (28 días) mostraron cannibalización
+entre /matrimonios-maipu y /coctel-maipu en la keyword "banquetería",
+oportunidad sin explotar en "banquetes maipú" (170 imp, posición 13,86,
+0 clics) y /empanadas-maipu con buena posición pero 0 clics
+(127 imp, posición 8,94).
+
+**Completado:**
+- ✅ feat: /coctel-maipu reposicionada como hub de banquetería
+  - Title: "Banquetería y Cóctel en Maipú · Bocados para Eventos · Galdi"
+  - H1, keywords, JSON-LD description y BreadcrumbList actualizados
+  - Nueva FAQ "¿Qué incluye la banquetería para eventos en Maipú?"
+    como primera pregunta
+
+- ✅ fix: /matrimonios-maipu acotada solo a torta de novios + mesa de dulces
+  - Eliminadas secciones "Bocados Salados" y "Barra de Tragos"
+    (array servicios + JSON-LD hasOfferCatalog)
+  - Agregado bloque de derivación a /coctel-maipu antes de FAQs
+  - Link "Ver diseños de torta de bodas →" en card Torta de Novios
+  - FAQs actualizadas (primera pregunta reescrita + nueva FAQ de
+    derivación a banquetería)
+
+- ✅ feat: /empanadas-maipu migrada de SeoPage genérico a página custom
+  - Schema: LocalBusiness + Bakery, FAQPage (5 preguntas),
+    BreadcrumbList
+  - Grid de 6 sabores: pino, queso, napolitana, vegetariana,
+    queso camarón, mariscos
+  - Pedido mínimo por docena, delivery, distribución a almacenes
+
+- ✅ feat: nueva página /tortas-bodas-maipu
+  - Diseños (rústico, elegante, minimalista) + decoración floral
+  - Sabores y rellenos (6: 3 Leches, Chocolate, Moka, Selva Negra,
+    Hojarasca, Piña)
+  - Tamaños S/M/L/XL según invitados
+  - Degustación previa, cómo cotizar, FAQ (5 preguntas)
+  - Internal links + link inverso desde /matrimonios-maipu
+  - Agregada a sitemap.xml
+
+**Incidente de deploy resuelto:**
+- /coctel-maipu no se actualizó en el primer deploy (commit f9935e2)
+  pese a que el código fuente era correcto. Causa: directorio out/
+  con caché de build anterior, Firebase calculó hashes como "sin
+  cambios" y saltó la subida del archivo.
+- Fix: rebuild limpio (rm -rf .next out) forzó a Firebase a subir
+  98 archivos. Commit 645bb6f.
+- Lección: ante discrepancias entre código y producción, primero
+  intentar rebuild limpio antes de asumir error de código.
