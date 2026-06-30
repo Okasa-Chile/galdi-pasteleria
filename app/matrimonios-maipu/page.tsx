@@ -3,16 +3,16 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export const metadata: Metadata = {
-  title: 'Banquetería Matrimonios Maipú · Torta de Novios + Mesa de Dulces · Galdi',
-  description: 'Banquetería artesanal para matrimonios en Maipú: torta de novios personalizada, mesa de dulces, bocados salados y cena. Degustación previa sin costo. Cotiza sin compromiso.',
-  keywords: 'banquetería matrimonios Maipú, torta de novios Maipú, mesa dulces matrimonio Maipú, bocados matrimonio Maipú, pastelería artesanal Maipú',
+  title: 'Torta de Novios y Matrimonios en Maipú · Mesa de Dulces · Galdi',
+  description: 'Torta de novios personalizada y mesa de dulces para tu matrimonio en Maipú. Degustación previa sin costo. Cotiza sin compromiso por WhatsApp.',
+  keywords: 'torta de novios Maipú, matrimonio Maipú, torta matrimonio Maipú, mesa dulces matrimonio Maipú, pastelería artesanal Maipú',
   alternates: { canonical: 'https://galdi.cl/matrimonios-maipu' },
 };
 
 const faqs = [
   {
-    q: '¿Qué incluye la banquetería para matrimonios de Galdi en Maipú?',
-    a: 'El servicio incluye: torta de novios personalizada (sabor y decoración a elección), mesa de postres artesanales (profiteroles, mousse de chocolate, pannacotta, mini cheesecakes, macarons, alfajores de maicena y mini tartaletas de frutas frescas), bocados salados (mini empanadas artesanales, canapés de salmón ahumado, blinis, tartaletas saladas y crostinis con queso crema), servicio de cena y barra de tragos. Todo coordinado para que disfrutes tu día sin preocupaciones.',
+    q: '¿Qué incluye el servicio de torta de novios y mesa de dulces para mi matrimonio?',
+    a: 'Incluye torta de novios personalizada (sabor, relleno, decoración y número de pisos a elección) y mesa de postres artesanales: profiteroles, mousse de chocolate, pannacotta, mini cheesecakes, macarons, alfajores de maicena y mini tartaletas de frutas frescas. Para cóctel, bocados salados y barra de tragos, revisa nuestro servicio de banquetería y cóctel.',
   },
   {
     q: '¿Con cuánta anticipación debo reservar la banquetería para mi matrimonio?',
@@ -41,6 +41,10 @@ const faqs = [
   {
     q: '¿Atienden matrimonios civiles y religiosos en Maipú?',
     a: 'Sí. Galdi atiende tanto matrimonios civiles como religiosos en Maipú y alrededores. Adaptamos el servicio según el formato del evento: recepción formal, cóctel de bienvenida, celebración íntima o banquete completo para grandes grupos.',
+  },
+  {
+    q: '¿Hacen también la banquetería completa del matrimonio (cóctel, bocados y tragos)?',
+    a: 'Sí, ese servicio lo coordinamos a través de nuestra banquetería y cóctel para eventos, que cubre bocados dulces y salados, brochetas y barra de tragos para tu matrimonio. Puedes cotizar ambos servicios juntos por WhatsApp.',
   },
 ];
 
@@ -97,28 +101,10 @@ const jsonLd = {
           {
             '@type': 'Offer',
             itemOffered: {
-              '@type': 'Service',
-              name: 'Bocados Salados para Matrimonios',
-              description:
-                'Mini empanadas artesanales, canapés de salmón ahumado, blinis, tartaletas saladas y crostinis con queso crema.',
-            },
-          },
-          {
-            '@type': 'Offer',
-            itemOffered: {
               '@type': 'FoodService',
               name: 'Servicio de Cena para Matrimonios',
               description:
                 'Plateada al jugo, lomo liso al jugo, filete al champiñón, lomo vetado a la parrilla, pollo relleno y pasta rellena. Menú completo coordinado para tu matrimonio.',
-            },
-          },
-          {
-            '@type': 'Offer',
-            itemOffered: {
-              '@type': 'FoodService',
-              name: 'Barra de Tragos para Matrimonios',
-              description:
-                'Pisco sour, vino, champagne, cerveza artesanal, mojito, aperol spritz, whisky y bebidas sin alcohol.',
             },
           },
         ],
@@ -154,16 +140,12 @@ const servicios = [
     titulo: 'Torta de Novios',
     descripcion:
       'Personalizable en sabor, relleno y decoración. Sabores: 3 Leches, Chocolate, Moka, Selva Negra, Hojarasca y Piña. Incluye degustación previa sin costo.',
+    link: { href: '/tortas-bodas-maipu', label: 'Ver diseños de torta de bodas →' },
   },
   {
     titulo: 'Mesa de Dulces Artesanales',
     descripcion:
       'profiteroles, mousse de chocolate o frambuesa, pannacotta, mini cheesecakes, macarons, tiramisú, alfajores de maicena y mini tartaletas de frutas frescas.',
-  },
-  {
-    titulo: 'Bocados Salados',
-    descripcion:
-      'Mini empanadas artesanales, canapés de salmón ahumado, blinis, tartaletas saladas y crostinis con queso crema.',
   },
   {
     titulo: 'Queques y Muffins',
@@ -174,11 +156,6 @@ const servicios = [
     titulo: 'Servicio de Cena',
     descripcion: 'Menú de cena completo para tu matrimonio: plateada al jugo, lomo liso al jugo, filete al champiñón, lomo vetado a la parrilla, pollo relleno, pasta rellena y ensaladas frescas de estación. Coordinamos el menú según tus preferencias y número de invitados.',
     icono: '🍽️',
-  },
-  {
-    titulo: 'Barra de Tragos',
-    descripcion: 'Barra completa para tu matrimonio: pisco sour, vino tinto y blanco, champagne para el brindis, cerveza artesanal, mojito, aperol spritz, whisky, ron con cola y bebidas sin alcohol para todos los invitados.',
-    icono: '🥂',
   },
 ];
 
@@ -268,6 +245,11 @@ export default function MatrimoniosMaipuPage() {
                 >
                   <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.05rem', fontWeight: 400, color: '#1a0f0a', marginBottom: '0.5rem' }}>{s.titulo}</h3>
                   <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.84rem', color: '#5a3520', lineHeight: 1.65 }}>{s.descripcion}</p>
+                  {'link' in s && s.link && (
+                    <Link href={(s as {titulo: string; descripcion: string; link: {href: string; label: string}}).link.href} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: 'var(--gold)', textDecoration: 'none', display: 'inline-block', marginTop: '0.5rem' }}>
+                      {(s as {titulo: string; descripcion: string; link: {href: string; label: string}}).link.label}
+                    </Link>
+                  )}
                 </div>
               ))}
             </div>
@@ -316,6 +298,21 @@ export default function MatrimoniosMaipuPage() {
               ))}
             </ul>
           </section>
+
+          {/* Banquetería completa */}
+          <div style={{ marginBottom: '3.5rem', padding: '1.5rem 2rem', background: 'rgba(212,168,83,0.08)', borderLeft: '3px solid var(--gold)', borderRadius: '2px' }}>
+            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', fontWeight: 400, color: '#1a0f0a', marginBottom: '0.5rem' }}>
+              ¿Necesitas banquetería completa para tu matrimonio?
+            </h3>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.875rem', color: '#5a3520', lineHeight: 1.75, margin: 0 }}>
+              Además de la torta de novios y la mesa de dulces, coordinamos cóctel,
+              bocados salados y barra de tragos para tu matrimonio a través de nuestro
+              servicio de banquetería.{' '}
+              <Link href="/coctel-maipu" style={{ color: 'var(--gold)', textDecoration: 'none' }}>
+                Ver banquetería y cóctel →
+              </Link>
+            </p>
+          </div>
 
           {/* Preguntas frecuentes */}
           <section aria-labelledby="preguntas-frecuentes" style={{ marginBottom: '3.5rem' }}>

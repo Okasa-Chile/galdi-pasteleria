@@ -3,13 +3,17 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export const metadata: Metadata = {
-  title: 'Cóctel en Maipú — Banquetería Galdi Pastelería Artesanal',
-  description: 'Bocados dulces y salados para cócteles y recepciones en Maipú. Presentación elegante, variedad para tu evento social. Cotiza con Galdi.',
-  keywords: 'cóctel Maipú, banquetería cóctel Maipú, bocados cóctel Maipú, catering cóctel Maipú, recepción cóctel Maipú',
+  title: 'Banquetería y Cóctel en Maipú · Bocados para Eventos · Galdi',
+  description: 'Banquetería completa para eventos en Maipú: cóctel, bocados dulces y salados para matrimonios, cumpleaños y empresas. Presentación elegante. Cotiza con Galdi.',
+  keywords: 'banquetería Maipú, banquetes Maipú, cóctel Maipú, banquetería eventos Maipú, bocados cóctel Maipú, catering Maipú',
   alternates: { canonical: 'https://galdi.cl/coctel-maipu' },
 };
 
 const faqs = [
+  {
+    q: '¿Qué incluye la banquetería para eventos en Maipú?',
+    a: 'Nuestra banquetería cubre cóctel y recepción completa para matrimonios, cumpleaños, aniversarios y eventos corporativos en Maipú: bocados dulces y salados, brochetas, postres individuales y servicio de presentación elegante. Para torta de novios y mesa de dulces de matrimonio, visita nuestra página dedicada a matrimonios.',
+  },
   {
     q: '¿Con cuánta anticipación debo reservar el cóctel?',
     a: 'Para cócteles estándar recomendamos un mínimo de 48 horas de anticipación. Para eventos con más de 50 personas, lo ideal es contactarnos con 5 a 7 días de antelación para garantizar disponibilidad y personalización del menú.',
@@ -40,7 +44,7 @@ const jsonLd = {
       '@id': 'https://galdi.cl/#business',
       name: 'Galdi Pastelería Artesanal',
       description:
-        'Pastelería artesanal en Maipú especializada en cócteles y recepciones: canapés, tapaditos, mini empanadas, brochetas y postres individuales elaborados el mismo día. Presentación elegante. Factura electrónica disponible.',
+        'Banquetería artesanal en Maipú para matrimonios, cumpleaños y eventos corporativos: cóctel, canapés, tapaditos, mini empanadas, brochetas y postres individuales elaborados el mismo día. Presentación elegante. Factura electrónica disponible.',
       url: 'https://galdi.cl/coctel-maipu',
       telephone: '+56990991011',
       email: 'ventas@galdi.cl',
@@ -147,7 +151,7 @@ const jsonLd = {
         {
           '@type': 'ListItem',
           position: 3,
-          name: 'Cóctel en Maipú',
+          name: 'Banquetería y Cóctel en Maipú',
           item: 'https://galdi.cl/coctel-maipu',
         },
       ],
@@ -244,7 +248,7 @@ export default function CoctelMaipuPage() {
               Galdi · Eventos · Social
             </p>
             <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2rem, 5vw, 4rem)', fontWeight: 300, color: 'var(--cream)', lineHeight: 1.2, marginBottom: '1rem' }}>
-              Cóctel en Maipú — Banquetería Artesanal Galdi
+              Banquetería y Cóctel en Maipú
             </h1>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(0.85rem, 2vw, 1rem)', color: 'rgba(245,230,211,0.85)', maxWidth: '600px' }}>
               Bocados artesanales para tu recepción. Presentación elegante incluida.
