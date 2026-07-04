@@ -653,3 +653,29 @@ oportunidad sin explotar en "banquetes maipú" (170 imp, posición 13,86,
   98 archivos. Commit 645bb6f.
 - Lección: ante discrepancias entre código y producción, primero
   intentar rebuild limpio antes de asumir error de código.
+
+---
+
+## Jornada 04-07-2026
+
+### Cambios deployados
+- components/ArmaTuTorta.tsx: agregado mensaje "🕐 Entrega en 24 horas
+  después de contactarnos" bajo el párrafo principal del hero.
+- app/tortas-maipu/page.tsx: migrada de SeoPage genérico a página
+  custom (mismo patrón que coctel-maipu/coffee-break-maipu). JSON-LD
+  LocalBusiness + Bakery, FAQPage (5 preguntas), BreadcrumbList, grid
+  de 7 sabores, bloque destacado con link a /arma-tu-torta. Imagen
+  hero: /images/torta-chocolate-hero.webp.
+- components/Footer.tsx: agregado link "Tortas de Novia Maipú" 
+  (/tortas-bodas-maipu) al listado de links SEO, entre Coffee Break
+  y Día de la Madre.
+
+### SEO
+- Indexación manual solicitada en Search Console para:
+  /coffee-break-maipu, /coctel-maipu, /tortas-maipu,
+  /tortas-bodas-maipu (esta última había quedado fuera del lote
+  anterior).
+
+### Pendiente
+- Llamar a TUU para obtener API Key del terminal POS (Tab 4 ya
+  implementado en /gestion, solo falta la key).
