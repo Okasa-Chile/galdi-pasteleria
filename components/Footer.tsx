@@ -128,6 +128,7 @@ export default function Footer() {
                 { label: 'Cóctel Maipú', href: '/coctel-maipu' },
                 { label: 'Cumpleaños Maipú', href: '/cumpleanos-maipu' },
                 { label: 'Coffee Break Maipú', href: '/coffee-break-maipu' },
+                { label: 'Tortas de Novia Maipú', href: '/tortas-bodas-maipu' },
                 { label: 'Día de la Madre', href: '/dia-de-la-madre' },
                 { label: 'Tortas Día del Padre', href: '/dia-del-padre' },
                 { label: 'Arma tu Torta', href: '/arma-tu-torta' },

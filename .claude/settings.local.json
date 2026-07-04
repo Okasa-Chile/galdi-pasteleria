@@ -156,7 +156,8 @@
       "Bash(disown)",
       "Bash(netstat -ano)",
       "Bash(awk '{print $5}')",
-      "Bash(xargs -r -I{} taskkill //F //PID {})"
+      "Bash(xargs -r -I{} taskkill //F //PID {})",
+      "Bash(rm -f .next/dev/lock)"
     ]
   },
   "enableAllProjectMcpServers": true,
