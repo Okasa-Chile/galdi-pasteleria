@@ -152,7 +152,11 @@
       "PowerShell(git *)",
       "PowerShell(\\(Get-Content \"C:\\\\OKasa\\\\Web\\\\okasa-proyecto\\\\AI_CONTEXT.md\" | Measure-Object -Line\\).Lines4)",
       "PowerShell($content = Get-Content \"C:\\\\OKasa\\\\Web\\\\okasa-proyecto\\\\AI_CONTEXT.md\" -Raw; \\($content -split \"`n\"\\).Count)",
-      "PowerShell($content = Get-Content \"C:\\\\OKasa\\\\Web\\\\okasa-proyecto\\\\AI_CONTEXT.md\" -Raw; $lines = $content -split \"`n\"; $total = $lines.Count; Write-Output \"Total líneas: $total\"; Write-Output \"---últimas 5---\"; $lines[\\($total-6\\)..\\($total-1\\)] -join \"`n\")"
+      "PowerShell($content = Get-Content \"C:\\\\OKasa\\\\Web\\\\okasa-proyecto\\\\AI_CONTEXT.md\" -Raw; $lines = $content -split \"`n\"; $total = $lines.Count; Write-Output \"Total líneas: $total\"; Write-Output \"---últimas 5---\"; $lines[\\($total-6\\)..\\($total-1\\)] -join \"`n\")",
+      "Bash(disown)",
+      "Bash(netstat -ano)",
+      "Bash(awk '{print $5}')",
+      "Bash(xargs -r -I{} taskkill //F //PID {})"
     ]
   },
   "enableAllProjectMcpServers": true,
