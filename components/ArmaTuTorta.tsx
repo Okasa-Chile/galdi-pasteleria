@@ -409,6 +409,17 @@ export default function ArmaTuTorta() {
         }}>
           Diseña la torta de tus sueños. Elige cada detalle — la elaboramos con los mismos estándares artesanales que nos definen desde siempre.
         </p>
+        <p style={{
+          fontFamily: 'var(--font-sans)',
+          fontSize: 'clamp(0.75rem, 1.8vw, 0.85rem)',
+          fontWeight: 600,
+          color: P.roseDark,
+          maxWidth: '480px',
+          margin: '0.75rem auto 0',
+          letterSpacing: '0.01em',
+        }}>
+          🕐 Entrega en 24 horas después de contactarnos
+        </p>
 
         <div style={{
           display: 'flex',
