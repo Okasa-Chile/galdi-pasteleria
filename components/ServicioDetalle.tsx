@@ -367,7 +367,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
     <div
       id={pageMode ? 'productos' : undefined}
       style={pageMode
-        ? { position: 'relative', display: 'block', minHeight: '100vh', scrollMarginTop: '116px', paddingTop: '116px' }
+        ? { position: 'relative', display: 'block', minHeight: '100vh', scrollMarginTop: '116px', paddingTop: '2.5rem' }
         : { position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', flexDirection: 'column', animation: 'svcFadeIn 0.5s cubic-bezier(0.25,0.46,0.45,0.94) both' }
       }
     >

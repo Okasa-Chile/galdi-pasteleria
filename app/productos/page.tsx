@@ -11,7 +11,7 @@ export default function ProductosPage() {
       <h1 style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap' }}>
         Pasteles, Tortas y Pan Artesanal en Maipú — Galdi Pastelería
       </h1>
-      <main>
+      <main style={{ paddingTop: '76px' }}>
         <ServicioDetalle
           id="delivery"
           nombre="Nuestros Productos"
