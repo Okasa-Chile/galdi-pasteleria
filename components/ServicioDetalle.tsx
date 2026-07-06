@@ -9,7 +9,7 @@ import { usePreciosGaldi } from '@/hooks/usePreciosGaldi';
 
 // ─── Productos por servicio y tab ───────────────────────────────────────────
 
-const productosAlmacenes: Record<string, { nombre: string; nombreVisible?: string; imagen: string; unidad: string }[]> = {
+const productosAlmacenes: Record<string, { nombre: string; nombreVisible?: string; imagen: string; unidad: string; detalle?: string }[]> = {
   'Pan': [
     { nombre: 'Pan Amasado',               imagen: imagenes['Pan Amasado'],               unidad: 'kg' },
     { nombre: 'Tortilla con Chicharrones', imagen: imagenes['Tortilla con Chicharrones'], unidad: 'unidad' },
@@ -41,17 +41,25 @@ const productosAlmacenes: Record<string, { nombre: string; nombreVisible?: strin
   ],
 };
 
-const productosDelivery: Record<string, { nombre: string; nombreVisible?: string; imagen: string; unidad: string; href?: string }[]> = {
+const productosDelivery: Record<string, { nombre: string; nombreVisible?: string; imagen: string; unidad: string; href?: string; detalle?: string }[]> = {
   'Tortas': [
-    { nombre: 'Torta 3 Leches',     imagen: imagenes['Torta 3 Leches'],     unidad: 'un' },
-    { nombre: 'Torta de Chocolate', imagen: imagenes['Torta de Chocolate'], unidad: 'un' },
-    { nombre: 'Torta Moka',        nombreVisible: 'Moka / Pralinée', imagen: imagenes['Moca / Pralinée'],    unidad: 'un' },
-    { nombre: 'Torta Selva Negra', nombreVisible: 'Selva Negra',     imagen: imagenes['Selva Negra'],        unidad: 'un' },
-    { nombre: 'Torta Panqueque',    imagen: imagenes['Torta Panqueque'],    unidad: 'un' },
-    { nombre: 'Torta de Piña',      imagen: imagenes['Torta de Piña'],      unidad: 'un' },
-    { nombre: 'Torta de Hojarasca', imagen: imagenes['Torta de Hojarasca'], unidad: 'un' },
-    { nombre: 'Torta Amor',         imagen: imagenes['Torta Amor'],         unidad: 'un' },
-    { nombre: 'Arma tu Torta',      imagen: '/images/torta-personalizada.webp', unidad: 'un', href: '/arma-tu-torta' },
+    { nombre: 'Torta 3 Leches', imagen: imagenes['Torta 3 Leches'], unidad: 'un',
+      detalle: 'Bizcocho, tres leches (evaporada, condensada, crema), crema chantilly' },
+    { nombre: 'Torta de Chocolate', imagen: imagenes['Torta de Chocolate'], unidad: 'un',
+      detalle: 'Bizcocho de chocolate, relleno y cobertura de chocolate' },
+    { nombre: 'Torta Moka', nombreVisible: 'Moka / Pralinée', imagen: imagenes['Moca / Pralinée'], unidad: 'un',
+      detalle: 'Bizcocho, crema de café, praliné de frutos secos caramelizados' },
+    { nombre: 'Torta Selva Negra', nombreVisible: 'Selva Negra', imagen: imagenes['Selva Negra'], unidad: 'un',
+      detalle: 'Bizcocho de chocolate, cerezas, crema chantilly' },
+    { nombre: 'Torta Panqueque', imagen: imagenes['Torta Panqueque'], unidad: 'un',
+      detalle: 'Panqueques finos, manjar (o chocolate/frambuesa a elección)' },
+    { nombre: 'Torta de Piña', imagen: imagenes['Torta de Piña'], unidad: 'un',
+      detalle: 'Bizcocho, piña natural, crema chantilly' },
+    { nombre: 'Torta de Hojarasca', imagen: imagenes['Torta de Hojarasca'], unidad: 'un',
+      detalle: 'Masa de hojarasca en capas crocantes, manjar' },
+    { nombre: 'Torta Amor', imagen: imagenes['Torta Amor'], unidad: 'un',
+      detalle: 'Hojarasca, crema pastelera, frambuesas, manjar, merengue' },
+    { nombre: 'Arma tu Torta', imagen: '/images/torta-personalizada.webp', unidad: 'un', href: '/arma-tu-torta' },
   ],
   'Pasteles': [
     { nombre: 'Pie de Limón Merengado', imagen: imagenes['Pie de Limón Merengado'], unidad: 'un' },
@@ -751,6 +759,21 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                     <div>
                       <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: 'var(--cream)', fontWeight: 500, margin: 0, lineHeight: 1.3 }}>{prod.nombreVisible ?? prod.nombre}</p>
                       <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.6rem', color: 'rgba(212,168,83,0.7)', margin: '0.15rem 0 0', letterSpacing: '0.05em' }}>{label}</p>
+                      {prod.detalle && (
+                        <p style={{
+                          fontFamily: 'var(--font-sans)',
+                          fontSize: '0.6rem',
+                          color: 'rgba(245,230,211,0.55)',
+                          margin: '0.15rem 0 0',
+                          lineHeight: 1.35,
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical' as const,
+                          overflow: 'hidden',
+                        }}>
+                          {prod.detalle}
+                        </p>
+                      )}
                     </div>
                     {esTorta && (
                       <div style={{ display: 'flex', gap: '4px', flexShrink: 0, marginTop: '1px' }}>
