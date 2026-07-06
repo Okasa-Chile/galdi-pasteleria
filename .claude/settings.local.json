@@ -157,7 +157,12 @@
       "Bash(netstat -ano)",
       "Bash(awk '{print $5}')",
       "Bash(xargs -r -I{} taskkill //F //PID {})",
-      "Bash(rm -f .next/dev/lock)"
+      "Bash(rm -f .next/dev/lock)",
+      "Bash(grep -n \"headerHeight\\\\|ResizeObserver\\\\|useRef\\\\|top: \\\\`\\\\|top: '\")",
+      "Bash(git log *)",
+      "Read(//c/Users/claud/AppData/Local/Temp/claude/C--OKasa-Web-galdi-nextjs/d1528137-6066-4ffd-b485-005fa90b29d3/scratchpad/**)",
+      "Bash(taskkill *)",
+      "Bash(:)"
     ]
   },
   "enableAllProjectMcpServers": true,

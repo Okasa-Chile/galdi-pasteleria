@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -59,7 +59,8 @@ const productosDelivery: Record<string, { nombre: string; nombreVisible?: string
       detalle: 'Masa de hojarasca en capas crocantes, manjar' },
     { nombre: 'Torta Amor', imagen: imagenes['Torta Amor'], unidad: 'un',
       detalle: 'Hojarasca, crema pastelera, frambuesas, manjar, merengue' },
-    { nombre: 'Arma tu Torta', imagen: '/images/torta-personalizada.webp', unidad: 'un', href: '/arma-tu-torta' },
+    { nombre: 'Arma tu Torta', imagen: '/images/torta-personalizada.webp', unidad: 'un', href: '/arma-tu-torta',
+      detalle: 'Diseña tu torta ideal: elige base, relleno, decoración y tamaño a tu gusto' },
   ],
   'Pasteles': [
     { nombre: 'Pie de Limón Merengado', imagen: imagenes['Pie de Limón Merengado'], unidad: 'un' },
@@ -656,7 +657,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
       {pageMode && (
         <div style={{
           position: 'sticky',
-          top: '120px',
+          top: '76px',
           zIndex: 499,
           display: 'flex',
           borderBottom: '1px solid rgba(245,230,211,0.15)',
@@ -766,10 +767,6 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                           color: 'rgba(245,230,211,0.55)',
                           margin: '0.15rem 0 0',
                           lineHeight: 1.35,
-                          display: '-webkit-box',
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: 'vertical' as const,
-                          overflow: 'hidden',
                         }}>
                           {prod.detalle}
                         </p>
