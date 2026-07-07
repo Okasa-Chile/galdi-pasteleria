@@ -67,7 +67,7 @@ const jsonLd = {
           {
             '@type': 'Offer',
             itemOffered: {
-              '@type': 'Product',
+              '@type': 'Service',
               name: 'Torta 3 Leches',
               description: 'Bizcocho húmedo bañado en tres leches, con un toque de canela.',
             },
@@ -75,7 +75,7 @@ const jsonLd = {
           {
             '@type': 'Offer',
             itemOffered: {
-              '@type': 'Product',
+              '@type': 'Service',
               name: 'Torta de Chocolate',
               description: 'Bizcocho de chocolate intenso con relleno y cobertura a elección.',
             },
@@ -83,7 +83,7 @@ const jsonLd = {
           {
             '@type': 'Offer',
             itemOffered: {
-              '@type': 'Product',
+              '@type': 'Service',
               name: 'Torta Moca',
               description: 'Combinación de café y chocolate en un equilibrio suave y aromático.',
             },
@@ -91,7 +91,7 @@ const jsonLd = {
           {
             '@type': 'Offer',
             itemOffered: {
-              '@type': 'Product',
+              '@type': 'Service',
               name: 'Torta Selva Negra',
               description: 'Bizcocho de chocolate, cerezas y crema chantilly, un clásico infaltable.',
             },
@@ -99,7 +99,7 @@ const jsonLd = {
           {
             '@type': 'Offer',
             itemOffered: {
-              '@type': 'Product',
+              '@type': 'Service',
               name: 'Torta Panqueque',
               description: 'Delicadas capas de panqueques con manjar entre cada una.',
             },
@@ -107,7 +107,7 @@ const jsonLd = {
           {
             '@type': 'Offer',
             itemOffered: {
-              '@type': 'Product',
+              '@type': 'Service',
               name: 'Torta de Piña',
               description: 'Bizcocho esponjoso con piña natural, crema batida y un toque dulce.',
             },
@@ -115,7 +115,7 @@ const jsonLd = {
           {
             '@type': 'Offer',
             itemOffered: {
-              '@type': 'Product',
+              '@type': 'Service',
               name: 'Torta de Hojarasca',
               description: 'Delicadas capas de masa crocante unidas con manjar, un clásico chileno.',
             },
