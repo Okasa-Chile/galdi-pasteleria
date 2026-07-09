@@ -134,7 +134,7 @@ const sabores = [
   { titulo: '3 Leches', descripcion: 'Húmeda y esponjosa, bañada en crema de leche. La opción más pedida para matrimonios.' },
   { titulo: 'Chocolate', descripcion: 'Bizcocho de chocolate con relleno de ganache o mousse de chocolate.' },
   { titulo: 'Moka', descripcion: 'Combinación de café y chocolate en bizcocho y relleno. Perfecta para amantes del café.' },
-  { titulo: 'Selva Negra', descripcion: 'Bizcocho de chocolate, cerezas y crema chantilly. Clásica y elegante.' },
+  { titulo: 'Selva Negra', descripcion: 'Bizcocho de chocolate, mermelada de cerezas y crema chantilly. Clásica y elegante.' },
   { titulo: 'Hojarasca', descripcion: 'Capas crujientes de hojarasca con manjar artesanal. Un clásico chileno para matrimonios.' },
   { titulo: 'Piña', descripcion: 'Bizcocho esponjoso con relleno de piña y crema chantilly. Fresca y tropical.' },
 ];

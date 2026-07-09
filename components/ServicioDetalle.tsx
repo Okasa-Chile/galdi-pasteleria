@@ -44,13 +44,13 @@ const productosAlmacenes: Record<string, { nombre: string; nombreVisible?: strin
 const productosDelivery: Record<string, { nombre: string; nombreVisible?: string; imagen: string; unidad: string; href?: string; detalle?: string }[]> = {
   'Tortas': [
     { nombre: 'Torta 3 Leches', imagen: imagenes['Torta 3 Leches'], unidad: 'un',
-      detalle: 'Bizcocho, tres leches (evaporada, condensada, crema), crema chantilly' },
+      detalle: 'Bizcocho, tres leches (evaporada, condensada, crema), merengue' },
     { nombre: 'Torta de Chocolate', imagen: imagenes['Torta de Chocolate'], unidad: 'un',
       detalle: 'Bizcocho de chocolate, relleno y cobertura de chocolate' },
     { nombre: 'Torta Moka', nombreVisible: 'Moka / Pralinée', imagen: imagenes['Moca / Pralinée'], unidad: 'un',
       detalle: 'Bizcocho, crema de café, praliné de frutos secos caramelizados' },
     { nombre: 'Torta Selva Negra', nombreVisible: 'Selva Negra', imagen: imagenes['Selva Negra'], unidad: 'un',
-      detalle: 'Bizcocho de chocolate, cerezas, crema chantilly' },
+      detalle: 'Bizcocho de chocolate, mermelada de cerezas, crema chantilly' },
     { nombre: 'Torta Panqueque', imagen: imagenes['Torta Panqueque'], unidad: 'un',
       detalle: 'Panqueques finos, manjar (o chocolate/frambuesa a elección)' },
     { nombre: 'Torta de Piña', imagen: imagenes['Torta de Piña'], unidad: 'un',

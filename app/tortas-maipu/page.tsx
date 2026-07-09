@@ -93,7 +93,7 @@ const jsonLd = {
             itemOffered: {
               '@type': 'Service',
               name: 'Torta Selva Negra',
-              description: 'Bizcocho de chocolate, cerezas y crema chantilly, un clásico infaltable.',
+              description: 'Bizcocho de chocolate, mermelada de cerezas y crema chantilly, un clásico infaltable.',
             },
           },
           {
@@ -163,7 +163,7 @@ const sabores = [
   },
   {
     titulo: 'Torta Selva Negra',
-    descripcion: 'Bizcocho de chocolate, cerezas y crema chantilly, un clásico infaltable.',
+    descripcion: 'Bizcocho de chocolate, mermelada de cerezas y crema chantilly, un clásico infaltable.',
   },
   {
     titulo: 'Torta Panqueque',
