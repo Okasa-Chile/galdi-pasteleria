@@ -351,6 +351,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
         </div>
       </div>
       <div style="margin-top:14px;">
+        <label>RUT (opcional)</label>
+        <input type="text" id="pres-rut" placeholder="ej: 12.345.678-9">
+      </div>
+      <div style="margin-top:14px;">
         <label>Dirección</label>
         <input type="text" id="pres-direccion" placeholder="ej: Av. Principal 123, Depto 45">
       </div>
@@ -424,7 +428,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
         </div>
         <div>
           <label>Tipo de evento</label>
-          <select id="pres-tipo-evento">
+          <select id="pres-tipo-evento" onchange="presToggleTipoEventoOtro(this)">
             <option value="">— Seleccionar tipo —</option>
             <option value="tortas-pasteles">Tortas y Pasteles</option>
             <option value="pan-artesanal">Pan Artesanal</option>
@@ -436,6 +440,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
             <option value="cumpleanos">Cumpleaños</option>
             <option value="otro">Otro</option>
           </select>
+          <div id="pres-tipo-evento-otro-wrap" style="display:none;margin-top:10px;">
+            <label>Especificar tipo de evento</label>
+            <input type="text" id="pres-tipo-evento-otro" placeholder="ej: Bautizo, Graduación...">
+          </div>
         </div>
       </div>
     </div>
@@ -1326,6 +1334,18 @@ window.presRecalcTotales = () => {
   document.getElementById('pres-row-descuento').style.display = descuento > 0 ? '' : 'none';
 };
 
+window.presToggleTipoEventoOtro = (sel) => {
+  const wrap = document.getElementById('pres-tipo-evento-otro-wrap');
+  if (!wrap) return;
+  if (sel.value === 'otro') {
+    wrap.style.display = '';
+  } else {
+    wrap.style.display = 'none';
+    const otroInput = document.getElementById('pres-tipo-evento-otro');
+    if (otroInput) otroInput.value = '';
+  }
+};
+
 window.presSetDescTipo = (tipo) => {
   const btnPct = document.getElementById('pres-desc-tipo-pct');
   const btnFijo = document.getElementById('pres-desc-tipo-fijo');
@@ -1432,10 +1452,12 @@ window.guardarPresupuesto = async () => {
     cliente,
     telefono:     document.getElementById('pres-telefono')?.value.trim() || '',
     email:        document.getElementById('pres-email')?.value.trim() || '',
+    rut:          document.getElementById('pres-rut')?.value.trim() || '',
     direccion:    document.getElementById('pres-direccion')?.value.trim() || '',
     comuna:       document.getElementById('pres-comuna')?.value.trim() || '',
     fechaEvento:  document.getElementById('pres-fecha-evento')?.value || '',
     tipoEvento:   document.getElementById('pres-tipo-evento')?.value || '',
+    tipoEventoOtro: document.getElementById('pres-tipo-evento-otro')?.value.trim() || '',
     observaciones: document.getElementById('pres-obs')?.value.trim() || '',
     validoHasta:  document.getElementById('pres-valido-hasta')?.value || '',
     formaPago:    document.getElementById('pres-forma-pago')?.value || '',
@@ -1475,12 +1497,14 @@ window.guardarPresupuesto = async () => {
   if (btnCancelarEd) btnCancelarEd.style.display = 'none';
 
   // Limpiar formulario
-  ['pres-nombre','pres-telefono','pres-email','pres-obs','pres-valido-hasta'].forEach(id => {
+  ['pres-nombre','pres-telefono','pres-email','pres-rut','pres-obs','pres-valido-hasta','pres-tipo-evento-otro'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
   ['pres-fecha-evento','pres-tipo-evento','pres-forma-pago'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
+  const otroWrapGuardar = document.getElementById('pres-tipo-evento-otro-wrap');
+  if (otroWrapGuardar) otroWrapGuardar.style.display = 'none';
   document.getElementById('pres-desc-valor').value = 0;
   presSetDescTipo('pct');
   document.getElementById('pres-lineas').innerHTML = '';
@@ -1501,6 +1525,7 @@ window.editarPresupuesto = async (docId) => {
     document.getElementById('pres-nombre').value    = data.cliente       || '';
     document.getElementById('pres-telefono').value  = data.telefono      || '';
     document.getElementById('pres-email').value     = data.email         || '';
+    document.getElementById('pres-rut').value       = data.rut          || '';
     document.getElementById('pres-direccion').value = data.direccion     || '';
     document.getElementById('pres-obs').value       = data.observaciones || '';
     document.getElementById('pres-valido-hasta').value  = data.validoHasta  || '';
@@ -1511,6 +1536,10 @@ window.editarPresupuesto = async (docId) => {
     if (comunaEl) comunaEl.value = data.comuna || '';
     const tipoEl = document.getElementById('pres-tipo-evento');
     if (tipoEl) tipoEl.value = data.tipoEvento || '';
+    const otroInput = document.getElementById('pres-tipo-evento-otro');
+    if (otroInput) otroInput.value = data.tipoEventoOtro || '';
+    const otroWrap = document.getElementById('pres-tipo-evento-otro-wrap');
+    if (otroWrap) otroWrap.style.display = (data.tipoEvento === 'otro') ? '' : 'none';
     const pagoEl = document.getElementById('pres-forma-pago');
     if (pagoEl) pagoEl.value = data.formaPago || '';
 
@@ -1598,6 +1627,7 @@ window.duplicarPresupuesto = async (docId) => {
     document.getElementById('pres-nombre').value        = data.cliente       || '';
     document.getElementById('pres-telefono').value      = data.telefono      || '';
     document.getElementById('pres-email').value         = data.email         || '';
+    document.getElementById('pres-rut').value           = data.rut           || '';
     document.getElementById('pres-direccion').value     = data.direccion     || '';
     document.getElementById('pres-obs').value           = data.observaciones || '';
     document.getElementById('pres-valido-hasta').value  = data.validoHasta   || '';
@@ -1608,6 +1638,10 @@ window.duplicarPresupuesto = async (docId) => {
     if (comunaEl) comunaEl.value = data.comuna || '';
     const tipoEl = document.getElementById('pres-tipo-evento');
     if (tipoEl) tipoEl.value = data.tipoEvento || '';
+    const otroInput = document.getElementById('pres-tipo-evento-otro');
+    if (otroInput) otroInput.value = data.tipoEventoOtro || '';
+    const otroWrap = document.getElementById('pres-tipo-evento-otro-wrap');
+    if (otroWrap) otroWrap.style.display = (data.tipoEvento === 'otro') ? '' : 'none';
     const pagoEl = document.getElementById('pres-forma-pago');
     if (pagoEl) pagoEl.value = data.formaPago || '';
 
@@ -1692,12 +1726,14 @@ window.cancelarEdicionPresupuesto = () => {
   const btnCancelar = document.getElementById('btn-cancelar-edicion');
   if (btnCancelar) btnCancelar.style.display = 'none';
   // Limpiar formulario
-  ['pres-nombre','pres-telefono','pres-email','pres-obs','pres-valido-hasta','pres-direccion'].forEach(id => {
+  ['pres-nombre','pres-telefono','pres-email','pres-rut','pres-obs','pres-valido-hasta','pres-direccion','pres-tipo-evento-otro'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
   ['pres-fecha-evento','pres-tipo-evento','pres-forma-pago','pres-comuna'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
+  const otroWrapCancel = document.getElementById('pres-tipo-evento-otro-wrap');
+  if (otroWrapCancel) otroWrapCancel.style.display = 'none';
   document.getElementById('pres-desc-valor').value = 0;
   presSetDescTipo('pct');
   document.getElementById('pres-lineas').innerHTML = '';
@@ -1727,10 +1763,12 @@ window.vistaPreviaPresupuesto = () => {
   const numero      = document.getElementById('pres-numero')?.value || '';
   const telefono    = document.getElementById('pres-telefono')?.value.trim() || '';
   const email       = document.getElementById('pres-email')?.value.trim() || '';
+  const rut         = document.getElementById('pres-rut')?.value.trim() || '';
   const direccion   = document.getElementById('pres-direccion')?.value.trim() || '';
   const comuna      = document.getElementById('pres-comuna')?.value.trim() || '';
   const fechaEvento = document.getElementById('pres-fecha-evento')?.value || '';
   const tipoEvento  = document.getElementById('pres-tipo-evento')?.value || '';
+  const tipoEventoOtro = document.getElementById('pres-tipo-evento-otro')?.value.trim() || '';
   const obs         = document.getElementById('pres-obs')?.value.trim() || '';
   const validoHasta = document.getElementById('pres-valido-hasta')?.value || '';
   const formaPago   = document.getElementById('pres-forma-pago')?.value || '';
@@ -1828,13 +1866,14 @@ window.vistaPreviaPresupuesto = () => {
   const extraCliente = [
     telefono  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${fmtTel(telefono)}</td></tr>` : '',
     email     ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${email}</td></tr>` : '',
+    rut       ? `<tr><td style="color:#888;padding:2px 0;">RUT</td><td style="padding:2px 0;">${rut}</td></tr>` : '',
     direccion ? `<tr><td style="color:#888;padding:2px 0;">Dirección</td><td style="padding:2px 0;">${direccion}</td></tr>` : '',
     comuna    ? `<tr><td style="color:#888;padding:2px 0;">Comuna</td><td style="padding:2px 0;">${comuna}</td></tr>` : '',
   ].join('');
 
   // Filas datos del evento
   const extraEvento = [
-    tipoEvento  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Tipo de evento</td><td style="padding:2px 0;">${tipoEvento.charAt(0).toUpperCase()+tipoEvento.slice(1)}</td></tr>` : '',
+    tipoEvento  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Tipo de evento</td><td style="padding:2px 0;">${tipoEvento === 'otro' && tipoEventoOtro ? tipoEventoOtro : tipoEvento.charAt(0).toUpperCase()+tipoEvento.slice(1)}</td></tr>` : '',
     fechaEvento ? `<tr><td style="color:#888;padding:2px 0;">Fecha del evento</td><td style="padding:2px 0;">${fmtFecha(fechaEvento)}</td></tr>` : '',
   ].join('');
 
