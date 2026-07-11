@@ -2071,7 +2071,7 @@ window.verPresupuesto = (docId) => {
       ${campo('Email', data.email)}
       ${campo('Dirección', data.direccion)}
       ${campo('Comuna', data.comuna)}
-      ${campo('Tipo evento', data.tipoEvento)}
+      ${campo('Tipo evento', data.tipoEvento === 'otro' && data.tipoEventoOtro ? data.tipoEventoOtro : data.tipoEvento)}
       ${campo('Fecha evento', data.fechaEvento ? fmtFecha(data.fechaEvento) : '')}
     </div>
 
@@ -2184,7 +2184,7 @@ window.vistaPreviaDesdeHistorial = (docId) => {
   ].join('');
 
   const extraEvento = [
-    data.tipoEvento  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Tipo de evento</td><td style="padding:2px 0;">${data.tipoEvento.charAt(0).toUpperCase()+data.tipoEvento.slice(1)}</td></tr>` : '',
+    data.tipoEvento  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Tipo de evento</td><td style="padding:2px 0;">${data.tipoEvento === 'otro' && data.tipoEventoOtro ? data.tipoEventoOtro : data.tipoEvento.charAt(0).toUpperCase()+data.tipoEvento.slice(1)}</td></tr>` : '',
     data.fechaEvento ? `<tr><td style="color:#888;padding:2px 0;">Fecha del evento</td><td style="padding:2px 0;">${fmtFecha(data.fechaEvento)}</td></tr>` : '',
   ].join('');
 
