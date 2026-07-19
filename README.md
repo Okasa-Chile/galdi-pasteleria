@@ -679,3 +679,12 @@ oportunidad sin explotar en "banquetes maipú" (170 imp, posición 13,86,
 ### Pendiente
 - Llamar a TUU para obtener API Key del terminal POS (Tab 4 ya
   implementado en /gestion, solo falta la key).
+
+---
+
+## Sesión 18-07-2026
+
+Experimento VibeCurb (awwwards-hero + imagegen-frontend) en
+/experimental/hero-editorial. Ver commit para código de referencia.
+No deployado. Tailwind v4 con problema latente detectado — atender
+en sesión aparte.
