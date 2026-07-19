@@ -47,6 +47,8 @@ repomix-output.xml
 
 # Claude Code worktrees
 .claude/worktrees/
+# Skills instalados manualmente (pruebas locales, no versionar)
+.claude/skills/
 # Added by code-review-graph
 .code-review-graph/
 C*.log
