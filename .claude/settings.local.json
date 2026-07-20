@@ -181,7 +181,11 @@
       "Bash(cp \"C:\\\\Users\\\\claud\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--OKasa-Web-galdi-nextjs\\\\b25a3654-b842-4a17-8080-4a3aef57f8ac\\\\scratchpad\\\\SKILL_imagegen-frontend.md\" \".claude/skills/imagegen-frontend/SKILL.md\")",
       "Bash(where cwebp *)",
       "Bash(where magick *)",
-      "Bash(tasklist)"
+      "Bash(tasklist)",
+      "Bash(grep -E \"^productos$\")",
+      "Bash(powershell -Command \"Get-Process -Id 9584 | Select-Object Id,ProcessName,Path\")",
+      "Bash(tasklist //FI \"PID eq 9584\")",
+      "Bash(powershell -Command \"taskkill /PID 9584 /F\")"
     ]
   },
   "enableAllProjectMcpServers": true,
