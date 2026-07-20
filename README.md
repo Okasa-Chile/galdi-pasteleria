@@ -688,3 +688,67 @@ Experimento VibeCurb (awwwards-hero + imagegen-frontend) en
 /experimental/hero-editorial. Ver commit para código de referencia.
 No deployado. Tailwind v4 con problema latente detectado — atender
 en sesión aparte.
+
+---
+
+## Jornada 20-07-2026
+
+### Landings geo expandidas (SeoPage genérico → página custom)
+
+**✅ /cumpleanos-maipu**
+- Migrada al patrón custom (Schema LocalBusiness+Bakery, FAQPage 5
+  preguntas, BreadcrumbList)
+- Grid "Mesa de Dulces para Cumpleaños" con 5 productos reales de
+  galdi_productos (Cheesecake, Pastelitos Surtidos, Muffins Surtidos
+  Cóctel, Brochetas de Frutas, Galletas Artesanales)
+- Diferenciada de /tortas-maipu para evitar canibalización: NO lista
+  sabores de torta, deriva mediante bloque destacado hacia
+  /tortas-maipu y /arma-tu-torta
+- Sección "Cómo pedir tu cumpleaños" + FAQ + CTAs
+- Deploy: commit 593562e
+
+**✅ /delivery-maipu**
+- Migrada al patrón custom, funcionando como HUB de derivación (no
+  lista productos propios): Tortas, Empanadas, Cumpleaños, Cóctel/
+  Banquetería
+- Pan Artesanal y "Catálogo completo" excluidos deliberadamente del
+  listado de derivación (ver decisiones de negocio abajo)
+- Sección "Zonas de cobertura y costos de despacho" con política
+  actualizada (ver abajo)
+- Deploy: commit 82c213a
+
+### Decisiones de negocio
+
+- **pan-artesanal-maipu**: NO se expandirá con el patrón SEO (mucho
+  trabajo, poca ganancia). Excluida también del listado de derivación
+  de /delivery-maipu — evita que un pedido de bajo valor (ej. una
+  docena de sopaipillas) termine costando más en despacho que el
+  producto mismo.
+
+- **Pedido mínimo para delivery: $15.000** — nueva regla de negocio.
+  Pendiente evaluar si se aplica también al carrito/checkout (Flow),
+  o si por ahora queda solo como mención informativa en la landing.
+
+- **Política de despacho actualizada** (reemplaza la de 25-05-2026):
+  - Retiro en Maipú: gratis
+  - Comunas cercanas (Maipú, Cerrillos, Pudahuel, Estación Central,
+    Padre Hurtado, Lo Prado): $3.000 a $5.000 (rango según dirección
+    exacta, ya no monto fijo)
+  - Otras comunas de la Región Metropolitana: según distancia
+    (cálculo variable, cotizado junto con el pedido — ya no monto fijo
+    de $5.000)
+
+- **TUU (API Key para /gestion) descartado por ahora.** Razón: si el
+  pago es presencial con terminal POS físico, lo prioritario es que el
+  pedido quede claro y bien registrado, no la integración de la API.
+  Posible pendiente futuro: mejorar el registro de pedidos para pagos
+  presenciales.
+
+### SEO
+- Indexación manual solicitada en Search Console para /cumpleanos-maipu
+  y /delivery-maipu.
+
+### Pendiente
+- distribucion-maipu no requiere trabajo adicional (ya redirige a "/").
+- Evaluar si el pedido mínimo de $15.000 se implementa como validación
+  real en el carrito/checkout.
