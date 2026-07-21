@@ -1,5 +1,5 @@
 # AI_CONTEXT — Proyecto Galdi Pastelería
-> Registro de trabajo asistido por IA · Actualizado: 29 junio 2026
+> Registro de trabajo asistido por IA · Actualizado: 20 julio 2026
 
 ---
 
@@ -70,7 +70,7 @@ git add . && git commit -m "mensaje" && git push
 
 ---
 
-## 🏗️ Estructura del Proyecto
+## 📁 Estructura del Proyecto
 
 ```
 galdi-nextjs/
@@ -111,7 +111,8 @@ galdi-nextjs/
 ## 📦 Estado actual del sitio público
 
 ### SEO
-- Seobility score: **92%** (medido 15-04-2026)
+- Seobility On-page: **91%** (medido 20-07-2026)
+- Seobility Enlazado de la página: **82%** — fixes de enlazado interno desplegados 20-07-2026 (ver Jornada 20-07-2026 abajo), pendiente re-medir
 - Rich Results Test: **3 elementos válidos** (FAQPage, Empresas locales, Organización)
 - Google Search Console: sin errores críticos
 - Sitemap y robots.txt activos
@@ -119,7 +120,7 @@ galdi-nextjs/
 - 10+ landing pages SEO con JSON-LD
 
 ### Google Business Profile
-- Reseñas actuales: **54** (todas ⭐⭐⭐⭐⭐) · Meta: **100** 🎯 en progreso
+- Reseñas actuales: **71** (todas ⭐⭐⭐⭐⭐) · Nota promedio: **5.0**
 - Áreas de servicio: Maipú, Cerrillos, Pudahuel
 - Descripción optimizada · Menu link → galdi.cl/productos
 
@@ -147,7 +148,9 @@ galdi-nextjs/
 
 ---
 
-## 📝 Notas Permanentes
+## 🔧 Reglas operativas
+
+### Estilo de trabajo y comunicación
 
 - **Estilo de trabajo**: confirmaciones breves ("ya", "listo") → Claude pregunta si el contexto es ambiguo antes de actuar
 - **Paleta Galdi**: café oscuro `#1a0f0a` · crema `#f5e6d3` · dorado `#d4a853` · terracota `#c4704f`
@@ -161,9 +164,7 @@ galdi-nextjs/
 - **Gemini (otro AI)**: siempre hacer git push antes de trabajar con otro AI para evitar contaminación de archivos
 - **PowerShell**: no usar && para encadenar comandos — ejecutar secuencialmente
 
----
-
-## 🧰 Herramientas CC instaladas
+### Herramientas y entorno
 
 | Herramienta | Estado |
 |---|---|
@@ -173,18 +174,39 @@ galdi-nextjs/
 | Everything Claude Code | ✅ 75+ skills |
 | addyosmani/agent-skills | ✅ 21 skills + 7 comandos slash |
 
----
+### Comandos y rutas locales
 
-## 🔜 Pendientes
+```bash
+npm run dev     # servidor desarrollo → http://localhost:3000
+npm run build   # export estático → out/
+npm run start   # preview producción local
+```
+
+### Rutas locales
+- Galdi: `C:\OKasa\Web\galdi-nextjs`
+- Okasa: `C:\OKasa\Web\okasa-proyecto`
+
+### Advertencias de desarrollo
+
+**Banner/AnnouncementBar:** El texto del banner superior NO está en `BannerDiaMadre.tsx` — está hardcodeado en `components/Header.tsx` línea ~116. Siempre modificar `Header.tsx` para cambiar el texto del banner de producción.
+
+### Regla operativa Dev/CC (vigente desde 14-07-2026)
+
+- CC levanta npm run dev y lo deja corriendo.
+- La verificación visual en localhost la hace Claudio personalmente.
+- CC NO usa herramientas de navegador/Chrome DevTools (consume mucho
+  contexto/costo en la sesión).
+- En reportes, CC se limita a: qué compiló, qué pasó el chequeo de
+  TypeScript, y detalle de los cambios de código — sin afirmaciones
+  sobre comportamiento visual verificado por él.
+
+### Pendientes activos
 
 ### Técnicos
 - [ ] **Sistema cupones/descuentos** — prompt `.txt` preparado, no ejecutado aún
 - [ ] **Integración WhatsApp → /gestion** — pedidos entrantes con estado pendiente/confirmado/entregado (futuro)
 - [ ] **QR en PDF usando SVG en vez de canvas**
 - [ ] **Agenda de clientes en /gestion**
-- [x] **Funcionalidad edición presupuestos Tab 5** — botón Editar, Actualizar, Cancelar edición
-- [x] **Carrito de compras con pago Flow** — backend completo (flowCrearOrden + flowConfirmar como Cloud Functions). Despacho: $3.000 cercanas / $5.000 lejanas. Comunas cercanas: Maipú, Cerrillos, Pudahuel, Estación Central, Padre Hurtado, Lo Prado. Retiro gratis en Maipú. Pago 100% anticipado.
-- [x] **Precios catálogo público (Fase A)** — hook usePreciosGaldi.ts + precios por talla S/M/L/XL en cards de /productos. Tallas Firestore corregidas 12-06-2026.
 - [ ] **Crear cuenta Flow** — pendiente. Puede demorar 1-3 días hábiles en verificar.
 - [ ] **POS TUU** — en proceso de compra por Claudio
 - [ ] **Carrito frontend** — componente con productos, cantidades, selector comuna y botón Pagar con Flow
@@ -197,9 +219,6 @@ galdi-nextjs/
   - Paso 4: firmas Jacqueline (ClaveÚnica) + Ingrid + Notario ($15.000)
   - Notaría: Marco Francisco Urenda Bilicic · Av. Pajaritos 4500 · Santiago
 - [ ] **Presupuesto matrimonio** — esperar consulta a Jacqueline sobre precios actualizados
-
-### Marketing
-- ✅ **Reseñas Google Business** — 54/50 · todas ⭐⭐⭐⭐⭐ (meta superada)
 
 ---
 
@@ -235,425 +254,7 @@ galdi-nextjs/
 - **20-05-2026** — Nueva página /arma-tu-torta · configurador paso a paso · links en catálogo, delivery, header y footer · sección promocional en home · imagen torta-personalizada.webp
 - **01-04-2026** — Seobility 92% · Rich Results validado
 
----
-
-## Sesión 30-04-2026
-
-**Completado:**
-- ✅ fix: 9 canonicals SEO agregados a páginas sin ellos (tortas, empanadas, pan-artesanal, delivery, distribucion, coctel, cumpleanos, coffee-break, productos) — commit c03bb9a
-- ✅ feat: `app/productos/layout.tsx` creado con canonical https://galdi.cl/productos
-- ✅ feat: `app/validar-presupuesto/layout.tsx` creado con robots noindex/nofollow
-- ✅ seo: "Las Palmas" agregado en Footer.tsx y Nosotras.tsx — commit 7c1030b
-- ✅ seo: meta descriptions CTR mejoradas en /matrimonios-maipu y /empanadas-maipu — commit f47c50e
-
-**Search Console (28 días a 30-04-2026):**
-- Clics: 30 · Impresiones: 1.270 · CTR: 2,4% · Posición media: 8,7
-- Sitio con ~1,5 meses de vida · 172 consultas distintas
-- Keywords con mayor potencial: banquetes maipú (29 imp), torta bodas maipú (27 imp), pastelerías en maipu (13 imp)
-- Tendencia impresiones: despegue notable desde 13-04-2026 (5x en 2 semanas)
-
-**Reseñas Google Business:** 53 reseñas, todas ⭐⭐⭐⭐⭐ (meta de 50 superada ✅)
-
----
-
-## Sesión 20-05-2026: Arma tu Torta + Fixes
-
-### Cambios realizados
-
-#### Nueva página /arma-tu-torta
-- Creado `app/arma-tu-torta/page.tsx` — ruta pública con metadata SEO
-- Creado `components/ArmaTuTorta.tsx` — configurador paso a paso con:
-  - Paso 1: Elección de base (Bizcocho, Hojarasca, Panqueque)
-  - Paso 2: Elección de relleno — selección múltiple hasta 3
-  - Paso 3: Elección de decoración — selección múltiple hasta 2
-  - Paso 4: Elección de tamaño (S/M/L/XL)
-  - Resumen final con CTA WhatsApp con mensaje pre-llenado
-- Diseño femenino pastel: fondo crema #fdf6ee, acentos rosa #f2c4ce y durazno #f7dcc8
-- Ilustraciones botánicas hand-drawn en cards (18 imágenes en public/images/arma-tu-torta/)
-- Flores decorativas integradas (4 archivos en public/images/arma-tu-torta/)
-- Card "Arma tu Torta" agregada en Catalogo.tsx con link a /arma-tu-torta
-- Card "Arma tu Torta" agregada en ServicioDetalle.tsx delivery con link a /arma-tu-torta
-- Link "Arma tu Torta" agregado en Header.tsx entre Productos y Servicios
-- Link "Arma tu Torta" agregado en Footer.tsx sección links SEO
-- Sección promocional en app/page.tsx reemplaza bloque Día de la Madre
-- Imagen torta-personalizada.webp en public/images/
-
-#### Fix imagen Torta Amor
-- Corregido components/Catalogo.tsx: Torta Amor apuntaba a torta-amor-hero.webp (torta de chocolate)
-- Ahora apunta correctamente a torta-amor.webp (hojarasca con merengue)
-
-#### Fix forma de pago Okasa
-- Actualizado COT-001-Ajustado.xlsx celda A30: forma de pago 50% al reservar / 50% al recibir informe
-- Actualizado scripts/generar_cotizacion.py: columna D ahora muestra % de descuento
-- COT-016 regenerada con descuento 10% aplicado y visible para cliente Alexandre Sanchez Wadie
-
-### Imágenes nuevas
-- public/images/arma-tu-torta/ — 18 ilustraciones botánicas WebP + 4 flores decorativas
-- public/images/torta-personalizada.webp — imagen card Arma tu Torta
-
-#### SEO — Mejora de snippets
-- Mejorados title y description de 4 páginas con 0 clics en Search Console:
-  - app/empanadas-maipu/page.tsx
-  - app/matrimonios-maipu/page.tsx
-  - app/distribucion-maipu/page.tsx
-  - app/pan-artesanal-maipu/page.tsx
-- Títulos actualizados con formato: Keyword Principal · Diferenciador · Galdi
-- Descripciones con llamado a la acción directo
-- URLs enviadas a indexación manual en Google Search Console
-
-#### Stats Google Search Console (20-05-2026)
-- Impresiones 28 días: 1.440
-- Clics 28 días: 57
-- CTR medio: 4% (sobre promedio industria 2-3%)
-- Consultas activas: 81 keywords distintas
-- Keyword principal: "pasteleria maipu" (116 impresiones, 2 clics)
-
----
-
-## Sesión 27-05-2026
-
-### Cambios realizados
-
-#### Homepage (app/page.tsx)
-- Nueva estructura: Hero → ServicioDetalle delivery (pageMode) → Franja Eventos → Nosotras → Arma tu Torta (bloque inline) → FAQ → Contacto → Footer
-- Eliminados: Catalogo.tsx y Servicios.tsx del homepage
-- Agregado: EventosOverlay.tsx para manejar `?servicio=eventos` via useSearchParams
-
-#### Franja Eventos
-- Nueva sección con 4 paneles diagonales: Matrimonios, Cóctel, Cumpleaños, Corporativos
-- Links a `/?servicio=eventos&tab=X` (abre overlay, no página SEO)
-- Título elegante "Hacemos especiales tus momentos"
-
-#### /productos (app/productos/page.tsx)
-- Reemplazado por ServicioDetalle con pageMode=true (id="delivery")
-- Muestra catálogo completo con carrito WhatsApp y 6 tabs incluyendo Pan
-- Header link "Productos" hace scroll a #productos en homepage
-
-#### ServicioDetalle.tsx
-- Nueva prop `pageMode: boolean`
-- En pageMode: position relative, sin bloqueo de scroll, sin botón cerrar, sin logo
-- `id="productos"` cuando pageMode=true, `scrollMarginTop: '110px'`
-- Tab Pan agregado a productosDelivery (Pan Amasado, Tortilla con Chicharrones, Ciabatta)
-
-#### Reseñas Google Business
-- Nuevo componente: `components/ResenasGoogle.tsx`
-- Cloud Function: `functions/src/index.ts` → `placesReviews`
-- URL producción: `https://us-central1-galdi-web.cloudfunctions.net/placesReviews`
-- Place ID Galdi: `ChIJf7l5N6LDYpYR6uNj83Fqd9g` (actualizado — el anterior estaba vencido)
-- Firebase plan actualizado a Blaze (requerido para Cloud Functions)
-- Places API habilitada en proyecto galdi-web
-- API Key servidor (sin restricción de referer): `AIzaSyBhM3t8G0NeXX8JiC0CEfsDcOExwQFFXh4`
-- Reseñas integradas dentro del `<section>` de Nosotras.tsx
-
-### Cloud Functions Flow (01-06-2026)
-- `flowCrearOrden` → https://us-central1-galdi-web.cloudfunctions.net/flowCrearOrden
-  Recibe: `{ orden, monto, email, descripcion }`
-  Retorna: `{ urlPago, token }`
-
-- `flowConfirmar` → https://us-central1-galdi-web.cloudfunctions.net/flowConfirmar
-  Webhook que Flow llama al confirmar pago (status 2 = pagado)
-  TODO: guardar pedido en Firestore + notificar a Galdi
-
-### Secrets configurados en Google Secret Manager
-- `FLOW_API_KEY` (project: galdi-web, version 1)
-- `FLOW_SECRET_KEY` (project: galdi-web, version 1)
-
-### Página nueva
-- `/pago-exitoso` → `app/pago-exitoso/page.tsx` (noindex)
-  Página de confirmación tras pago exitoso con Flow
-
-#### /gestion
-- Talla XL dinámica: aparece en catálogo, calculadora y lista de precios para cualquier producto con XL en COSTOS_TALLA
-- Pan Artesanal reducido a 3 productos: Pan Amasado, Tortilla con Chicharrones, Ciabatta
-
-#### Eliminaciones
-- `/distribucion-maipu` redirige a `/`
-- Servicio "Distribución Almacenes" eliminado de Servicios.tsx y Footer.tsx
-- Sección Catalogo.tsx eliminada del homepage
-- `app/api/resenas/route.ts` eliminado (incompatible con `output: export`)
-
-#### Header
-- "Servicios y Pedidos" → "Servicios y Eventos"
-- "Productos" hace scroll a `#productos` (anchor, no navegación)
-- Todos los anchors con `scrollMarginTop: '130px'`
-
-#### Nosotras.tsx
-- Eliminados los 3 badges (100% Artesanal, Hecho en Casa, Recetas Familiares)
-- ResenasGoogle integrado dentro del `<section>` raíz
-- Padding ajustado a `'2rem 5% 0'`
-
----
-
-## Sesión 12-06-2026: Fase A Precios + Día del Padre
-
-### Fase A — Precios Firestore en catálogo público
-
-#### hook `hooks/usePreciosGaldi.ts`
-- Lee colección `galdi_productos` desde Firestore client-side
-- Retorna `Record<string, PrecioProducto>` indexado por campo `nombre`
-- Interface `PrecioProducto`: nombre, precio, precioS?, precioM?, precioL?, precioXL?, unidad
-
-#### `components/ServicioDetalle.tsx` — nombreVisible pattern
-- Tipo interno tiene `nombreVisible?: string` en ambos Record types (almacenes y delivery)
-- `nombre` = clave exacta Firestore para lookup de precios y key de carrito
-- `nombreVisible` = texto visible en la card (cuando difiere del nombre Firestore)
-- 6 productos con nombreVisible: Torta Moka ("Moka / Pralinée"), Torta Selva Negra ("Selva Negra"), 4 empanadas (Pino, Napolitana, Vegetariana, Queso Camarón)
-- Bloque precios IIFE en cada card: muestra tallas S/M/L/XL si existen, precio unitario si no
-- `totalMonto` en barra inferior: suma precio×cantidad usando carritoKey con talla
-- Formato barra: `🛒 N producto(s) · $XX.XXX · Ver pedido`
-
-#### Tallas Firestore corregidas (12-06-2026)
-- Script fix-tallas.js ejecutado con ADC (no serviceAccountKey.json)
-- 10 tortas actualizadas con precioS/M/L/XL reales
-- XL en $0 → hook convierte a `undefined` → no aparece en catálogo
-
-### Nueva página /dia-del-padre
-- `app/dia-del-padre/page.tsx` — 3 tortas: Panqueque, Torta de Chocolate, 3 Leches
-- Imagen: `public/images/torta-chocolate-hero.webp` (78.8 KB, 1400×781, quality=50)
-- JSON-LD: FoodEstablishment + FAQPage
-- Fecha: **21 de junio** (corregida en Header.tsx, BannerDiaMadre.tsx, page.tsx, app/page.tsx)
-- Enlazada desde Header franja, homepage bloque, Footer SEO links, sitemap.xml
-
-### SEO /productos
-- `app/productos/layout.tsx`: title "Pasteles, Tortas y Pan Artesanal en Maipú · Galdi", description actualizada, canonical
-- `app/productos/page.tsx`: H1 invisible con CSS clip/overflow, ServicioDetalle nombre="Nuestros Productos"
-
-### Notas técnicas
-- `serviceAccountKey.json` NO existe en `functions/` — usar `admin.initializeApp({projectId:'galdi-web'})` con ADC
-- `git add .` siempre requiere `git reset HEAD functions/node_modules/ functions/package-lock.json app/pago-exitoso/` después
-
----
-
-## Sesión 15-06-2026
-
-### Cambios realizados
-
-#### SEO /dia-del-padre — cobertura multi-comuna
-- metadata.keywords expandido con Pudahuel, Cerrillos, Padre Hurtado, Estación Central, Santiago
-- FAQPage JSON-LD expandido de 4 a 9 preguntas (una por comuna + generales)
-- Sección visual #cobertura-comunas en extraContent con tabla de precios de despacho
-
-#### flowConfirmar
-- functions/src/index.ts: bloque Firestore implementado, pedidos pagados se guardan en galdi_pedidos
-- .trim() agregado en lectura de FLOW_API_KEY y FLOW_SECRET_KEY (problema raíz: whitespace en secrets)
-- Credenciales Flow actualizadas en Secret Manager
-
-#### Carrito Flow frontend
-- app/carrito/page.tsx (nuevo) + app/carrito/layout.tsx (noindex)
-- Formulario completo: nombre, email, teléfono, comuna, dirección, fecha entrega (24h mínimo)
-- Cálculo automático de despacho por comuna ($0 retiro / $3.000 cercanas / $5.000 lejanas)
-- Validación email + teléfono chileno
-- Botón "Pagar con Flow" → llama flowCrearOrden → redirect a urlPago
-
-#### ServicioDetalle.tsx — múltiples mejoras
-- Sincronización carrito → sessionStorage en cada cambio + evento custom galdi:carrito-actualizado
-- paddingTop 75px en pageMode (fix: tabs quedaban tapadas por header global)
-- Tabs premium: cubic-bezier, glow dorado en activa, expansión letter-spacing
-- Talla seleccionada: pulse animation con halo dorado doble
-- Precio dinámico por talla seleccionada (no muestra todas las tallas si está elegida una)
-- Deseleccionar talla al hacer clic de nuevo en la misma
-- Pasteles y Queques ahora con selector S/M/L (igual que Tortas)
-- Modal carrito rediseñado: 720px, imágenes 64x64, total dorado grande, 2 botones (Flow + WhatsApp)
-- Barra inferior con icono SVG carrito + badge animado
-
-#### Header.tsx
-- Reemplazado botón "Cotizar" por "Carrito" con SVG icon
-- Badge dinámico con totalItems (lee sessionStorage + escucha eventos)
-- Aplicado en desktop y mobile
-
-#### Footer.tsx
-- Label "Día del Padre" → "Tortas Día del Padre"
-
-#### Firestore
-- Pasteles & Tartas: precioS=$12.000, precioM=$15.000, precioL=$18.000 (5 productos)
-- Queques: precioS=$4.000, precioM=$6.000 (3 productos)
-- Empanadas: estructura copiada de Empanada de Mariscos (4 productos)
-
-#### ArmaTuTorta.tsx
-- Precios por tamaño: S $22k / M $30k / L $42k / XL $55k
-- Opción "Sin azúcar" con alulosa: +$4k / +$6k / +$10k / +$15k
-- Toggle elegante con descripción
-- Bloque "Valor total" con precio destacado en resumen
-- WhatsApp incluye precio referencial + nota sin azúcar
-
-#### Limpieza repo
-- 30+ carpetas de agentes IA removidas del índice Git (.adal, .augment, skills/, etc.)
-- 3.721 archivos eliminados (~828.750 líneas)
-- 10 imágenes obsoletas con mayúsculas/espacios eliminadas
-- functions/node_modules/ excluido del repo (5.959 archivos desindexados)
-- .gitignore actualizado con todas las exclusiones
-
-#### Posicionamiento competitivo Arma tu Torta sin azúcar
-- vs Ruyed (alulosa, Providencia): -10% a -13% más accesibles
-- vs Riesco/Mozart (premium): bien posicionados en segmento medio-alto
-- Sin competencia directa en Maipú
-- Diferenciador: personalización total (Ruyed solo pre-diseñadas)
-
-### Estado actual del proyecto
-- Todas las URLs en https://galdi.cl funcionando
-- Carrito Flow end-to-end operativo
-- /dia-del-padre rankeando (deadline: domingo 21 junio — 6 días)
-- 313 archivos en producción
-
-### Sesión 16-06-2026
-
-#### ServicioDetalle.tsx — botón eliminar ítem carrito
-- Función eliminarItem(key) agregada tras quitar()
-- Botón × por ítem en modal resumen, color rgba(245,150,150,0.7), marginLeft auto
-- Permite eliminar un producto individual sin vaciar todo el carrito
-
-### Pendientes para sesiones futuras
-- [ ] Comunicar endulzante "alulosa" en página /arma-tu-torta como diferenciador
-- [ ] Considerar agregar /sin-azucar como landing SEO específica (oportunidad de mercado)
-- [ ] 5 deep-analysis blog posts Okasa (workflow Gemini)
-- [ ] Enriquecer 4 landing pages geolocalizadas Okasa
-- [ ] Re-evaluar /distribucion-maipu (404 vs redirect a /productos)
-- [ ] Internal linking a /tortas-maipu (7 enlaces) según brief SEO
-- [ ] H1 duplicado homepage Galdi
-- [ ] Auditar header anchors vs URLs reales
-
----
-
-## Sesión 24-06-2026
-
-### Cambios realizados
-
-#### Eliminación referencias Día del Padre
-- Removida franja Día del Padre de `components/Header.tsx` (bloque background #c4704f con link a /dia-del-padre)
-- Removido bloque completo de `components/BannerDiaMadre.tsx`
-- Removida sección "Bloque Día del Padre" de `app/page.tsx`
-
-#### Catálogo galdi_productos — 21 productos nuevos
-Productos agregados sin tocar existentes (costos en 0, solo precio de venta):
-
-**Cóctel Salado** (12 productos, unidad: 'unidad'):
-- Mechada Premium $700 · Mechada Clásica $650 · Mechada Tradicional $600
-- Brochetas Mixtas $800 · Empanadas Cóctel $650 · Brochetas de Camarón $600
-- Mini Pizzas $600 · Brochetas Serrano $550 · Bolitas de Carne/Cucharitas Ceviche $500
-- Canapés Surtidos $450 · Brochetas Frescas $400 · Sopaipillitas con Pebre $300
-
-**Cóctel Dulce** (5 productos, unidad: 'unidad'):
-- Cheesecake $470 · Pastelitos Surtidos $450 · Muffins Surtidos Cóctel $450
-- Brochetas de Frutas $400 · Galletas Artesanales $350
-
-**Tablas** (4 productos, unidad: 'unidad'):
-- Tabla Tradicional 5p $28.900 · Tabla Tradicional 10p $48.900
-- Tabla Carnes y Picoteo 5p $42.900 · Tabla Carnes y Picoteo 10p $69.900
-
-Nota: precios originales del PDF Lista de Precios 2026 estaban "por ciento" — se convirtieron a precio unitario para permitir cotizaciones flexibles (50, 75, 120 unidades).
-
-#### Fix cotizaciones — bug $36
-Problema: productos nuevos con `costo:0` mostraban precio $36 en cotizaciones porque:
-1. `fsLoad()` sobreescribía `logistica:0` con `30` (`Number(p.logistica) || 30`)
-2. Dropdown usaba `cpx(p)` ignorando el `precio` ya guardado en Firestore
-3. Cálculo: `(0+0+30+0) * 1.19 = $35.7 ≈ $36`
-
-Fix aplicado en `public/gestion/index.html`:
-- `p.logistica = p.logistica !== undefined ? Number(p.logistica) : 30` (respeta 0 explícito)
-- Dropdown: `value="' + (p.precio || cpx(p)) + '"` (usa precio guardado, fallback a cpx)
-
-### Aprendizajes
-- Productos sin estructura de costos (solo precio de venta) son válidos para acelerar cotizaciones
-- `Number(x) || default` falla cuando x es 0 — usar `x !== undefined ? Number(x) : default`
-- Lista de Precios PDF (para clientes) debe sincronizarse con galdi_productos (fuente de verdad)
-
----
-
-## Desarrollo local
-
-```bash
-npm run dev     # servidor desarrollo → http://localhost:3000
-npm run build   # export estático → out/
-npm run start   # preview producción local
-```
-
-### Rutas locales
-- Galdi: `C:\OKasa\Web\galdi-nextjs`
-- Okasa: `C:\OKasa\Web\okasa-proyecto`
-
-### Advertencias de desarrollo
-
-**Banner/AnnouncementBar:** El texto del banner superior NO está en `BannerDiaMadre.tsx` — está hardcodeado en `components/Header.tsx` línea ~116. Siempre modificar `Header.tsx` para cambiar el texto del banner de producción.
-
----
-
-## Jornada 30-06-2026
-
-**Completado:**
-- ✅ feat: /coffee-break-maipu expandida con página custom SEO
-  (reemplaza SeoPage genérico)
-  - Schema: LocalBusiness + Bakery, FAQPage (5 preguntas), BreadcrumbList
-  - Productos ajustados a formato corporativo real: mini sandwiches,
-    mini empanadas (pino/queso/queso champiñón), mini tartaletas
-    (pie de limón, kuchen de manzana, kuchen sureño, kuchen de nuez),
-    alfajores, bebidas calientes (café/té/chocolate)
-  - Commit 1c293f0 + ajustes posteriores de productos
-
-- ✅ feat: /coctel-maipu expandida con página custom SEO
-  (reemplaza SeoPage genérico, mismo patrón que coffee-break)
-  - Schema: LocalBusiness + Bakery, FAQPage (5 preguntas), BreadcrumbList
-  - Grid de 7 bocados: canapés, tapaditos, mini empanadas,
-    brochetas de fruta, brochetas de carne, postres individuales,
-    bocados especiales
-  - Enfoque diferenciado: recepciones/eventos sociales (matrimonios,
-    cumpleaños, aniversarios) vs. coffee-break (corporativo)
-
-**Patrón establecido para próximas expansiones SEO:**
-Páginas aún en SeoPage genérico (thin-content, candidatas a
-expandir con el mismo patrón): revisar cumpleanos-maipu,
-tortas-maipu, empanadas-maipu, pan-artesanal-maipu,
-delivery-maipu, distribucion-maipu.
-
----
-
-## Jornada 30-06-2026 (continuación) — Reposicionamiento SEO
-
-**Contexto:** Datos de Search Console (28 días) mostraron cannibalización
-entre /matrimonios-maipu y /coctel-maipu en la keyword "banquetería",
-oportunidad sin explotar en "banquetes maipú" (170 imp, posición 13,86,
-0 clics) y /empanadas-maipu con buena posición pero 0 clics
-(127 imp, posición 8,94).
-
-**Completado:**
-- ✅ feat: /coctel-maipu reposicionada como hub de banquetería
-  - Title: "Banquetería y Cóctel en Maipú · Bocados para Eventos · Galdi"
-  - H1, keywords, JSON-LD description y BreadcrumbList actualizados
-  - Nueva FAQ "¿Qué incluye la banquetería para eventos en Maipú?"
-    como primera pregunta
-
-- ✅ fix: /matrimonios-maipu acotada solo a torta de novios + mesa de dulces
-  - Eliminadas secciones "Bocados Salados" y "Barra de Tragos"
-    (array servicios + JSON-LD hasOfferCatalog)
-  - Agregado bloque de derivación a /coctel-maipu antes de FAQs
-  - Link "Ver diseños de torta de bodas →" en card Torta de Novios
-  - FAQs actualizadas (primera pregunta reescrita + nueva FAQ de
-    derivación a banquetería)
-
-- ✅ feat: /empanadas-maipu migrada de SeoPage genérico a página custom
-  - Schema: LocalBusiness + Bakery, FAQPage (5 preguntas),
-    BreadcrumbList
-  - Grid de 6 sabores: pino, queso, napolitana, vegetariana,
-    queso camarón, mariscos
-  - Pedido mínimo por docena, delivery, distribución a almacenes
-
-- ✅ feat: nueva página /tortas-bodas-maipu
-  - Diseños (rústico, elegante, minimalista) + decoración floral
-  - Sabores y rellenos (6: 3 Leches, Chocolate, Moka, Selva Negra,
-    Hojarasca, Piña)
-  - Tamaños S/M/L/XL según invitados
-  - Degustación previa, cómo cotizar, FAQ (5 preguntas)
-  - Internal links + link inverso desde /matrimonios-maipu
-  - Agregada a sitemap.xml
-
-**Incidente de deploy resuelto:**
-- /coctel-maipu no se actualizó en el primer deploy (commit f9935e2)
-  pese a que el código fuente era correcto. Causa: directorio out/
-  con caché de build anterior, Firebase calculó hashes como "sin
-  cambios" y saltó la subida del archivo.
-- Fix: rebuild limpio (rm -rf .next out) forzó a Firebase a subir
-  98 archivos. Commit 645bb6f.
-- Lección: ante discrepancias entre código y producción, primero
-  intentar rebuild limpio antes de asumir error de código.
+📄 **Detalle expandido de jornadas anteriores a 04-07-2026 → [CHANGELOG.md](./CHANGELOG.md)**
 
 ---
 
