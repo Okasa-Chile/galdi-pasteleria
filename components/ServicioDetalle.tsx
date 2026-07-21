@@ -443,7 +443,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
           width: 120%;
           height: 200%;
         }
-        .svc-prod-card { background: rgba(26,15,10,0.55); backdrop-filter: blur(4px); border: 1px solid rgba(212,168,83,0.15); display: flex; flex-direction: column; overflow: hidden; transition: border-color 0.25s; }
+        .svc-prod-card { position: relative; background: rgba(26,15,10,0.55); backdrop-filter: blur(4px); border: 1px solid rgba(212,168,83,0.15); display: flex; flex-direction: column; overflow: hidden; transition: border-color 0.25s; }
         .svc-prod-card:hover { border-color: rgba(212,168,83,0.4); }
         .svc-btn-add { background: #f0c040; border: none; color: #1a0f0a; font-weight: 600; font-family: var(--font-sans); font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.5rem; cursor: pointer; width: 100%; transition: background 0.2s; }
         .svc-btn-add:hover { background: var(--terracota); color: var(--cream); }
@@ -749,6 +749,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
               const enCarrito = carrito[carritoKey] ?? 0;
               const min = getMinimo(activeTab, prod.unidad, prod.nombre, id);
               const label = getLabelMinimo(activeTab, prod.unidad, prod.nombre, id);
+              const esArmaTuTorta = prod.nombre === 'Arma tu Torta';
               const card = (
                 <div key={prod.nombre} className="svc-prod-card">
                   {/* Imagen */}
@@ -758,7 +759,15 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                   {/* Nombre + mínimo + selector talla */}
                   <div style={{ padding: '0.4rem 0.5rem 0.3rem', flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '6px' }}>
                     <div>
-                      <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: 'var(--cream)', fontWeight: 500, margin: 0, lineHeight: 1.3 }}>{prod.nombreVisible ?? prod.nombre}</p>
+                      {esArmaTuTorta ? (
+                        <Link href="/arma-tu-torta" style={{ textDecoration: 'none', color: 'inherit' }}>
+                          {/* Pseudo-elemento: hace clickeable toda la tarjeta (menos los botones, que van con z-index superior) */}
+                          <span aria-hidden="true" style={{ position: 'absolute', inset: 0, zIndex: 0 }} />
+                          <p style={{ position: 'relative', zIndex: 1, fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: 'var(--cream)', fontWeight: 500, margin: 0, lineHeight: 1.3 }}>{prod.nombreVisible ?? prod.nombre}</p>
+                        </Link>
+                      ) : (
+                        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: 'var(--cream)', fontWeight: 500, margin: 0, lineHeight: 1.3 }}>{prod.nombreVisible ?? prod.nombre}</p>
+                      )}
                       <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.6rem', color: 'rgba(212,168,83,0.7)', margin: '0.15rem 0 0', letterSpacing: '0.05em' }}>{label}</p>
                       {prod.detalle && (
                         <p style={{
@@ -773,7 +782,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                       )}
                     </div>
                     {esTorta && (
-                      <div style={{ display: 'flex', gap: '4px', flexShrink: 0, marginTop: '1px' }}>
+                      <div style={{ display: 'flex', gap: '4px', flexShrink: 0, marginTop: '1px', position: 'relative', zIndex: 1 }}>
                         {(() => {
                           let tallas: ('S'|'M'|'L'|'XL')[];
                           if (activeTab === 'Queques') tallas = ['S', 'M'];
@@ -857,19 +866,21 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                     );
                   })()}
                   {/* Botón agregar / contador */}
-                  {esTorta && !tallaSeleccionada ? (
-                    <button className="svc-btn-add" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
-                      Elige tamaño
-                    </button>
-                  ) : enCarrito === 0 ? (
-                    <button className="svc-btn-add" onClick={() => agregar(carritoKey, activeTab, prod.unidad)}><span style={{fontSize:'1rem'}}>🛒</span> AGREGAR</button>
-                  ) : (
-                    <div className="svc-counter">
-                      <button onClick={() => quitar(carritoKey, activeTab, prod.unidad)}>−</button>
-                      <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'var(--cream)' }}>{enCarrito} {pluralizar(enCarrito, (activeTab === 'Empanadas' && id === 'delivery') ? 'unidad' : prod.unidad)}</span>
-                      <button onClick={() => agregar(carritoKey, activeTab, prod.unidad)}>+</button>
-                    </div>
-                  )}
+                  <div style={{ position: 'relative', zIndex: 1 }}>
+                    {esTorta && !tallaSeleccionada ? (
+                      <button className="svc-btn-add" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+                        Elige tamaño
+                      </button>
+                    ) : enCarrito === 0 ? (
+                      <button className="svc-btn-add" onClick={() => agregar(carritoKey, activeTab, prod.unidad)}><span style={{fontSize:'1rem'}}>🛒</span> AGREGAR</button>
+                    ) : (
+                      <div className="svc-counter">
+                        <button onClick={() => quitar(carritoKey, activeTab, prod.unidad)}>−</button>
+                        <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'var(--cream)' }}>{enCarrito} {pluralizar(enCarrito, (activeTab === 'Empanadas' && id === 'delivery') ? 'unidad' : prod.unidad)}</span>
+                        <button onClick={() => agregar(carritoKey, activeTab, prod.unidad)}>+</button>
+                      </div>
+                    )}
+                  </div>
                   {/* Texto personas — solo tortas en delivery */}
                   {esTorta && (
                     <div className="talla-personas" style={{ color: tallaSeleccionada ? 'rgba(201,165,90,0.8)' : 'rgba(220,100,100,0.8)' }}>
@@ -878,11 +889,7 @@ export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClos
                   )}
                 </div>
               );
-              return prod.nombre === 'Arma tu Torta' ? (
-                <Link key={prod.nombre} href="/arma-tu-torta" style={{ textDecoration: 'none' }}>
-                  {card}
-                </Link>
-              ) : card;
+              return card;
             })}
           </div>
         )}

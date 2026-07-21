@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import ServicioDetalle from '@/components/ServicioDetalle';
@@ -45,7 +46,7 @@ export default function Home() {
             { label: 'Cumpleaños',  img: '/images/eventos-cumpleanos.webp', href: '/?servicio=eventos&tab=Cumplea%C3%B1os' },
             { label: 'Corporativos',img: '/images/Corporativo.webp',        href: '/?servicio=eventos&tab=Corporativos' },
           ].map((svc, i, arr) => (
-            <a key={svc.label} href={svc.href} style={{
+            <div key={svc.label} style={{
               position: 'relative',
               flex: 1,
               overflow: 'hidden',
@@ -56,8 +57,6 @@ export default function Home() {
                 : 'polygon(5% 0, 110% 0, 95% 100%, 0 100%)',
               marginLeft: i > 0 ? '-3.5%' : 0,
               zIndex: arr.length - i,
-              textDecoration: 'none',
-              display: 'block',
               transition: 'flex 0.4s ease',
             }}
             onMouseEnter={e => e.currentTarget.style.flex = '1.4'}
@@ -66,14 +65,23 @@ export default function Home() {
               <img src={svc.img} alt={svc.label} style={{ width: '115%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s', display: 'block' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(26,15,10,0.82) 0%, rgba(26,15,10,0.15) 55%)' }} />
               <div style={{ position: 'absolute', bottom: '1.75rem', left: '50%', transform: 'translateX(-50%)', textAlign: 'center' }}>
-                <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', fontWeight: 300, color: 'var(--cream)', letterSpacing: '0.08em', whiteSpace: 'nowrap', textShadow: '0 2px 12px rgba(0,0,0,0.6)', display: 'block', marginBottom: '0.4rem' }}>
-                  {svc.label}
-                </span>
+                <Link href={svc.href} style={{ textDecoration: 'none' }}>
+                  <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', fontWeight: 300, color: 'var(--cream)', letterSpacing: '0.08em', whiteSpace: 'nowrap', textShadow: '0 2px 12px rgba(0,0,0,0.6)', display: 'block', marginBottom: '0.4rem' }}>
+                    {svc.label}
+                  </span>
+                </Link>
                 <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.62rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold)', opacity: 0.9 }}>
                   Ver más →
                 </span>
               </div>
-            </a>
+              {/* Overlay clickable: mantiene toda la tarjeta clickeable sin sumar "Ver más →" al anchor text. aria-hidden + tabIndex -1 evitan foco/lectura duplicados (el label ya es un link accesible arriba) */}
+              <Link
+                href={svc.href}
+                aria-hidden="true"
+                tabIndex={-1}
+                style={{ position: 'absolute', inset: 0, zIndex: 0 }}
+              />
+            </div>
           ))}
         </div>
       </section>
@@ -98,7 +106,7 @@ export default function Home() {
           opacity: 0.35,
           pointerEvents: 'none',
         }}>
-          <img src="/images/arma-tu-torta/flor-esquina-izq-transparent.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          <img src="/images/arma-tu-torta/flor-esquina-izq-transparent.webp" alt="" role="presentation" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         </div>
         {/* Decoración floral derecha */}
         <div style={{
@@ -111,7 +119,7 @@ export default function Home() {
           opacity: 0.35,
           pointerEvents: 'none',
         }}>
-          <img src="/images/arma-tu-torta/flor-esquina-der-transparent.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          <img src="/images/arma-tu-torta/flor-esquina-der-transparent.webp" alt="" role="presentation" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         </div>
         <p style={{
           fontFamily: 'var(--font-sans)',
