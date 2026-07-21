@@ -218,6 +218,7 @@ galdi-nextjs/
 
 ## 📋 Historial de jornadas (resumen)
 
+- **20-07-2026** — 2 landings geo migradas a custom: cumpleanos-maipu (commit 593562e) y delivery-maipu como hub de derivación (commit 82c213a) · 3 fixes SEO (commit 1e7ef49): refactor tarjeta "Arma tu Torta" (HTML inválido resuelto, anchor 136→13 chars), Franja Eventos con stretched link pattern, role="presentation" en flores decorativas · scripts/analizar_anchors.mjs creado · decisiones de negocio: pan artesanal descartado del patrón SEO, pedido mínimo delivery $15.000, política de despacho actualizada (rangos, no montos fijos), TUU descartado
 - **24-06-2026** — 21 productos nuevos en Firestore: 12 Cóctel Salado + 5 Cóctel Dulce + 4 Tablas (solo precio venta, cóctel por unidad) · fix bug $36 gestion-index.html (logística 0 explícito + dropdown precio) · Flow.cl integración confirmada operativa
 - **12-06-2026** — Fase A completa: hook usePreciosGaldi.ts · precios por talla S/M/L/XL en catálogo /productos · nombreVisible pattern para nombres Firestore vs display · tallas corregidas en Firestore (10 tortas) · fix fecha "21 de junio" Día del Padre en Header/Banner/page · nueva página /dia-del-padre con JSON-LD y imagen torta-chocolate-hero.webp · SEO /productos: title, description y H1 invisible
 - **25-05-2026** — Reunión socias: aprobado carrito de compras con pago online vía Flow · Método de pago físico TUU (POS en proceso de compra) · Despacho Gran Santiago: $3.000 zonas cercanas (Maipú, Cerrillos, Pudahuel, Estación Central, Padre Hurtado, Lo Prado) / $5.000 zonas lejanas (resto Gran Santiago) · Retiro gratis en Maipú · Pago online 100% anticipado · Pendiente: precios catálogo (mañana) · Pendiente: crear cuenta Flow
@@ -717,6 +718,64 @@ en sesión aparte.
   actualizada (ver abajo)
 - Deploy: commit 82c213a
 
+### Fixes SEO — informe SEO Checker (Enlazado 82% → esperado ~100%)
+
+**Diagnóstico (commit 1e7ef49)**
+Se creó scripts/analizar_anchors.mjs (jsdom, instalado con
+--legacy-peer-deps por conflicto preexistente react ^19.2.1 vs 18.3.1
+en package-lock, no relacionado). Lee out/index.html tras un build y
+lista anchors repetidos/largos, enlaces con query params, e imágenes
+sin ALT.
+
+**FIX 1 — Refactor tarjeta "Arma tu Torta"** (components/ServicioDetalle.tsx)
+- Problema: el `<Link href="/arma-tu-torta">` envolvía TODA la tarjeta
+  (nombre, botones S/M/L, botón "Elige tamaño"). HTML inválido
+  (botones dentro de `<a>`) y anchor text de 136 caracteres.
+- Solución: patrón "linked card" adaptado a CSS inline. La tarjeta
+  contenedora tiene `position: relative`; el `<Link>` envuelve solo el
+  nombre y contiene un `<span aria-hidden position:absolute inset:0
+  zIndex:0>` como pseudo-elemento que hace toda la card clickeable.
+  Botones S/M/L y "Elige tamaño"/"AGREGAR" con `position:relative;
+  zIndex:1` para quedar por encima y capturar sus propios clicks.
+- Resultado: anchor text bajó de 136 a ~13 caracteres. Botones
+  interactivos funcionan sin navegar; click en nombre o área vacía sí
+  navega a /arma-tu-torta.
+
+**FIX 2 — Franja Eventos** (app/page.tsx)
+- Problema: 4 paneles diagonales (Matrimonios/Cóctel/Cumpleaños/
+  Corporativos) con anchor text "MatrimoniosVer más →" (label + CTA
+  concatenados).
+- Solución: contenedor pasó de `<a>` a `<div>`; el `<span>{svc.label}</span>`
+  ahora va envuelto en un `<Link>` propio (anchor corto: "Matrimonios",
+  "Cóctel", etc.); "Ver más →" queda como `<span>` plano fuera del link.
+- Trade-off documentado: el patrón "linked card" del FIX 1 no aplicaba
+  aquí porque el wrapper del label ya tenía `position:absolute` (el
+  pseudo-elemento habría quedado anclado a un área pequeña). Se usó
+  el patrón alternativo "stretched link" (Bootstrap): un segundo
+  `<Link>` vacío, `position:absolute inset:0`, `aria-hidden="true"` y
+  `tabIndex={-1}`, hijo directo del panel — cubre toda la tarjeta para
+  click/tap y queda invisible para lectores de pantalla y navegación
+  por teclado.
+- Consecuencia: aparecen 4 anchors nuevos "sin texto" en el
+  diagnóstico. Checkers modernos que respetan aria-hidden (Google,
+  Seobility) NO deberían marcarlos como problema; si Seobility lo
+  marca, es falso positivo aceptable.
+- NO se aplicó `rel="nofollow"` a los enlaces con query params
+  (?servicio=eventos&tab=X): son URLs internas legítimas de la SPA y
+  penalizarían el crawl.
+
+**FIX 3 — role="presentation" en flores decorativas** (app/page.tsx)
+- Problema: 2 imágenes decorativas (flor-esquina-izq/der-transparent
+  .webp) con `alt=""` (correcto WCAG para decorativas) que el SEO
+  Checker reporta como "sin descripción ALT" al no distinguir entre
+  atributo ausente y alt vacío deliberado.
+- Solución: agregado `role="presentation"` junto al `alt=""` existente.
+  Es la recomendación WAI-ARIA para imágenes puramente decorativas
+  y muchos checkers modernos lo reconocen.
+
+Deploy conjunto de los 3 fixes: commit 1e7ef49 (git add selectivo
+excluyendo .claude/settings.local.json).
+
 ### Decisiones de negocio
 
 - **pan-artesanal-maipu**: NO se expandirá con el patrón SEO (mucho
@@ -744,11 +803,25 @@ en sesión aparte.
   Posible pendiente futuro: mejorar el registro de pedidos para pagos
   presenciales.
 
+### Regla operativa reforzada (14-07-2026 → 20-07-2026)
+
+- CC levanta npm run dev y lo deja corriendo.
+- La verificación visual en localhost la hace Claudio personalmente.
+- CC NO usa herramientas de navegador/Chrome DevTools (consume mucho
+  contexto/costo en la sesión).
+- En reportes, CC se limita a: qué compiló, qué pasó el chequeo de
+  TypeScript, y detalle de los cambios de código — sin afirmaciones
+  sobre comportamiento visual verificado por él.
+
 ### SEO
 - Indexación manual solicitada en Search Console para /cumpleanos-maipu
   y /delivery-maipu.
+- Pendiente: re-correr SEO Checker sobre galdi.cl en unos días para
+  confirmar que el score de "Enlazado de la página" subió del 82%.
 
 ### Pendiente
 - distribucion-maipu no requiere trabajo adicional (ya redirige a "/").
 - Evaluar si el pedido mínimo de $15.000 se implementa como validación
-  real en el carrito/checkout.
+  real en el carrito/checkout con Flow.
+- Considerar agregar .claude/settings.local.json al .gitignore para
+  que no vuelva a aparecer en git status.
