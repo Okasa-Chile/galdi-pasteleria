@@ -844,7 +844,7 @@ window.renderPrecios = () => {
                 const precio6Un = Math.round(precioDocena / 2);
                 return `
                   <tr style="${bg};">
-                    <td rowspan="2" style="padding:8px;font-size:13px;vertical-align:middle;"><strong>${p.nombre}</strong></td>
+                    <td rowspan="2" style="padding:8px;font-size:13px;vertical-align:middle;"><strong>${escAttr(p.nombre)}</strong></td>
                     <td style="padding:8px;font-size:12px;color:var(--muted);">6 unidades</td>
                     <td colspan="5" style="padding:8px;font-size:13px;text-align:right;color:var(--green);"><strong>${fmt(precio6Un)}</strong></td>
                   </tr>
@@ -860,7 +860,7 @@ window.renderPrecios = () => {
               const tieneTallas = pS || pM || pL || pXL;
               const esQuequeLP = p.cat === 'Queques & Muffins' && p.nombre !== 'Muffins';
               const filaMain = `<tr style="${bg};">
-                <td style="padding:8px;font-size:13px;"><strong>${p.nombre}</strong></td>
+                <td style="padding:8px;font-size:13px;"><strong>${escAttr(p.nombre)}</strong></td>
                 <td style="padding:8px;font-size:12px;color:var(--muted);">${p.unidad}</td>
                 <td style="padding:8px;font-size:13px;text-align:right;">
                   ${tieneTallas ? '—' : `<strong>${fmt(p.precio)}</strong>`}
@@ -1196,7 +1196,7 @@ window.presCargarProductos = (catSel) => {
   }
   const filtrados = prods.filter(p => (p.cat || p.categoria) === cat);
   prodSel.innerHTML = '<option value="">-- Producto --</option>' +
-    filtrados.map(p => '<option value="' + (p.precio || cpx(p)) + '" data-cat="' + cat + '" data-original-nombre="' + p.nombre + '">' + p.nombre + '</option>').join('');
+    filtrados.map(p => '<option value="' + (p.precio || cpx(p)) + '" data-cat="' + escAttr(cat) + '" data-original-nombre="' + escAttr(p.nombre) + '">' + escAttr(p.nombre) + '</option>').join('');
   prodSel.disabled = false;
   prodSel.style.background = '';
   prodSel.style.color = '';
@@ -1571,7 +1571,7 @@ window.editarPresupuesto = async (docId) => {
               const fila = document.createElement('div');
               fila.style.cssText = 'display:flex;gap:6px;align-items:center;';
               fila.innerHTML =
-                '<input type="text" class="pack-prod-nombre" placeholder="Producto" style="flex:1;font-size:12px;" value="' + (p.nombre||'').replace(/"/g,'&quot;') + '">' +
+                '<input type="text" class="pack-prod-nombre" placeholder="Producto" style="flex:1;font-size:12px;" value="' + escAttr(p.nombre) + '">' +
                 '<input type="number" class="pack-prod-cant" min="1" value="' + (p.cantidadPorPack||1) + '" style="width:60px;font-size:12px;text-align:right;" title="Cantidad por pack">' +
                 '<span style="font-size:10px;color:var(--muted);white-space:nowrap;">x pack</span>' +
                 '<button type="button" onclick="this.closest(\'div\').remove()" style="background:none;border:none;color:#9b3a2a;cursor:pointer;font-size:14px;line-height:1;padding:2px 4px;">&#10005;</button>';
@@ -1673,7 +1673,7 @@ window.duplicarPresupuesto = async (docId) => {
               const fila = document.createElement('div');
               fila.style.cssText = 'display:flex;gap:6px;align-items:center;';
               fila.innerHTML =
-                '<input type="text" class="pack-prod-nombre" placeholder="Producto" style="flex:1;font-size:12px;" value="' + (p.nombre||'').replace(/"/g,'&quot;') + '">' +
+                '<input type="text" class="pack-prod-nombre" placeholder="Producto" style="flex:1;font-size:12px;" value="' + escAttr(p.nombre) + '">' +
                 '<input type="number" class="pack-prod-cant" min="1" value="' + (p.cantidadPorPack||1) + '" style="width:60px;font-size:12px;text-align:right;" title="Cantidad por pack">' +
                 '<span style="font-size:10px;color:var(--muted);white-space:nowrap;">x pack</span>' +
                 '<button type="button" onclick="this.closest(\'div\').remove()" style="background:none;border:none;color:#9b3a2a;cursor:pointer;font-size:14px;line-height:1;padding:2px 4px;">&#10005;</button>';
@@ -1835,9 +1835,9 @@ window.vistaPreviaPresupuesto = () => {
     const bg = i % 2 === 0 ? '#fdf8f2' : '#fff';
     const cs = 'padding:9px 12px;border-bottom:1px solid #ede3d4;';
     if (it.tipo === 'pack') {
-      const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${p.nombre} x${p.cantidadPorPack}`).join('<br>');
+      const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${escAttr(p.nombre)} x${p.cantidadPorPack}`).join('<br>');
       return `<tr style="background:${bg};">
-        <td style="${cs}"><strong>${it.nombrePack}</strong>${detalle?`<br><span style="font-size:11px;color:#888;">${detalle}</span>`:''}
+        <td style="${cs}"><strong>${escAttr(it.nombrePack)}</strong>${detalle?`<br><span style="font-size:11px;color:#888;">${detalle}</span>`:''}
         </td>
         <td style="${cs};text-align:center;">${it.cantidadPersonas}</td>
         <td style="${cs};text-align:right;">${fmtNum(it.precioPack)}</td>
@@ -1845,7 +1845,7 @@ window.vistaPreviaPresupuesto = () => {
       </tr>`;
     }
     return `<tr style="background:${bg};">
-      <td style="${cs}">${it.descripcion}</td>
+      <td style="${cs}">${escAttr(it.descripcion)}</td>
       <td style="${cs};text-align:center;">${it.cantidad}</td>
       <td style="${cs};text-align:right;">${fmtNum(it.precioUnit)}</td>
       <td style="${cs};text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
@@ -2086,9 +2086,9 @@ window.verPresupuesto = (docId) => {
         const bg = i%2===0?'var(--cream)':'#fff';
         const cs = 'padding:8px 10px;border-bottom:1px solid var(--border);';
         if (it.tipo === 'pack') {
-          const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${p.nombre} x${p.cantidadPorPack}`).join('<br>');
+          const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${escAttr(p.nombre)} x${p.cantidadPorPack}`).join('<br>');
           return `<tr style="background:${bg};">
-            <td style="${cs}"><strong>${it.nombrePack||it.descripcion||'—'}</strong>${detalle?`<br><span style="font-size:11px;color:var(--muted);">${detalle}</span>`:''}
+            <td style="${cs}"><strong>${escAttr(it.nombrePack||it.descripcion||'—')}</strong>${detalle?`<br><span style="font-size:11px;color:var(--muted);">${detalle}</span>`:''}
             </td>
             <td style="${cs};text-align:center;">${it.cantidadPersonas||it.cantidad}</td>
             <td style="${cs};text-align:right;">${fmtNum(it.precioPack||it.precioUnit)}</td>
@@ -2096,7 +2096,7 @@ window.verPresupuesto = (docId) => {
           </tr>`;
         }
         return `<tr style="background:${bg};">
-          <td style="${cs}">${it.descripcion||'—'}</td>
+          <td style="${cs}">${escAttr(it.descripcion||'—')}</td>
           <td style="${cs};text-align:center;">${it.cantidad}</td>
           <td style="${cs};text-align:right;">${fmtNum(it.precioUnit)}</td>
           <td style="${cs};text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
@@ -2151,9 +2151,9 @@ window.vistaPreviaDesdeHistorial = (docId) => {
     const bg = i % 2 === 0 ? '#fdf8f2' : '#fff';
     const cs = 'padding:9px 12px;border-bottom:1px solid #ede3d4;';
     if (it.tipo === 'pack') {
-      const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${p.nombre} x${p.cantidadPorPack}`).join('<br>');
+      const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${escAttr(p.nombre)} x${p.cantidadPorPack}`).join('<br>');
       return `<tr style="background:${bg};">
-        <td style="${cs}"><strong>${it.nombrePack||it.descripcion||'—'}</strong>${detalle?`<br><span style="font-size:11px;color:#888;">${detalle}</span>`:''}
+        <td style="${cs}"><strong>${escAttr(it.nombrePack||it.descripcion||'—')}</strong>${detalle?`<br><span style="font-size:11px;color:#888;">${detalle}</span>`:''}
         </td>
         <td style="${cs};text-align:center;">${it.cantidadPersonas||it.cantidad}</td>
         <td style="${cs};text-align:right;">${fmtNum(it.precioPack||it.precioUnit)}</td>
@@ -2161,7 +2161,7 @@ window.vistaPreviaDesdeHistorial = (docId) => {
       </tr>`;
     }
     return `<tr style="background:${bg};">
-      <td style="${cs}">${it.descripcion || '—'}</td>
+      <td style="${cs}">${escAttr(it.descripcion || '—')}</td>
       <td style="${cs};text-align:center;">${it.cantidad}</td>
       <td style="${cs};text-align:right;">${fmtNum(it.precioUnit)}</td>
       <td style="${cs};text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
@@ -2316,7 +2316,7 @@ window.renderT = () => {
     const tallasDisp = esTortaOPastel ? (['S','M','L'].concat(!!(COSTOS_TALLA[p.nombre]?.XL || p.nombre==='Torta Panqueque') ? ['XL'] : [])) : [];
     const badgeTallas=esTortaOPastel?`<div style="margin-top:4px;display:flex;gap:4px;" onclick="event.stopPropagation()">${tallasDisp.map(t=>`<span style="font-size:10px;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">${t}</span>`).join('')}</div>`:esQueque?`<div style="margin-top:4px;display:flex;gap:4px;" onclick="event.stopPropagation()">${['S','M'].map(t=>`<span style="font-size:10px;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">${t}</span>`).join('')}</div>`:''
     return `<tr class="${sel?.id===p.id?'selected':''}" onclick="selProd(${p.id})" style="cursor:pointer;">
-      <td><strong>${p.nombre}</strong>${badgeTallas}</td>
+      <td><strong>${escAttr(p.nombre)}</strong>${badgeTallas}</td>
       <td><span class="tag tag-${p.tipo}">${p.tipo==='propio'?'Propio':'Reventa'}</span></td>
       <td>${p.unidad}</td>
       <td style="color:${mr>=15?'#4a7c59':'#9b3a2a'}">${mr}%</td>
@@ -2574,7 +2574,7 @@ window.poblarProductos = () => {
   const filtrados = prods.filter(p => (p.cat || p.categoria) === mapacat[cat]);
   sel.innerHTML = '<option value="">— Elegir producto —</option>' +
     (filtrados.length
-      ? filtrados.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('')
+      ? filtrados.map(p => `<option value="${p.id}">${escAttr(p.nombre)}</option>`).join('')
       : '<option value="">Sin productos</option>');
   document.getElementById('v-m').value = '';
 };
@@ -2796,6 +2796,13 @@ window.renderC = () => {
 function g(id){return document.getElementById(id)?.value||0;}
 function s(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
 function fmt(n){return '$'+Math.round(n).toLocaleString('es-CL');}
+function escAttr(v) {
+  return String(v ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
 </script>
 </body>
 </html>
