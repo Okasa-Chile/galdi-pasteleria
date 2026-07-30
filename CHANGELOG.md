@@ -5,6 +5,80 @@ proyecto, consultar README.md.
 
 ---
 
+## Jornada 29-07-2026 — Fix escAttr en /gestion + migración IDs galdi_productos
+
+**Contexto:** Se agregaron 5 "tapaditos" nuevos a la categoría Cóctel
+Salado en `galdi_productos` (Firestore). Los 4 primeros se crearon con
+nombres entre comillas (ej. `Tapadito "Ave Pimentón"`), lo que rompía la
+construcción de HTML en `/gestion` (atributos `data-original-nombre` /
+`data-cat` quedaban mal cerrados). Al investigar se detectó un problema
+más profundo: todos los productos creados por script desde el
+24-06-2026 en adelante (26 documentos, incluyendo los 12 originales de
+Cóctel Salado/Dulce/Tablas) se habían guardado con `.add()` sin campo
+`id`, dejando `p.id` como `undefined`.
+
+**Completado:**
+- ✅ feat: 5 productos nuevos en Cóctel Salado — Tapadito Ave Pimentón,
+  Tapadito Huevito Especias, Tapadito Jamón Queso, Tapadito Churrasco
+  Tomate Lechuga, Tapadito Clásico — todos a $650. Los 4 primeros se
+  renombraron para quitar las comillas del nombre (rompían atributos
+  HTML).
+- ✅ fix: bug de comillas/`&` sin escapar rompiendo atributos y markup
+  en `/gestion` (`public/gestion/index.html`). Se agregó el helper
+  `escAttr()` junto a los demás helpers (`g`, `s`, `fmt`) y se aplicó en
+  todos los puntos donde se inyecta nombre de producto o texto libre del
+  cliente dentro de HTML: `presCargarProductos` (options del selector de
+  productos), tabla de catálogo (Tab 1), tabla de precios (Tab Precios),
+  selector de Tab Ventas, y las tres vistas de presupuesto
+  (`vistaPreviaPresupuesto`, `verPresupuesto`,
+  `vistaPreviaDesdeHistorial`) incluyendo nombre de cliente, teléfono,
+  email, RUT, dirección, comuna y observaciones — estos son campos que
+  escriben Jacqueline e Ingrid a mano, así que una dirección con
+  comillas o un "&" en el nombre rompía la vista igual que pasó con los
+  tapaditos.
+- ✅ fix: migración de 26 documentos de `galdi_productos` sin campo
+  `id` (todos los agregados por script desde el 24-06-2026). Cada uno
+  se migró a un nuevo doc con ID = `String(id)` (usando
+  `id = Date.now() + i` como base), verificando que el nuevo documento
+  quedara escrito correctamente antes de borrar el antiguo. Respaldo
+  completo de los 62 documentos previo a la migración en
+  `backups/backup_galdi_productos_2026-07-29.json` (carpeta agregada a
+  `.gitignore`, no se sube al repo por contener datos del negocio).
+- ✅ cleanup: eliminado `public/gestion/gestion-unificado.html` — no
+  tenía ninguna referencia en el repo ni en `firebase.json` (el único
+  archivo que se sirve en `/gestion` es `index.html`, copiado
+  manualmente a `out/gestion/` antes de cada deploy). Era código
+  muerto de una iteración anterior.
+
+**Patrón crítico para `galdi_productos` (dejar explícito para futuras
+jornadas):**
+- El campo `id` es la llave primaria real que usan `fsSaveProd` y
+  `fsDeleteProd` (`doc(db,'galdi_productos', String(p.id))`) — el ID
+  del documento de Firestore **debe** ser `String(id)`.
+- **Nunca** crear productos nuevos con `.add()` sin campo `id` — el
+  documento queda editable desde `/gestion` pero cualquier edición
+  posterior desde el Tab 1 escribiría en un documento nuevo
+  (`galdi_productos/undefined` en el peor caso), duplicando o
+  corrompiendo el catálogo.
+- Los productos nuevos deben crearse con `id = Date.now()` (mismo
+  patrón que usa la propia app al guardar desde el Tab 1) y
+  `setDoc(doc(db,'galdi_productos', String(id)), {...datos, id})`.
+
+**Bugs conocidos pendientes (no corregidos en esta jornada):**
+- `exportarPreciosExcel` arma el CSV con
+  `` `"${cat}","${p.nombre}",...` `` sin escapar comillas ni comas — un
+  nombre de producto con `"` o `,` rompe columnas del CSV exportado.
+  Es un problema de escaping de CSV, distinto al de HTML corregido
+  aquí.
+- El editor de presupuestos (`editarPresupuesto` y
+  `duplicarPresupuesto`) reconstruye todas las líneas en modo manual
+  (`presSetModo(btnManual, 'manual')`), perdiendo el vínculo con el
+  producto original del catálogo (`prodSel` / `data-original-nombre`).
+  Al editar o duplicar un presupuesto, el precio ya no se recalcula
+  automáticamente si cambia el precio del producto en el catálogo.
+
+---
+
 ## Jornada 30-06-2026 (continuación) — Reposicionamiento SEO
 
 **Contexto:** Datos de Search Console (28 días) mostraron cannibalización

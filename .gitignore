@@ -45,6 +45,9 @@ next-env.d.ts
 
 repomix-output.xml
 
+# Respaldos de datos (Firestore, etc.) — contienen datos del negocio, no versionar
+/backups/
+
 # Claude Code worktrees
 .claude/worktrees/
 # Skills instalados manualmente (pruebas locales, no versionar)

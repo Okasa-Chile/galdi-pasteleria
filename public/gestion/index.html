@@ -1864,11 +1864,11 @@ window.vistaPreviaPresupuesto = () => {
 
   // Filas info cliente extra
   const extraCliente = [
-    telefono  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${fmtTel(telefono)}</td></tr>` : '',
-    email     ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${email}</td></tr>` : '',
-    rut       ? `<tr><td style="color:#888;padding:2px 0;">RUT</td><td style="padding:2px 0;">${rut}</td></tr>` : '',
-    direccion ? `<tr><td style="color:#888;padding:2px 0;">Dirección</td><td style="padding:2px 0;">${direccion}</td></tr>` : '',
-    comuna    ? `<tr><td style="color:#888;padding:2px 0;">Comuna</td><td style="padding:2px 0;">${comuna}</td></tr>` : '',
+    telefono  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${escAttr(fmtTel(telefono))}</td></tr>` : '',
+    email     ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${escAttr(email)}</td></tr>` : '',
+    rut       ? `<tr><td style="color:#888;padding:2px 0;">RUT</td><td style="padding:2px 0;">${escAttr(rut)}</td></tr>` : '',
+    direccion ? `<tr><td style="color:#888;padding:2px 0;">Dirección</td><td style="padding:2px 0;">${escAttr(direccion)}</td></tr>` : '',
+    comuna    ? `<tr><td style="color:#888;padding:2px 0;">Comuna</td><td style="padding:2px 0;">${escAttr(comuna)}</td></tr>` : '',
   ].join('');
 
   // Filas datos del evento
@@ -1917,7 +1917,7 @@ window.vistaPreviaPresupuesto = () => {
   <div style="background:#fdf8f2;border:1px solid #ede3d4;border-radius:6px;padding:14px 18px;margin-bottom:24px;">
     <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#C9A55A;margin-bottom:8px;">Datos del Cliente</div>
     <table style="font-size:13px;">
-      <tr><td style="color:#888;padding:2px 0;width:130px;">Nombre</td><td style="padding:2px 0;font-weight:600;">${cliente}</td></tr>
+      <tr><td style="color:#888;padding:2px 0;width:130px;">Nombre</td><td style="padding:2px 0;font-weight:600;">${escAttr(cliente)}</td></tr>
       ${extraCliente}
     </table>
   </div>
@@ -1966,7 +1966,7 @@ window.vistaPreviaPresupuesto = () => {
   </table>
 
   <!-- Observaciones -->
-  ${obs ? `<div style="border:1px solid #ede3d4;border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#666;"><strong style="color:#3D1F0A;">Observaciones:</strong> ${obs}</div>` : ''}
+  ${obs ? `<div style="border:1px solid #ede3d4;border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#666;"><strong style="color:#3D1F0A;">Observaciones:</strong> ${escAttr(obs)}</div>` : ''}
 
   <!-- Pie -->
   <div style="border-top:1px solid #ede3d4;padding-top:14px;font-size:11px;color:#aaa;text-align:center;">
@@ -2042,7 +2042,7 @@ window.verPresupuesto = (docId) => {
     const [y, m, d] = v.split('-');
     return `${d}/${m}/${y}`;
   };
-  const campo = (label, val) => val ? `<div style="display:flex;gap:8px;font-size:13px;margin-bottom:4px;"><span style="color:var(--muted);min-width:110px;">${label}</span><span>${val}</span></div>` : '';
+  const campo = (label, val) => val ? `<div style="display:flex;gap:8px;font-size:13px;margin-bottom:4px;"><span style="color:var(--muted);min-width:110px;">${label}</span><span>${escAttr(val)}</span></div>` : '';
 
   const items    = Array.isArray(data.items) ? data.items : [];
   const subtotal = data.subtotal  || 0;
@@ -2117,7 +2117,7 @@ window.verPresupuesto = (docId) => {
     <div style="background:var(--sand);border-radius:6px;padding:12px 14px;font-size:12px;">
       ${campo('Forma de pago', data.formaPago)}
       ${campo('Válido hasta', data.validoHasta ? fmtFecha(data.validoHasta) : '')}
-      ${data.observaciones ? `<div style="margin-top:6px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;">Observaciones</div><div style="font-size:12px;color:var(--brown);margin-top:4px;">${data.observaciones}</div>` : ''}
+      ${data.observaciones ? `<div style="margin-top:6px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;">Observaciones</div><div style="font-size:12px;color:var(--brown);margin-top:4px;">${escAttr(data.observaciones)}</div>` : ''}
     </div>` : ''}
   `;
 
@@ -2177,10 +2177,10 @@ window.vistaPreviaDesdeHistorial = (docId) => {
   const fmtTel = t => t ? t.replace(/^\+?56\s*/, '') : '';
 
   const extraCliente = [
-    data.telefono  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${fmtTel(data.telefono)}</td></tr>` : '',
-    data.email     ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${data.email}</td></tr>` : '',
-    data.direccion ? `<tr><td style="color:#888;padding:2px 0;">Dirección</td><td style="padding:2px 0;">${data.direccion}</td></tr>` : '',
-    data.comuna    ? `<tr><td style="color:#888;padding:2px 0;">Comuna</td><td style="padding:2px 0;">${data.comuna}</td></tr>` : '',
+    data.telefono  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${escAttr(fmtTel(data.telefono))}</td></tr>` : '',
+    data.email     ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${escAttr(data.email)}</td></tr>` : '',
+    data.direccion ? `<tr><td style="color:#888;padding:2px 0;">Dirección</td><td style="padding:2px 0;">${escAttr(data.direccion)}</td></tr>` : '',
+    data.comuna    ? `<tr><td style="color:#888;padding:2px 0;">Comuna</td><td style="padding:2px 0;">${escAttr(data.comuna)}</td></tr>` : '',
   ].join('');
 
   const extraEvento = [
@@ -2224,7 +2224,7 @@ window.vistaPreviaDesdeHistorial = (docId) => {
   <div style="background:#fdf8f2;border:1px solid #ede3d4;border-radius:6px;padding:14px 18px;margin-bottom:24px;">
     <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#C9A55A;margin-bottom:8px;">Datos del Cliente</div>
     <table style="font-size:13px;">
-      <tr><td style="color:#888;padding:2px 0;width:130px;">Nombre</td><td style="padding:2px 0;font-weight:600;">${data.cliente}</td></tr>
+      <tr><td style="color:#888;padding:2px 0;width:130px;">Nombre</td><td style="padding:2px 0;font-weight:600;">${escAttr(data.cliente)}</td></tr>
       ${extraCliente}
     </table>
   </div>
@@ -2269,7 +2269,7 @@ window.vistaPreviaDesdeHistorial = (docId) => {
     </tr>
   </table>
 
-  ${data.observaciones ? `<div style="border:1px solid #ede3d4;border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#666;"><strong style="color:#3D1F0A;">Observaciones:</strong> ${data.observaciones}</div>` : ''}
+  ${data.observaciones ? `<div style="border:1px solid #ede3d4;border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#666;"><strong style="color:#3D1F0A;">Observaciones:</strong> ${escAttr(data.observaciones)}</div>` : ''}
 
   <div style="border-top:1px solid #ede3d4;padding-top:14px;font-size:11px;color:#aaa;text-align:center;">
     ${data.validoHasta ? 'Presupuesto válido hasta el ' + fmtFecha(data.validoHasta) + '.' : 'Presupuesto sujeto a disponibilidad.'}
