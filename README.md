@@ -1,5 +1,5 @@
 # AI_CONTEXT — Proyecto Galdi Pastelería
-> Registro de trabajo asistido por IA · Actualizado: 20 julio 2026
+> Registro de trabajo asistido por IA · Actualizado: 3 agosto 2026
 
 ---
 
@@ -120,7 +120,7 @@ galdi-nextjs/
 - 10+ landing pages SEO con JSON-LD
 
 ### Google Business Profile
-- Reseñas actuales: **71** (todas ⭐⭐⭐⭐⭐) · Nota promedio: **5.0**
+- Reseñas actuales: **72** (todas ⭐⭐⭐⭐⭐) · Nota promedio: **5.0**
 - Áreas de servicio: Maipú, Cerrillos, Pudahuel
 - Descripción optimizada · Menu link → galdi.cl/productos
 
@@ -229,9 +229,11 @@ npm run start   # preview producción local
 | **WhatsApp** | +56 9 9099 1011 (wa.me/56990991011) |
 | **Email** | ventas@galdi.cl |
 | **Ubicación** | Pasaje Marcos Echenique N° 809, Las Palmas, Maipú |
-| **Código postal** | 9293891 |
+| **Código postal** | 9260057 |
 | **RUT empresa** | 78.378.827-6 (COMERCIALIZADORA Y DISTRIBUIDORA GALDI SpA) |
 | **Instagram** | @galdi_banqueteria |
+
+⚠️ Estos datos deben coincidir siempre con lib/businessSchema.ts y con Google Business Profile. Fuente de verdad para el schema del sitio: lib/businessSchema.ts
 
 ---
 
