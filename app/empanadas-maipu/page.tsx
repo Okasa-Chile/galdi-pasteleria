@@ -241,10 +241,16 @@ export default function EmpanadaMaipuPage() {
               Galdi · Productos · Empanadas
             </p>
             <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2rem, 5vw, 4rem)', fontWeight: 300, color: 'var(--cream)', lineHeight: 1.2, marginBottom: '1rem' }}>
-              Empanadas Artesanales en Maipú
+              {/* === FIESTAS PATRIAS 2026 — INICIO (revertir después del 18-09) === */}
+              {/* original: Empanadas Artesanales en Maipú */}
+              Empanadas por Docena para Fiestas Patrias en Maipú
+              {/* === FIESTAS PATRIAS 2026 — FIN === */}
             </h1>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(0.85rem, 2vw, 1rem)', color: 'rgba(245,230,211,0.85)', maxWidth: '600px' }}>
-              Hechas a mano con recetas familiares. Pedido por docena con delivery.
+              {/* === FIESTAS PATRIAS 2026 — INICIO (revertir después del 18-09) === */}
+              {/* original: Hechas a mano con recetas familiares. Pedido por docena con delivery. */}
+              Hechas a mano con recetas familiares. Desde $2.500 por unidad en pedidos de 3 o más docenas.
+              {/* === FIESTAS PATRIAS 2026 — FIN === */}
             </p>
           </div>
         </div>
