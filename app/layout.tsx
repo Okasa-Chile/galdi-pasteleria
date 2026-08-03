@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
+import { businessSchema } from "@/lib/businessSchema";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://galdi.cl'),
@@ -54,45 +55,9 @@ export default function RootLayout({
         <meta name="color-scheme" content="light only" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": ["Bakery", "LocalBusiness"],
-          "name": "Galdi SPA - Pastelería, Panadería, Eventos",
-          "description": "Pastelería y panadería artesanal en Maipú. Tortas, pan amasado, empanadas y banquetería para eventos. Delivery en Maipú y Gran Santiago.",
-          "url": "https://galdi.cl",
-          "telephone": "+56990991011",
-          "email": "ventas@galdi.cl",
-          "priceRange": "$$",
-          "servesCuisine": "Pastelería Artesanal Chilena",
-          "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "Pasaje Marcos Echenique N° 809",
-            "addressLocality": "Las Palmas, Maipú",
-            "addressRegion": "Región Metropolitana",
-            "postalCode": "9293891",
-            "addressCountry": "CL"
-          },
-          "geo": {
-            "@type": "GeoCoordinates",
-            "latitude": -33.4776144,
-            "longitude": -70.7521309
-          },
-          "openingHoursSpecification": [{
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
-            "opens": "09:00",
-            "closes": "19:00"
-          }],
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "5.0",
-            "reviewCount": "54",
-            "bestRating": "5",
-            "worstRating": "1"
-          },
-          "sameAs": [
-            "https://www.instagram.com/galdi_banqueteria/",
-            "https://www.google.com/maps?cid=15591011647306482666"
-          ],
-          "areaServed": ["Maipú","Cerrillos","Pudahuel","Estación Central","Padre Hurtado","Lo Prado"]
+          ...businessSchema({
+            description: "Pastelería y panadería artesanal en Maipú. Tortas, pan amasado, empanadas y banquetería para eventos. Delivery en Maipú y Gran Santiago.",
+          }),
         })}} />
       </head>
       <body>

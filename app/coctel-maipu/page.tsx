@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import { businessSchema } from '@/lib/businessSchema';
 
 export const metadata: Metadata = {
   title: 'Banquetería y Cóctel en Maipú · Bocados para Eventos · Galdi',
@@ -39,31 +40,10 @@ const faqs = [
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
-    {
-      '@type': ['LocalBusiness', 'Bakery'],
-      '@id': 'https://galdi.cl/#business',
-      name: 'Galdi Pastelería Artesanal',
+    businessSchema({
+      url: 'https://galdi.cl/coctel-maipu',
       description:
         'Banquetería artesanal en Maipú para matrimonios, cumpleaños y eventos corporativos: cóctel, canapés, tapaditos, mini empanadas, brochetas y postres individuales elaborados el mismo día. Presentación elegante. Factura electrónica disponible.',
-      url: 'https://galdi.cl/coctel-maipu',
-      telephone: '+56990991011',
-      email: 'ventas@galdi.cl',
-      priceRange: '$$',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: 'Pasaje Marcos Echenique 809',
-        addressLocality: 'Maipú',
-        addressRegion: 'Región Metropolitana',
-        postalCode: '9250000',
-        addressCountry: 'CL',
-      },
-      areaServed: [
-        { '@type': 'City', name: 'Maipú' },
-        { '@type': 'City', name: 'Cerrillos' },
-        { '@type': 'City', name: 'Pudahuel' },
-        { '@type': 'City', name: 'Estación Central' },
-      ],
-      servesCuisine: 'Chilean',
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Cóctel Dulce y Salado',
@@ -133,8 +113,7 @@ const jsonLd = {
           },
         ],
       },
-      sameAs: 'https://share.google/s9CQErdNSBOZ8y15P',
-    },
+    }),
     {
       '@type': 'FAQPage',
       mainEntity: faqs.map((f) => ({
@@ -203,7 +182,7 @@ const ventajas = [
   'Variedad de bocados dulces y salados según tu evento.',
   'Factura electrónica disponible para empresas y particulares.',
   'Entrega puntual en Maipú, Cerrillos, Pudahuel y Estación Central.',
-  'Atención directa con las socias fundadoras: Jaqueline e Ingrid.',
+  'Atención directa con las socias fundadoras: Jacqueline e Ingrid.',
 ];
 
 const pasos = [

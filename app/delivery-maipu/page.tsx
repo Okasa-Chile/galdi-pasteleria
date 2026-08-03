@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import { businessSchema } from '@/lib/businessSchema';
 
 export const metadata: Metadata = {
   title: 'Delivery de Pasteles y Tortas en Maipú · Galdi',
@@ -39,35 +40,11 @@ const faqs = [
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
-    {
-      '@type': ['LocalBusiness', 'Bakery'],
-      '@id': 'https://galdi.cl/#business',
-      name: 'Galdi Pastelería Artesanal',
+    businessSchema({
+      url: 'https://galdi.cl/delivery-maipu',
       description:
         'Pastelería artesanal en Maipú con delivery de tortas, empanadas, pan artesanal, cumpleaños y cóctel. Despacho en Maipú y comunas cercanas, con opción de pago online.',
-      url: 'https://galdi.cl/delivery-maipu',
-      telephone: '+56990991011',
-      email: 'ventas@galdi.cl',
-      priceRange: '$$',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: 'Pasaje Marcos Echenique 809',
-        addressLocality: 'Maipú',
-        addressRegion: 'Región Metropolitana',
-        postalCode: '9250000',
-        addressCountry: 'CL',
-      },
-      areaServed: [
-        { '@type': 'City', name: 'Maipú' },
-        { '@type': 'City', name: 'Cerrillos' },
-        { '@type': 'City', name: 'Pudahuel' },
-        { '@type': 'City', name: 'Estación Central' },
-        { '@type': 'City', name: 'Padre Hurtado' },
-        { '@type': 'City', name: 'Lo Prado' },
-      ],
-      servesCuisine: 'Chilean',
-      sameAs: 'https://share.google/s9CQErdNSBOZ8y15P',
-    },
+    }),
     {
       '@type': 'FAQPage',
       mainEntity: faqs.map((f) => ({

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import SeoPage from '@/components/SeoPage';
+import { businessSchema } from '@/lib/businessSchema';
 export const metadata: Metadata = {
   title: 'Panadería Artesanal Maipú · Pan Amasado, Marraqueta y más · Galdi',
   description: 'Pan amasado, marraqueta, dobladitas y tortilla con chicharrones hechos a mano en Maipú. Recetas familiares de generación en generación. Pedidos por WhatsApp con delivery.',
@@ -11,15 +12,10 @@ export default function Page() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
-        "@type": "FoodEstablishment",
-        "name": "Galdi Pastelería Artesanal",
-        "description": "Pan artesanal en Maipú: pan amasado, marraqueta, integral, dobladitas. Distribución fresca a almacenes.",
-        "url": "https://galdi.cl/pan-artesanal-maipu",
-        "telephone": "+56990991011",
-        "address": { "@type": "PostalAddress", "streetAddress": "Pasaje Marcos Echenique 809", "addressLocality": "Maipú", "addressRegion": "Región Metropolitana", "addressCountry": "CL" },
-        "servesCuisine": "Chilean",
-        "areaServed": "Maipú",
-        "sameAs": "https://share.google/s9CQErdNSBOZ8y15P"
+        ...businessSchema({
+          url: "https://galdi.cl/pan-artesanal-maipu",
+          description: "Pan artesanal en Maipú: pan amasado, marraqueta, integral, dobladitas. Distribución fresca a almacenes.",
+        }),
       })}} />
       <SeoPage
         titulo="Pan Artesanal en Maipú"

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import { businessSchema } from '@/lib/businessSchema';
 
 export const metadata: Metadata = {
   title: 'Torta de Novios y Matrimonios en Maipú · Mesa de Dulces · Galdi',
@@ -51,31 +52,10 @@ const faqs = [
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
-    {
-      '@type': ['LocalBusiness', 'FoodEstablishment'],
-      '@id': 'https://galdi.cl/#business',
-      name: 'Galdi Pastelería Artesanal',
+    businessSchema({
+      url: 'https://galdi.cl/matrimonios-maipu',
       description:
         'Pastelería artesanal en Maipú especializada en banquetería para matrimonios: tortas de novios personalizadas, mesa de dulces artesanales y bocados salados. Recetas familiares sin conservantes artificiales.',
-      url: 'https://galdi.cl/matrimonios-maipu',
-      telephone: '+56990991011',
-      email: 'ventas@galdi.cl',
-      priceRange: '$$',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: 'Pasaje Marcos Echenique 809',
-        addressLocality: 'Maipú',
-        addressRegion: 'Región Metropolitana',
-        postalCode: '9250000',
-        addressCountry: 'CL',
-      },
-      areaServed: [
-        { '@type': 'City', name: 'Maipú' },
-        { '@type': 'City', name: 'Cerrillos' },
-        { '@type': 'City', name: 'Pudahuel' },
-        { '@type': 'City', name: 'Estación Central' },
-      ],
-      servesCuisine: 'Chilean',
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Banquetería para Matrimonios',
@@ -109,8 +89,7 @@ const jsonLd = {
           },
         ],
       },
-      sameAs: 'https://share.google/s9CQErdNSBOZ8y15P',
-    },
+    }),
     {
       '@type': 'FAQPage',
       mainEntity: faqs.map((f) => ({
@@ -165,7 +144,7 @@ const ventajas = [
   'Personalización completa en tortas, decoración y sabores según tus preferencias.',
   'Entrega a domicilio en Maipú, Cerrillos, Pudahuel y Estación Central.',
   'Cotización sin compromiso y degustación previa disponible para matrimonios.',
-  'Atención directa con las socias fundadoras: Jaqueline e Ingrid Gálvez Díaz.',
+  'Atención directa con las socias fundadoras: Jacqueline e Ingrid Gálvez Díaz.',
 ];
 
 const pasos = [

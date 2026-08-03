@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import { businessSchema } from '@/lib/businessSchema';
 
 export const metadata: Metadata = {
   /* === FIESTAS PATRIAS 2026 — INICIO (revertir después del 18-09) === */
@@ -54,31 +55,10 @@ const faqs = [
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
-    {
-      '@type': ['LocalBusiness', 'Bakery'],
-      '@id': 'https://galdi.cl/#business',
-      name: 'Galdi Pastelería Artesanal',
+    businessSchema({
+      url: 'https://galdi.cl/empanadas-maipu',
       description:
         'Pastelería artesanal en Maipú especializada en empanadas hechas a mano: pino, napolitana, vegetariana, queso camarón y mariscos. Pedido mínimo por docena. Delivery en Maipú y comunas cercanas.',
-      url: 'https://galdi.cl/empanadas-maipu',
-      telephone: '+56990991011',
-      email: 'ventas@galdi.cl',
-      priceRange: '$$',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: 'Pasaje Marcos Echenique 809',
-        addressLocality: 'Maipú',
-        addressRegion: 'Región Metropolitana',
-        postalCode: '9250000',
-        addressCountry: 'CL',
-      },
-      areaServed: [
-        { '@type': 'City', name: 'Maipú' },
-        { '@type': 'City', name: 'Cerrillos' },
-        { '@type': 'City', name: 'Pudahuel' },
-        { '@type': 'City', name: 'Estación Central' },
-      ],
-      servesCuisine: 'Chilean',
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Empanadas Artesanales',
@@ -133,8 +113,7 @@ const jsonLd = {
           },
         ],
       },
-      sameAs: 'https://share.google/s9CQErdNSBOZ8y15P',
-    },
+    }),
     {
       '@type': 'FAQPage',
       mainEntity: faqs.map((f) => ({
@@ -193,7 +172,7 @@ const ventajas = [
   'Pedido por docena: puedes combinar sabores según tus preferencias.',
   'Delivery en Maipú, Cerrillos, Pudahuel, Estación Central, Padre Hurtado y Lo Prado.',
   'Disponibles para eventos, fechas patrias, almacenes y distribución regular.',
-  'Atención directa con las socias fundadoras: Jaqueline e Ingrid.',
+  'Atención directa con las socias fundadoras: Jacqueline e Ingrid.',
 ];
 
 const pasos = [

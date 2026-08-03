@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import { businessSchema } from '@/lib/businessSchema';
 
 export const metadata: Metadata = {
   title: 'Cumpleaños en Maipú: Torta y Mesa de Dulces · Galdi',
@@ -35,31 +36,10 @@ const faqs = [
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
-    {
-      '@type': ['LocalBusiness', 'Bakery'],
-      '@id': 'https://galdi.cl/#business',
-      name: 'Galdi Pastelería Artesanal',
+    businessSchema({
+      url: 'https://galdi.cl/cumpleanos-maipu',
       description:
         'Pastelería artesanal en Maipú especializada en celebraciones de cumpleaños: torta personalizada y mesa de dulces artesanal elaboradas el mismo día. Delivery en Maipú y comunas cercanas.',
-      url: 'https://galdi.cl/cumpleanos-maipu',
-      telephone: '+56990991011',
-      email: 'ventas@galdi.cl',
-      priceRange: '$$',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: 'Pasaje Marcos Echenique 809',
-        addressLocality: 'Maipú',
-        addressRegion: 'Región Metropolitana',
-        postalCode: '9250000',
-        addressCountry: 'CL',
-      },
-      areaServed: [
-        { '@type': 'City', name: 'Maipú' },
-        { '@type': 'City', name: 'Cerrillos' },
-        { '@type': 'City', name: 'Pudahuel' },
-        { '@type': 'City', name: 'Estación Central' },
-      ],
-      servesCuisine: 'Chilean',
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Mesa de Dulces para Cumpleaños',
@@ -96,8 +76,7 @@ const jsonLd = {
           },
         ],
       },
-      sameAs: 'https://share.google/s9CQErdNSBOZ8y15P',
-    },
+    }),
     {
       '@type': 'FAQPage',
       mainEntity: faqs.map((f) => ({

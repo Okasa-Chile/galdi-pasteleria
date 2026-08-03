@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import { businessSchema } from '@/lib/businessSchema';
 
 export const metadata: Metadata = {
   title: 'Torta de Bodas y Novios en Maipú · Diseños a Medida · Galdi',
@@ -35,31 +36,10 @@ const faqs = [
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
-    {
-      '@type': ['LocalBusiness', 'Bakery'],
-      '@id': 'https://galdi.cl/#business',
-      name: 'Galdi Pastelería Artesanal',
+    businessSchema({
+      url: 'https://galdi.cl/tortas-bodas-maipu',
       description:
         'Pastelería artesanal en Maipú especializada en tortas de bodas y novios personalizadas: diseños a medida, degustación previa sin costo, entrega el día del matrimonio.',
-      url: 'https://galdi.cl/tortas-bodas-maipu',
-      telephone: '+56990991011',
-      email: 'ventas@galdi.cl',
-      priceRange: '$$',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: 'Pasaje Marcos Echenique 809',
-        addressLocality: 'Maipú',
-        addressRegion: 'Región Metropolitana',
-        postalCode: '9250000',
-        addressCountry: 'CL',
-      },
-      areaServed: [
-        { '@type': 'City', name: 'Maipú' },
-        { '@type': 'City', name: 'Cerrillos' },
-        { '@type': 'City', name: 'Pudahuel' },
-        { '@type': 'City', name: 'Estación Central' },
-      ],
-      servesCuisine: 'Chilean',
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Tortas de Bodas Personalizadas',
@@ -90,8 +70,7 @@ const jsonLd = {
           },
         ],
       },
-      sameAs: 'https://share.google/s9CQErdNSBOZ8y15P',
-    },
+    }),
     {
       '@type': 'FAQPage',
       mainEntity: faqs.map((f) => ({
