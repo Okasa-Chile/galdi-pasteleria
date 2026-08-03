@@ -258,6 +258,115 @@ npm run start   # preview producción local
 
 ---
 
+## Jornada 03-08-2026
+
+### Fiestas Patrias 2026 — bloque temporal en /empanadas-maipu
+
+Decisión estratégica previa: se evaluó con estudio de mercado la creación de
+DOS líneas nuevas. Resultado:
+- **Caja dieciochera de mercadería no perecible (modelo distribuidor/reventa):
+  DESCARTADA.** Razones: margen bruto ~7% (compra en segundo eslabón de la
+  cadena, no compite con supermercados), barrera sanitaria insalvable (requiere
+  resolución de "Bodega de Alimentos No Perecibles", 20-30 días hábiles de
+  tramitación = imposible para el 18-09-2026), ciclo de caja negativo por Ley
+  de Pago a 30 días, y falta de espacio físico (200 cajas = 5,4 m³).
+- **Cajas de empanadas por docena: APROBADA** (decisión previa, no dependía
+  del estudio).
+
+Decisión de implementación: NO se creó página nueva. Se enriqueció la página
+existente /empanadas-maipu para no fragmentar autoridad SEO.
+
+Diagnóstico GSC previo (últimos 3 meses, filtro página /empanadas-maipu):
+62 impresiones, 1 clic, posición media 8,02. Solo 2 consultas activas
+("empanadas maipu" pos 9,08 / "empanadas en maipu" pos 9,17). 92% del tráfico
+es móvil. Conclusión: la página está indexada y rankea, pero compite por
+keywords genéricas dominadas por el Local Pack. El bloque estacional busca
+capturar keywords de cola larga con menos competencia.
+
+Cambios aplicados (todos marcados con comentarios
+`/* === FIESTAS PATRIAS 2026 — INICIO (revertir después del 18-09) === */`):
+- Metadata: title, description y keywords estacionales (originales comentados)
+- H1 y subtítulo del hero con ángulo dieciochero + precio visible
+- Sección nueva con tabla de 2 tramos de precio mayorista
+- 3 FAQs nuevas al inicio del array (entran automáticamente al schema FAQPage)
+- Constante waUrlFiestasPatrias para CTA WhatsApp dedicado
+
+**Tabla de precios vigente (venta mayorista por docena):**
+| Volumen | Precio unidad | Precio docena |
+|---|---|---|
+| 1 a 2 docenas | $2.700 | $32.400 |
+| 3 o más docenas | $2.500 | $30.000 |
+
+⚠️ REVERSIÓN PENDIENTE después del 18-09-2026: buscar todos los comentarios
+`FIESTAS PATRIAS 2026` en app/empanadas-maipu/page.tsx y restaurar los valores
+originales comentados.
+
+### Auditoría del sitio — Bloque 1 y 4 (datos duros + consistencia técnica)
+
+Creado `lib/businessSchema.ts` como fuente única de verdad del schema
+LocalBusiness. Exporta `GALDI_BUSINESS` y el helper `businessSchema(overrides)`.
+
+11 archivos refactorizados para heredar de ahí (10 páginas + layout.tsx):
+layout, empanadas-maipu, tortas-bodas-maipu, cumpleanos-maipu, coctel-maipu,
+coffee-break-maipu, matrimonios-maipu, tortas-maipu, delivery-maipu,
+pan-artesanal-maipu.
+
+Errores corregidos:
+- **Código postal:** era 9250000 (código genérico de la comuna de Maipú) en 8
+  páginas. Corregido a **9260057**, que es el que Google Business Profile tiene
+  registrado para la dirección exacta. (Nota: 9293891 que figuraba en notas
+  internas tampoco coincidía con GBP.)
+- **Nombre del negocio:** unificado a **"Galdi SPA - Pastelería- Panadería -
+  Eventos"**, el nombre exacto de GBP (antes había dos variantes).
+- **Reseñas:** aggregateRating actualizado de 54 a **72** (dato real al
+  03-08-2026).
+- **Dirección:** unificada a "Pasaje Marcos Echenique N° 809" +
+  addressLocality "Las Palmas, Maipú".
+- **areaServed:** de 4 a 6 comunas (agrega Padre Hurtado y Lo Prado).
+- **"Jaqueline" → "Jacqueline":** 4 ocurrencias corregidas (empanadas-maipu,
+  coctel-maipu, coffee-break-maipu, matrimonios-maipu).
+- **Tipos unificados:** matrimonios-maipu (era LocalBusiness+FoodEstablishment)
+  y pan-artesanal-maipu (era FoodEstablishment) ahora usan
+  ['LocalBusiness','Bakery'] como el resto. Razón: todas comparten el mismo
+  @id, declarar tipos distintos genera señales contradictorias.
+- **geo y openingHoursSpecification:** ahora presentes en las 11 páginas (antes
+  solo en layout).
+
+Verificación: grep final confirmó 0 ocurrencias de `postalCode` y de
+`'@id': 'https://galdi.cl/#business'` fuera de lib/businessSchema.ts.
+JSON-LD generado validado con JSON.parse en out/index.html,
+out/empanadas-maipu.html y out/pan-artesanal-maipu.html — idéntico byte a byte
+en los 5 bloques revisados.
+
+### REGLA NUEVA
+Todo dato del negocio (nombre, dirección, teléfono, código postal, coordenadas,
+horarios, reseñas, comunas, redes sociales) va EXCLUSIVAMENTE en
+`lib/businessSchema.ts`. Nunca hardcodear en páginas individuales. El nombre y
+el código postal deben coincidir siempre con Google Business Profile.
+
+### Auditoría — PENDIENTE (continuar en próxima sesión)
+
+**Bloque 2 — Credibilidad de contenido:** revisar afirmaciones no verificables
+generadas por Gemini en landings y blog (mismo problema detectado en Okasa el
+28-07-2026). Verificar cifras, casos y porcentajes sin respaldo.
+
+**Bloque 3 — SEO estructural:** canibalización entre landings, thin content en
+páginas que aún usan SeoPage genérico, enlazado interno.
+
+**Hallazgos ya detectados, sin resolver:**
+- Páginas de campaña vencidas siguen publicadas y en el Footer/sitemap:
+  `/dia-del-padre` (dice "Encarga hasta el jueves 18 de junio") y
+  `/dia-de-la-madre`. Decidir: despublicar, noindex, o actualizar para 2027.
+- Ambas usan schema `FoodEstablishment` en vez del patrón unificado.
+- Producto "Empanada de Queso" aparece en web y FAQ pero NO existe en
+  galdi_productos (Firestore).
+- Duplicación de JSON-LD: cada página emite el bloque de layout.tsx más el
+  suyo propio, ambos con el mismo @id. Google los fusiona sin conflicto (datos
+  ahora idénticos), pero se podría optimizar haciendo que las landings solo
+  referencien el @id.
+
+---
+
 ## Jornada 04-07-2026
 
 ### Cambios deployados
