@@ -217,6 +217,43 @@ npm run start   # preview producción local
 - [ ] **Evaluar cambio de title del home** — se dejó fuera a propósito el 04-08-2026 para poder medir el efecto de la description por separado
 - [ ] **Revisar "tortas en maipu"** (posición 11,1, CTR 3%) vs "tortas maipú" (posición 7,0, CTR 10,7%) en Search Console
 
+### Bloque 3 — SEO estructural (diagnóstico 04-08-2026)
+
+**Línea base medida el 04-08-2026 (GSC, 3 meses):**
+- 462 clics, 9.250 impresiones, CTR 5%, posición media 7,4
+- "pasteleria maipu": 745 imp, 27 clics, CTR 3,6%, pos 6,2 — la de
+  mayor volumen y peor CTR relativo
+- Consultas equivalentes en posiciones similares rinden 5,8-8,3%
+- "tortas en maipu": pos 11,1, CTR 3% vs "tortas maipú": pos 7,0,
+  CTR 10,7% — posible página equivocada para una de las variantes
+- "galdi" (marca): pos 2,4, CTR 34,4% — algo aparece antes que el
+  sitio propio al buscar la marca
+
+**Google Business Profile:**
+- Galdi está CUARTO en el listado local de "pasteleria maipu", fuera
+  del Local Pack (que muestra 3)
+- Con 5,0 y 72 reseñas supera en calificación a los tres de arriba
+  (El Parrón 4,2/299, Melinda 4,8/17, Dulce Limón 4,7/56)
+- 268 interacciones del perfil en 6 meses vs 462 clics web: el canal
+  principal es el resultado web, no el Local Pack
+- Descripción del perfil corregida el 04-08 (sin distribución a
+  almacenes, comunas alineadas con el sitio)
+- [ ] **PENDIENTE:** configurar Horario especial para feriados,
+  especialmente 18-19 de septiembre
+
+**Próximo paso del Bloque 3:**
+- [ ] Revisar GSC → Rendimiento → 3 meses → pestaña PÁGINAS
+- Grupos con posible canibalización:
+  - Tortas: /tortas-maipu, /tortas-bodas-maipu, /dia-de-la-madre,
+    /arma-tu-torta, /productos
+  - Eventos: /coctel-maipu, /coffee-break-maipu, /cumpleanos-maipu,
+    /matrimonios-maipu
+  - Delivery: /delivery-maipu, /productos, home
+
+**Nota:** `reviewCount` en `lib/businessSchema.ts` es manual (hoy 72,
+hardcodeado, no viene de ninguna variable ni fuente automática). Las
+reseñas crecen ~14/mes, revisar periódicamente.
+
 ### Administrativos / Externos
 - [ ] **Estatuto societario Galdi** — modificación portal RES en curso:
   - Paso 3: subir documentos (acta notaría Repertorio 494 + cert. vigencia)
