@@ -1,5 +1,5 @@
 # AI_CONTEXT — Proyecto Galdi Pastelería
-> Registro de trabajo asistido por IA · Actualizado: 3 agosto 2026
+> Registro de trabajo asistido por IA · Actualizado: 4 agosto 2026
 
 ---
 
@@ -138,7 +138,7 @@ galdi-nextjs/
 | Tab 5 | ✅ | Presupuestos con QR + /validar-presupuesto |
 
 ### Características clave
-- Correlativo presupuestos: COT-G081+
+- Correlativo presupuestos: COT-G105+
 - QR único por presupuesto → galdi.cl/validar-presupuesto?token=XXX
 - COSTOS_TALLA: estructura {mat, mdo, energia, logistica, margen} por talla
 - Key del carrito compuesta: `nombre·talla`
@@ -207,11 +207,13 @@ npm run start   # preview producción local
 - [ ] **Integración WhatsApp → /gestion** — pedidos entrantes con estado pendiente/confirmado/entregado (futuro)
 - [ ] **QR en PDF usando SVG en vez de canvas**
 - [ ] **Agenda de clientes en /gestion**
-- [ ] **Crear cuenta Flow** — pendiente. Puede demorar 1-3 días hábiles en verificar.
-- [ ] **POS TUU** — en proceso de compra por Claudio
-- [ ] **Carrito frontend** — componente con productos, cantidades, selector comuna y botón Pagar con Flow
-- [ ] **Precio dinámico por talla seleccionada** — al seleccionar talla en la card, mostrar solo el precio de esa talla (en vez de todas las tallas a la vez). Limpio y elegante.
-- [ ] **flowConfirmar → guardar pedido en Firestore al confirmar pago + notificar a Galdi por WhatsApp**
+- [ ] **Bug persistencia checkout** — `flowCrearOrden` solo pasa 4 campos, revisar qué falta persistir
+- [ ] **Campaña Día del Niño** (09-08-2026)
+- [ ] **REVERSIÓN Fiestas Patrias post 18-09-2026** — buscar comentarios `FIESTAS PATRIAS 2026` en `app/empanadas-maipu/page.tsx` y `components/Hero.tsx` y restaurar los valores/array originales comentados
+- [ ] **Auditoría Bloque 3** (SEO estructural) — ver sección de Auditoría arriba
+- [ ] **Revisar costos Mariscos y Queso Camarón** en /gestion — comparten $850 de materiales con Pino, pero sus insumos (mariscos, camarones) son más caros; el costo no refleja la diferencia real
+- [ ] **components/Servicios.tsx es código huérfano** — no está importado en ningún lugar del repo (confirmado 04-08-2026), evaluar eliminarlo
+- [ ] **prod-empanada.webp sobredimensionado** — 2400×1792px sin variante responsive (`sizes`), ahora es LCP de la home vía el bloque estacional del Hero; revisar/optimizar si la ponderación se vuelve permanente
 
 ### Administrativos / Externos
 - [ ] **Estatuto societario Galdi** — modificación portal RES en curso:
@@ -239,6 +241,7 @@ npm run start   # preview producción local
 
 ## 📋 Historial de jornadas (resumen)
 
+- **04-08-2026** — Auditoría de credibilidad Bloque 2 completa: plazos, delivery unificado 6 comunas, claims de conservantes acotados a elaboración propia, "100%" eliminado de contenido, "mismo día"→"por encargo" (17 casos), degustación condicionada a cotización confirmada (13 menciones), torta bodas XL sin comprometer 4 pisos, Vegetariana/Queso corregidos en Catalogo.tsx · /dia-del-padre y /dia-de-la-madre perennizadas (sin fechas duras, migradas a businessSchema()) · Distribución a almacenes retirada de metadata/Hero, tab B2B oculto tras `B2B_ACTIVO=false` (código intacto) · Hero Fiestas Patrias: empanada ponderada 3x (posiciones 0,3,6), ahora es la imagen LCP · Gestión: 6 empanadas corregidas docena→unidad + Empanada de Queso creada ($2.700)
 - **20-07-2026** — 2 landings geo migradas a custom: cumpleanos-maipu (commit 593562e) y delivery-maipu como hub de derivación (commit 82c213a) · 3 fixes SEO (commit 1e7ef49): refactor tarjeta "Arma tu Torta" (HTML inválido resuelto, anchor 136→13 chars), Franja Eventos con stretched link pattern, role="presentation" en flores decorativas · scripts/analizar_anchors.mjs creado · decisiones de negocio: pan artesanal descartado del patrón SEO, pedido mínimo delivery $15.000, política de despacho actualizada (rangos, no montos fijos), TUU descartado
 - **24-06-2026** — 21 productos nuevos en Firestore: 12 Cóctel Salado + 5 Cóctel Dulce + 4 Tablas (solo precio venta, cóctel por unidad) · fix bug $36 gestion-index.html (logística 0 explícito + dropdown precio) · Flow.cl integración confirmada operativa
 - **12-06-2026** — Fase A completa: hook usePreciosGaldi.ts · precios por talla S/M/L/XL en catálogo /productos · nombreVisible pattern para nombres Firestore vs display · tallas corregidas en Firestore (10 tortas) · fix fecha "21 de junio" Día del Padre en Header/Banner/page · nueva página /dia-del-padre con JSON-LD y imagen torta-chocolate-hero.webp · SEO /productos: title, description y H1 invisible
@@ -346,22 +349,28 @@ horarios, reseñas, comunas, redes sociales) va EXCLUSIVAMENTE en
 `lib/businessSchema.ts`. Nunca hardcodear en páginas individuales. El nombre y
 el código postal deben coincidir siempre con Google Business Profile.
 
-### Auditoría — PENDIENTE (continuar en próxima sesión)
+### Auditoría — Bloques 1, 2 y 4 ✅ completados · Bloque 3 pendiente
 
-**Bloque 2 — Credibilidad de contenido:** revisar afirmaciones no verificables
-generadas por Gemini en landings y blog (mismo problema detectado en Okasa el
-28-07-2026). Verificar cifras, casos y porcentajes sin respaldo.
+**Bloque 1 — Plazos/datos duros** y **Bloque 4 — Consistencia técnica de
+schema** completados el 03-08-2026 (ver CHANGELOG.md).
 
-**Bloque 3 — SEO estructural:** canibalización entre landings, thin content en
-páginas que aún usan SeoPage genérico, enlazado interno.
+**Bloque 2 — Credibilidad de contenido** completado el 04-08-2026: plazos,
+delivery, conservantes, "mismo día"→"por encargo", degustación condicionada,
+torta bodas XL, distribución a almacenes retirada, Hero Fiestas Patrias. Ver
+detalle completo en CHANGELOG.md, jornada 04-08-2026.
 
-**Hallazgos ya detectados, sin resolver:**
-- Páginas de campaña vencidas siguen publicadas y en el Footer/sitemap:
-  `/dia-del-padre` (dice "Encarga hasta el jueves 18 de junio") y
-  `/dia-de-la-madre`. Decidir: despublicar, noindex, o actualizar para 2027.
-- Ambas usan schema `FoodEstablishment` en vez del patrón unificado.
-- Producto "Empanada de Queso" aparece en web y FAQ pero NO existe en
-  galdi_productos (Firestore).
+**Bloque 3 — SEO estructural (PENDIENTE):** canibalización entre landings,
+thin content en páginas que aún usan SeoPage genérico, enlazado interno.
+
+**Hallazgos ya detectados, resueltos el 04-08-2026:**
+- ~~Páginas de campaña vencidas...~~ → `/dia-del-padre` y `/dia-de-la-madre`
+  perennizadas (sin fechas duras, evergreen), se mantienen en Footer/sitemap.
+- ~~Ambas usan schema FoodEstablishment...~~ → migradas a businessSchema()
+  (patrón unificado).
+- ~~Producto "Empanada de Queso"...~~ → creado en galdi_productos vía
+  /gestion ($2.700).
+
+**Hallazgo aún sin resolver:**
 - Duplicación de JSON-LD: cada página emite el bloque de layout.tsx más el
   suyo propio, ambos con el mismo @id. Google los fusiona sin conflicto (datos
   ahora idénticos), pero se podría optimizar haciendo que las landings solo

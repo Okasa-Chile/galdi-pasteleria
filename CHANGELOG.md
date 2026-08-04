@@ -5,6 +5,69 @@ proyecto, consultar README.md.
 
 ---
 
+## Jornada 04-08-2026 — Auditoría de credibilidad (Bloque 2) + retiro distribución a almacenes
+
+**Contexto:** cierre del Bloque 2 de la auditoría de credibilidad iniciada
+el 03-08-2026 (Bloque 1 y 4 ya cerrados esa jornada). Todos los cambios de
+texto fueron validados punto por punto con Claudio antes de aplicarse — sin
+ampliar alcance ni improvisar wording no autorizado.
+
+**Auditoría de credibilidad (Bloque 2):**
+- Plazos corregidos: torta personalizada 48h, cotización 24h hábiles
+- Delivery unificado: 6 comunas + resto RM a consultar
+- Claims de conservantes acotados a elaboración propia (los insumos de
+  terceros — manjar, mermelada, jamón serrano, camarones, quesos — sí
+  pueden traer conservantes)
+- Eliminados todos los "100%" de contenido (CSS/gradientes exceptuados)
+- "elaborado/horneado/preparado/hecho el mismo día" → "por encargo"
+  (17 casos, criterio: verbo de producción vs. verbo de logística)
+- Degustación condicionada a "una vez confirmada la cotización"
+  (13 menciones en matrimonios-maipu y tortas-bodas-maipu)
+- Torta de bodas XL: ya no compromete "4 pisos o más" (nunca ejecutada)
+- components/Catalogo.tsx: Empanada Vegetariana corregida a "queso
+  champiñón" (decía "verduras salteadas", no correspondía al producto
+  real) + sabor "Queso" agregado (faltaba en el catálogo)
+
+**Páginas de campaña:**
+- /dia-del-padre y /dia-de-la-madre perennizadas: quitadas todas las
+  fechas duras 2026, texto evergreen "48 horas de anticipación"
+- JSON-LD migrado de FoodEstablishment hardcodeado a businessSchema()
+  (patrón unificado del resto del sitio)
+- Bloques envueltos en comentarios de reactivación 2027, se mantienen
+  en Footer y sitemap
+
+**Distribución a almacenes retirada** (decisión estratégica, código
+intacto — se puede reactivar):
+- Metadata global (app/layout.tsx) y openGraph actualizados, sin
+  mención de distribución a almacenes
+- Tagline del Hero sin "Distribución"
+- Tab B2B oculto en components/ServicioDetalle.tsx tras
+  `const B2B_ACTIVO = false` — productosAlmacenes, tabsAlmacenes y toda
+  la lógica del flujo B2B siguen en el código, solo inalcanzables
+- Fallback: cualquier `id="b2b"` entrante degrada a `"delivery"` (deep
+  link `/?servicio=b2b` ya era inerte antes de este cambio — se
+  verificó que ningún componente vivo lee ese query param)
+- app/pan-artesanal-maipu/page.tsx: solo se corrigió el CTA roto
+  (`ctaHref`/`ctaTexto`), el resto del contenido de distribución en esa
+  página se deja tal cual por decisión de Claudio
+
+**Hero Fiestas Patrias** (components/Hero.tsx, temporal — revertir
+después del 18-09-2026, comentarios de reversión incluidos):
+- Array ampliado de 7 a 9 slides: empanada ponderada 3x (antes 1x)
+- Rotación es secuencial (no aleatoria), así que las 3 apariciones se
+  distribuyeron en las posiciones 0, 3 y 6 — nunca consecutivas,
+  incluido el wraparound del loop
+- `priority={i === 0}` ahora aplica a prod-empanada.webp — pasa a ser
+  la imagen LCP de la home (2400×1792px, 72.7 KB, sin variante
+  responsive — reportado como pendiente, no optimizado en esta jornada)
+
+**Gestión (fuera del repo, Firestore vía panel /gestion):**
+- 6 empanadas grandes corregidas de unidad "docena" a "unidad"
+- Producto "Empanada de Queso" creado ($2.700, mismos costos base que
+  las demás empanadas de la categoría)
+
+---
+
 ## Jornada 29-07-2026 — Fix escAttr en /gestion + migración IDs galdi_productos
 
 **Contexto:** Se agregaron 5 "tapaditos" nuevos a la categoría Cóctel

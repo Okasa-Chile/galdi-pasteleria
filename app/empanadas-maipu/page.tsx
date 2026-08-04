@@ -168,7 +168,7 @@ const sabores = [
 
 const ventajas = [
   'Empanadas hechas a mano con recetas familiares, sin mezclas industriales.',
-  'Masa artesanal elaborada el mismo día del pedido para máxima frescura.',
+  'Masa artesanal preparada a mano, coordinada según la fecha de entrega.',
   'Pedido por docena: puedes combinar sabores según tus preferencias.',
   'Delivery en Maipú, Cerrillos, Pudahuel, Estación Central, Padre Hurtado y Lo Prado.',
   'Disponibles para eventos, fechas patrias, almacenes y distribución regular.',
@@ -178,7 +178,7 @@ const ventajas = [
 const pasos = [
   'Contáctanos por WhatsApp (+56 9 9099 1011) o escríbenos a ventas@galdi.cl.',
   'Cuéntanos los sabores, cantidad de docenas y la fecha de entrega.',
-  'Te confirmamos disponibilidad y precio en menos de 24 horas.',
+  'Te confirmamos disponibilidad y precio dentro de 24 horas hábiles.',
   'Coordinamos el despacho a tu dirección en Maipú y comunas cercanas.',
 ];
 
@@ -266,7 +266,7 @@ export default function EmpanadaMaipuPage() {
               {[
                 'Pedidos mayoristas para empresas, colegios y eventos de Fiestas Patrias.',
                 'Combina sabores en tu pedido: pino, napolitana, vegetariana, queso camarón y mariscos.',
-                'Recién horneadas el mismo día, sin conservantes ni mezclas industriales.',
+                'Horneadas artesanalmente, sin mezclas industriales.',
                 'Reserva con anticipación: la semana del 18 de septiembre se agota rápido.',
                 'Retiro gratis en Maipú o delivery en comunas cercanas.',
                 'Emitimos boleta o factura para pedidos de empresas.',
@@ -310,10 +310,11 @@ export default function EmpanadaMaipuPage() {
               ¿Qué empanadas ofrece Galdi en Maipú?
             </h2>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#5a3520', lineHeight: 1.75, marginBottom: '1.75rem' }}>
-              En Galdi elaboramos empanadas artesanales con recetas familiares, sin conservantes
-              ni mezclas industriales. Cada empanada se hornea el mismo día del pedido para
-              garantizar frescura y sabor. Puedes combinar distintos sabores dentro de la misma
-              docena según disponibilidad.
+              En Galdi elaboramos empanadas artesanales con recetas familiares,
+              sin mezclas industriales. Cada empanada se prepara a mano y se
+              hornea coordinando la fecha de entrega para garantizar frescura y
+              sabor. Puedes combinar distintos sabores dentro de la misma docena
+              según disponibilidad.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.25rem' }}>
               {sabores.map((s) => (
@@ -400,7 +401,7 @@ export default function EmpanadaMaipuPage() {
           {/* CTAs */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center', marginBottom: '3rem' }}>
             <Link
-              href="/?servicio=b2b&tab=Empanadas"
+              href="/productos"
               style={{ background: 'var(--terracota)', color: 'var(--cream)', padding: '1rem 2.5rem', fontFamily: 'var(--font-sans)', fontSize: '0.85rem', letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none', border: '1px solid var(--terracota)' }}
             >
               Ver todas las empanadas

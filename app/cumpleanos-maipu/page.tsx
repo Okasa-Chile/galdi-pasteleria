@@ -39,7 +39,7 @@ const jsonLd = {
     businessSchema({
       url: 'https://galdi.cl/cumpleanos-maipu',
       description:
-        'Pastelería artesanal en Maipú especializada en celebraciones de cumpleaños: torta personalizada y mesa de dulces artesanal elaboradas el mismo día. Delivery en Maipú y comunas cercanas.',
+        'Pastelería artesanal en Maipú especializada en celebraciones de cumpleaños: torta personalizada y mesa de dulces artesanal elaboradas por encargo. Delivery en Maipú y comunas cercanas.',
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Mesa de Dulces para Cumpleaños',
@@ -154,7 +154,7 @@ export default function CumpleanosMaipuPage() {
               Cumpleaños en Maipú: Torta y Mesa de Dulces
             </h1>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(0.85rem, 2vw, 1rem)', color: 'rgba(245,230,211,0.85)', maxWidth: '600px' }}>
-              Celebra con productos 100% artesanales, hechos el mismo día.
+              Celebra con productos artesanales, preparados especialmente para tu día.
             </p>
           </div>
         </div>
@@ -172,7 +172,7 @@ export default function CumpleanosMaipuPage() {
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#5a3520', lineHeight: 1.75 }}>
               En Galdi armamos la celebración de cumpleaños completa: torta personalizada a elección
               de sabor y tamaño, mesa de dulces artesanal y, si lo necesitas para más invitados,
-              cóctel dulce. Todo elaborado el mismo día del evento, con entrega en Maipú y comunas
+              cóctel dulce. Todo elaborado por encargo, con entrega en Maipú y comunas
               cercanas.
             </p>
           </section>

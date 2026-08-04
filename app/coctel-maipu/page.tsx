@@ -43,7 +43,7 @@ const jsonLd = {
     businessSchema({
       url: 'https://galdi.cl/coctel-maipu',
       description:
-        'Banquetería artesanal en Maipú para matrimonios, cumpleaños y eventos corporativos: cóctel, canapés, tapaditos, mini empanadas, brochetas y postres individuales elaborados el mismo día. Presentación elegante. Factura electrónica disponible.',
+        'Banquetería artesanal en Maipú para matrimonios, cumpleaños y eventos corporativos: cóctel, canapés, tapaditos, mini empanadas, brochetas y postres individuales elaborados por encargo. Presentación elegante. Factura electrónica disponible.',
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Cóctel Dulce y Salado',
@@ -72,7 +72,7 @@ const jsonLd = {
               '@type': 'Service',
               name: 'Mini Empanadas',
               description:
-                'De pino, queso y queso champiñón. Horneadas el mismo día del evento.',
+                'De pino, queso y queso champiñón. Horneadas por encargo para tu evento.',
             },
           },
           {
@@ -152,7 +152,7 @@ const bocados = [
   {
     titulo: 'Mini Empanadas',
     descripcion:
-      'De pino, queso y queso champiñón. Horneadas el mismo día del evento.',
+      'De pino, queso y queso champiñón. Horneadas por encargo para tu evento.',
   },
   {
     titulo: 'Brochetas de Fruta',
@@ -177,7 +177,7 @@ const bocados = [
 ];
 
 const ventajas = [
-  'Elaboración 100% artesanal, sin conservantes ni mezclas industriales.',
+  'Elaboración artesanal propia, sin conservantes añadidos ni mezclas industriales.',
   'Presentación elegante, lista para servir a tus invitados.',
   'Variedad de bocados dulces y salados según tu evento.',
   'Factura electrónica disponible para empresas y particulares.',
@@ -241,7 +241,7 @@ export default function CoctelMaipuPage() {
           <p style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1rem, 2vw, 1.2rem)', fontWeight: 300, color: '#3d2010', lineHeight: 1.9, marginBottom: '3.5rem', textAlign: 'center' }}>
             Galdi es una pastelería artesanal ubicada en Pasaje Marcos Echenique 809, Maipú,
             Región Metropolitana. Ofrece banquetería para cócteles y recepciones con bocados
-            elaborados el mismo día: canapés, tapaditos, mini empanadas, brochetas y postres
+            elaborados por encargo: canapés, tapaditos, mini empanadas, brochetas y postres
             individuales. Factura electrónica disponible. Entrega en Maipú y comunas cercanas.
           </p>
 
@@ -256,7 +256,7 @@ export default function CoctelMaipuPage() {
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#5a3520', lineHeight: 1.75, marginBottom: '1.75rem' }}>
               Preparamos cócteles y recepciones en Maipú con una selección variada de bocados
               dulces y salados, ideales para matrimonios, cumpleaños, aniversarios y eventos
-              sociales. Cada bocado se elabora el mismo día y se presenta con un montaje elegante,
+              sociales. Cada bocado se elabora por encargo y se presenta con un montaje elegante,
               listo para servir directamente a tus invitados. Coordinamos la cantidad según el
               número de asistentes y el estilo de tu evento, con entrega puntual en Maipú y
               comunas cercanas.

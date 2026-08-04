@@ -98,7 +98,7 @@ export default function Nosotras() {
             lineHeight: 1.8,
             marginBottom: '1.25rem',
           }}>
-            Desde nuestras tortas y pasteles hasta el pan artesanal que horneamos cada semana, todo lo que ofrecemos nace del mismo lugar: el deseo de compartir el sabor de lo hecho con cariño. Atendemos pedidos para eventos, delivery en Maipú y distribución a almacenes de la comuna. Si buscas una pastelería artesanal en Maipú con sabor de verdad, estás en el lugar correcto.
+            Desde nuestras tortas y pasteles hasta el pan artesanal que horneamos cada semana, todo lo que ofrecemos nace del mismo lugar: el deseo de compartir el sabor de lo hecho con cariño. Atendemos pedidos para eventos y delivery en Maipú y comunas cercanas. Si buscas una pastelería artesanal en Maipú con sabor de verdad, estás en el lugar correcto.
           </p>
           <p style={{
             fontFamily: 'var(--font-sans)',
@@ -116,7 +116,7 @@ export default function Nosotras() {
             lineHeight: 1.8,
             marginBottom: '1.25rem',
           }}>
-            Con los años, Galdi creció de boca en boca — la mejor forma de crecer para una pastelería artesanal. Hoy abastecemos almacenes de la comuna, hacemos delivery a domicilio y atendemos eventos de todo tipo, sin perder nunca lo que nos hace distintas: el tiempo, la dedicación y la receta de siempre. Porque cuando algo se hace bien desde el principio, no hace falta cambiarlo.
+            Con los años, Galdi creció de boca en boca — la mejor forma de crecer para una pastelería artesanal. Hoy hacemos delivery a domicilio y atendemos eventos de todo tipo, sin perder nunca lo que nos hace distintas: el tiempo, la dedicación y la receta de siempre. Porque cuando algo se hace bien desde el principio, no hace falta cambiarlo.
           </p>
           <p style={{
             fontFamily: 'var(--font-sans)',
@@ -125,7 +125,7 @@ export default function Nosotras() {
             lineHeight: 1.8,
             marginBottom: '2.5rem',
           }}>
-            Nuestro proceso artesanal comienza con la elección de los ingredientes: harina sin blanquear, mantequilla real, huevos frescos y azúcar sin refinar donde la receta lo permite. No usamos mezclas industriales ni saborizantes artificiales — cada masa se trabaja a mano, cada relleno se cocina en el momento y cada torta se decora con paciencia. Ese compromiso con la calidad no es marketing: es la única forma en que sabemos hacer las cosas. Y es también nuestra forma de cuidar a Maipú, la comuna que nos vio crecer y a la que hoy servimos con orgullo y con lo mejor que tenemos.
+            Nuestro proceso artesanal comienza con la elección de ingredientes de calidad, buscando siempre el mejor resultado en cada preparación. Cada masa se trabaja a mano, cada relleno se cocina en el momento y cada torta se decora con paciencia. Ese compromiso con la calidad no es marketing: es la única forma en que sabemos hacer las cosas. Y es también nuestra forma de cuidar a Maipú, la comuna que nos vio crecer y a la que hoy servimos con orgullo y con lo mejor que tenemos.
           </p>
 
         </div>

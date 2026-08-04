@@ -5,7 +5,7 @@ import { useState } from 'react';
 const faqs = [
   {
     q: '¿Cómo hago un pedido?',
-    a: 'La forma más rápida es escribirnos por WhatsApp al +56 9 9099 1011. Cuéntanos qué necesitas, la fecha de entrega y la dirección, y te respondemos con disponibilidad y precio el mismo día. También puedes escribirnos a ventas@galdi.cl si prefieres el correo.',
+    a: 'La forma más rápida es escribirnos por WhatsApp al +56 9 9099 1011. Cuéntanos qué necesitas, la fecha de entrega y la dirección, y te respondemos con disponibilidad y precio dentro de 24 horas hábiles. También puedes escribirnos a ventas@galdi.cl si prefieres el correo.',
   },
   {
     q: '¿Hacen delivery? ¿A qué sectores despachan?',
@@ -13,7 +13,7 @@ const faqs = [
   },
   {
     q: '¿Con cuánta anticipación debo hacer mi pedido?',
-    a: 'Depende del producto. Las tortas personalizadas requieren mínimo 5 días de anticipación para asegurar la preparación y decoración. Para el resto de productos — pan, empanadas, galletas, kuchen, desayunos — con 48 horas es suficiente. Si tienes una fecha fija para tu evento, avísanos lo antes posible: mientras más tiempo tengamos, mejor podemos coordinar.',
+    a: 'Con 48 horas de anticipación es suficiente para la mayoría de nuestros pedidos: tortas personalizadas, pan, empanadas, galletas, kuchen y desayunos. Para tortas de matrimonio o eventos grandes, avísanos con más tiempo: mientras antes nos escribas, mejor podemos coordinar.',
   },
   {
     q: '¿Pueden adaptarse a restricciones alimentarias?',
@@ -21,7 +21,7 @@ const faqs = [
   },
   {
     q: '¿Tienen precios especiales para eventos?',
-    a: 'Para eventos con 20 o más personas preparamos una cotización personalizada según el tipo de preparación, la cantidad y la modalidad de entrega (retiro en Maipú o despacho al lugar del evento). Escríbenos con la fecha, el número de invitados y el tipo de servicio que necesitas — coffee break, mesa dulce, cóctel, matrimonio — y te enviamos la propuesta en el día.',
+    a: 'Para eventos con 20 o más personas preparamos una cotización personalizada según el tipo de preparación, la cantidad y la modalidad de entrega (retiro en Maipú o despacho al lugar del evento). Escríbenos con la fecha, el número de invitados y el tipo de servicio que necesitas — coffee break, mesa dulce, cóctel, matrimonio — y te enviamos la propuesta dentro de 24 horas hábiles.',
   },
   {
     q: '¿Hacen tortas para celíacos o diabéticos?',

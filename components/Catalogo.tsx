@@ -110,7 +110,8 @@ const categorias = [
     productos: [
       { nombre: 'Pino',          detalle: 'Nuestra empanada clásica con pino chileno tradicional: jugosa y bien sazonada.' },
       { nombre: 'Napolitana',    detalle: 'Rellena de jamón, tomate y queso fundido en masa artesanal dorada.' },
-      { nombre: 'Vegetariana',   detalle: 'Relleno colorido de verduras salteadas con el punto justo de sazón.' },
+      { nombre: 'Vegetariana',   detalle: 'Rellena de queso champiñón. Sin carne, con ingredientes frescos seleccionados.' },
+      { nombre: 'Queso',         detalle: 'Rellena de queso fundido, sencilla y sabrosa. Ideal para los más pequeños.' },
       { nombre: 'Queso Camarón', detalle: 'Camarones frescos con queso derretido en masa artesanal dorada.' },
       { nombre: 'Empanada de Mariscos', detalle: 'Generosa mezcla de mariscos frescos sazonados con especias, envuelta en masa artesanal dorada y crocante.' },
     ],

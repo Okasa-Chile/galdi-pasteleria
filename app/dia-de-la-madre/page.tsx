@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import SeoPage from '@/components/SeoPage';
+import { businessSchema } from '@/lib/businessSchema';
 
 export const metadata: Metadata = {
   title: 'Tortas para el Día de la Madre en Maipú | Galdi Pastelería',
@@ -14,80 +15,70 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    businessSchema({
+      url: 'https://galdi.cl/dia-de-la-madre',
+      description:
+        'Pastelería artesanal en Maipú con tortas especiales para el Día de la Madre: Torta Amor, Torta 3 Leches y Torta Panqueque. Delivery en Maipú y comunas cercanas.',
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Tortas Día de la Madre',
+        itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'MenuItem', name: 'Torta Amor' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'MenuItem', name: 'Torta 3 Leches' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'MenuItem', name: 'Torta Panqueque' } },
+        ],
+      },
+    }),
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: '¿Hacen delivery de tortas para el Día de la Madre en Santiago?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Despachamos en Maipú y comunas cercanas. Para otras comunas de la Región Metropolitana, consúltanos por WhatsApp al +56 9 9099 1011 y cotizamos el despacho según tu dirección.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: '¿Con cuánta anticipación debo encargar la torta?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Encarga con al menos 48 horas de anticipación para asegurar disponibilidad.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: '¿Qué tortas tienen disponibles para el Día de la Madre?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Ofrecemos Torta Amor (hojarasca con crema pastelera y frambuesas), Torta 3 Leches y Torta Panqueque. Todas elaboradas de forma artesanal en Maipú.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: '¿Pueden personalizar la torta para mamá?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Sí, coordinamos decoraciones y dedicatorias personalizadas. Contáctanos por WhatsApp para conversar los detalles de tu pedido.',
+          },
+        },
+      ],
+    },
+  ],
+};
+
 export default function DiaDeLaMadrePage() {
   return (
     <>
+      {/* === DÍA DE LA MADRE 2027 — INICIO (activar en abril) === */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FoodEstablishment",
-            "name": "Galdi Pastelería",
-            "url": "https://galdi.cl",
-            "telephone": "+56990991011",
-            "address": {
-              "@type": "PostalAddress",
-              "streetAddress": "Pasaje Marcos Echenique N° 809",
-              "addressLocality": "Maipú",
-              "addressRegion": "Región Metropolitana",
-              "addressCountry": "CL"
-            },
-            "hasOfferCatalog": {
-              "@type": "OfferCatalog",
-              "name": "Tortas Día de la Madre",
-              "itemListElement": [
-                { "@type": "Offer", "itemOffered": { "@type": "MenuItem", "name": "Torta Amor" } },
-                { "@type": "Offer", "itemOffered": { "@type": "MenuItem", "name": "Torta 3 Leches" } },
-                { "@type": "Offer", "itemOffered": { "@type": "MenuItem", "name": "Torta Panqueque" } }
-              ]
-            }
-          })
-        }}
-      />
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "¿Hacen delivery de tortas para el Día de la Madre en Santiago?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Sí, Galdi Pastelería realiza delivery de tortas artesanales en toda la Región Metropolitana. El costo de envío varía según la comuna — consulta directamente por WhatsApp al +56 9 9099 1011."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "¿Con cuánta anticipación debo encargar la torta?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Recomendamos encargar con al menos 48 horas de anticipación para asegurar disponibilidad, especialmente en fechas como el Día de la Madre."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "¿Qué tortas tienen disponibles para el Día de la Madre?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Ofrecemos Torta Amor (hojarasca con crema pastelera y frambuesas), Torta 3 Leches y Torta Panqueque. Todas elaboradas de forma artesanal en Maipú."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "¿Pueden personalizar la torta para mamá?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Sí, coordinamos decoraciones y dedicatorias personalizadas. Contáctanos por WhatsApp para conversar los detalles de tu pedido."
-                }
-              }
-            ]
-          })
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
       <SeoPage
@@ -122,15 +113,15 @@ export default function DiaDeLaMadrePage() {
               Pastelería artesanal para el Día de la Madre en Maipú
             </h2>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.95rem', color: '#5a3520', lineHeight: 1.8, marginBottom: '1rem' }}>
-              En Galdi somos una pastelería artesanal ubicada en Maipú. Para el Día de la Madre elaboramos tortas personalizadas con ingredientes seleccionados, sin conservantes, hechas el mismo día de entrega para garantizar frescura.
+              En Galdi somos una pastelería artesanal ubicada en Maipú. Para el Día de la Madre elaboramos tortas personalizadas con ingredientes seleccionados, de elaboración propia sin conservantes añadidos.
             </p>
             <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.15rem', fontWeight: 400, color: '#3d2010', margin: '1.5rem 0 0.75rem' }}>
               Preguntas frecuentes
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {[
-                { q: '¿Hacen delivery de tortas para el Día de la Madre en Santiago?', a: 'Sí, realizamos delivery en toda la Región Metropolitana. El costo de envío varía según la comuna — consúltanos por WhatsApp al +56 9 9099 1011.' },
-                { q: '¿Con cuánta anticipación debo encargar?', a: 'Recomendamos al menos 48 horas de anticipación para asegurar disponibilidad, especialmente en el Día de la Madre.' },
+                { q: '¿Hacen delivery de tortas para el Día de la Madre en Santiago?', a: 'Despachamos en Maipú y comunas cercanas. Para otras comunas de la Región Metropolitana, consúltanos por WhatsApp al +56 9 9099 1011 y cotizamos el despacho según tu dirección.' },
+                { q: '¿Con cuánta anticipación debo encargar?', a: 'Encarga con al menos 48 horas de anticipación.' },
                 { q: '¿Pueden personalizar la torta para mamá?', a: 'Sí, coordinamos decoraciones y dedicatorias personalizadas. Escríbenos por WhatsApp para conversar los detalles.' },
               ].map(({ q, a }) => (
                 <div key={q}>
@@ -142,6 +133,7 @@ export default function DiaDeLaMadrePage() {
           </div>
         }
       />
+      {/* === DÍA DE LA MADRE 2027 — FIN === */}
     </>
   );
 }

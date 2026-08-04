@@ -7,6 +7,10 @@ import { useRouter } from 'next/navigation';
 import { imagenes } from './Catalogo';
 import { usePreciosGaldi } from '@/hooks/usePreciosGaldi';
 
+// Distribución a almacenes desactivada (decisión 04-08-2026).
+// Poner en true para reactivar el flujo B2B completo.
+const B2B_ACTIVO = false;
+
 // ─── Productos por servicio y tab ───────────────────────────────────────────
 
 const productosAlmacenes: Record<string, { nombre: string; nombreVisible?: string; imagen: string; unidad: string; detalle?: string }[]> = {
@@ -185,7 +189,10 @@ type Carrito = Record<string, number>;
 
 // ─── Componente principal ────────────────────────────────────────────────────
 
-export default function ServicioDetalle({ id, nombre, imagen, initialTab, onClose, pageMode = false }: Props) {
+export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab, onClose, pageMode = false }: Props) {
+  // Con B2B_ACTIVO en false, cualquier id="b2b" entrante (deep link, nav futura)
+  // degrada a 'delivery' sin tocar la lógica ni los datos del flujo B2B.
+  const id = (idProp === 'b2b' && !B2B_ACTIVO) ? 'delivery' : idProp;
 
   const tabsAlmacenes = Object.keys(productosAlmacenes);
   const tabsDelivery  = Object.keys(productosDelivery);

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import SeoPage from '@/components/SeoPage';
+import { businessSchema } from '@/lib/businessSchema';
 
 export const metadata: Metadata = {
   title: 'Tortas para el Día del Padre en Maipú | Galdi Pastelería',
-  description: 'Tortas artesanales para el Día del Padre con delivery en Maipú, Pudahuel, Cerrillos, Estación Central, Padre Hurtado y Santiago. Encarga hasta el jueves 18 de junio. WhatsApp +56 9 9099 1011.',
+  description: 'Tortas artesanales para el Día del Padre con delivery en Maipú, Pudahuel, Cerrillos, Estación Central, Padre Hurtado y Santiago. Encarga con al menos 48 horas de anticipación. WhatsApp +56 9 9099 1011.',
   keywords: 'tortas día del padre maipú, tortas día del padre pudahuel, tortas día del padre cerrillos, tortas día del padre padre hurtado, tortas día del padre estación central, tortas día del padre santiago, delivery tortas sector poniente santiago, pastelería artesanal maipú, torta para papá maipú',
   alternates: { canonical: 'https://galdi.cl/dia-del-padre' },
   openGraph: {
@@ -14,97 +15,88 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    businessSchema({
+      url: 'https://galdi.cl/dia-del-padre',
+      description:
+        'Pastelería artesanal en Maipú con tortas especiales para el Día del Padre: Torta Panqueque, Torta de Chocolate y Torta 3 Leches. Delivery en Maipú, Pudahuel, Cerrillos, Estación Central, Padre Hurtado y otras comunas de Santiago.',
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Tortas Día del Padre',
+        itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'MenuItem', name: 'Torta Panqueque' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'MenuItem', name: 'Torta de Chocolate' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'MenuItem', name: 'Torta 3 Leches' } },
+        ],
+      },
+    }),
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: '¿Hacen delivery de tortas para el Día del Padre en Maipú?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Sí. Hacemos delivery en Maipú con un costo de $3.000, o puedes retirar gratis en nuestro local. Encarga con al menos 48 horas de anticipación. WhatsApp +56 9 9099 1011.' },
+        },
+        {
+          '@type': 'Question',
+          name: '¿Hacen delivery de tortas para el Día del Padre a Pudahuel?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Sí. Repartimos tortas artesanales a Pudahuel para el Día del Padre con despacho de $3.000. Pedidos con al menos 48 horas de anticipación. WhatsApp +56 9 9099 1011.' },
+        },
+        {
+          '@type': 'Question',
+          name: '¿Hacen delivery de tortas para el Día del Padre a Cerrillos?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Sí. Llevamos tortas artesanales a Cerrillos para el Día del Padre con despacho de $3.000. Encarga con al menos 48 horas de anticipación. WhatsApp +56 9 9099 1011.' },
+        },
+        {
+          '@type': 'Question',
+          name: '¿Hacen delivery de tortas para el Día del Padre a Estación Central?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Sí. Repartimos a Estación Central con despacho de $3.000. Encarga con al menos 48 horas de anticipación. WhatsApp +56 9 9099 1011.' },
+        },
+        {
+          '@type': 'Question',
+          name: '¿Hacen delivery de tortas para el Día del Padre a Padre Hurtado?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Sí. Llevamos tortas artesanales a Padre Hurtado para el Día del Padre con despacho de $5.000. Encarga con al menos 48 horas de anticipación. WhatsApp +56 9 9099 1011.' },
+        },
+        {
+          '@type': 'Question',
+          name: '¿Hacen delivery de tortas para el Día del Padre a Santiago?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Sí. Cubrimos Santiago y otras comunas del Gran Santiago. El costo de despacho varía según la distancia. Consulta disponibilidad directamente por WhatsApp al +56 9 9099 1011 con al menos 48 horas de anticipación.' },
+        },
+        {
+          '@type': 'Question',
+          name: '¿Con cuánta anticipación debo encargar la torta?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Encarga con al menos 48 horas de anticipación. En fechas especiales los pedidos se completan rápido.' },
+        },
+        {
+          '@type': 'Question',
+          name: '¿Qué tortas tienen disponibles para el Día del Padre?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Torta Panqueque (capas con manjar o chocolate), Torta de Chocolate (bizcocho húmedo con cobertura de cacao) y Torta 3 Leches. Todas artesanales, hechas en Maipú por encargo.' },
+        },
+        {
+          '@type': 'Question',
+          name: '¿Pueden poner una dedicatoria?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Sí. Coordina los detalles por WhatsApp al +56 9 9099 1011 cuando hagas el pedido.' },
+        },
+      ],
+    },
+  ],
+};
+
 export default function DiaDElPadrePage() {
   return (
     <>
+      {/* === DÍA DEL PADRE 2027 — INICIO (activar en junio) === */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FoodEstablishment",
-            "name": "Galdi Pastelería",
-            "url": "https://galdi.cl",
-            "telephone": "+56990991011",
-            "address": {
-              "@type": "PostalAddress",
-              "streetAddress": "Pasaje Marcos Echenique N° 809",
-              "addressLocality": "Maipú",
-              "addressRegion": "Región Metropolitana",
-              "addressCountry": "CL"
-            },
-            "hasOfferCatalog": {
-              "@type": "OfferCatalog",
-              "name": "Tortas Día del Padre",
-              "itemListElement": [
-                { "@type": "Offer", "itemOffered": { "@type": "MenuItem", "name": "Torta Panqueque" } },
-                { "@type": "Offer", "itemOffered": { "@type": "MenuItem", "name": "Torta de Chocolate" } },
-                { "@type": "Offer", "itemOffered": { "@type": "MenuItem", "name": "Torta 3 Leches" } }
-              ]
-            }
-          })
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "¿Hacen delivery de tortas para el Día del Padre en Maipú?",
-                "acceptedAnswer": { "@type": "Answer", "text": "Sí. Hacemos delivery en Maipú con un costo de $3.000, o puedes retirar gratis en nuestro local. Encarga hasta el jueves 18 de junio. WhatsApp +56 9 9099 1011." }
-              },
-              {
-                "@type": "Question",
-                "name": "¿Hacen delivery de tortas para el Día del Padre a Pudahuel?",
-                "acceptedAnswer": { "@type": "Answer", "text": "Sí. Repartimos tortas artesanales a Pudahuel para el Día del Padre con despacho de $3.000. Pedidos hasta el jueves 18 de junio. WhatsApp +56 9 9099 1011." }
-              },
-              {
-                "@type": "Question",
-                "name": "¿Hacen delivery de tortas para el Día del Padre a Cerrillos?",
-                "acceptedAnswer": { "@type": "Answer", "text": "Sí. Llevamos tortas artesanales a Cerrillos para el Día del Padre con despacho de $3.000. Encarga antes del jueves 18 de junio. WhatsApp +56 9 9099 1011." }
-              },
-              {
-                "@type": "Question",
-                "name": "¿Hacen delivery de tortas para el Día del Padre a Estación Central?",
-                "acceptedAnswer": { "@type": "Answer", "text": "Sí. Repartimos a Estación Central con despacho de $3.000. Para recibir tu torta el domingo 21 de junio, encarga antes del jueves 18. WhatsApp +56 9 9099 1011." }
-              },
-              {
-                "@type": "Question",
-                "name": "¿Hacen delivery de tortas para el Día del Padre a Padre Hurtado?",
-                "acceptedAnswer": { "@type": "Answer", "text": "Sí. Llevamos tortas artesanales a Padre Hurtado para el Día del Padre con despacho de $5.000. Encarga hasta el jueves 18 de junio. WhatsApp +56 9 9099 1011." }
-              },
-              {
-                "@type": "Question",
-                "name": "¿Hacen delivery de tortas para el Día del Padre a Santiago?",
-                "acceptedAnswer": { "@type": "Answer", "text": "Sí. Cubrimos Santiago y otras comunas del Gran Santiago. El costo de despacho varía según la distancia. Consulta disponibilidad directamente por WhatsApp al +56 9 9099 1011 antes del jueves 18 de junio." }
-              },
-              {
-                "@type": "Question",
-                "name": "¿Con cuánta anticipación debo encargar la torta?",
-                "acceptedAnswer": { "@type": "Answer", "text": "Antes del jueves 18 de junio para asegurar entrega el sábado 20 o domingo 21. En fechas especiales los pedidos se completan rápido." }
-              },
-              {
-                "@type": "Question",
-                "name": "¿Qué tortas tienen disponibles para el Día del Padre?",
-                "acceptedAnswer": { "@type": "Answer", "text": "Torta Panqueque (capas con manjar o chocolate), Torta de Chocolate (bizcocho húmedo con cobertura de cacao) y Torta 3 Leches. Todas artesanales, hechas en Maipú el mismo día de entrega." }
-              },
-              {
-                "@type": "Question",
-                "name": "¿Pueden poner una dedicatoria?",
-                "acceptedAnswer": { "@type": "Answer", "text": "Sí. Coordina los detalles por WhatsApp al +56 9 9099 1011 cuando hagas el pedido." }
-              }
-            ]
-          })
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <SeoPage
         titulo="Tortas para el Día del Padre"
         subtitulo="Encarga con tiempo y llega con algo bueno de verdad"
-        descripcion="El 21 de junio se acerca. En Galdi hacemos tortas por encargo en Maipú: Panqueque, Chocolate, 3 Leches. Sin conservantes, hechas el mismo día de entrega. Pedidos por WhatsApp."
+        descripcion="En Galdi hacemos tortas por encargo en Maipú: Panqueque, Chocolate, 3 Leches. De elaboración propia, sin conservantes añadidos. Encarga con al menos 48 horas de anticipación. Pedidos por WhatsApp."
         imagen="/images/torta-chocolate-hero.webp"
         ctaTexto="Ver productos"
         ctaHref="/#productos"
@@ -157,7 +149,7 @@ export default function DiaDElPadrePage() {
                 ))}
               </ul>
               <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.88rem', color: 'rgba(245,230,211,0.8)', lineHeight: 1.7 }}>
-                Encarga antes del <strong style={{ color: '#d4a853' }}>jueves 18 de junio</strong> para asegurar tu torta para el sábado 20 o domingo 21.
+                Encarga con al menos <strong style={{ color: '#d4a853' }}>48 horas de anticipación</strong>.
               </p>
             </div>
 
@@ -168,7 +160,7 @@ export default function DiaDElPadrePage() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {[
                   { q: '¿Hacen delivery a Pudahuel, Cerrillos y Estación Central?', a: 'Sí, a todas esas comunas con despacho de $3.000. A Padre Hurtado es $5.000. Para Santiago y otras comunas, consulta por WhatsApp.' },
-                  { q: '¿Con cuánta anticipación debo encargar?', a: 'Antes del jueves 18 de junio para asegurar entrega el fin de semana del Día del Padre.' },
+                  { q: '¿Con cuánta anticipación debo encargar?', a: 'Encarga con al menos 48 horas de anticipación.' },
                   { q: '¿Pueden poner una dedicatoria en la torta?', a: 'Sí. Dinos el mensaje cuando hagas el pedido por WhatsApp y lo coordinamos.' },
                 ].map(({ q, a }) => (
                   <div key={q}>
@@ -181,6 +173,7 @@ export default function DiaDElPadrePage() {
           </div>
         }
       />
+      {/* === DÍA DEL PADRE 2027 — FIN === */}
     </>
   );
 }

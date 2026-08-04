@@ -5,7 +5,7 @@ import { businessSchema } from '@/lib/businessSchema';
 
 export const metadata: Metadata = {
   title: 'Torta de Novios y Matrimonios en Maipú · Mesa de Dulces · Galdi',
-  description: 'Torta de novios personalizada y mesa de dulces para tu matrimonio en Maipú. Degustación previa sin costo. Cotiza sin compromiso por WhatsApp.',
+  description: 'Torta de novios personalizada y mesa de dulces para tu matrimonio en Maipú. Degustación previa sin costo al confirmar la cotización. Cotiza sin compromiso por WhatsApp.',
   keywords: 'torta de novios Maipú, matrimonio Maipú, torta matrimonio Maipú, mesa dulces matrimonio Maipú, pastelería artesanal Maipú',
   alternates: { canonical: 'https://galdi.cl/matrimonios-maipu' },
 };
@@ -21,7 +21,7 @@ const faqs = [
   },
   {
     q: '¿Hacen tortas de novios personalizadas para matrimonios en Maipú?',
-    a: 'Sí. Las tortas de novios Galdi se personalizan en sabor, relleno, decoración y número de pisos. Sabores disponibles: 3 Leches, Chocolate, Moka, Selva Negra, Hojarasca y Piña. Puedes solicitar degustación previa antes de confirmar el pedido, sin costo adicional.',
+    a: 'Sí. Las tortas de novios Galdi se personalizan en sabor, relleno, decoración y número de pisos. Sabores disponibles: 3 Leches, Chocolate, Moka, Selva Negra, Hojarasca y Piña. Puedes solicitar degustación previa sin costo una vez confirmada la cotización.',
   },
   {
     q: '¿Ofrecen entrega a domicilio para matrimonios en Maipú?',
@@ -33,11 +33,11 @@ const faqs = [
   },
   {
     q: '¿Puedo degustar los productos antes de confirmar el pedido?',
-    a: 'Sí. Para matrimonios ofrecemos degustación de tortas y dulces antes de confirmar. Este servicio nos permite ajustar los sabores y rellenos exactamente a tus preferencias. Contáctanos por WhatsApp o correo para coordinar la degustación.',
+    a: 'Sí. Para matrimonios ofrecemos degustación de tortas y dulces sin costo una vez confirmada la cotización. Este servicio nos permite ajustar los sabores y rellenos exactamente a tus preferencias. Contáctanos por WhatsApp o correo para coordinar la degustación.',
   },
   {
     q: '¿Qué dulces incluye la mesa de dulces para matrimonios?',
-    a: 'Profiteroles, mousse de chocolate o frambuesa, pannacotta, mini cheesecakes, macarons, tiramisú, alfajores de maicena y mini tartaletas de frutas frescas. Todo elaborado artesanalmente con ingredientes frescos y sin conservantes.',
+    a: 'Profiteroles, mousse de chocolate o frambuesa, pannacotta, mini cheesecakes, macarons, tiramisú, alfajores de maicena y mini tartaletas de frutas frescas. Todo elaborado artesanalmente con ingredientes frescos seleccionados.',
   },
   {
     q: '¿Atienden matrimonios civiles y religiosos en Maipú?',
@@ -55,7 +55,7 @@ const jsonLd = {
     businessSchema({
       url: 'https://galdi.cl/matrimonios-maipu',
       description:
-        'Pastelería artesanal en Maipú especializada en banquetería para matrimonios: tortas de novios personalizadas, mesa de dulces artesanales y bocados salados. Recetas familiares sin conservantes artificiales.',
+        'Pastelería artesanal en Maipú especializada en banquetería para matrimonios: tortas de novios personalizadas, mesa de dulces artesanales y bocados salados. Recetas familiares de elaboración propia sin conservantes artificiales añadidos.',
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Banquetería para Matrimonios',
@@ -66,7 +66,7 @@ const jsonLd = {
               '@type': 'Service',
               name: 'Torta de Novios Personalizada',
               description:
-                'Torta artesanal para matrimonios personalizable en sabor, relleno y decoración. Sabores: 3 Leches, Chocolate, Moka, Selva Negra, Hojarasca y Piña. Incluye degustación previa sin costo.',
+                'Torta artesanal para matrimonios personalizable en sabor, relleno y decoración. Sabores: 3 Leches, Chocolate, Moka, Selva Negra, Hojarasca y Piña. Incluye degustación previa sin costo una vez confirmada la cotización.',
             },
           },
           {
@@ -118,7 +118,7 @@ const servicios = [
   {
     titulo: 'Torta de Novios',
     descripcion:
-      'Personalizable en sabor, relleno y decoración. Sabores: 3 Leches, Chocolate, Moka, Selva Negra, Hojarasca y Piña. Incluye degustación previa sin costo.',
+      'Personalizable en sabor, relleno y decoración. Sabores: 3 Leches, Chocolate, Moka, Selva Negra, Hojarasca y Piña. Incluye degustación previa sin costo una vez confirmada la cotización.',
     link: { href: '/tortas-bodas-maipu', label: 'Ver diseños de torta de bodas →' },
   },
   {
@@ -139,18 +139,18 @@ const servicios = [
 ];
 
 const ventajas = [
-  'Elaboración 100% artesanal con recetas familiares transmitidas entre generaciones.',
-  'Sin conservantes artificiales: ingredientes frescos y naturales en todos los productos.',
+  'Elaboración artesanal con recetas familiares transmitidas entre generaciones.',
+  'Elaboración propia sin conservantes artificiales añadidos, con ingredientes frescos seleccionados.',
   'Personalización completa en tortas, decoración y sabores según tus preferencias.',
-  'Entrega a domicilio en Maipú, Cerrillos, Pudahuel y Estación Central.',
-  'Cotización sin compromiso y degustación previa disponible para matrimonios.',
+  'Entrega a domicilio en Maipú, Cerrillos, Pudahuel, Estación Central, Padre Hurtado y Lo Prado. Otras comunas de la Región Metropolitana, a consultar.',
+  'Cotización sin compromiso y degustación previa sin costo una vez confirmada la cotización.',
   'Atención directa con las socias fundadoras: Jacqueline e Ingrid Gálvez Díaz.',
 ];
 
 const pasos = [
   'Contáctanos por WhatsApp (+56 9 9099 1011) o correo electrónico (ventas@galdi.cl).',
   'Cuéntanos la fecha del matrimonio, número de invitados y los productos que te interesan.',
-  'Si lo prefieres, coordinamos una degustación previa de tortas y dulces sin costo.',
+  'Una vez confirmada la cotización, coordinamos una degustación previa de tortas y dulces sin costo.',
   'Confirmamos el pedido con anticipación y acordamos los detalles de entrega.',
 ];
 

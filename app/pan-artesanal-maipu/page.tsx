@@ -22,8 +22,8 @@ export default function Page() {
         subtitulo="Amasado a mano con receta familiar. Distribución fresca a tu negocio."
         descripcion="Elaboramos pan artesanal todos los días: pan amasado, marraqueta, integral, pan frica, dobladitas y tortilla con chicharrones. Distribuimos a almacenes, cafeterías y negocios de Maipú con entrega fresca."
         imagen="/images/pan-amasado-new.webp"
-        ctaTexto="Ver distribución"
-        ctaHref="/?servicio=b2b&tab=Pan"
+        ctaTexto="Ver productos"
+        ctaHref="/?servicio=delivery&tab=Pan"
         waTexto="Hola Galdi, quiero información sobre pan artesanal"
         breadcrumb="Galdi · Productos · Pan Artesanal"
       />

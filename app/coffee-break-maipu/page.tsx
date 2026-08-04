@@ -5,7 +5,7 @@ import { businessSchema } from '@/lib/businessSchema';
 
 export const metadata: Metadata = {
   title: 'Coffee Break en Maipú — Galdi Pastelería Artesanal',
-  description: 'Servicio de coffee break en Maipú con productos 100% artesanales. Queques, muffins, empanadas y dulces para tu empresa. Factura disponible. Cotiza con Galdi.',
+  description: 'Servicio de coffee break en Maipú con productos artesanales. Queques, muffins, empanadas y dulces para tu empresa. Factura disponible. Cotiza con Galdi.',
   keywords: 'coffee break Maipú, coffee break empresas Maipú, catering corporativo Maipú, banquetería corporativa Maipú, eventos corporativos Maipú',
   alternates: { canonical: 'https://galdi.cl/coffee-break-maipu' },
 };
@@ -39,7 +39,7 @@ const jsonLd = {
     businessSchema({
       url: 'https://galdi.cl/coffee-break-maipu',
       description:
-        'Pastelería artesanal en Maipú especializada en coffee break para empresas: mini sandwiches, mini empanadas, mini tartaletas, alfajores y bebidas calientes elaborados el mismo día. Factura electrónica disponible.',
+        'Pastelería artesanal en Maipú especializada en coffee break para empresas: mini sandwiches, mini empanadas, mini tartaletas, alfajores y bebidas calientes elaborados por encargo. Factura electrónica disponible.',
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Coffee Break para Empresas',
@@ -59,7 +59,7 @@ const jsonLd = {
               '@type': 'Service',
               name: 'Mini Empanadas',
               description:
-                'De pino, queso y queso champiñón. Horneadas el mismo día del evento.',
+                'De pino, queso y queso champiñón. Horneadas por encargo para tu evento.',
             },
           },
           {
@@ -77,7 +77,7 @@ const jsonLd = {
               '@type': 'Service',
               name: 'Alfajores',
               description:
-                'Alfajores de maicena rellenos de manjar, hechos el mismo día.',
+                'Alfajores de maicena rellenos de manjar, hechos a mano.',
             },
           },
           {
@@ -125,7 +125,7 @@ const servicios = [
   {
     titulo: 'Mini Empanadas',
     descripcion:
-      'De pino, queso y queso champiñón. Horneadas el mismo día del evento.',
+      'De pino, queso y queso champiñón. Horneadas por encargo para tu evento.',
   },
   {
     titulo: 'Mini Tartaletas',
@@ -135,7 +135,7 @@ const servicios = [
   {
     titulo: 'Alfajores',
     descripcion:
-      'Alfajores de maicena rellenos de manjar, hechos el mismo día.',
+      'Alfajores de maicena rellenos de manjar, hechos a mano.',
   },
   {
     titulo: 'Bebidas Calientes',
@@ -145,8 +145,8 @@ const servicios = [
 ];
 
 const ventajas = [
-  'Elaboración 100% artesanal, sin conservantes ni mezclas industriales.',
-  'Productos preparados el mismo día del evento para máxima frescura.',
+  'Elaboración artesanal propia, sin conservantes añadidos ni mezclas industriales.',
+  'Productos preparados por encargo para máxima frescura.',
   'Factura electrónica disponible para empresas y organizaciones.',
   'Entrega puntual en Maipú, Cerrillos, Pudahuel y Estación Central.',
   'Menú personalizable según preferencias y restricciones alimentarias.',
@@ -209,7 +209,7 @@ export default function CoffeeBreakMaipuPage() {
           <p style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1rem, 2vw, 1.2rem)', fontWeight: 300, color: '#3d2010', lineHeight: 1.9, marginBottom: '3.5rem', textAlign: 'center' }}>
             Galdi es una pastelería artesanal ubicada en Pasaje Marcos Echenique 809, Maipú,
             Región Metropolitana. Ofrece servicio de coffee break para empresas, colegios y
-            eventos corporativos con productos elaborados el mismo día: mini sandwiches,
+            eventos corporativos con productos elaborados por encargo: mini sandwiches,
             mini empanadas, mini tartaletas, alfajores y bebidas calientes. Factura electrónica disponible.
             Entrega en Maipú y comunas cercanas.
           </p>
@@ -224,9 +224,9 @@ export default function CoffeeBreakMaipuPage() {
             </h2>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#5a3520', lineHeight: 1.75, marginBottom: '1.75rem' }}>
               Organizamos coffee breaks para empresas, colegios y eventos corporativos en Maipú
-              con productos elaborados el mismo día. Nuestro servicio incluye mini sandwiches,
+              con productos elaborados por encargo. Nuestro servicio incluye mini sandwiches,
               mini empanadas, mini tartaletas y alfajores preparados con ingredientes frescos
-              y sin conservantes artificiales. Cada pedido se presenta de forma prolija, lista para
+              seleccionados, de elaboración propia sin conservantes añadidos. Cada pedido se presenta de forma prolija, lista para
               servir, con embalaje adecuado para transporte. Coordinamos entrega a domicilio en
               Maipú y comunas cercanas, con puntualidad garantizada para que tu evento comience
               a tiempo.

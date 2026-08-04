@@ -5,7 +5,7 @@ import { businessSchema } from '@/lib/businessSchema';
 
 export const metadata: Metadata = {
   title: 'Torta de Bodas y Novios en Maipú · Diseños a Medida · Galdi',
-  description: 'Torta de bodas y novios personalizada en Maipú: sabores, rellenos y diseños a medida. Degustación previa sin costo. Cotiza tu torta de matrimonio por WhatsApp.',
+  description: 'Torta de bodas y novios personalizada en Maipú: sabores, rellenos y diseños a medida. Degustación previa sin costo al confirmar la cotización. Cotiza tu torta de matrimonio por WhatsApp.',
   keywords: 'torta bodas Maipú, torta novios Maipú, torta de matrimonio Maipú, torta personalizada bodas Maipú',
   alternates: { canonical: 'https://galdi.cl/tortas-bodas-maipu' },
 };
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: '¿Cómo personalizo mi torta de bodas en Maipú?',
-    a: 'Eliges sabor, relleno, número de pisos y estilo de decoración. Ofrecemos degustación previa sin costo para ajustar sabores antes de confirmar el pedido.',
+    a: 'Eliges sabor, relleno, número de pisos y estilo de decoración. Ofrecemos degustación previa sin costo una vez confirmada la cotización, para ajustar los sabores antes de la elaboración final.',
   },
   {
     q: '¿Qué sabores de torta de novios tiene Galdi?',
@@ -39,7 +39,7 @@ const jsonLd = {
     businessSchema({
       url: 'https://galdi.cl/tortas-bodas-maipu',
       description:
-        'Pastelería artesanal en Maipú especializada en tortas de bodas y novios personalizadas: diseños a medida, degustación previa sin costo, entrega el día del matrimonio.',
+        'Pastelería artesanal en Maipú especializada en tortas de bodas y novios personalizadas: diseños a medida, degustación previa sin costo al confirmar la cotización, entrega el día del matrimonio.',
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Tortas de Bodas Personalizadas',
@@ -122,13 +122,13 @@ const tamanos = [
   { titulo: 'Pequeña (S)', descripcion: 'Hasta 20 invitados. 1 piso. Ideal para ceremonias íntimas o mesa de dulces.' },
   { titulo: 'Mediana (M)', descripcion: 'Hasta 40 invitados. 2 pisos. El formato más popular para matrimonios civiles y religiosos.' },
   { titulo: 'Grande (L)', descripcion: 'Hasta 80 invitados. 3 pisos. Presencia imponente para la recepción.' },
-  { titulo: 'Extra Grande (XL)', descripcion: 'Más de 100 invitados. 4 pisos o más. Coordinamos diseño y logística con anticipación.' },
+  { titulo: 'Extra Grande (XL)', descripcion: 'Más de 100 invitados. Diseño y logística coordinados caso a caso con anticipación.' },
 ];
 
 const pasos = [
   'Contáctanos por WhatsApp (+56 9 9099 1011) o escríbenos a ventas@galdi.cl.',
   'Cuéntanos la fecha del matrimonio, número de invitados y el estilo que buscas.',
-  'Coordinamos una degustación previa sin costo para elegir sabores y rellenos.',
+  'Al confirmar la cotización, coordinamos una degustación sin costo para elegir sabores y rellenos.',
   'Confirmamos el diseño final y los detalles de entrega el día del matrimonio.',
 ];
 
@@ -170,7 +170,7 @@ export default function TortasBodasMaipuPage() {
               Torta de Bodas en Maipú
             </h1>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(0.85rem, 2vw, 1rem)', color: 'rgba(245,230,211,0.85)', maxWidth: '600px' }}>
-              Diseños a medida. Degustación previa sin costo. Entrega el día de tu matrimonio.
+              Diseños a medida. Degustación sin costo al confirmar tu cotización. Entrega el día de tu matrimonio.
             </p>
           </div>
         </div>
@@ -181,8 +181,8 @@ export default function TortasBodasMaipuPage() {
           <p style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1rem, 2vw, 1.2rem)', fontWeight: 300, color: '#3d2010', lineHeight: 1.9, marginBottom: '3.5rem', textAlign: 'center' }}>
             Galdi es una pastelería artesanal ubicada en Pasaje Marcos Echenique 809, Maipú,
             Región Metropolitana. Elabora tortas de bodas y novios personalizadas: sabor, relleno,
-            pisos y decoración a elección. Incluye degustación previa sin costo y entrega
-            coordinada el día del matrimonio en Maipú y comunas cercanas.
+            pisos y decoración a elección. Incluye degustación previa sin costo al confirmar
+            la cotización y entrega coordinada el día del matrimonio en Maipú y comunas cercanas.
           </p>
 
           {/* Diseños */}
@@ -264,13 +264,13 @@ export default function TortasBodasMaipuPage() {
               id="degustacion"
               style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 300, color: '#1a0f0a', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid rgba(212,168,83,0.3)' }}
             >
-              Degustación previa sin costo
+              Degustación previa sin costo al confirmar la cotización
             </h2>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#5a3520', lineHeight: 1.75 }}>
-              Para matrimonios ofrecemos degustación de tortas y dulces antes de confirmar el
-              pedido. Esta instancia nos permite ajustar los sabores, rellenos y nivel de dulzor
-              exactamente a tus preferencias. Contáctanos por WhatsApp o correo para coordinar
-              la degustación sin costo adicional.
+              Para matrimonios ofrecemos degustación de tortas y dulces sin costo una vez
+              confirmada la cotización. Esta instancia nos permite ajustar los sabores, rellenos
+              y nivel de dulzor exactamente a tus preferencias. Contáctanos por WhatsApp o correo
+              para coordinar la degustación.
             </p>
           </section>
 

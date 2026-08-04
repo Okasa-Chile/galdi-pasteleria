@@ -418,7 +418,7 @@ export default function ArmaTuTorta() {
           margin: '0.75rem auto 0',
           letterSpacing: '0.01em',
         }}>
-          🕐 Entrega en 24 horas después de contactarnos
+          🕐 Entrega en 48 horas después de contactarnos
         </p>
 
         <div style={{
