@@ -89,6 +89,15 @@ export default function Nosotras() {
             lineHeight: 1.8,
             marginBottom: '1.25rem',
           }}>
+            Galdi partió hace tres años, cuando Jacqueline empezó a preparar tortas y pasteles por encargo para conocidos y vecinos de Villa Las Palmas. El boca a boca hizo el resto: los pedidos crecieron, Ingrid se sumó al proyecto y lo que era una cocina familiar se convirtió en la pastelería que somos hoy.
+          </p>
+          <p style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: '0.9rem',
+            color: '#3d2010',
+            lineHeight: 1.8,
+            marginBottom: '1.25rem',
+          }}>
             Cada producto que sale de nuestra cocina en Maipú lleva el mismo cuidado que pondríamos en prepararlo para nuestra propia familia. Sin apuros, sin atajos — solo ingredientes de calidad, recetas probadas y mucho cariño en cada preparación. Así es como entendemos la pastelería artesanal: hecha con las manos, pensada con el corazón.
           </p>
           <p style={{

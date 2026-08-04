@@ -9,11 +9,11 @@ export const metadata: Metadata = {
     canonical: 'https://galdi.cl',
   },
   title: 'Galdi — Pastelería Artesanal en Maipú',
-  description: 'Pastelería artesanal en Maipú. Tortas, pasteles, pan y empanadas hechos con cariño. Eventos, cóctel y delivery en Maipú y comunas cercanas.',
+  description: 'Tres años elaborando tortas, pasteles, empanadas y pan artesanal en Maipú. Recetas familiares de las hermanas Gálvez. Delivery, eventos y cóctel. WhatsApp.',
   keywords: 'pastelería artesanal Maipú, panadería artesanal Maipú, panadería Maipú, tortas Maipú, pan amasado Maipú, empanadas Maipú, banquetería Maipú, matrimonios Maipú, cóctel Maipú, coffee break Maipú, eventos Maipú, eventos colegio Maipú, pan de pascua Maipú, cajas fiestas patrias, cajas navidad Maipú, delivery pasteles Maipú, queques artesanales, brunch Maipú',
   openGraph: {
     title: 'Galdi — Pastelería Artesanal en Maipú',
-    description: 'Pastelería artesanal en Maipú. Tortas, pasteles, pan y empanadas hechos con cariño. Eventos, cóctel y delivery en Maipú y comunas cercanas.',
+    description: 'Tres años elaborando tortas, pasteles, empanadas y pan artesanal en Maipú. Recetas familiares de las hermanas Gálvez. Delivery, eventos y cóctel. WhatsApp.',
     url: 'https://galdi.cl',
     siteName: 'Galdi Pastelería',
     images: [

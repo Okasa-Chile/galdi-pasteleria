@@ -66,6 +66,16 @@ después del 18-09-2026, comentarios de reversión incluidos):
 - Producto "Empanada de Queso" creado ($2.700, mismos costos base que
   las demás empanadas de la categoría)
 
+**Trayectoria de 3 años incorporada:**
+- components/Nosotras.tsx: párrafo nuevo sobre el origen de Galdi
+  (Jacqueline vendiendo a conocidos y vecinos, Ingrid sumándose al
+  formalizar la empresa)
+- app/layout.tsx: description y openGraph reescritos para incluir los
+  3 años de trayectoria (155 caracteres)
+- Motivo: diagnóstico de CTR en Search Console — "pastelería maipu"
+  rinde 3,6% en posición 6,2, cuando consultas equivalentes en
+  posiciones similares rinden 6-8%
+
 ---
 
 ## Jornada 29-07-2026 — Fix escAttr en /gestion + migración IDs galdi_productos
