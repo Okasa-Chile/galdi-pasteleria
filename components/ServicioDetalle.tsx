@@ -744,6 +744,17 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
           );
         })()}
 
+        {id === 'delivery' && activeTab === 'Tortas' && (
+          <div style={{ maxWidth: '640px', margin: '0 0 1.25rem', padding: '1rem 1.25rem', background: 'rgba(212,168,83,0.10)', borderLeft: '3px solid var(--gold)', borderRadius: '2px', display: 'flex', flexWrap: 'wrap', gap: '0.5rem 1.5rem' }}>
+            <Link href="/tortas-maipu" style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: 'var(--gold)', textDecoration: 'none' }}>
+              Ver todos los sabores y cómo cotizar tu torta en Maipú →
+            </Link>
+            <Link href="/tortas-bodas-maipu" style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: 'var(--gold)', textDecoration: 'none' }}>
+              ¿Es para tu matrimonio? Torta de bodas a medida →
+            </Link>
+          </div>
+        )}
+
         {/* ALMACENES / DELIVERY — grilla de productos */}
         {(id === 'b2b' || id === 'delivery') && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.75rem', marginTop: '1rem' }}>

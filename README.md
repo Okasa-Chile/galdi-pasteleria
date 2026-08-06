@@ -261,13 +261,43 @@ Export de 3 meses (Páginas.csv) + filtrado por consulta confirmó:
 - **Grupo Tortas — canibalización real:** en 5/5 variantes de keyword
   ("tortas maipu", "tortas en maipu", "tortas maipú", "tortas a
   domicilio maipú", "tortas en maipú"), el home se lleva más clics
-  que `/tortas-maipu`, la página dedicada. Pendiente de resolver
-  (refuerzo de enlazado interno hacia la landing).
+  que `/tortas-maipu`, la página dedicada. **RESUELTO (06-08-2026)** —
+  ver detalle abajo.
 - **"torta bodas maipú" — fragmentación en 5 páginas:** 273
   impresiones repartidas entre home (126), `/tortas-bodas-maipu` (46),
   `/matrimonios-maipu` (39), `/productos` (32), `/cumpleanos-maipu`
   (30). 0 clics. Página canónica definida: `/tortas-bodas-maipu`.
-  Pendiente de resolver.
+  **RESUELTO (06-08-2026)** — ver detalle abajo.
+
+**Fix Grupo Tortas — enlazado interno (06-08-2026):**
+
+**Causa estructural encontrada:** los 13 enlaces SEO del Footer estaban
+detrás de `{seoOpen && ...}` — renderizado condicional sobre `useState`.
+En static export no existían en el HTML, así que las 13 landings no
+recibían ningún enlace interno desde el home ni desde `/productos`.
+Google no hace clic en botones para descubrir enlaces.
+
+**Fix aplicado:** el bloque de links del Footer ahora se renderiza
+siempre y se oculta con `display: seoOpen ? 'flex' : 'none'`.
+Comportamiento visual idéntico para el usuario.
+
+**Causa secundaria:** home y `/productos` comparten
+`ServicioDetalle.tsx`, que renderiza el catálogo completo de Tortas —
+competía por contenido con `/tortas-maipu`. Fix: bloque de derivación
+con anchor text explícito hacia `/tortas-maipu` y `/tortas-bodas-maipu`,
+agregado una sola vez en el componente (se propaga a ambas páginas).
+
+**También:** `/tortas-maipu` no enlazaba a `/tortas-bodas-maipu` (era la
+única del grupo que no cerraba el círculo). Agregado.
+
+**No se tocó** el catálogo de compra ni los productos listados.
+
+**REGLA NUEVA:** nunca poner enlaces internos detrás de un renderizado
+condicional por `useState` (`{cond && <a>}`). Si deben ocultarse,
+renderizarlos siempre y controlar la visibilidad con CSS. En static
+export, el estado inicial es lo único que queda en el HTML.
+
+**Medición:** requiere 2-4 semanas en GSC. No forzar conclusiones antes.
 - **"banquetes maipú" — fragmentación en 4 páginas:** 232 impresiones
   entre `/coctel-maipu` (190), `/matrimonios-maipu` (186), home (17),
   `/coffee-break-maipu` (15). 0 clics. Página canónica definida:

@@ -116,29 +116,27 @@ export default function Footer() {
             style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: seoOpen ? 'var(--gold)' : 'rgba(245,230,211,0.45)', letterSpacing: '0.08em', textTransform: 'uppercase', padding: 0 }}>
             Links {seoOpen ? '▲' : '▼'}
           </button>
-          {seoOpen && (
-            <div style={{ position: 'absolute', bottom: '2rem', right: 0, background: '#2a1205', border: '1px solid rgba(212,168,83,0.2)', padding: '1rem 1.25rem', display: 'flex', flexDirection: 'column', gap: '0.6rem', minWidth: '200px', zIndex: 100 }}>
-              {[
-                { label: 'Productos artesanales', href: '/productos' },
-                { label: 'Empanadas en Maipú', href: '/empanadas-maipu' },
-                { label: 'Tortas en Maipú', href: '/tortas-maipu' },
-                { label: 'Pan artesanal Maipú', href: '/pan-artesanal-maipu' },
-                { label: 'Delivery Maipú', href: '/delivery-maipu' },
-                { label: 'Matrimonios Maipú', href: '/matrimonios-maipu' },
-                { label: 'Cóctel Maipú', href: '/coctel-maipu' },
-                { label: 'Cumpleaños Maipú', href: '/cumpleanos-maipu' },
-                { label: 'Coffee Break Maipú', href: '/coffee-break-maipu' },
-                { label: 'Tortas de Novia Maipú', href: '/tortas-bodas-maipu' },
-                { label: 'Día de la Madre', href: '/dia-de-la-madre' },
-                { label: 'Tortas Día del Padre', href: '/dia-del-padre' },
-                { label: 'Arma tu Torta', href: '/arma-tu-torta' },
-              ].map((link) => (
-                <a key={link.href} href={link.href} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'rgba(245,230,211,0.55)', textDecoration: 'none', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          )}
+          <div style={{ position: 'absolute', bottom: '2rem', right: 0, background: '#2a1205', border: '1px solid rgba(212,168,83,0.2)', padding: '1rem 1.25rem', display: seoOpen ? 'flex' : 'none', flexDirection: 'column', gap: '0.6rem', minWidth: '200px', zIndex: 100 }}>
+            {[
+              { label: 'Productos artesanales', href: '/productos' },
+              { label: 'Empanadas en Maipú', href: '/empanadas-maipu' },
+              { label: 'Tortas en Maipú', href: '/tortas-maipu' },
+              { label: 'Pan artesanal Maipú', href: '/pan-artesanal-maipu' },
+              { label: 'Delivery Maipú', href: '/delivery-maipu' },
+              { label: 'Matrimonios Maipú', href: '/matrimonios-maipu' },
+              { label: 'Cóctel Maipú', href: '/coctel-maipu' },
+              { label: 'Cumpleaños Maipú', href: '/cumpleanos-maipu' },
+              { label: 'Coffee Break Maipú', href: '/coffee-break-maipu' },
+              { label: 'Tortas de Novia Maipú', href: '/tortas-bodas-maipu' },
+              { label: 'Día de la Madre', href: '/dia-de-la-madre' },
+              { label: 'Tortas Día del Padre', href: '/dia-del-padre' },
+              { label: 'Arma tu Torta', href: '/arma-tu-torta' },
+            ].map((link) => (
+              <a key={link.href} href={link.href} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: 'rgba(245,230,211,0.55)', textDecoration: 'none', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>
+                {link.label}
+              </a>
+            ))}
+          </div>
         </div>
 
       </div>

@@ -338,6 +338,7 @@ export default function TortasMaipuPage() {
             style={{ textAlign: 'center', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1.5rem', marginBottom: '2.5rem' }}
           >
             {[
+              { href: '/tortas-bodas-maipu', label: 'Tortas de Bodas Maipú' },
               { href: '/matrimonios-maipu', label: 'Banquetería Matrimonios' },
               { href: '/coctel-maipu', label: 'Cóctel en Maipú' },
               { href: '/coffee-break-maipu', label: 'Coffee Break Maipú' },
