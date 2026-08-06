@@ -84,6 +84,27 @@ export default function Home() {
             </div>
           ))}
         </div>
+
+        {/* Enlaces a landings de eventos — SEO (06-08-2026) */}
+        <nav
+          aria-label="Páginas de servicios para eventos"
+          style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.75rem 2rem', padding: '1.5rem 5% 2rem' }}
+        >
+          {[
+            { href: '/matrimonios-maipu', label: 'Banquetería para matrimonios en Maipú' },
+            { href: '/coctel-maipu', label: 'Cóctel y canapés a domicilio en Maipú' },
+            { href: '/cumpleanos-maipu', label: 'Cumpleaños en Maipú' },
+            { href: '/coffee-break-maipu', label: 'Coffee break para empresas en Maipú' },
+          ].map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', letterSpacing: '0.08em', color: 'var(--gold)', textDecoration: 'none' }}
+            >
+              {l.label} →
+            </Link>
+          ))}
+        </nav>
       </section>
       <Nosotras />
       {/* Bloque Arma tu Torta */}

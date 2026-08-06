@@ -302,9 +302,33 @@ export, el estado inicial es lo único que queda en el HTML.
   entre `/coctel-maipu` (190), `/matrimonios-maipu` (186), home (17),
   `/coffee-break-maipu` (15). 0 clics. Página canónica definida:
   `/coctel-maipu`. Pendiente de resolver.
-- **"canapés a domicilio maipu":** `/coctel-maipu` tiene 18
-  impresiones y 0 clics pese a ser la página correcta — problema de
-  snippet, no de arquitectura. Pendiente.
+**"canapés a domicilio maipu" — RESUELTO 06-08-2026 (diagnóstico previo
+era incorrecto).** Datos GSC reales (3 meses): posición media 3,5, CTR
+9,4%, 3 clics, 32 impresiones. El snippet NO era el problema — ese CTR en
+esa posición es sano. El reparto por página mostró canibalización: home
+3 clics/23 imp, /matrimonios-maipu 1/3, /coctel-maipu 0 clics/19 imp,
+/productos 0/7.
+
+Causa: los 4 paneles de la Franja Eventos en app/page.tsx apuntaban al
+propio home con query params (/?servicio=eventos&tab=X) para abrir el
+overlay. El home concentraba una sección prominente sobre eventos cuyos
+enlaces internos apuntaban a sí mismo; las landings de eventos no recibían
+ningún enlace desde ahí.
+
+Fix (opción B): se conservan los paneles y el overlay sin cambios, y se
+agrega debajo de la franja una nav con 4 enlaces textuales de anchor
+descriptivo hacia /matrimonios-maipu, /coctel-maipu, /cumpleanos-maipu y
+/coffee-break-maipu. No se tocó title/description de /coctel-maipu.
+
+**LECCIÓN DE PROCESO:** el diagnóstico "problema de snippet" se había
+anotado sin mirar la posición media ni el reparto por página. Antes de
+concluir que un CTR bajo es culpa del copy, verificar SIEMPRE posición
+media y pestaña PÁGINAS filtrada por esa consulta — un CTR de 0% en una
+página que comparte consulta con otras 3 es canibalización, no snippet.
+
+**Medición:** 2-4 semanas en GSC. Este cambio se despliega junto a la
+ventana de medición del fix del Footer (06-08-2026), pero afecta a un
+grupo de páginas distinto (Eventos vs. Tortas), así que son separables.
 - **`/delivery-maipu`:** cero impresiones en las 337 consultas
   registradas — no aparece en ninguna búsqueda. Investigar aparte
   (¿indexación? ¿la keyword simplemente no tiene volumen?).
