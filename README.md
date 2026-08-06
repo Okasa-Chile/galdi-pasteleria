@@ -254,6 +254,50 @@ npm run start   # preview producción local
 hardcodeado, no viene de ninguna variable ni fuente automática). Las
 reseñas crecen ~14/mes, revisar periódicamente.
 
+**Actualización 05-08-2026 — Canibalización investigada con GSC real:**
+
+Export de 3 meses (Páginas.csv) + filtrado por consulta confirmó:
+
+- **Grupo Tortas — canibalización real:** en 5/5 variantes de keyword
+  ("tortas maipu", "tortas en maipu", "tortas maipú", "tortas a
+  domicilio maipú", "tortas en maipú"), el home se lleva más clics
+  que `/tortas-maipu`, la página dedicada. Pendiente de resolver
+  (refuerzo de enlazado interno hacia la landing).
+- **"torta bodas maipú" — fragmentación en 5 páginas:** 273
+  impresiones repartidas entre home (126), `/tortas-bodas-maipu` (46),
+  `/matrimonios-maipu` (39), `/productos` (32), `/cumpleanos-maipu`
+  (30). 0 clics. Página canónica definida: `/tortas-bodas-maipu`.
+  Pendiente de resolver.
+- **"banquetes maipú" — fragmentación en 4 páginas:** 232 impresiones
+  entre `/coctel-maipu` (190), `/matrimonios-maipu` (186), home (17),
+  `/coffee-break-maipu` (15). 0 clics. Página canónica definida:
+  `/coctel-maipu`. Pendiente de resolver.
+- **"canapés a domicilio maipu":** `/coctel-maipu` tiene 18
+  impresiones y 0 clics pese a ser la página correcta — problema de
+  snippet, no de arquitectura. Pendiente.
+- **`/delivery-maipu`:** cero impresiones en las 337 consultas
+  registradas — no aparece en ninguna búsqueda. Investigar aparte
+  (¿indexación? ¿la keyword simplemente no tiene volumen?).
+
+**Investigado y resuelto — NO era canibalización:** se sospechó que
+`matrimonios-maipu` competía con `coctel-maipu` por "banquetería"
+(H1, 2 H2 y schema name de `matrimonios-maipu` usaban ese término
+intensamente). Investigación confirmó que son productos de negocio
+reales y distintos (cena servida/sentada para matrimonios vs. cóctel
+de pie para eventos en general), con puente bidireccional de FAQs ya
+construido correctamente entre ambas páginas. El único problema real
+era que el title/description de `matrimonios-maipu` decía "Torta de
+Novios y Mesa de Dulces" sin mencionar la banquetería/cena servida que
+la página sí ofrece — desalineación title↔contenido, no canibalización
+de arquitectura. Corregido en commit `a075221` (05-08-2026).
+
+**Lección de proceso:** `python -c "print(...)"` con texto acentuado
+en la consola de Windows de esta sesión corrompe tildes por codepage
+incorrecto (ej. "Maipú" → "Maip�"), aunque el dato en disco esté
+íntegro. No es corrupción real de datos — usar `sed`/`grep`/lectura
+de archivo directa en vez de `print()` de Unicode para verificar
+contenido con tildes.
+
 ### Administrativos / Externos
 - [ ] **Estatuto societario Galdi** — modificación portal RES en curso:
   - Paso 3: subir documentos (acta notaría Repertorio 494 + cert. vigencia)
