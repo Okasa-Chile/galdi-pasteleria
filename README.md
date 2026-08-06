@@ -333,6 +333,26 @@ grupo de páginas distinto (Eventos vs. Tortas), así que son separables.
   registradas — no aparece en ninguna búsqueda. Investigar aparte
   (¿indexación? ¿la keyword simplemente no tiene volumen?).
 
+**Sitemap migrado a generación automática (06-08-2026):**
+`public/sitemap.xml` era estático y escrito a mano; sus `lastmod` estaban
+congelados y no reflejaban cambios reales. Migrado a `app/sitemap.ts`, que
+Next genera en cada build. Se agregó `/arma-tu-torta`, que faltaba.
+
+REGLA NUEVA: al crear una landing nueva, agregarla a `app/sitemap.ts`.
+Nunca crear archivos `sitemap.xml` manuales en `public/` — ganan sobre el
+generado por Next y lo dejan sin efecto.
+
+**noindex en /experimental/hero-editorial:** ruta de desarrollo en
+producción. Ya tenía `robots: { index: false, follow: false }` en su
+metadata — verificado, no requirió cambio.
+
+**Aclaración de diagnóstico — `/delivery-maipu`:** no estaba indexada
+pese a figurar en el sitemap. La causa no era el sitemap sino la falta de
+enlaces internos crawleables (bug del Footer, corregido en `e5e930b`).
+Estar en el sitemap no basta — sin enlaces internos Google considera la
+página poco importante y no la indexa ("Descubierta: actualmente sin
+indexar").
+
 **Investigado y resuelto — NO era canibalización:** se sospechó que
 `matrimonios-maipu` competía con `coctel-maipu` por "banquetería"
 (H1, 2 H2 y schema name de `matrimonios-maipu` usaban ese término
