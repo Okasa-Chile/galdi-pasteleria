@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
-import { businessSchema } from "@/lib/businessSchema";
+import { GALDI_BUSINESS } from "@/lib/businessSchema";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://galdi.cl'),
@@ -55,9 +55,7 @@ export default function RootLayout({
         <meta name="color-scheme" content="light only" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           "@context": "https://schema.org",
-          ...businessSchema({
-            description: "Pastelería y panadería artesanal en Maipú. Tortas, pan amasado, empanadas y banquetería para eventos. Delivery en Maipú y Gran Santiago.",
-          }),
+          ...GALDI_BUSINESS,
         })}} />
       </head>
       <body>

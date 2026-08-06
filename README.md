@@ -324,6 +324,12 @@ contenido con tildes.
 
 ## 📋 Historial de jornadas (resumen)
 
+- **06-08-2026** — Fix GSC "La reseña tiene varias puntuaciones agregadas":
+  eliminado aggregateRating duplicado en JSON-LD (mismo @id emitido por
+  layout.tsx y por las 11 landings). businessSchema() ahora devuelve solo
+  una referencia por @id; GALDI_BUSINESS es el nodo canónico único emitido
+  desde layout.tsx. aggregateRating retirado por completo (LocalBusiness no
+  es elegible para review snippets, regla self-serving reviews de Google).
 - **04-08-2026** — Auditoría de credibilidad Bloque 2 completa: plazos, delivery unificado 6 comunas, claims de conservantes acotados a elaboración propia, "100%" eliminado de contenido, "mismo día"→"por encargo" (17 casos), degustación condicionada a cotización confirmada (13 menciones), torta bodas XL sin comprometer 4 pisos, Vegetariana/Queso corregidos en Catalogo.tsx · /dia-del-padre y /dia-de-la-madre perennizadas (sin fechas duras, migradas a businessSchema()) · Distribución a almacenes retirada de metadata/Hero, tab B2B oculto tras `B2B_ACTIVO=false` (código intacto) · Hero Fiestas Patrias: empanada ponderada 3x (posiciones 0,3,6), ahora es la imagen LCP · Gestión: 6 empanadas corregidas docena→unidad + Empanada de Queso creada ($2.700) · Trayectoria de 3 años incorporada en Nosotras.tsx y metadata (description/openGraph 155 caracteres), motivada por diagnóstico de CTR bajo en Search Console para "pastelería maipu"
 - **20-07-2026** — 2 landings geo migradas a custom: cumpleanos-maipu (commit 593562e) y delivery-maipu como hub de derivación (commit 82c213a) · 3 fixes SEO (commit 1e7ef49): refactor tarjeta "Arma tu Torta" (HTML inválido resuelto, anchor 136→13 chars), Franja Eventos con stretched link pattern, role="presentation" en flores decorativas · scripts/analizar_anchors.mjs creado · decisiones de negocio: pan artesanal descartado del patrón SEO, pedido mínimo delivery $15.000, política de despacho actualizada (rangos, no montos fijos), TUU descartado
 - **24-06-2026** — 21 productos nuevos en Firestore: 12 Cóctel Salado + 5 Cóctel Dulce + 4 Tablas (solo precio venta, cóctel por unidad) · fix bug $36 gestion-index.html (logística 0 explícito + dropdown precio) · Flow.cl integración confirmada operativa
@@ -453,11 +459,37 @@ thin content en páginas que aún usan SeoPage genérico, enlazado interno.
 - ~~Producto "Empanada de Queso"...~~ → creado en galdi_productos vía
   /gestion ($2.700).
 
-**Hallazgo aún sin resolver:**
-- Duplicación de JSON-LD: cada página emite el bloque de layout.tsx más el
-  suyo propio, ambos con el mismo @id. Google los fusiona sin conflicto (datos
-  ahora idénticos), pero se podría optimizar haciendo que las landings solo
-  referencien el @id.
+**Hallazgos resueltos:**
+- ~~Duplicación de JSON-LD: cada página emite el bloque de layout.tsx más el
+  suyo propio, ambos con el mismo @id.~~ → **RESUELTO 06-08-2026.** Ver
+  "Fix aggregateRating duplicado (GSC)" más abajo.
+
+### Fix aggregateRating duplicado (GSC) — 06-08-2026
+
+GSC reportó error crítico "La reseña tiene varias puntuaciones agregadas".
+Causa: layout.tsx emitía businessSchema() en el head de todas las páginas y
+11 landings emitían el mismo objeto (mismo @id, mismo aggregateRating) en su
+propio @graph.
+
+Además se verificó que aggregateRating en LocalBusiness/Organization NO es
+elegible para review snippets (regla de self-serving reviews de Google): el
+marcado no producía estrellas y sí generaba riesgo (reseñas agregadas de un
+tercero + sin contenido visible de respaldo). Se eliminó por completo.
+
+Cambios: solo lib/businessSchema.ts y app/layout.tsx. Las 11 landings no se
+tocaron.
+
+**REGLA NUEVA — Arquitectura JSON-LD**
+- GALDI_BUSINESS es el nodo canónico completo. Se emite UNA sola vez en todo
+  el sitio, desde app/layout.tsx.
+- businessSchema() devuelve solo una REFERENCIA por @id ({@type, @id} +
+  overrides seguros). Las páginas la usan dentro de su @graph para colgar
+  propiedades propias (ej. hasOfferCatalog) sin redeclarar la entidad.
+- Los overrides `url` y `description` se descartan a propósito: son de la
+  entidad negocio, no de la landing. La URL de página va vía canonical.
+- NO reintroducir aggregateRating. Si algún día se quieren estrellas reales,
+  la vía es schema Product en productos individuales con reseñas reales
+  visibles en la página.
 
 ---
 
