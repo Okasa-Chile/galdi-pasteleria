@@ -4,9 +4,9 @@ import Image from 'next/image';
 import { businessSchema } from '@/lib/businessSchema';
 
 export const metadata: Metadata = {
-  title: 'Torta de Novios y Matrimonios en Maipú · Mesa de Dulces · Galdi',
-  description: 'Torta de novios personalizada y mesa de dulces para tu matrimonio en Maipú. Degustación previa sin costo al confirmar la cotización. Cotiza sin compromiso por WhatsApp.',
-  keywords: 'torta de novios Maipú, matrimonio Maipú, torta matrimonio Maipú, mesa dulces matrimonio Maipú, pastelería artesanal Maipú',
+  title: 'Torta de Novios, Mesa de Dulces y Banquetería para Matrimonios en Maipú · Galdi',
+  description: 'Torta de novios personalizada, mesa de dulces y banquetería completa con cena servida para tu matrimonio en Maipú. Degustación previa sin costo al confirmar la cotización. Cotiza sin compromiso por WhatsApp.',
+  keywords: 'torta de novios Maipú, banquetería matrimonios Maipú, cena matrimonio Maipú, mesa dulces matrimonio Maipú, matrimonio Maipú, pastelería artesanal Maipú',
   alternates: { canonical: 'https://galdi.cl/matrimonios-maipu' },
 };
 
