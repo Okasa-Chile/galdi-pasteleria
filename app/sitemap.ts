@@ -13,7 +13,8 @@ export const revalidate = false;
  * sitemap.xml manuales.
  *
  * Excluidas a propósito: /carrito y /pago-exitoso (transaccionales),
- * /experimental/* (rutas de desarrollo, con noindex).
+ * /experimental/* (rutas de desarrollo, con noindex),
+ * /distribucion-maipu (redirige a "/", servicio retirado).
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://galdi.cl';
@@ -26,9 +27,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/tortas-maipu', priority: 0.8, changeFrequency: 'monthly' },
     { path: '/tortas-bodas-maipu', priority: 0.8, changeFrequency: 'monthly' },
     { path: '/empanadas-maipu', priority: 0.8, changeFrequency: 'monthly' },
-    { path: '/pan-artesanal-maipu', priority: 0.8, changeFrequency: 'monthly' },
+    { path: '/pan-artesanal-maipu', priority: 0.5, changeFrequency: 'monthly' },
     { path: '/delivery-maipu', priority: 0.8, changeFrequency: 'monthly' },
-    { path: '/distribucion-maipu', priority: 0.8, changeFrequency: 'monthly' },
     { path: '/matrimonios-maipu', priority: 0.8, changeFrequency: 'monthly' },
     { path: '/coctel-maipu', priority: 0.8, changeFrequency: 'monthly' },
     { path: '/cumpleanos-maipu', priority: 0.8, changeFrequency: 'monthly' },
