@@ -565,6 +565,28 @@ tocaron.
   la vía es schema Product en productos individuales con reseñas reales
   visibles en la página.
 
+### Bloque 3 — CERRADO 06-08-2026
+
+Hallazgo estructural principal: los 13 enlaces SEO del Footer estaban tras
+`{seoOpen && ...}` y no existían en el HTML estático. Las landings no
+recibían ningún enlace interno crawleable. Verificado empíricamente:
+`tortas-bodas-maipu` en `out/index.html` pasó de 0 a 2 ocurrencias.
+
+**LECCIÓN DE MÉTODO:** dos diagnósticos del Bloque 3 estaban mal anotados y
+se corrigieron con datos reales de GSC.
+- "canapés a domicilio maipu — problema de snippet" → era canibalización
+  (pos 3,5, CTR 9,4%, sano).
+- "/delivery-maipu 0 impresiones" → la página no estaba indexada, pese a
+  figurar en el sitemap. Estar en el sitemap no basta sin enlaces internos.
+
+REGLA: antes de concluir causa por CTR bajo, verificar SIEMPRE posición
+media y pestaña PÁGINAS filtrada por la consulta.
+
+### Pendientes de calendario
+
+- 18-09-2026: revertir bloque Fiestas Patrias en `empanadas-maipu` y `Hero`.
+- 2-4 semanas: medir efecto de los fixes de enlazado en GSC.
+
 ---
 
 ## Jornada 04-07-2026
