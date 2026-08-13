@@ -107,7 +107,7 @@ export default function Nosotras() {
             lineHeight: 1.8,
             marginBottom: '1.25rem',
           }}>
-            Desde nuestras tortas y pasteles hasta el pan artesanal que horneamos cada semana, todo lo que ofrecemos nace del mismo lugar: el deseo de compartir el sabor de lo hecho con cariño. Atendemos pedidos para eventos y delivery en Maipú y comunas cercanas. Si buscas una pastelería artesanal en Maipú con sabor de verdad, estás en el lugar correcto.
+            Desde nuestras tortas y pasteles hasta cada dulce que preparamos, todo lo que ofrecemos nace del mismo lugar: el deseo de compartir el sabor de lo hecho con cariño. Atendemos pedidos para eventos y delivery en Maipú y comunas cercanas. Si buscas una pastelería artesanal en Maipú con sabor de verdad, estás en el lugar correcto.
           </p>
           <p style={{
             fontFamily: 'var(--font-sans)',

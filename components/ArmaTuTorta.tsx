@@ -38,6 +38,7 @@ const RELLENOS = [
   { id: 'crema-lucuma',        nombre: 'Crema de Lúcuma',       imagen: '/images/arma-tu-torta/relleno-crema-lucuma.webp',        desc: 'Fruta andina transformada en crema noble y singular.' },
   { id: 'frutas-conserva',     nombre: 'Frutas en Conserva',    imagen: '/images/arma-tu-torta/relleno-frutas-conserva.webp',     desc: 'Piña y durazno en almíbar, jugosos y refrescantes.' },
   { id: 'mantequilla-mani',    nombre: 'Mantequilla de Maní',   imagen: '/images/arma-tu-torta/relleno-mantequilla-mani.webp',    desc: 'Textura cremosa con notas tostadas. Sorprendente.' },
+  { id: 'crema-diplomatica',   nombre: 'Crema Diplomática',     imagen: '/images/arma-tu-torta/relleno-crema-diplomatica.webp',   desc: 'Pastelera aligerada con chantilly, suave y aterciopelada.' },
 ];
 
 const DECORACIONES = [
@@ -47,6 +48,7 @@ const DECORACIONES = [
   { id: 'manjar-deco',      nombre: 'Manjar',              imagen: '/images/arma-tu-torta/deco-manjar.webp',           desc: 'Hilos de dulce de leche. Acabado cálido.' },
   { id: 'frutas-frescas',   nombre: 'Frutas Frescas',      imagen: '/images/arma-tu-torta/deco-frutas-frescas.webp',   desc: 'Fresas y frambuesas naturales. Frescura y color.' },
   { id: 'trozos-chocolate', nombre: 'Trozos de Chocolate', imagen: '/images/arma-tu-torta/deco-trozos-chocolate.webp', desc: 'Escamas de chocolate oscuro. Textura y profundidad.' },
+  { id: 'crema-diplomatica-deco', nombre: 'Crema Diplomática', imagen: '/images/arma-tu-torta/deco-crema-diplomatica.webp', desc: 'Rosetones livianos y sedosos, textura delicada.' },
 ];
 
 const TAMANIOS = [

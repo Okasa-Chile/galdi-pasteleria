@@ -31,6 +31,7 @@ export const imagenes: Record<string, string> = {
   'Torta de Chocolate':        '/images/torta-chocolate.webp',
   'Moca / Pralinée':           '/images/torta-moka.webp',
   'Selva Negra':               '/images/torta-selva-negra.webp',
+  'Torta de Lúcuma':           '/images/torta-lucuma.webp',
   'Panqueque':                 '/images/torta-panqueques.webp',
   'Torta Panqueque':           '/images/torta-panqueques.webp',
   'Torta de Piña':             '/images/torta-pina-new.webp',
@@ -47,6 +48,7 @@ export const imagenes: Record<string, string> = {
   'Pino':                      '/images/empanada-pino.webp',
   'Napolitana':                '/images/empanada-napolitana.webp',
   'Vegetariana':               '/images/prod-empanada.webp',
+  'Queso':                     '/images/empanada-queso-frita.webp',
   'Queso Camarón':             '/images/empanada-camaron.webp',
   'Empanada de Mariscos':      '/images/Empanada de Mariscos.webp',
   // Queques
@@ -76,6 +78,7 @@ const categorias = [
       { nombre: 'Torta de Chocolate',  detalle: 'Húmeda, intensa y con cobertura de cacao puro.' },
       { nombre: 'Moca / Pralinée',     detalle: 'Café aromático y frutos secos caramelizados en una torta de elegancia incomparable.' },
       { nombre: 'Selva Negra',         detalle: 'Bizcocho de chocolate con cerezas y crema chantilly.' },
+      { nombre: 'Torta de Lúcuma',     detalle: 'Bizcocho de vainilla, crema de lúcuma y manjar, decorada con rosetones y toques de caramelo' },
       { nombre: 'Panqueque',           detalle: 'Delicadas capas de panqueques con manjar entre cada una.' },
       { nombre: 'Torta de Piña',       detalle: 'Bizcocho esponjoso con piña natural, crema batida y un toque dulce que refresca en cada bocado.' },
       { nombre: 'Torta de Hojarasca', detalle: 'Delicadas capas de masa crocante unidas con manjar, un clásico chileno irresistible.' },

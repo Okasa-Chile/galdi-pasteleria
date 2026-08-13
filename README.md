@@ -426,6 +426,57 @@ contenido con tildes.
 
 ---
 
+## Jornada 13-08-2026
+
+### Producto nuevo: Torta de Lucuma
+- Imagen procesada con Gemini/Nano Banana desde foto real, estilo catalogo
+  (fondo ambar difuminado, cake stand, iluminacion calida). Guardada como
+  `public/images/torta-lucuma.webp`.
+- Producto creado en `galdi_productos` clonando estructura de costos de
+  Torta Selva Negra (mismo precio, costosTalla S/M/L identicos).
+- Agregada en `Catalogo.tsx` (mapa imagenes + categoria Tortas) y
+  `ServicioDetalle.tsx` (productosDelivery.Tortas), sin nombreVisible.
+
+### Producto nuevo: Crema Diplomatica (Arma tu Torta)
+- Dos ilustraciones nuevas estilo acuarela botanica (igual al resto del
+  configurador): `relleno-crema-diplomatica.webp` y
+  `deco-crema-diplomatica.webp`, generadas directo en Gemini sin foto base.
+- Agregada como opcion de relleno (id `crema-diplomatica`) y decoracion
+  (id `crema-diplomatica-deco`) en `components/ArmaTuTorta.tsx`.
+
+### Producto nuevo: Empanada de Queso (frita) visible en /productos
+- Ya existia en Firestore desde el 04-08 pero faltaba en
+  `productosDelivery.Empanadas` de `ServicioDetalle.tsx` -- no se mostraba
+  en el catalogo de pedidos aunque existiera en gestion.
+- Imagen real procesada con Gemini (seleccion de 3-4 empanadas de una
+  bandeja de produccion, re-escenificadas en el estilo del resto del
+  catalogo de empanadas): `public/images/empanada-queso-frita.webp`.
+- Se detecto inconsistencia de unidad: el producto quedo creado el 04-08
+  con `unidad: 'unidad'` en vez de `'docena'` (que es lo que tienen las
+  otras 5 empanadas en Firestore, verificado en vivo). Corregido a
+  `docena` en el documento Firestore. Las otras 5 NO se tocaron.
+
+### Torta de Pina -- foto real reemplazando placeholder
+- `public/images/torta-pina-new.webp` reemplazada por foto real del
+  producto, procesada en Gemini en formato horizontal 2:1 (mismo estilo
+  que el resto del catalogo: mesa de madera oscura, luz calida lateral,
+  cake stand blanco). Mismo nombre de archivo, no requirio cambios de
+  codigo.
+
+### Copy -- Nosotras.tsx
+- Eliminada mencion a "pan artesanal que horneamos cada semana" en el
+  parrafo de Nuestra Historia (no correspondia -- no es una promesa que
+  se cumpla de forma literal semanal). Reemplazado por "cada dulce que
+  preparamos".
+
+### Deploy
+- `npm run build` + `firebase deploy --only hosting` -- publicado en
+  https://galdi-web.web.app
+- NOTA: `galdi-pasteleria` no tiene script `npm run typecheck` en
+  package.json (solo `dev`, `build`, `start`, `lint`) -- el build ya
+  corre TypeScript internamente. No usar `npm run typecheck` en el
+  flujo de deploy de Galdi (si en Okasa).
+
 ## Jornada 03-08-2026
 
 ### Fiestas Patrias 2026 — bloque temporal en /empanadas-maipu
