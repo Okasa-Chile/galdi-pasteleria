@@ -1025,7 +1025,10 @@ window.presAgregarLinea = () => {
       '<select class="sel-talla-linea" onchange="presTallaChanged(this)" style="display:none;font-size:12px;"><option value="">— Talla —</option><option value="S">S — 8 a 10 p.</option><option value="M">M — 14 a 16 p.</option><option value="L">L — 20 a 22 p.</option><option value="XL" class="opt-xl-pres" style="display:none">XL — 25 p.</option></select>' +
     '</div>' +
     '<input type="number" class="pres-cant" min="1" value="1" oninput="presRecalcLinea(this)" style="width:100%;text-align:right;">' +
-    '<input type="number" class="pres-precio" min="0" step="1" placeholder="0" oninput="presRecalcLinea(this)" style="width:100%;text-align:right;">' +
+    '<div class="pres-precio-wrap" style="display:flex;flex-direction:column;gap:2px;">' +
+      '<input type="number" class="pres-precio" min="0" step="1" placeholder="0" oninput="presRecalcLinea(this)" style="width:100%;text-align:right;">' +
+      '<div class="pres-aviso-mayorista" style="display:none;font-size:9px;color:#C9A55A;font-weight:600;text-align:right;white-space:nowrap;">mayorista 3+ doc</div>' +
+    '</div>' +
     '<input type="text" class="pres-subtotal-linea" readonly value="$0" style="width:100%;text-align:right;background:var(--sand);color:var(--brown);cursor:default;">' +
     '<button class="btn btn-sm btn-red" onclick="presEliminarLinea(this)" style="padding:6px 8px;font-size:13px;line-height:1;">&#10005;</button>';
   // ── Drag & drop ────────────────────────────────────────────────────────────
@@ -1297,7 +1300,25 @@ window.presRecalcLinea = (inputEl) => {
     precio = parseFloat(row.querySelector('.pres-pack-precio')?.value) || 0;
   } else {
     cant = parseFloat(row.querySelector('.pres-cant').value) || 0;
-    precio = parseFloat(row.querySelector('.pres-precio').value) || 0;
+    const precioInput = row.querySelector('.pres-precio');
+    const avisoMayorista = row.querySelector('.pres-aviso-mayorista');
+    const lineaId = row.getAttribute('data-id');
+    const prod = lineaProds.get(lineaId);
+    const catProd = prod ? (prod.cat || prod.categoria) : null;
+    if (catProd === 'Empanadas') {
+      const precioMayorista = window.precioEmpanadaPorVolumen(prod.nombre, catProd, cant);
+      if (precioMayorista !== null) {
+        precioInput.value = precioMayorista;
+        if (avisoMayorista) avisoMayorista.style.display = '';
+      } else {
+        const base = precioInput.getAttribute('data-precio-base');
+        if (base !== null) precioInput.value = base;
+        if (avisoMayorista) avisoMayorista.style.display = 'none';
+      }
+    } else if (avisoMayorista) {
+      avisoMayorista.style.display = 'none';
+    }
+    precio = parseFloat(precioInput.value) || 0;
   }
   const sub = cant * precio;
   row.querySelector('.pres-subtotal-linea').value = fmt(sub);
@@ -2556,6 +2577,17 @@ const VALORES_TALLA_TORTAS = {
 };
 const PANQUEQUE_XL = {mat:20000, mdo:5190, energia:400, logistica:30, margen:23};
 const COSTO_BANO_CHOCOLATE = 1500;
+
+const EMPANADAS_MAYORISTA_MIN_UNIDADES = 36;
+const EMPANADAS_PRECIO_MAYORISTA = 2500;
+const EMPANADAS_EXCLUIDAS_MAYORISTA = ['Empanada de Mariscos', 'Empanada Queso Camarón'];
+
+window.precioEmpanadaPorVolumen = (nombreProducto, categoria, cantidad) => {
+  if (categoria !== 'Empanadas') return null;
+  if (EMPANADAS_EXCLUIDAS_MAYORISTA.includes(nombreProducto)) return null;
+  if (cantidad >= EMPANADAS_MAYORISTA_MIN_UNIDADES) return EMPANADAS_PRECIO_MAYORISTA;
+  return null;
+};
 
 const COSTOS_TALLA = {
   'Tortas': {
