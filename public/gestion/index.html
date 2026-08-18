@@ -1379,6 +1379,7 @@ window.presSetDescTipo = (tipo) => {
 };
 
 window.guardarPresupuesto = async () => {
+  let tokenRecienGuardado = null;
   // Validaciones
   const cliente = document.getElementById('pres-nombre')?.value.trim();
   if (!cliente) { alert('Ingresa el nombre del cliente antes de generar el presupuesto.'); return; }
@@ -1479,6 +1480,7 @@ window.guardarPresupuesto = async () => {
     } else {
       presupuesto.creadoEn = serverTimestamp();
       presupuesto.token = Math.random().toString(36).substring(2,10) + Math.random().toString(36).substring(2,10);
+      tokenRecienGuardado = presupuesto.token;
       await addDoc(collection(db, 'galdi_presupuestos'), presupuesto);
     }
   } catch (e) {
@@ -1488,6 +1490,10 @@ window.guardarPresupuesto = async () => {
   }
 
   alert('✓ Presupuesto ' + presupuesto.numero + (fueEdicion ? ' actualizado' : ' guardado') + ' correctamente.');
+
+  if (tokenRecienGuardado) {
+    window.vistaPreviaPresupuesto(tokenRecienGuardado);
+  }
 
   // Reset estado edición
   presupuestoEditandoId = null;
@@ -1742,7 +1748,41 @@ window.cancelarEdicionPresupuesto = () => {
   presRecalcTotales();
 };
 
-window.vistaPreviaPresupuesto = () => {
+window.generarQRDataURL = (token) => {
+  if (!token) return null;
+  try {
+    const url = 'https://galdi.cl/validar-presupuesto?token=' + encodeURIComponent(token);
+    const cont = document.createElement('div');
+    cont.style.display = 'none';
+    document.body.appendChild(cont);
+    new QRCode(cont, {
+      text: url,
+      width: 130,
+      height: 130,
+      colorDark: '#3D1F0A',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+    const canvas = cont.querySelector('canvas');
+    const dataURL = canvas ? canvas.toDataURL('image/png') : null;
+    document.body.removeChild(cont);
+    return dataURL;
+  } catch (e) {
+    console.error('Error generando QR:', e);
+    return null;
+  }
+};
+
+window.bloqueQRHtml = (token) => {
+  const dataURL = window.generarQRDataURL(token);
+  if (!dataURL) return '';
+  return `<div style="text-align:center;margin-top:22px;padding-top:18px;border-top:1px solid #ede3d4;">
+    <img src="${dataURL}" alt="Codigo QR de validacion" style="width:110px;height:110px;display:block;margin:0 auto 6px;">
+    <div style="font-size:10px;color:#aaa;">Escanea para validar este presupuesto en galdi.cl</div>
+  </div>`;
+};
+
+window.vistaPreviaPresupuesto = (token = null) => {
   // Validaciones
   const cliente = document.getElementById('pres-nombre')?.value.trim();
   if (!cliente) { alert('Ingresa el nombre del cliente antes de generar la vista previa.'); return; }
@@ -1967,6 +2007,8 @@ window.vistaPreviaPresupuesto = () => {
 
   <!-- Observaciones -->
   ${obs ? `<div style="border:1px solid #ede3d4;border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#666;"><strong style="color:#3D1F0A;">Observaciones:</strong> ${escAttr(obs)}</div>` : ''}
+
+  ${window.bloqueQRHtml(token)}
 
   <!-- Pie -->
   <div style="border-top:1px solid #ede3d4;padding-top:14px;font-size:11px;color:#aaa;text-align:center;">
@@ -2270,6 +2312,8 @@ window.vistaPreviaDesdeHistorial = (docId) => {
   </table>
 
   ${data.observaciones ? `<div style="border:1px solid #ede3d4;border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#666;"><strong style="color:#3D1F0A;">Observaciones:</strong> ${escAttr(data.observaciones)}</div>` : ''}
+
+  ${window.bloqueQRHtml(data.token)}
 
   <div style="border-top:1px solid #ede3d4;padding-top:14px;font-size:11px;color:#aaa;text-align:center;">
     ${data.validoHasta ? 'Presupuesto válido hasta el ' + fmtFecha(data.validoHasta) + '.' : 'Presupuesto sujeto a disponibilidad.'}

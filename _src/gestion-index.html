@@ -351,6 +351,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
         </div>
       </div>
       <div style="margin-top:14px;">
+        <label>RUT (opcional)</label>
+        <input type="text" id="pres-rut" placeholder="ej: 12.345.678-9">
+      </div>
+      <div style="margin-top:14px;">
         <label>Dirección</label>
         <input type="text" id="pres-direccion" placeholder="ej: Av. Principal 123, Depto 45">
       </div>
@@ -424,7 +428,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
         </div>
         <div>
           <label>Tipo de evento</label>
-          <select id="pres-tipo-evento">
+          <select id="pres-tipo-evento" onchange="presToggleTipoEventoOtro(this)">
             <option value="">— Seleccionar tipo —</option>
             <option value="tortas-pasteles">Tortas y Pasteles</option>
             <option value="pan-artesanal">Pan Artesanal</option>
@@ -436,6 +440,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
             <option value="cumpleanos">Cumpleaños</option>
             <option value="otro">Otro</option>
           </select>
+          <div id="pres-tipo-evento-otro-wrap" style="display:none;margin-top:10px;">
+            <label>Especificar tipo de evento</label>
+            <input type="text" id="pres-tipo-evento-otro" placeholder="ej: Bautizo, Graduación...">
+          </div>
         </div>
       </div>
     </div>
@@ -688,7 +696,7 @@ async function fsLoad() {
         p.costo     = Number(p.costo)    || 0;
         p.mdo       = Number(p.mdo)      || 0;
         p.energia   = Number(p.energia)  || 0;
-        p.logistica = Number(p.logistica)|| 30;
+        p.logistica = p.logistica !== undefined ? Number(p.logistica) : 30;
         p.margen    = Number(p.margen)   || 0;
         p.precioS   = Number(p.precioS)  || 0;
         p.precioM   = Number(p.precioM)  || 0;
@@ -836,7 +844,7 @@ window.renderPrecios = () => {
                 const precio6Un = Math.round(precioDocena / 2);
                 return `
                   <tr style="${bg};">
-                    <td rowspan="2" style="padding:8px;font-size:13px;vertical-align:middle;"><strong>${p.nombre}</strong></td>
+                    <td rowspan="2" style="padding:8px;font-size:13px;vertical-align:middle;"><strong>${escAttr(p.nombre)}</strong></td>
                     <td style="padding:8px;font-size:12px;color:var(--muted);">6 unidades</td>
                     <td colspan="5" style="padding:8px;font-size:13px;text-align:right;color:var(--green);"><strong>${fmt(precio6Un)}</strong></td>
                   </tr>
@@ -852,7 +860,7 @@ window.renderPrecios = () => {
               const tieneTallas = pS || pM || pL || pXL;
               const esQuequeLP = p.cat === 'Queques & Muffins' && p.nombre !== 'Muffins';
               const filaMain = `<tr style="${bg};">
-                <td style="padding:8px;font-size:13px;"><strong>${p.nombre}</strong></td>
+                <td style="padding:8px;font-size:13px;"><strong>${escAttr(p.nombre)}</strong></td>
                 <td style="padding:8px;font-size:12px;color:var(--muted);">${p.unidad}</td>
                 <td style="padding:8px;font-size:13px;text-align:right;">
                   ${tieneTallas ? '—' : `<strong>${fmt(p.precio)}</strong>`}
@@ -1188,7 +1196,7 @@ window.presCargarProductos = (catSel) => {
   }
   const filtrados = prods.filter(p => (p.cat || p.categoria) === cat);
   prodSel.innerHTML = '<option value="">-- Producto --</option>' +
-    filtrados.map(p => '<option value="' + cpx(p) + '" data-cat="' + cat + '" data-original-nombre="' + p.nombre + '">' + p.nombre + '</option>').join('');
+    filtrados.map(p => '<option value="' + (p.precio || cpx(p)) + '" data-cat="' + escAttr(cat) + '" data-original-nombre="' + escAttr(p.nombre) + '">' + escAttr(p.nombre) + '</option>').join('');
   prodSel.disabled = false;
   prodSel.style.background = '';
   prodSel.style.color = '';
@@ -1326,6 +1334,18 @@ window.presRecalcTotales = () => {
   document.getElementById('pres-row-descuento').style.display = descuento > 0 ? '' : 'none';
 };
 
+window.presToggleTipoEventoOtro = (sel) => {
+  const wrap = document.getElementById('pres-tipo-evento-otro-wrap');
+  if (!wrap) return;
+  if (sel.value === 'otro') {
+    wrap.style.display = '';
+  } else {
+    wrap.style.display = 'none';
+    const otroInput = document.getElementById('pres-tipo-evento-otro');
+    if (otroInput) otroInput.value = '';
+  }
+};
+
 window.presSetDescTipo = (tipo) => {
   const btnPct = document.getElementById('pres-desc-tipo-pct');
   const btnFijo = document.getElementById('pres-desc-tipo-fijo');
@@ -1359,6 +1379,7 @@ window.presSetDescTipo = (tipo) => {
 };
 
 window.guardarPresupuesto = async () => {
+  let tokenRecienGuardado = null;
   // Validaciones
   const cliente = document.getElementById('pres-nombre')?.value.trim();
   if (!cliente) { alert('Ingresa el nombre del cliente antes de generar el presupuesto.'); return; }
@@ -1432,10 +1453,12 @@ window.guardarPresupuesto = async () => {
     cliente,
     telefono:     document.getElementById('pres-telefono')?.value.trim() || '',
     email:        document.getElementById('pres-email')?.value.trim() || '',
+    rut:          document.getElementById('pres-rut')?.value.trim() || '',
     direccion:    document.getElementById('pres-direccion')?.value.trim() || '',
     comuna:       document.getElementById('pres-comuna')?.value.trim() || '',
     fechaEvento:  document.getElementById('pres-fecha-evento')?.value || '',
     tipoEvento:   document.getElementById('pres-tipo-evento')?.value || '',
+    tipoEventoOtro: document.getElementById('pres-tipo-evento-otro')?.value.trim() || '',
     observaciones: document.getElementById('pres-obs')?.value.trim() || '',
     validoHasta:  document.getElementById('pres-valido-hasta')?.value || '',
     formaPago:    document.getElementById('pres-forma-pago')?.value || '',
@@ -1457,6 +1480,7 @@ window.guardarPresupuesto = async () => {
     } else {
       presupuesto.creadoEn = serverTimestamp();
       presupuesto.token = Math.random().toString(36).substring(2,10) + Math.random().toString(36).substring(2,10);
+      tokenRecienGuardado = presupuesto.token;
       await addDoc(collection(db, 'galdi_presupuestos'), presupuesto);
     }
   } catch (e) {
@@ -1467,6 +1491,10 @@ window.guardarPresupuesto = async () => {
 
   alert('✓ Presupuesto ' + presupuesto.numero + (fueEdicion ? ' actualizado' : ' guardado') + ' correctamente.');
 
+  if (tokenRecienGuardado) {
+    window.vistaPreviaPresupuesto(tokenRecienGuardado);
+  }
+
   // Reset estado edición
   presupuestoEditandoId = null;
   const btnGuardar = document.getElementById('btn-guardar-presupuesto');
@@ -1475,12 +1503,14 @@ window.guardarPresupuesto = async () => {
   if (btnCancelarEd) btnCancelarEd.style.display = 'none';
 
   // Limpiar formulario
-  ['pres-nombre','pres-telefono','pres-email','pres-obs','pres-valido-hasta'].forEach(id => {
+  ['pres-nombre','pres-telefono','pres-email','pres-rut','pres-obs','pres-valido-hasta','pres-tipo-evento-otro'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
   ['pres-fecha-evento','pres-tipo-evento','pres-forma-pago'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
+  const otroWrapGuardar = document.getElementById('pres-tipo-evento-otro-wrap');
+  if (otroWrapGuardar) otroWrapGuardar.style.display = 'none';
   document.getElementById('pres-desc-valor').value = 0;
   presSetDescTipo('pct');
   document.getElementById('pres-lineas').innerHTML = '';
@@ -1501,6 +1531,7 @@ window.editarPresupuesto = async (docId) => {
     document.getElementById('pres-nombre').value    = data.cliente       || '';
     document.getElementById('pres-telefono').value  = data.telefono      || '';
     document.getElementById('pres-email').value     = data.email         || '';
+    document.getElementById('pres-rut').value       = data.rut          || '';
     document.getElementById('pres-direccion').value = data.direccion     || '';
     document.getElementById('pres-obs').value       = data.observaciones || '';
     document.getElementById('pres-valido-hasta').value  = data.validoHasta  || '';
@@ -1511,6 +1542,10 @@ window.editarPresupuesto = async (docId) => {
     if (comunaEl) comunaEl.value = data.comuna || '';
     const tipoEl = document.getElementById('pres-tipo-evento');
     if (tipoEl) tipoEl.value = data.tipoEvento || '';
+    const otroInput = document.getElementById('pres-tipo-evento-otro');
+    if (otroInput) otroInput.value = data.tipoEventoOtro || '';
+    const otroWrap = document.getElementById('pres-tipo-evento-otro-wrap');
+    if (otroWrap) otroWrap.style.display = (data.tipoEvento === 'otro') ? '' : 'none';
     const pagoEl = document.getElementById('pres-forma-pago');
     if (pagoEl) pagoEl.value = data.formaPago || '';
 
@@ -1542,7 +1577,7 @@ window.editarPresupuesto = async (docId) => {
               const fila = document.createElement('div');
               fila.style.cssText = 'display:flex;gap:6px;align-items:center;';
               fila.innerHTML =
-                '<input type="text" class="pack-prod-nombre" placeholder="Producto" style="flex:1;font-size:12px;" value="' + (p.nombre||'').replace(/"/g,'&quot;') + '">' +
+                '<input type="text" class="pack-prod-nombre" placeholder="Producto" style="flex:1;font-size:12px;" value="' + escAttr(p.nombre) + '">' +
                 '<input type="number" class="pack-prod-cant" min="1" value="' + (p.cantidadPorPack||1) + '" style="width:60px;font-size:12px;text-align:right;" title="Cantidad por pack">' +
                 '<span style="font-size:10px;color:var(--muted);white-space:nowrap;">x pack</span>' +
                 '<button type="button" onclick="this.closest(\'div\').remove()" style="background:none;border:none;color:#9b3a2a;cursor:pointer;font-size:14px;line-height:1;padding:2px 4px;">&#10005;</button>';
@@ -1598,6 +1633,7 @@ window.duplicarPresupuesto = async (docId) => {
     document.getElementById('pres-nombre').value        = data.cliente       || '';
     document.getElementById('pres-telefono').value      = data.telefono      || '';
     document.getElementById('pres-email').value         = data.email         || '';
+    document.getElementById('pres-rut').value           = data.rut           || '';
     document.getElementById('pres-direccion').value     = data.direccion     || '';
     document.getElementById('pres-obs').value           = data.observaciones || '';
     document.getElementById('pres-valido-hasta').value  = data.validoHasta   || '';
@@ -1608,6 +1644,10 @@ window.duplicarPresupuesto = async (docId) => {
     if (comunaEl) comunaEl.value = data.comuna || '';
     const tipoEl = document.getElementById('pres-tipo-evento');
     if (tipoEl) tipoEl.value = data.tipoEvento || '';
+    const otroInput = document.getElementById('pres-tipo-evento-otro');
+    if (otroInput) otroInput.value = data.tipoEventoOtro || '';
+    const otroWrap = document.getElementById('pres-tipo-evento-otro-wrap');
+    if (otroWrap) otroWrap.style.display = (data.tipoEvento === 'otro') ? '' : 'none';
     const pagoEl = document.getElementById('pres-forma-pago');
     if (pagoEl) pagoEl.value = data.formaPago || '';
 
@@ -1639,7 +1679,7 @@ window.duplicarPresupuesto = async (docId) => {
               const fila = document.createElement('div');
               fila.style.cssText = 'display:flex;gap:6px;align-items:center;';
               fila.innerHTML =
-                '<input type="text" class="pack-prod-nombre" placeholder="Producto" style="flex:1;font-size:12px;" value="' + (p.nombre||'').replace(/"/g,'&quot;') + '">' +
+                '<input type="text" class="pack-prod-nombre" placeholder="Producto" style="flex:1;font-size:12px;" value="' + escAttr(p.nombre) + '">' +
                 '<input type="number" class="pack-prod-cant" min="1" value="' + (p.cantidadPorPack||1) + '" style="width:60px;font-size:12px;text-align:right;" title="Cantidad por pack">' +
                 '<span style="font-size:10px;color:var(--muted);white-space:nowrap;">x pack</span>' +
                 '<button type="button" onclick="this.closest(\'div\').remove()" style="background:none;border:none;color:#9b3a2a;cursor:pointer;font-size:14px;line-height:1;padding:2px 4px;">&#10005;</button>';
@@ -1692,12 +1732,14 @@ window.cancelarEdicionPresupuesto = () => {
   const btnCancelar = document.getElementById('btn-cancelar-edicion');
   if (btnCancelar) btnCancelar.style.display = 'none';
   // Limpiar formulario
-  ['pres-nombre','pres-telefono','pres-email','pres-obs','pres-valido-hasta','pres-direccion'].forEach(id => {
+  ['pres-nombre','pres-telefono','pres-email','pres-rut','pres-obs','pres-valido-hasta','pres-direccion','pres-tipo-evento-otro'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
   ['pres-fecha-evento','pres-tipo-evento','pres-forma-pago','pres-comuna'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
+  const otroWrapCancel = document.getElementById('pres-tipo-evento-otro-wrap');
+  if (otroWrapCancel) otroWrapCancel.style.display = 'none';
   document.getElementById('pres-desc-valor').value = 0;
   presSetDescTipo('pct');
   document.getElementById('pres-lineas').innerHTML = '';
@@ -1706,7 +1748,41 @@ window.cancelarEdicionPresupuesto = () => {
   presRecalcTotales();
 };
 
-window.vistaPreviaPresupuesto = () => {
+window.generarQRDataURL = (token) => {
+  if (!token) return null;
+  try {
+    const url = 'https://galdi.cl/validar-presupuesto?token=' + encodeURIComponent(token);
+    const cont = document.createElement('div');
+    cont.style.display = 'none';
+    document.body.appendChild(cont);
+    new QRCode(cont, {
+      text: url,
+      width: 130,
+      height: 130,
+      colorDark: '#3D1F0A',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+    const canvas = cont.querySelector('canvas');
+    const dataURL = canvas ? canvas.toDataURL('image/png') : null;
+    document.body.removeChild(cont);
+    return dataURL;
+  } catch (e) {
+    console.error('Error generando QR:', e);
+    return null;
+  }
+};
+
+window.bloqueQRHtml = (token) => {
+  const dataURL = window.generarQRDataURL(token);
+  if (!dataURL) return '';
+  return `<div style="text-align:center;margin-top:22px;padding-top:18px;border-top:1px solid #ede3d4;">
+    <img src="${dataURL}" alt="Codigo QR de validacion" style="width:110px;height:110px;display:block;margin:0 auto 6px;">
+    <div style="font-size:10px;color:#aaa;">Escanea para validar este presupuesto en galdi.cl</div>
+  </div>`;
+};
+
+window.vistaPreviaPresupuesto = (token = null) => {
   // Validaciones
   const cliente = document.getElementById('pres-nombre')?.value.trim();
   if (!cliente) { alert('Ingresa el nombre del cliente antes de generar la vista previa.'); return; }
@@ -1727,10 +1803,12 @@ window.vistaPreviaPresupuesto = () => {
   const numero      = document.getElementById('pres-numero')?.value || '';
   const telefono    = document.getElementById('pres-telefono')?.value.trim() || '';
   const email       = document.getElementById('pres-email')?.value.trim() || '';
+  const rut         = document.getElementById('pres-rut')?.value.trim() || '';
   const direccion   = document.getElementById('pres-direccion')?.value.trim() || '';
   const comuna      = document.getElementById('pres-comuna')?.value.trim() || '';
   const fechaEvento = document.getElementById('pres-fecha-evento')?.value || '';
   const tipoEvento  = document.getElementById('pres-tipo-evento')?.value || '';
+  const tipoEventoOtro = document.getElementById('pres-tipo-evento-otro')?.value.trim() || '';
   const obs         = document.getElementById('pres-obs')?.value.trim() || '';
   const validoHasta = document.getElementById('pres-valido-hasta')?.value || '';
   const formaPago   = document.getElementById('pres-forma-pago')?.value || '';
@@ -1797,9 +1875,9 @@ window.vistaPreviaPresupuesto = () => {
     const bg = i % 2 === 0 ? '#fdf8f2' : '#fff';
     const cs = 'padding:9px 12px;border-bottom:1px solid #ede3d4;';
     if (it.tipo === 'pack') {
-      const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${p.nombre} x${p.cantidadPorPack}`).join('<br>');
+      const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${escAttr(p.nombre)} x${p.cantidadPorPack}`).join('<br>');
       return `<tr style="background:${bg};">
-        <td style="${cs}"><strong>${it.nombrePack}</strong>${detalle?`<br><span style="font-size:11px;color:#888;">${detalle}</span>`:''}
+        <td style="${cs}"><strong>${escAttr(it.nombrePack)}</strong>${detalle?`<br><span style="font-size:11px;color:#888;">${detalle}</span>`:''}
         </td>
         <td style="${cs};text-align:center;">${it.cantidadPersonas}</td>
         <td style="${cs};text-align:right;">${fmtNum(it.precioPack)}</td>
@@ -1807,7 +1885,7 @@ window.vistaPreviaPresupuesto = () => {
       </tr>`;
     }
     return `<tr style="background:${bg};">
-      <td style="${cs}">${it.descripcion}</td>
+      <td style="${cs}">${escAttr(it.descripcion)}</td>
       <td style="${cs};text-align:center;">${it.cantidad}</td>
       <td style="${cs};text-align:right;">${fmtNum(it.precioUnit)}</td>
       <td style="${cs};text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
@@ -1826,15 +1904,16 @@ window.vistaPreviaPresupuesto = () => {
 
   // Filas info cliente extra
   const extraCliente = [
-    telefono  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${fmtTel(telefono)}</td></tr>` : '',
-    email     ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${email}</td></tr>` : '',
-    direccion ? `<tr><td style="color:#888;padding:2px 0;">Dirección</td><td style="padding:2px 0;">${direccion}</td></tr>` : '',
-    comuna    ? `<tr><td style="color:#888;padding:2px 0;">Comuna</td><td style="padding:2px 0;">${comuna}</td></tr>` : '',
+    telefono  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${escAttr(fmtTel(telefono))}</td></tr>` : '',
+    email     ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${escAttr(email)}</td></tr>` : '',
+    rut       ? `<tr><td style="color:#888;padding:2px 0;">RUT</td><td style="padding:2px 0;">${escAttr(rut)}</td></tr>` : '',
+    direccion ? `<tr><td style="color:#888;padding:2px 0;">Dirección</td><td style="padding:2px 0;">${escAttr(direccion)}</td></tr>` : '',
+    comuna    ? `<tr><td style="color:#888;padding:2px 0;">Comuna</td><td style="padding:2px 0;">${escAttr(comuna)}</td></tr>` : '',
   ].join('');
 
   // Filas datos del evento
   const extraEvento = [
-    tipoEvento  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Tipo de evento</td><td style="padding:2px 0;">${tipoEvento.charAt(0).toUpperCase()+tipoEvento.slice(1)}</td></tr>` : '',
+    tipoEvento  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Tipo de evento</td><td style="padding:2px 0;">${tipoEvento === 'otro' && tipoEventoOtro ? tipoEventoOtro : tipoEvento.charAt(0).toUpperCase()+tipoEvento.slice(1)}</td></tr>` : '',
     fechaEvento ? `<tr><td style="color:#888;padding:2px 0;">Fecha del evento</td><td style="padding:2px 0;">${fmtFecha(fechaEvento)}</td></tr>` : '',
   ].join('');
 
@@ -1846,7 +1925,8 @@ window.vistaPreviaPresupuesto = () => {
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family:Arial,sans-serif; font-size:13px; color:#3D1F0A; background:#fff; padding:32px 40px; max-width:800px; margin:auto; position:relative; }
-    @media print { body { padding:12px 20px; } .no-print { display:none; } }
+    @page { size: letter portrait; margin: 12mm; }
+    @media print { body { padding:0; } .no-print { display:none; } }
   </style>
 </head>
 <body>
@@ -1877,7 +1957,7 @@ window.vistaPreviaPresupuesto = () => {
   <div style="background:#fdf8f2;border:1px solid #ede3d4;border-radius:6px;padding:14px 18px;margin-bottom:24px;">
     <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#C9A55A;margin-bottom:8px;">Datos del Cliente</div>
     <table style="font-size:13px;">
-      <tr><td style="color:#888;padding:2px 0;width:130px;">Nombre</td><td style="padding:2px 0;font-weight:600;">${cliente}</td></tr>
+      <tr><td style="color:#888;padding:2px 0;width:130px;">Nombre</td><td style="padding:2px 0;font-weight:600;">${escAttr(cliente)}</td></tr>
       ${extraCliente}
     </table>
   </div>
@@ -1926,7 +2006,9 @@ window.vistaPreviaPresupuesto = () => {
   </table>
 
   <!-- Observaciones -->
-  ${obs ? `<div style="border:1px solid #ede3d4;border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#666;"><strong style="color:#3D1F0A;">Observaciones:</strong> ${obs}</div>` : ''}
+  ${obs ? `<div style="border:1px solid #ede3d4;border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#666;"><strong style="color:#3D1F0A;">Observaciones:</strong> ${escAttr(obs)}</div>` : ''}
+
+  ${window.bloqueQRHtml(token)}
 
   <!-- Pie -->
   <div style="border-top:1px solid #ede3d4;padding-top:14px;font-size:11px;color:#aaa;text-align:center;">
@@ -2002,7 +2084,7 @@ window.verPresupuesto = (docId) => {
     const [y, m, d] = v.split('-');
     return `${d}/${m}/${y}`;
   };
-  const campo = (label, val) => val ? `<div style="display:flex;gap:8px;font-size:13px;margin-bottom:4px;"><span style="color:var(--muted);min-width:110px;">${label}</span><span>${val}</span></div>` : '';
+  const campo = (label, val) => val ? `<div style="display:flex;gap:8px;font-size:13px;margin-bottom:4px;"><span style="color:var(--muted);min-width:110px;">${label}</span><span>${escAttr(val)}</span></div>` : '';
 
   const items    = Array.isArray(data.items) ? data.items : [];
   const subtotal = data.subtotal  || 0;
@@ -2031,7 +2113,7 @@ window.verPresupuesto = (docId) => {
       ${campo('Email', data.email)}
       ${campo('Dirección', data.direccion)}
       ${campo('Comuna', data.comuna)}
-      ${campo('Tipo evento', data.tipoEvento)}
+      ${campo('Tipo evento', data.tipoEvento === 'otro' && data.tipoEventoOtro ? data.tipoEventoOtro : data.tipoEvento)}
       ${campo('Fecha evento', data.fechaEvento ? fmtFecha(data.fechaEvento) : '')}
     </div>
 
@@ -2046,9 +2128,9 @@ window.verPresupuesto = (docId) => {
         const bg = i%2===0?'var(--cream)':'#fff';
         const cs = 'padding:8px 10px;border-bottom:1px solid var(--border);';
         if (it.tipo === 'pack') {
-          const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${p.nombre} x${p.cantidadPorPack}`).join('<br>');
+          const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${escAttr(p.nombre)} x${p.cantidadPorPack}`).join('<br>');
           return `<tr style="background:${bg};">
-            <td style="${cs}"><strong>${it.nombrePack||it.descripcion||'—'}</strong>${detalle?`<br><span style="font-size:11px;color:var(--muted);">${detalle}</span>`:''}
+            <td style="${cs}"><strong>${escAttr(it.nombrePack||it.descripcion||'—')}</strong>${detalle?`<br><span style="font-size:11px;color:var(--muted);">${detalle}</span>`:''}
             </td>
             <td style="${cs};text-align:center;">${it.cantidadPersonas||it.cantidad}</td>
             <td style="${cs};text-align:right;">${fmtNum(it.precioPack||it.precioUnit)}</td>
@@ -2056,7 +2138,7 @@ window.verPresupuesto = (docId) => {
           </tr>`;
         }
         return `<tr style="background:${bg};">
-          <td style="${cs}">${it.descripcion||'—'}</td>
+          <td style="${cs}">${escAttr(it.descripcion||'—')}</td>
           <td style="${cs};text-align:center;">${it.cantidad}</td>
           <td style="${cs};text-align:right;">${fmtNum(it.precioUnit)}</td>
           <td style="${cs};text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
@@ -2077,7 +2159,7 @@ window.verPresupuesto = (docId) => {
     <div style="background:var(--sand);border-radius:6px;padding:12px 14px;font-size:12px;">
       ${campo('Forma de pago', data.formaPago)}
       ${campo('Válido hasta', data.validoHasta ? fmtFecha(data.validoHasta) : '')}
-      ${data.observaciones ? `<div style="margin-top:6px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;">Observaciones</div><div style="font-size:12px;color:var(--brown);margin-top:4px;">${data.observaciones}</div>` : ''}
+      ${data.observaciones ? `<div style="margin-top:6px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;">Observaciones</div><div style="font-size:12px;color:var(--brown);margin-top:4px;">${escAttr(data.observaciones)}</div>` : ''}
     </div>` : ''}
   `;
 
@@ -2111,9 +2193,9 @@ window.vistaPreviaDesdeHistorial = (docId) => {
     const bg = i % 2 === 0 ? '#fdf8f2' : '#fff';
     const cs = 'padding:9px 12px;border-bottom:1px solid #ede3d4;';
     if (it.tipo === 'pack') {
-      const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${p.nombre} x${p.cantidadPorPack}`).join('<br>');
+      const detalle = (it.productosPack||[]).filter(p=>p.nombre).map(p=>`• ${escAttr(p.nombre)} x${p.cantidadPorPack}`).join('<br>');
       return `<tr style="background:${bg};">
-        <td style="${cs}"><strong>${it.nombrePack||it.descripcion||'—'}</strong>${detalle?`<br><span style="font-size:11px;color:#888;">${detalle}</span>`:''}
+        <td style="${cs}"><strong>${escAttr(it.nombrePack||it.descripcion||'—')}</strong>${detalle?`<br><span style="font-size:11px;color:#888;">${detalle}</span>`:''}
         </td>
         <td style="${cs};text-align:center;">${it.cantidadPersonas||it.cantidad}</td>
         <td style="${cs};text-align:right;">${fmtNum(it.precioPack||it.precioUnit)}</td>
@@ -2121,7 +2203,7 @@ window.vistaPreviaDesdeHistorial = (docId) => {
       </tr>`;
     }
     return `<tr style="background:${bg};">
-      <td style="${cs}">${it.descripcion || '—'}</td>
+      <td style="${cs}">${escAttr(it.descripcion || '—')}</td>
       <td style="${cs};text-align:center;">${it.cantidad}</td>
       <td style="${cs};text-align:right;">${fmtNum(it.precioUnit)}</td>
       <td style="${cs};text-align:right;font-weight:600;">${fmtNum(it.subtotalLinea)}</td>
@@ -2137,14 +2219,14 @@ window.vistaPreviaDesdeHistorial = (docId) => {
   const fmtTel = t => t ? t.replace(/^\+?56\s*/, '') : '';
 
   const extraCliente = [
-    data.telefono  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${fmtTel(data.telefono)}</td></tr>` : '',
-    data.email     ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${data.email}</td></tr>` : '',
-    data.direccion ? `<tr><td style="color:#888;padding:2px 0;">Dirección</td><td style="padding:2px 0;">${data.direccion}</td></tr>` : '',
-    data.comuna    ? `<tr><td style="color:#888;padding:2px 0;">Comuna</td><td style="padding:2px 0;">${data.comuna}</td></tr>` : '',
+    data.telefono  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Teléfono</td><td style="padding:2px 0;">${escAttr(fmtTel(data.telefono))}</td></tr>` : '',
+    data.email     ? `<tr><td style="color:#888;padding:2px 0;">Email</td><td style="padding:2px 0;">${escAttr(data.email)}</td></tr>` : '',
+    data.direccion ? `<tr><td style="color:#888;padding:2px 0;">Dirección</td><td style="padding:2px 0;">${escAttr(data.direccion)}</td></tr>` : '',
+    data.comuna    ? `<tr><td style="color:#888;padding:2px 0;">Comuna</td><td style="padding:2px 0;">${escAttr(data.comuna)}</td></tr>` : '',
   ].join('');
 
   const extraEvento = [
-    data.tipoEvento  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Tipo de evento</td><td style="padding:2px 0;">${data.tipoEvento.charAt(0).toUpperCase()+data.tipoEvento.slice(1)}</td></tr>` : '',
+    data.tipoEvento  ? `<tr><td style="color:#888;padding:2px 0;width:130px;">Tipo de evento</td><td style="padding:2px 0;">${data.tipoEvento === 'otro' && data.tipoEventoOtro ? data.tipoEventoOtro : data.tipoEvento.charAt(0).toUpperCase()+data.tipoEvento.slice(1)}</td></tr>` : '',
     data.fechaEvento ? `<tr><td style="color:#888;padding:2px 0;">Fecha del evento</td><td style="padding:2px 0;">${fmtFecha(data.fechaEvento)}</td></tr>` : '',
   ].join('');
 
@@ -2184,7 +2266,7 @@ window.vistaPreviaDesdeHistorial = (docId) => {
   <div style="background:#fdf8f2;border:1px solid #ede3d4;border-radius:6px;padding:14px 18px;margin-bottom:24px;">
     <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#C9A55A;margin-bottom:8px;">Datos del Cliente</div>
     <table style="font-size:13px;">
-      <tr><td style="color:#888;padding:2px 0;width:130px;">Nombre</td><td style="padding:2px 0;font-weight:600;">${data.cliente}</td></tr>
+      <tr><td style="color:#888;padding:2px 0;width:130px;">Nombre</td><td style="padding:2px 0;font-weight:600;">${escAttr(data.cliente)}</td></tr>
       ${extraCliente}
     </table>
   </div>
@@ -2229,7 +2311,9 @@ window.vistaPreviaDesdeHistorial = (docId) => {
     </tr>
   </table>
 
-  ${data.observaciones ? `<div style="border:1px solid #ede3d4;border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#666;"><strong style="color:#3D1F0A;">Observaciones:</strong> ${data.observaciones}</div>` : ''}
+  ${data.observaciones ? `<div style="border:1px solid #ede3d4;border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#666;"><strong style="color:#3D1F0A;">Observaciones:</strong> ${escAttr(data.observaciones)}</div>` : ''}
+
+  ${window.bloqueQRHtml(data.token)}
 
   <div style="border-top:1px solid #ede3d4;padding-top:14px;font-size:11px;color:#aaa;text-align:center;">
     ${data.validoHasta ? 'Presupuesto válido hasta el ' + fmtFecha(data.validoHasta) + '.' : 'Presupuesto sujeto a disponibilidad.'}
@@ -2276,7 +2360,7 @@ window.renderT = () => {
     const tallasDisp = esTortaOPastel ? (['S','M','L'].concat(!!(COSTOS_TALLA[p.nombre]?.XL || p.nombre==='Torta Panqueque') ? ['XL'] : [])) : [];
     const badgeTallas=esTortaOPastel?`<div style="margin-top:4px;display:flex;gap:4px;" onclick="event.stopPropagation()">${tallasDisp.map(t=>`<span style="font-size:10px;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">${t}</span>`).join('')}</div>`:esQueque?`<div style="margin-top:4px;display:flex;gap:4px;" onclick="event.stopPropagation()">${['S','M'].map(t=>`<span style="font-size:10px;color:#C9A55A;border:1px solid #C9A55A;border-radius:10px;padding:1px 6px;">${t}</span>`).join('')}</div>`:''
     return `<tr class="${sel?.id===p.id?'selected':''}" onclick="selProd(${p.id})" style="cursor:pointer;">
-      <td><strong>${p.nombre}</strong>${badgeTallas}</td>
+      <td><strong>${escAttr(p.nombre)}</strong>${badgeTallas}</td>
       <td><span class="tag tag-${p.tipo}">${p.tipo==='propio'?'Propio':'Reventa'}</span></td>
       <td>${p.unidad}</td>
       <td style="color:${mr>=15?'#4a7c59':'#9b3a2a'}">${mr}%</td>
@@ -2534,7 +2618,7 @@ window.poblarProductos = () => {
   const filtrados = prods.filter(p => (p.cat || p.categoria) === mapacat[cat]);
   sel.innerHTML = '<option value="">— Elegir producto —</option>' +
     (filtrados.length
-      ? filtrados.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('')
+      ? filtrados.map(p => `<option value="${p.id}">${escAttr(p.nombre)}</option>`).join('')
       : '<option value="">Sin productos</option>');
   document.getElementById('v-m').value = '';
 };
@@ -2756,6 +2840,13 @@ window.renderC = () => {
 function g(id){return document.getElementById(id)?.value||0;}
 function s(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
 function fmt(n){return '$'+Math.round(n).toLocaleString('es-CL');}
+function escAttr(v) {
+  return String(v ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
 </script>
 </body>
 </html>
