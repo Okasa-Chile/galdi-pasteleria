@@ -2,10 +2,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { businessSchema } from '@/lib/businessSchema';
+import CalcularDespachoWidget from '@/components/CalcularDespachoWidget';
 
 export const metadata: Metadata = {
   title: 'Delivery de Pasteles y Tortas en Maipú · Galdi',
-  description: 'Delivery de tortas, empanadas y pan artesanal en Maipú y comunas cercanas. Despacho desde $3.000. Pedido por WhatsApp o compra online.',
+  description: 'Delivery de tortas, empanadas y pan artesanal en Maipú y comunas cercanas. Despacho desde $3.000 según distancia. Calcula el tuyo online.',
   keywords: 'delivery pasteles Maipú, delivery tortas Maipú, despacho pastelería Maipú, delivery dulces Maipú',
   alternates: { canonical: 'https://galdi.cl/delivery-maipu' },
 };
@@ -17,11 +18,11 @@ const faqs = [
   },
   {
     q: '¿A qué comunas hacen delivery?',
-    a: 'Maipú, Cerrillos, Pudahuel, Estación Central, Padre Hurtado, Lo Prado y resto del Gran Santiago.',
+    a: 'Hacemos delivery en un radio de hasta 24 km desde nuestro local en Maipú, lo que cubre Cerrillos, Pudahuel, Estación Central, Padre Hurtado, Lo Prado y gran parte del Gran Santiago. Usa la calculadora de esta página para confirmar la cobertura y el costo exacto en tu dirección.',
   },
   {
     q: '¿Cuánto cuesta el despacho?',
-    a: 'Gratis retirando en Maipú; entre $3.000 y $5.000 en comunas cercanas según la dirección exacta; en otras comunas de la Región Metropolitana el costo se cotiza según distancia junto con el pedido.',
+    a: 'El costo se calcula según la distancia real desde nuestro local en Maipú: es gratis hasta 300 metros y desde ahí aumenta por tramos, partiendo en $3.000. Usa la calculadora de esta página para ver el costo exacto en tu dirección. Si estás fuera de nuestro radio de cobertura, coordinamos el despacho por WhatsApp.',
   },
   {
     q: '¿Puedo pagar online el delivery?',
@@ -41,9 +42,14 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     businessSchema({
+      // url y description NO llegan al JSON-LD: businessSchema() los descarta
+      // a propósito (ver lib/businessSchema.ts) porque son propiedades de la
+      // entidad negocio, no de la landing. Se mantienen actualizados igual
+      // por higiene del código fuente, para que nadie los lea como contenido
+      // vivo ni queden obsoletos si businessSchema() cambia en el futuro.
       url: 'https://galdi.cl/delivery-maipu',
       description:
-        'Pastelería artesanal en Maipú con delivery de tortas, empanadas, pan artesanal, cumpleaños y cóctel. Despacho en Maipú y comunas cercanas, con opción de pago online.',
+        'Pastelería artesanal en Maipú con delivery de tortas, empanadas, pan artesanal, cumpleaños y cóctel. Despacho según distancia, con opción de pago online.',
     }),
     {
       '@type': 'FAQPage',
@@ -74,12 +80,6 @@ const categorias = [
   { titulo: 'Empanadas', href: '/empanadas-maipu' },
   { titulo: 'Cumpleaños (torta + mesa de dulces)', href: '/cumpleanos-maipu' },
   { titulo: 'Cóctel y Banquetería', href: '/coctel-maipu' },
-];
-
-const cobertura = [
-  { zona: 'Retiro en Maipú (Pasaje Marcos Echenique 809)', costo: 'Gratis' },
-  { zona: 'Comunas cercanas — Maipú, Cerrillos, Pudahuel, Estación Central, Padre Hurtado, Lo Prado', costo: '$3.000 a $5.000 *' },
-  { zona: 'Otras comunas de la Región Metropolitana', costo: 'Según distancia' },
 ];
 
 const pasos = [
@@ -168,22 +168,8 @@ export default function DeliveryMaipuPage() {
             >
               Zonas de cobertura y costos de despacho
             </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: 'rgba(212,168,83,0.2)', borderRadius: '4px', overflow: 'hidden', marginBottom: '1rem' }}>
-              {cobertura.map((c) => (
-                <div
-                  key={c.zona}
-                  style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', background: '#fff', padding: '1.25rem 1.5rem' }}
-                >
-                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.88rem', color: '#5a3520', lineHeight: 1.6 }}>{c.zona}</span>
-                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.95rem', color: 'var(--terracota)', fontWeight: 600, whiteSpace: 'nowrap' }}>{c.costo}</span>
-                </div>
-              ))}
-            </div>
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: '#5a3520', fontStyle: 'italic', marginBottom: '0.35rem' }}>
-              * El costo en comunas cercanas varía según la dirección exacta; en el resto de la
-              Región Metropolitana el despacho se cotiza según distancia junto con el pedido.
-            </p>
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: '#5a3520', fontStyle: 'italic' }}>
+            <CalcularDespachoWidget />
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: '#5a3520', fontStyle: 'italic', marginTop: '1rem' }}>
               Pedido mínimo para delivery: $15.000.
             </p>
           </section>

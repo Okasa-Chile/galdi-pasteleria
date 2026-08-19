@@ -1,5 +1,6 @@
 import { onRequest } from 'firebase-functions/v2/https';
 import * as crypto from 'crypto';
+import { ORIGEN_GALDI, calcularCostoPorKm } from './deliveryPricing';
 
 const PLACE_ID = 'ChIJf7l5N6LDYpYR6uNj83Fqd9g';
 
@@ -178,6 +179,163 @@ export const flowConfirmar = onRequest(
 
     } catch (err) {
       res.status(500).json({ error: 'Error interno', detalle: String(err) });
+    }
+  }
+);
+
+// ─── Delivery por radio de km ──────────────────────────────────────────────
+//
+// Contrato de respuesta:
+// - Éxito:                  { km, costoDelivery, requiereCotizacionManual: false }
+// - Fuera del radio (>24km): { km, costoDelivery: null, requiereCotizacionManual: true, motivo: 'fuera_de_radio' }
+// - Dirección no ubicada:    HTTP 422 { error }  — culpa del input, bloquea hasta corregir
+// - Falla de infraestructura (red, timeout, cuota, Google caído, etc.):
+//                            HTTP 200 { km: null, costoDelivery: null, requiereCotizacionManual: true, motivo: 'error_infraestructura' }
+//   El detalle real del error se loguea server-side y NUNCA se expone al cliente.
+//   Este caso es HTTP 200 (no un error) a propósito: el checkout no debe tratarlo
+//   como fallo bloqueante — debe dejar avanzar el pedido con el despacho a coordinar
+//   por WhatsApp. Un fallo nuestro de infraestructura no puede bloquear una venta.
+
+const ERROR_DIRECCION_NO_UBICADA =
+  'No pudimos ubicar esa dirección, verifica que esté completa (calle, número, comuna).';
+
+const TIMEOUT_MS = 8000;
+
+interface GeocodingResponse {
+  status: string;
+  error_message?: string;
+  results: Array<{
+    partial_match?: boolean;
+    geometry: { location: { lat: number; lng: number } };
+  }>;
+}
+
+interface DistanceMatrixResponse {
+  status: string;
+  error_message?: string;
+  rows: Array<{
+    elements: Array<{
+      status: string;
+      distance?: { value: number };
+    }>;
+  }>;
+}
+
+function respuestaFallbackInfraestructura(res: import('express').Response) {
+  res.json({ km: null, costoDelivery: null, requiereCotizacionManual: true, motivo: 'error_infraestructura' });
+}
+
+// CORS (arriba) solo gobierna el navegador: no detiene curl, scripts ni
+// llamadas servidor-a-servidor (lo comprobé yo mismo diagnosticando este
+// endpoint). Esta función consume cuota de Google Maps por request, así que
+// además exige el header Origin y lo valida server-side contra la misma
+// lista — defensa mínima contra martilleo directo del endpoint.
+function origenPermitido(origin: string | undefined): boolean {
+  return !!origin && ALLOWED_ORIGINS.includes(origin);
+}
+
+export const calcularCostoDelivery = onRequest(
+  { region: 'us-central1', cors: ALLOWED_ORIGINS, invoker: 'public', secrets: ['GOOGLE_MAPS_API_KEY_GALDI'], maxInstances: 5 },
+  async (req, res) => {
+    if (req.method !== 'POST') {
+      res.status(405).json({ error: 'Método no permitido' });
+      return;
+    }
+
+    if (!origenPermitido(req.headers.origin)) {
+      res.status(403).json({ error: 'Origen no autorizado' });
+      return;
+    }
+
+    const direccion = String(req.body?.direccion ?? '').trim();
+    if (!direccion) {
+      res.status(400).json({ error: 'Falta la dirección.' });
+      return;
+    }
+
+    try {
+      const apiKey = process.env.GOOGLE_MAPS_API_KEY_GALDI?.trim();
+      if (!apiKey) {
+        console.error('[calcularCostoDelivery] GOOGLE_MAPS_API_KEY_GALDI no configurada');
+        respuestaFallbackInfraestructura(res);
+        return;
+      }
+
+      // a) Geocoding: dirección → coordenadas
+      const geoUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(direccion)}&region=cl&language=es&components=country:CL&key=${apiKey}`;
+      let geoData: GeocodingResponse;
+      try {
+        const geoRes = await fetch(geoUrl, { signal: AbortSignal.timeout(TIMEOUT_MS) });
+        geoData = await geoRes.json() as GeocodingResponse;
+      } catch (fetchErr) {
+        console.error('[calcularCostoDelivery] Error de red en Geocoding API:', fetchErr);
+        respuestaFallbackInfraestructura(res);
+        return;
+      }
+
+      if (geoData.status === 'ZERO_RESULTS') {
+        res.status(422).json({ error: ERROR_DIRECCION_NO_UBICADA });
+        return;
+      }
+      if (geoData.status !== 'OK') {
+        console.error('[calcularCostoDelivery] Geocoding status no-OK:', geoData.status, geoData.error_message);
+        respuestaFallbackInfraestructura(res);
+        return;
+      }
+
+      const primerResultado = geoData.results?.[0];
+      if (!primerResultado || primerResultado.partial_match) {
+        res.status(422).json({ error: ERROR_DIRECCION_NO_UBICADA });
+        return;
+      }
+
+      const destino = primerResultado.geometry.location;
+
+      // b) Distance Matrix: distancia real en auto desde el origen
+      const distUrl = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${ORIGEN_GALDI.lat},${ORIGEN_GALDI.lng}&destinations=${destino.lat},${destino.lng}&mode=driving&language=es&key=${apiKey}`;
+      let distData: DistanceMatrixResponse;
+      try {
+        const distRes = await fetch(distUrl, { signal: AbortSignal.timeout(TIMEOUT_MS) });
+        distData = await distRes.json() as DistanceMatrixResponse;
+      } catch (fetchErr) {
+        console.error('[calcularCostoDelivery] Error de red en Distance Matrix API:', fetchErr);
+        respuestaFallbackInfraestructura(res);
+        return;
+      }
+
+      if (distData.status !== 'OK') {
+        console.error('[calcularCostoDelivery] Distance Matrix status no-OK:', distData.status, distData.error_message);
+        respuestaFallbackInfraestructura(res);
+        return;
+      }
+
+      const elemento = distData.rows?.[0]?.elements?.[0];
+      if (!elemento || elemento.status === 'NOT_FOUND' || elemento.status === 'ZERO_RESULTS') {
+        res.status(422).json({ error: ERROR_DIRECCION_NO_UBICADA });
+        return;
+      }
+      if (elemento.status !== 'OK' || !elemento.distance) {
+        console.error('[calcularCostoDelivery] Distance Matrix element status no-OK:', elemento.status);
+        respuestaFallbackInfraestructura(res);
+        return;
+      }
+
+      const km = elemento.distance.value / 1000;
+
+      // c) Aplica la tabla de tramos
+      const costoDelivery = calcularCostoPorKm(km);
+
+      // d) Fuera del radio de despacho automático
+      if (costoDelivery === null) {
+        res.json({ km, costoDelivery: null, requiereCotizacionManual: true, motivo: 'fuera_de_radio' });
+        return;
+      }
+
+      res.json({ km, costoDelivery, requiereCotizacionManual: false });
+
+    } catch (err) {
+      console.error('[calcularCostoDelivery] Error inesperado:', err);
+      respuestaFallbackInfraestructura(res);
     }
   }
 );

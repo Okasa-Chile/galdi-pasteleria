@@ -3,17 +3,38 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { PEDIDO_MINIMO_DELIVERY } from '@/lib/deliveryPricing';
 
 const FLOW_URL = 'https://us-central1-galdi-web.cloudfunctions.net/flowCrearOrden';
+const CALCULAR_DESPACHO_URL = 'https://us-central1-galdi-web.cloudfunctions.net/calcularCostoDelivery';
 
-const COMUNAS_CERCANAS = ['Maipú', 'Cerrillos', 'Pudahuel', 'Estación Central', 'Padre Hurtado', 'Lo Prado'];
-
-function calcularDespacho(comuna: string): number {
-  if (!comuna) return 0;
-  if (comuna === 'Maipú (retiro en local)') return 0;
-  if (COMUNAS_CERCANAS.includes(comuna)) return 3000;
-  return 5000;
+interface DespachoOk {
+  km: number;
+  costoDelivery: number;
+  requiereCotizacionManual: false;
+  motivo?: undefined;
 }
+interface DespachoFueraDeRadio {
+  km: number;
+  costoDelivery: null;
+  requiereCotizacionManual: true;
+  motivo: 'fuera_de_radio';
+}
+interface DespachoErrorInfraestructura {
+  km: null;
+  costoDelivery: null;
+  requiereCotizacionManual: true;
+  motivo: 'error_infraestructura';
+}
+type DespachoInfo = DespachoOk | DespachoFueraDeRadio | DespachoErrorInfraestructura;
+
+const MENSAJE_FUERA_DE_RADIO =
+  'Tu dirección está fuera de nuestra zona de despacho automático — te contactaremos por WhatsApp para coordinar.';
+const MENSAJE_FALLO_INFRAESTRUCTURA =
+  'No pudimos calcular el despacho automáticamente — te contactaremos por WhatsApp para coordinar el costo de envío.';
+const FALLBACK_INFRAESTRUCTURA: DespachoErrorInfraestructura = {
+  km: null, costoDelivery: null, requiereCotizacionManual: true, motivo: 'error_infraestructura',
+};
 
 function fechaMinima(): string {
   const ahora = new Date();
@@ -50,9 +71,13 @@ export default function CarritoPage() {
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
-  const [comuna, setComuna] = useState('');
+  const [modoEntrega, setModoEntrega] = useState<'' | 'retiro' | 'domicilio'>('');
   const [direccion, setDireccion] = useState('');
   const [fechaEntrega, setFechaEntrega] = useState('');
+
+  const [despachoInfo, setDespachoInfo] = useState<DespachoInfo | null>(null);
+  const [calculandoDespacho, setCalculandoDespacho] = useState(false);
+  const [errorDespacho, setErrorDespacho] = useState('');
 
   useEffect(() => {
     try {
@@ -63,17 +88,67 @@ export default function CarritoPage() {
   }, []);
 
   const subtotal = items.reduce((acc, it) => acc + it.precio * it.cantidad, 0);
-  const despacho = calcularDespacho(comuna);
+  const despacho = modoEntrega === 'domicilio' ? (despachoInfo?.costoDelivery ?? 0) : 0;
   const total = subtotal + despacho;
+
+  const pedidoBajoMinimo = modoEntrega === 'domicilio' && subtotal < PEDIDO_MINIMO_DELIVERY;
+
+  async function handleCalcularDespacho() {
+    if (!direccion.trim()) {
+      setErrorDespacho('Ingresa tu dirección primero.');
+      return;
+    }
+    setErrorDespacho('');
+    setDespachoInfo(null);
+    setCalculandoDespacho(true);
+    try {
+      const res = await fetch(CALCULAR_DESPACHO_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ direccion }),
+      });
+      const data = await res.json();
+      if (data.error) {
+        // Dirección no ubicada/ambigua: es un problema del input, sí bloquea.
+        setErrorDespacho(data.error);
+      } else if (typeof data.requiereCotizacionManual === 'boolean') {
+        // Éxito, fuera de radio, o fallback de infraestructura ya vienen bien
+        // formados desde la Cloud Function — ninguno de estos bloquea el pedido.
+        setDespachoInfo(data);
+      } else {
+        // Respuesta inesperada: se trata igual que una falla de infraestructura,
+        // nunca como bloqueo del pedido.
+        setDespachoInfo(FALLBACK_INFRAESTRUCTURA);
+      }
+    } catch {
+      // Falla de red entre el navegador y nuestra función: mismo criterio,
+      // no bloquea, se coordina el despacho por WhatsApp.
+      setDespachoInfo(FALLBACK_INFRAESTRUCTURA);
+    } finally {
+      setCalculandoDespacho(false);
+    }
+  }
 
   async function handlePagar() {
     if (!nombre.trim()) { setError('Ingresa tu nombre completo.'); return; }
     if (!validarEmail(email)) { setError('Email inválido.'); return; }
     if (!validarTelefono(telefono)) { setError('Teléfono inválido. Formato: 9 1234 5678'); return; }
-    if (!comuna) { setError('Selecciona una comuna.'); return; }
-    if (comuna !== 'Maipú (retiro en local)' && !direccion.trim()) {
-      setError('Ingresa la dirección de despacho.');
-      return;
+    if (!modoEntrega) { setError('Elige retiro en local o despacho a domicilio.'); return; }
+    if (modoEntrega === 'domicilio') {
+      if (!direccion.trim()) { setError('Ingresa la dirección de despacho.'); return; }
+      if (pedidoBajoMinimo) {
+        setError(`Pedido mínimo para delivery: ${fmt(PEDIDO_MINIMO_DELIVERY)} — puedes retirar sin costo en nuestro local.`);
+        return;
+      }
+      if (!despachoInfo) { setError('Calcula el costo de despacho antes de continuar.'); return; }
+      if (despachoInfo.motivo === 'fuera_de_radio') {
+        setError(MENSAJE_FUERA_DE_RADIO);
+        return;
+      }
+      // motivo === 'error_infraestructura': NO bloquea. Un fallo nuestro de
+      // infraestructura no puede impedir la venta — el pedido avanza y el
+      // despacho queda marcado para coordinar por WhatsApp (ver descripción
+      // enviada a Flow más abajo).
     }
     if (!fechaEntrega) { setError('Selecciona fecha de entrega.'); return; }
 
@@ -81,9 +156,13 @@ export default function CarritoPage() {
     setEnviando(true);
 
     try {
-      const descripcion = items.map(it =>
+      const despachoSinCalcular = modoEntrega === 'domicilio' && despachoInfo?.motivo === 'error_infraestructura';
+      let descripcion = items.map(it =>
         `${it.cantidad} ${it.nombreVisible}${it.talla ? ` (${it.talla})` : ''}`
       ).join(', ');
+      if (despachoSinCalcular) {
+        descripcion = `⚠️ DESPACHO SIN CALCULAR (coordinar por WhatsApp) — ${descripcion}`;
+      }
       const orden = `GALDI-${Date.now()}`;
 
       const res = await fetch(FLOW_URL, {
@@ -95,7 +174,7 @@ export default function CarritoPage() {
 
       if (data.urlPago) {
         sessionStorage.setItem('galdi_pedido_meta', JSON.stringify({
-          orden, nombre, email, telefono, comuna, direccion, fechaEntrega, items, total
+          orden, nombre, email, telefono, modoEntrega, direccion, despachoInfo, despachoSinCalcular, fechaEntrega, items, total
         }));
         window.location.href = data.urlPago;
       } else {
@@ -174,7 +253,13 @@ export default function CarritoPage() {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.85rem', color: '#5a3520' }}>Despacho</span>
-              <span style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.85rem', color: '#3d2010' }}>{despacho === 0 ? 'Gratis (retiro)' : fmt(despacho)}</span>
+              <span style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.85rem', color: '#3d2010' }}>
+                {modoEntrega === 'retiro' && 'Gratis (retiro)'}
+                {modoEntrega === 'domicilio' && despachoInfo && !despachoInfo.requiereCotizacionManual && fmt(despacho)}
+                {modoEntrega === 'domicilio' && despachoInfo?.requiereCotizacionManual && 'A cotizar'}
+                {modoEntrega === 'domicilio' && !despachoInfo && 'Por calcular'}
+                {!modoEntrega && '—'}
+              </span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid #e8d5b7' }}>
               <span style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.1rem', color: '#1a0f0a', fontWeight: 600 }}>Total</span>
@@ -201,23 +286,86 @@ export default function CarritoPage() {
               <input style={inputStyle} type="tel" value={telefono} onChange={e => setTelefono(e.target.value)} placeholder="9 1234 5678" />
             </div>
             <div>
-              <label style={labelStyle}>Comuna *</label>
-              <select style={inputStyle} value={comuna} onChange={e => setComuna(e.target.value)}>
-                <option value="">Selecciona tu comuna</option>
-                <option value="Maipú (retiro en local)">Maipú — Retiro gratis en local</option>
-                <option value="Maipú">Maipú — Despacho $3.000</option>
-                <option value="Cerrillos">Cerrillos — Despacho $3.000</option>
-                <option value="Pudahuel">Pudahuel — Despacho $3.000</option>
-                <option value="Estación Central">Estación Central — Despacho $3.000</option>
-                <option value="Padre Hurtado">Padre Hurtado — Despacho $5.000</option>
-                <option value="Lo Prado">Lo Prado — Despacho $3.000</option>
-                <option value="Otra">Otra comuna Gran Santiago — Despacho $5.000</option>
-              </select>
+              <label style={labelStyle}>Forma de entrega *</label>
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <button
+                  type="button"
+                  onClick={() => { setModoEntrega('retiro'); setDespachoInfo(null); setErrorDespacho(''); }}
+                  style={{
+                    flex: 1, padding: '0.65rem', borderRadius: '4px', cursor: 'pointer',
+                    fontFamily: 'Jost, sans-serif', fontSize: '0.85rem',
+                    border: modoEntrega === 'retiro' ? '2px solid #d4a853' : '1px solid #d4c4a8',
+                    background: modoEntrega === 'retiro' ? 'rgba(212,168,83,0.12)' : '#fff',
+                    color: '#1a0f0a', fontWeight: modoEntrega === 'retiro' ? 700 : 400,
+                  }}
+                >
+                  Retiro en local (gratis)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setModoEntrega('domicilio')}
+                  style={{
+                    flex: 1, padding: '0.65rem', borderRadius: '4px', cursor: 'pointer',
+                    fontFamily: 'Jost, sans-serif', fontSize: '0.85rem',
+                    border: modoEntrega === 'domicilio' ? '2px solid #d4a853' : '1px solid #d4c4a8',
+                    background: modoEntrega === 'domicilio' ? 'rgba(212,168,83,0.12)' : '#fff',
+                    color: '#1a0f0a', fontWeight: modoEntrega === 'domicilio' ? 700 : 400,
+                  }}
+                >
+                  Despacho a domicilio
+                </button>
+              </div>
             </div>
-            {comuna && comuna !== 'Maipú (retiro en local)' && (
+            {modoEntrega === 'domicilio' && (
               <div>
                 <label style={labelStyle}>Dirección de despacho *</label>
-                <input style={inputStyle} value={direccion} onChange={e => setDireccion(e.target.value)} placeholder="Calle, número, depto" />
+                <input
+                  style={inputStyle}
+                  value={direccion}
+                  onChange={e => { setDireccion(e.target.value); setDespachoInfo(null); setErrorDespacho(''); }}
+                  placeholder="Calle, número, comuna"
+                />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.6rem' }}>
+                  <button
+                    type="button"
+                    onClick={handleCalcularDespacho}
+                    disabled={calculandoDespacho}
+                    style={{
+                      padding: '0.5rem 1rem', background: '#f0e4ce', color: '#3d2010',
+                      border: '1px solid #d4c4a8', borderRadius: '4px',
+                      cursor: calculandoDespacho ? 'not-allowed' : 'pointer',
+                      fontFamily: 'Jost, sans-serif', fontSize: '0.78rem',
+                      letterSpacing: '0.06em', textTransform: 'uppercase',
+                    }}
+                  >
+                    {calculandoDespacho ? 'Calculando...' : 'Calcular despacho'}
+                  </button>
+                  {despachoInfo && !despachoInfo.requiereCotizacionManual && (
+                    <span style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.8rem', color: '#5a3520' }}>
+                      {despachoInfo.km.toFixed(1)} km — {despachoInfo.costoDelivery === 0 ? 'gratis' : fmt(despachoInfo.costoDelivery)}
+                    </span>
+                  )}
+                </div>
+                {errorDespacho && (
+                  <p style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.78rem', color: '#c0392b', marginTop: '0.5rem' }}>
+                    {errorDespacho}
+                  </p>
+                )}
+                {despachoInfo?.motivo === 'fuera_de_radio' && (
+                  <p style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.78rem', color: '#c0392b', marginTop: '0.5rem' }}>
+                    {MENSAJE_FUERA_DE_RADIO}
+                  </p>
+                )}
+                {despachoInfo?.motivo === 'error_infraestructura' && (
+                  <p style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.78rem', color: '#8a6a4a', marginTop: '0.5rem' }}>
+                    {MENSAJE_FALLO_INFRAESTRUCTURA}
+                  </p>
+                )}
+                {pedidoBajoMinimo && (
+                  <p style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.78rem', color: '#c0392b', marginTop: '0.5rem' }}>
+                    Pedido mínimo para delivery: {fmt(PEDIDO_MINIMO_DELIVERY)} — puedes retirar sin costo en nuestro local.
+                  </p>
+                )}
               </div>
             )}
             <div>

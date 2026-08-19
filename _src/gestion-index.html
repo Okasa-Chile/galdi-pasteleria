@@ -357,6 +357,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
       <div style="margin-top:14px;">
         <label>Dirección</label>
         <input type="text" id="pres-direccion" placeholder="ej: Av. Principal 123, Depto 45">
+        <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
+          <button class="btn btn-sm btn-gray" type="button" id="btn-calcular-despacho" onclick="calcularDespachoPresupuesto()">📍 Calcular despacho</button>
+          <span id="pres-despacho-resultado" style="font-size:13px;color:var(--muted);"></span>
+        </div>
       </div>
       <div style="margin-top:14px;">
         <label>Comuna</label>
@@ -635,6 +639,7 @@ import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, updateD
 // ── CONFIG ────────────────────────────────────────────────────────────────
 const AUTORIZADOS = ['contacto@okasa.cl','ventas@galdi.cl','iaclaudioferrari@gmail.com','ingridgalvezd@gmail.com','jacquelinegalvezd@gmail.com'];
 const META = 1200000;
+const CALCULAR_DESPACHO_URL = 'https://us-central1-galdi-web.cloudfunctions.net/calcularCostoDelivery';
 
 // ── FIREBASE INIT ─────────────────────────────────────────────────────────
 const config = await fetch('/__/firebase/init.json').then(r=>r.json());
@@ -1397,6 +1402,51 @@ window.presSetDescTipo = (tipo) => {
   }
   input.value = 0;
   presRecalcTotales();
+};
+
+window.calcularDespachoPresupuesto = async () => {
+  const direccion = document.getElementById('pres-direccion')?.value.trim() || '';
+  const resultado = document.getElementById('pres-despacho-resultado');
+  const btn = document.getElementById('btn-calcular-despacho');
+  if (!direccion) {
+    resultado.textContent = 'Ingresa una dirección primero.';
+    resultado.style.color = '#c0392b';
+    return;
+  }
+  resultado.style.color = 'var(--muted)';
+  resultado.textContent = 'Calculando...';
+  btn.disabled = true;
+  try {
+    const res = await fetch(CALCULAR_DESPACHO_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ direccion }),
+    });
+    const data = await res.json();
+    if (data.error) {
+      // Dirección no ubicada/ambigua: hay que corregir el input.
+      resultado.textContent = data.error;
+      resultado.style.color = '#c0392b';
+    } else if (data.motivo === 'fuera_de_radio') {
+      resultado.textContent = `${data.km.toFixed(1)} km — fuera de zona de despacho automático, cotizar caso a caso.`;
+      resultado.style.color = '#c0392b';
+    } else if (data.motivo === 'error_infraestructura') {
+      resultado.textContent = 'No pudimos calcular el despacho automáticamente (falla temporal). Calcula el costo manualmente o inténtalo de nuevo en unos minutos.';
+      resultado.style.color = '#8a6a4a';
+    } else if (data.requiereCotizacionManual) {
+      // Respuesta inesperada sin motivo reconocido: no bloquea, se trata como falla temporal.
+      resultado.textContent = 'No pudimos calcular el despacho automáticamente. Calcula el costo manualmente o inténtalo de nuevo.';
+      resultado.style.color = '#8a6a4a';
+    } else {
+      resultado.textContent = `${data.km.toFixed(1)} km — despacho: ${data.costoDelivery === 0 ? 'gratis' : '$' + data.costoDelivery.toLocaleString('es-CL')}`;
+      resultado.style.color = 'var(--gold2)';
+    }
+  } catch {
+    resultado.textContent = 'No pudimos calcular el despacho automáticamente (error de conexión). Calcula el costo manualmente o inténtalo de nuevo.';
+    resultado.style.color = '#8a6a4a';
+  } finally {
+    btn.disabled = false;
+  }
 };
 
 window.guardarPresupuesto = async () => {
