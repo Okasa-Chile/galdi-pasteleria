@@ -135,7 +135,7 @@ galdi-nextjs/
 | Tab 2 | ✅ | Catálogo de productos con selector tallas |
 | Tab 3 | ✅ | Registro de compras/insumos |
 | Tab 4 | ✅ | Registro de ventas |
-| Tab 5 | ✅ | Presupuestos con QR + /validar-presupuesto |
+| Tab 5 | ✅ | Presupuestos con QR de validación + /validar-presupuesto · precio mayorista automático de empanadas |
 
 ### Características clave
 - Correlativo presupuestos: COT-G105+
@@ -145,6 +145,10 @@ galdi-nextjs/
 - Talla XL exclusiva para Torta Panqueque
 - `cumpleanosSlides`: 8 slides (antes 10) — imágenes cumpleanos01-08.webp renovadas
 - `SeoPage.tsx`: incluye logo con link a `/` en el hero (afecta todas las páginas SEO)
+- QR de validación en presupuestos: se genera en el documento padre con qrcodejs, se convierte a dataURL y se embebe como `<img>` en el HTML del popup de impresión. NO se puede generar dentro del popup: la librería no está cargada ahí.
+- El QR aparece en ambas rutas de impresión (vista previa tras guardar, y reimpresión desde historial). En la ruta del formulario, `guardarPresupuesto` captura el token recién generado y llama a `vistaPreviaPresupuesto(token)` ANTES de limpiar el formulario, porque esa función lee todo desde el DOM.
+- Presupuestos históricos sin campo `token` se imprimen sin el bloque QR, sin error (comportamiento defensivo).
+- Precio mayorista de empanadas: desde 36 unidades (3 docenas) el precio unitario baja automáticamente de $2.700 a $2.500. Excluidos por costo de insumos: "Empanada de Mariscos" y "Empanada Queso Camarón". La exclusión es por nombre EXACTO — "Empanada de Queso" y "Empanada Queso Camarón" son productos distintos, un match por substring rompería la regla.
 
 ---
 
@@ -208,6 +212,7 @@ npm run start   # preview producción local
 - [ ] **QR en PDF usando SVG en vez de canvas**
 - [ ] **Agenda de clientes en /gestion**
 - [ ] **Bug persistencia checkout** — `flowCrearOrden` solo pasa 4 campos, revisar qué falta persistir
+- [ ] **PENDIENTE** — Los pedidos con despacho no calculado (error de infraestructura de Google Maps) se marcan con prefijo ⚠️ únicamente en la descripción enviada a Flow, porque `flowConfirmar` no persiste el detalle completo del pedido en Firestore. Esto depende de que alguien lea la descripción en el panel de Flow. Cuando se resuelva la persistencia completa del pedido en Firestore, migrar este flag a un campo propio en `galdi_pedidos`.
 - [ ] **Campaña Día del Niño** (09-08-2026)
 - [ ] **REVERSIÓN Fiestas Patrias post 18-09-2026** — buscar comentarios `FIESTAS PATRIAS 2026` en `app/empanadas-maipu/page.tsx` y `components/Hero.tsx` y restaurar los valores/array originales comentados
 - [ ] **Auditoría Bloque 3** (SEO estructural) — ver sección de Auditoría arriba
@@ -808,3 +813,71 @@ excluyendo .claude/settings.local.json).
   real en el carrito/checkout con Flow.
 - Considerar agregar .claude/settings.local.json al .gitignore para
   que no vuelva a aparecer en git status.
+
+## Jornada 17-08-2026 — QR de presupuestos + precio mayorista de empanadas
+
+### QR de validación (commit c0fd54d)
+
+**Hallazgo:** el QR de presupuestos no estaba roto — nunca existió. El README lo daba por implementado, pero `grep "QRCode"` en `public/gestion/index.html` no arrojaba resultados: la librería `qrcode.min.js` se cargaba en el `<head>` sin usarse en ningún punto. La mitad consumidora del sistema (`/validar-presupuesto`, que busca por `where('token','==',token)`) sí estaba construida y funcionando.
+
+Diferencia arquitectónica con Okasa, que conviene tener presente: en Okasa el QR lo genera Python (`generar_cotizacion.py` con qrcode + Pillow) y se inserta como PNG en el Excel vía openpyxl. En Galdi todo ocurre en el navegador, así que el QR debe generarse en cliente. La solución de Okasa no es portable acá.
+
+Implementación:
+- `generarQRDataURL(token)`: crea el QR en un div oculto del documento padre, extrae el canvas a dataURL y limpia el div. Retorna null ante cualquier fallo.
+- `bloqueQRHtml(token)`: devuelve el fragmento HTML del QR, o string vacío si no hay token.
+- `vistaPreviaPresupuesto` pasó a aceptar un parámetro opcional `token`.
+- `guardarPresupuesto` captura el token en la rama `addDoc` y dispara la vista previa antes del bloque de limpieza del formulario.
+
+Se descartó la alternativa de poner el QR solo en la reimpresión desde historial: habría producido dos versiones distintas del mismo COT-G según desde dónde se imprimiera.
+
+### Precio mayorista de empanadas (commit posterior)
+
+Detectado a partir del presupuesto de prueba COT-G110: 95 empanadas de pino quedaron a $2.700/un cuando por volumen correspondía $2.500. El precio se autocompleta del catálogo y las socias tenían que acordarse de bajarlo a mano en cada pedido grande.
+
+Regla implementada en `presRecalcLinea`, enganchada al `oninput` de la cantidad:
+- ≥36 unidades → $2.500/un
+- <36 unidades → restaura el precio base del catálogo
+- Excluidos siempre: Empanada de Mariscos y Empanada Queso Camarón
+- Marca visual dorada en la fila cuando aplica, para que la socia vea por qué cambió el precio
+- El campo de precio sigue readOnly, consistente con el resto del panel
+
+**Bug evitado durante la implementación:** la primera versión restauraba `data-precio-base` para cualquier producto fuera de la regla mayorista, sin filtrar por categoría. Eso habría borrado el extra de $1.500 del baño de chocolate en Queques cada vez que se tocara la cantidad, porque `data-precio-base` no incluye ese recargo. Se corrigió acotando toda la lógica al bloque `if (catProd === 'Empanadas')`.
+
+### Pendiente para la próxima sesión
+
+- **Uso del espacio del papel en la impresión de presupuestos:** los presupuestos cortos (ej. COT-G110, una sola línea) terminan a media hoja y el QR con el pie quedan flotando al centro, lo que se lee como documento cortado. Propuesta: anclar el bloque final al fondo con `min-height` en el contenedor y `margin-top:auto` en el pie. Requiere probar con un presupuesto largo (tipo COT-G108) antes de darlo por bueno: usar alturas de viewport en impresión es causa clásica de páginas en blanco fantasma.
+
+---
+
+## Jornada 18-08-2026 — Sistema de delivery por radio de km
+
+### Sistema de delivery por radio de km (en producción, tramos pendientes de recalibrar)
+
+- `lib/deliveryPricing.ts` es la fuente única de verdad: `ORIGEN_GALDI = { lat: -33.4776144, lng: -70.7521309 }`, `PEDIDO_MINIMO_DELIVERY = 15000`, tabla de 10 tramos.
+- Cloud Function `calcularCostoDelivery` (región `us-central1`, misma que `flowCrearOrden`/`flowConfirmar`): Geocoding API → Distance Matrix API → aplica la tabla de tramos. API key desde Secret Manager (`GOOGLE_MAPS_API_KEY_GALDI`). Distingue `fuera_de_radio` (>24 km, bloquea el pago automático) de `error_infraestructura` (timeout/cuota/caída de la API: responde HTTP 200 y permite avanzar el pedido igual, marcado con prefijo ⚠️ en la descripción que llega a Flow, para no bloquear ventas por una caída de Google).
+- `functions/src/deliveryPricing.ts` es una copia necesaria de `lib/deliveryPricing.ts` — Firebase solo empaqueta `functions/` al desplegar Cloud Functions, no puede importar directo desde `lib/`. `scripts/check-delivery-pricing-sync.mjs` compara ambos objetos en memoria y aborta con exit 1 si divergen; enganchado en `prebuild` y en ambos `predeploy` de `firebase.json` para que una edición a un solo lado nunca llegue a producción sin que la otra copia se actualice.
+- Integrado en 3 puntos del sitio: checkout (`app/carrito`), `/gestion` (Tab 5), y un widget en `/delivery-maipu`. El cálculo corre solo al hacer clic en el botón correspondiente, nunca mientras el usuario tipea la dirección (evita gastar cuota de API en cada tecla).
+- Código postal de Galdi corregido a `9293891` (el `9260057` registrado el 03-08-2026 era erróneo).
+
+### PENDIENTE CRÍTICO — Recalibrar tramos
+
+Los montos actuales son inviables comercialmente. Prueba con 13 direcciones reales (McDonald's de la Región Metropolitana, verificadas vía Places API):
+
+| Dirección | Distancia | Tramo actual |
+|---|---|---|
+| Av. Américo Vespucio 399, Maipú | 3,3 km | $5.000 |
+| Av. 5 de Abril 81, Maipú | 6,5 km | $8.000 |
+| Río Snake, Lo Prado | 9,2 km | $11.000 |
+| República 40, Santiago Centro | 15,1 km | $17.000 |
+| Paseo Ahumada | 24,4 km | fuera de radio |
+
+Tres de esas direcciones están en Maipú, donde hoy se cobra $3.000 — el alza real sería de 60-160% para clientes actuales, y Santiago Centro queda prácticamente fuera de cobertura.
+
+**Causa:** las rutas reales en Santiago son mucho más largas que la línea recta, y los tramos de 3 km fueron definidos con intuición de línea recta, no con distancias de ruteo reales.
+
+**Método acordado para recalibrar:** Claudio define cuánto DEBERÍA costar el delivery en 4 casos de referencia, y los tramos se derivan desde ahí — sin aplicar un factor de corrección arbitrario sobre la tabla actual.
+
+### Adicional
+
+- Prompt de investigación de precios de empanadas de pino para Fiestas Patrias 2026 (Gemini Deep Research) generado, pendiente de ejecutar.
+- Recordatorio vigente: revertir el bloque de Fiestas Patrias en `/empanadas-maipu` después del 18-09-2026.
