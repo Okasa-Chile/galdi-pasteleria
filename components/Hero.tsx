@@ -89,6 +89,7 @@ export default function Hero() {
         position: 'absolute',
         inset: 0,
         background: 'linear-gradient(to bottom, rgba(26,15,10,0.4) 0%, rgba(26,15,10,0.6) 100%)',
+        pointerEvents: 'none',
       }} />
 
       {/* Contenido */}
