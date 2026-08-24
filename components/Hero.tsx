@@ -103,6 +103,7 @@ export default function Hero() {
         justifyContent: 'center',
         textAlign: 'center',
         padding: '0 2rem',
+        pointerEvents: 'none',
       }}>
         <h1 style={{
           fontFamily: 'var(--font-serif)',
@@ -140,6 +141,7 @@ export default function Hero() {
             transition: 'var(--transition)',
             border: '1px solid var(--terracota)',
             whiteSpace: 'nowrap',
+            pointerEvents: 'auto',
           }}
           onMouseEnter={e => {
             e.currentTarget.style.background = 'rgba(196,112,79,0.15)';
