@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 // Array original (pre Fiestas Patrias) — restaurar reemplazando el bloque de abajo:
 // const slides = [
@@ -18,13 +19,13 @@ import Image from 'next/image';
 // distribuyen separadas entre sí para que nunca se repita la misma
 // foto dos veces seguidas al rotar.
 const slides = [
-  { src: '/images/prod-empanada.webp', alt: 'Empanadas artesanales Galdi' },
+  { src: '/images/prod-empanada.webp', alt: 'Empanadas artesanales Galdi', href: '/empanadas-maipu' },
   { src: '/images/torta-amor-hero.webp', alt: 'Torta Amor — Día de la Madre Galdi Pastelería Maipú' },
   { src: '/images/New_Hero_socias.webp', alt: 'Galdi — Pastelería artesanal' },
-  { src: '/images/prod-empanada.webp', alt: 'Empanadas artesanales Galdi' },
+  { src: '/images/prod-empanada.webp', alt: 'Empanadas artesanales Galdi', href: '/empanadas-maipu' },
   { src: '/images/SlideshowPanes.webp', alt: 'Pan artesanal Galdi' },
   { src: '/images/prod-dulces.webp', alt: 'Dulces artesanales Galdi' },
-  { src: '/images/prod-empanada.webp', alt: 'Empanadas artesanales Galdi' },
+  { src: '/images/prod-empanada.webp', alt: 'Empanadas artesanales Galdi', href: '/empanadas-maipu' },
   { src: '/images/prod-pie.webp', alt: 'Pasteles y tartas Galdi' },
   { src: '/images/Reparto.webp', alt: 'Reparto Galdi en Maipú' },
 ];
@@ -55,13 +56,8 @@ export default function Hero() {
       height: '100vh',
       overflow: 'hidden',
     }}>
-      {slides.map((slide, i) => (
-        <div key={i} style={{
-          position: 'absolute',
-          inset: 0,
-          opacity: i === current ? 1 : 0,
-          transition: 'opacity 1s ease-in-out',
-        }}>
+      {slides.map((slide, i) => {
+        const imagen = (
           <Image
             src={slide.src}
             alt={slide.alt}
@@ -70,8 +66,23 @@ export default function Hero() {
             style={{ objectFit: 'cover', objectPosition: slide.src.includes('New_Hero_socias') ? 'center 25%' : 'center', transform: slide.src.includes('New_Hero_socias') ? 'scale(1.4)' : 'none' }}
             priority={i === 0}
           />
-        </div>
-      ))}
+        );
+        return (
+          <div key={i} style={{
+            position: 'absolute',
+            inset: 0,
+            opacity: i === current ? 1 : 0,
+            transition: 'opacity 1s ease-in-out',
+            pointerEvents: i === current ? 'auto' : 'none',
+          }}>
+            {slide.href ? (
+              <Link href={slide.href} aria-label={slide.alt} style={{ position: 'absolute', inset: 0, display: 'block', cursor: 'pointer' }}>
+                {imagen}
+              </Link>
+            ) : imagen}
+          </div>
+        );
+      })}
 
       {/* Overlay oscuro */}
       <div style={{
