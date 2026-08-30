@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Validación de bandas de despacho · Galdi</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root{
+    --bg:#faf6ef;--card:#fff;--ink:#1a0f0a;--muted:#6b5642;--line:#e6d8c3;
+    --gold:#d4a853;--ok:#2e7d32;--mal:#c0392b;--lock:#8a7a63;--conf:#8e24aa;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.4;
+    display:flex;flex-direction:column;}
+  header{background:var(--ink);color:#f6ecd9;padding:.6rem 1rem;flex:none;}
+  header h1{margin:0;font-size:.92rem;font-weight:600;}
+  .sub{font-size:.76rem;opacity:.85;margin-top:.2rem;display:flex;flex-wrap:wrap;gap:.3rem 1rem;}
+  .sub b{color:var(--gold);}
+  .aviso{background:#fff3cd;color:#6a4a00;padding:.4rem 1rem;font-size:.74rem;flex:none;
+    border-bottom:1px solid #e6cf94;}
+  /* ── Controles de radio ── */
+  #controles{flex:none;background:var(--card);border-bottom:1px solid var(--line);
+    padding:.55rem .75rem;display:flex;flex-wrap:wrap;gap:.9rem;align-items:flex-start;}
+  .ctrl-grid{display:grid;grid-template-columns:auto 1fr auto;gap:.28rem .5rem;align-items:center;
+    flex:1 1 380px;min-width:300px;}
+  .ctrl-lbl{display:flex;align-items:center;gap:.35rem;font-size:.78rem;font-weight:600;white-space:nowrap;}
+  .sw{width:13px;height:13px;border-radius:3px;border:1px solid rgba(0,0,0,.25);display:inline-block;}
+  .ctrl-grid input[type=range]{width:100%;}
+  .ctrl-grid input[type=number]{width:66px;padding:.2rem .3rem;border:1px solid var(--line);
+    border-radius:4px;font:inherit;font-size:.8rem;}
+  .resumen{flex:1 1 260px;min-width:230px;font-size:.76rem;background:var(--bg);
+    border:1px solid var(--line);border-radius:6px;padding:.5rem .6rem;}
+  .resumen h4{margin:.1rem 0 .35rem;font-size:.74rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);}
+  .rband{display:inline-flex;align-items:center;gap:.25rem;margin:0 .5rem .2rem 0;}
+  .rband .dot{width:10px;height:10px;border-radius:2px;display:inline-block;}
+  .rconf{margin-top:.35rem;color:var(--conf);}
+  .rconf b{color:var(--conf);}
+  .botones{display:flex;gap:.4rem;align-items:center;flex:none;}
+  .botones button{padding:.4rem .7rem;border-radius:6px;border:1px solid var(--line);
+    background:var(--card);font-size:.76rem;font-weight:700;cursor:pointer;}
+  #restablecer{color:var(--muted);}
+  #ctrlAviso{flex-basis:100%;min-height:1.1em;font-size:.74rem;font-weight:700;
+    color:var(--mal);opacity:0;transition:opacity .25s;}
+  /* ── Mapa + listado ── */
+  #wrap{flex:1;display:flex;min-height:0;}
+  #map{width:50%;flex:none;}
+  #panel{width:50%;flex:none;display:flex;flex-direction:column;min-height:0;
+    border-left:1px solid var(--line);background:var(--bg);}
+  .toolbar{flex:none;padding:.5rem .7rem;border-bottom:1px solid var(--line);
+    display:flex;flex-wrap:wrap;gap:.35rem .5rem;align-items:center;}
+  .toolbar .cont{font-size:.78rem;margin-right:auto;}
+  .toolbar .cont b{color:var(--mal);}
+  .filtros button,#exportar{border:1px solid var(--line);background:var(--card);color:var(--muted);
+    padding:.3rem .55rem;border-radius:999px;font-size:.72rem;cursor:pointer;}
+  .filtros button[aria-pressed="true"]{background:var(--ink);color:#f6ecd9;border-color:var(--ink);}
+  #exportar{border-radius:6px;background:var(--gold);color:var(--ink);font-weight:700;border:none;}
+  #exportar:disabled{opacity:.45;cursor:not-allowed;}
+  #lista{flex:1;overflow-y:auto;padding:.55rem;}
+  .row{background:var(--card);border:1px solid var(--line);border-left-width:5px;border-radius:8px;
+    padding:.5rem .6rem;margin-bottom:.45rem;cursor:pointer;}
+  .row.sel{outline:2px solid var(--gold);outline-offset:1px;}
+  .row.conflicto{border-left-color:var(--conf);}
+  .row.resuelta-ok{border-left-color:var(--ok);}
+  .row.resuelta-mal{border-left-color:var(--mal);}
+  .r1{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;}
+  .nom{font-weight:700;font-size:.92rem;}
+  .pr{font-weight:700;white-space:nowrap;}
+  .pr .socias{color:var(--conf);}
+  .pr .tacha{text-decoration:line-through;opacity:.55;font-weight:400;}
+  .r2{font-size:.74rem;color:var(--muted);margin-top:.12rem;}
+  .chips{margin-top:.28rem;display:flex;flex-wrap:wrap;gap:.22rem;}
+  .chip{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;
+    padding:.07rem .32rem;border-radius:4px;}
+  .chip.socias{background:var(--lock);color:#fff;}
+  .chip.banda{color:#111;}
+  .chip.borde{background:#5c6bc0;color:#fff;}
+  .chip.conf{background:var(--conf);color:#fff;}
+  .chip.detect{background:#e0e0e0;color:#555;}
+  .acc{display:flex;gap:.4rem;margin-top:.45rem;}
+  .acc button{flex:1;padding:.38rem;border-radius:6px;border:1px solid var(--line);
+    background:var(--card);font-weight:700;font-size:.8rem;cursor:pointer;}
+  .acc button.on-ok{background:var(--ok);color:#fff;border-color:var(--ok);}
+  .acc button.on-mal{background:var(--mal);color:#fff;border-color:var(--mal);}
+  .corr{margin-top:.45rem;display:none;}
+  .corr.open{display:block;}
+  .corr label{display:block;font-size:.7rem;color:var(--muted);margin-bottom:.12rem;}
+  .corr input,.corr textarea{width:100%;padding:.35rem;border:1px solid var(--line);
+    border-radius:6px;font:inherit;font-size:.83rem;margin-bottom:.35rem;}
+  .band-label{font:700 11px system-ui;color:#333;
+    text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;white-space:nowrap;}
+  #err{padding:1rem;color:var(--mal);}
+  @media(max-width:860px){
+    #wrap{flex-direction:column;}
+    #map{width:100%;height:42vh;flex:none;}
+    #panel{width:100%;flex:1;border-left:none;border-top:1px solid var(--line);}
+    #controles{max-height:none;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Validación de bandas de despacho · Galdi</h1>
+  <div class="sub">
+    <span>Modelo: <b>radio en recta</b> (Haversine desde el local)</span>
+    <span>Techo actual: <b id="techo">–</b> km</span>
+    <span id="gen"></span>
+  </div>
+</header>
+<div class="aviso">⚠️ Los radios y las marcas se pierden al recargar. Cuando termines, <b>Exportar</b> — el JSON incluye los radios finales.</div>
+
+<div id="controles">
+  <div class="ctrl-grid" id="ctrlGrid"></div>
+  <div class="resumen" id="resumen"></div>
+  <div class="botones">
+    <button id="restablecer" title="Volver a los radios por defecto">↺ Restablecer</button>
+  </div>
+  <div id="ctrlAviso" aria-live="polite"></div>
+</div>
+
+<div id="wrap">
+  <div id="map"></div>
+  <div id="panel">
+    <div class="toolbar">
+      <span class="cont">Sin revisar: <b id="pend">–</b></span>
+      <span class="filtros" id="filtros">
+        <button data-f="todas" aria-pressed="true">Todas</button>
+        <button data-f="pendientes" aria-pressed="false">Sin revisar</button>
+        <button data-f="borde" aria-pressed="false">Al borde</button>
+        <button data-f="conflicto" aria-pressed="false">Conflicto</button>
+      </span>
+      <button id="exportar" disabled>Exportar</button>
+    </div>
+    <div id="lista"></div>
+    <div id="err" hidden></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  var RAW = null, bandasDefault = null, bandas = null;
+  var estado = {}, filtro = 'todas', selName = null;
+  var map, circlesLayer, labelsLayer, markers = {}, rowsEl = {}, ctrls = {};
+  var CERCA = 1.5;
+
+  var clone = function (x) { return JSON.parse(JSON.stringify(x)); };
+  var fmt = function (n) { return n == null ? '—' : '$' + Number(n).toLocaleString('es-CL'); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (m) {
+    return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]; }); };
+  var round1 = function (n) { return Math.round(n * 10) / 10; };
+
+  fetch('./validacion-delivery.json', { cache:'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(init)
+    .catch(function (e) {
+      var el = document.getElementById('err'); el.hidden = false;
+      el.textContent = 'No se pudo cargar validacion-delivery.json (' + e.message +
+        '). Sirve la página por HTTP (npm run dev), no con file://.';
+    });
+
+  function init(j) {
+    RAW = j;
+    CERCA = j.cercaDeBordeKm || 1.5;
+    bandasDefault = clone(j.bandas);
+    bandas = clone(j.bandas);
+    j.comunas.forEach(function (c) { estado[c.nombre] = { v:null, precio:'', com:'' }; });
+    var d = j.generadoEl ? new Date(j.generadoEl) : null;
+    document.getElementById('gen').textContent = d ? 'datos del ' + d.toLocaleString('es-CL') : '';
+
+    buildControles();
+    buildMap();
+    aplicarTodo();
+  }
+
+  // ─── Clasificación en vivo ────────────────────────────────────────────────
+  function ajustable(b) { return b.indice > 0 && b.hastaKm != null; } // 1..6
+  function bordesFinitos() {
+    return bandas.filter(function (b) { return b.hastaKm != null; }).map(function (b) { return b.hastaKm; });
+  }
+  function clasificar(recta) {
+    for (var i = 0; i < bandas.length; i++) {
+      if (bandas[i].hastaKm != null && recta <= bandas[i].hastaKm) return bandas[i];
+    }
+    return bandas[bandas.length - 1]; // fuera de radio
+  }
+  function distBorde(recta) {
+    return Math.min.apply(null, bordesFinitos().map(function (e) { return Math.abs(recta - e); }));
+  }
+  function derivar(c) {
+    if (c.recta == null) return { banda:null, precio:null, conflicto:false, dist:null, cerca:false };
+    var b = clasificar(c.recta);
+    var dist = distBorde(c.recta);
+    return {
+      banda: b,
+      precio: b.precio,
+      conflicto: c.esComunaSocias && c.precioSocias !== b.precio,
+      dist: dist,
+      cerca: dist < CERCA
+    };
+  }
+  function colorBanda(idx) {
+    var b = bandas.find(function (x) { return x.indice === idx; });
+    return b ? b.color : '#777';
+  }
+
+  // ─── Controles de radio ──────────────────────────────────────────────────
+  // Rango ESTÁTICO del slider/campo por banda: NO depende del valor de las
+  // bandas vecinas, así mover una barra nunca reajusta las otras. El orden
+  // (no cruzar la banda anterior/siguiente) se valida solo en setRadio().
+  var RANGO = { 0:[0.1,6], 1:[0.5,12], 2:[3,18], 3:[6,24], 4:[9,28], 5:[12,42], 6:[16,45], 7:[20,60] };
+  var avisoT = null;
+
+  function buildControles() {
+    var grid = document.getElementById('ctrlGrid');
+    grid.innerHTML = '';
+    bandas.forEach(function (b) {
+      if (b.hastaKm == null) return; // "fuera de radio" no tiene radio
+      var rg = RANGO[b.indice] || [0.1, 60];
+      var lbl = document.createElement('div');
+      lbl.className = 'ctrl-lbl';
+      lbl.innerHTML = '<span class="sw" style="background:' + b.color + '"></span>b' +
+        b.indice + ' · ' + (b.precio === 0 ? 'gratis' : fmt(b.precio));
+      var slider = document.createElement('input');
+      slider.type = 'range'; slider.step = '0.1'; slider.min = rg[0]; slider.max = rg[1];
+      var num = document.createElement('input');
+      num.type = 'number'; num.step = '0.1'; num.min = rg[0]; num.max = rg[1];
+      grid.appendChild(lbl); grid.appendChild(slider); grid.appendChild(num);
+      ctrls[b.indice] = { slider:slider, num:num };
+      slider.addEventListener('input', function () { setRadio(b.indice, parseFloat(slider.value)); });
+      num.addEventListener('change', function () { setRadio(b.indice, parseFloat(num.value)); });
+    });
+    syncControles();
+    document.getElementById('restablecer').addEventListener('click', function () {
+      bandas = clone(bandasDefault); syncControles(); aplicarTodo();
+    });
+  }
+  // Tope de orden EN VIVO (para validar en setRadio, NO para atar el slider).
+  function limites(indice) {
+    var i = bandas.findIndex(function (b) { return b.indice === indice; });
+    var min = i > 0 && bandas[i - 1].hastaKm != null ? round1(bandas[i - 1].hastaKm + 0.1) : 0.1;
+    var sig = bandas[i + 1];
+    var max = sig && sig.hastaKm != null ? round1(sig.hastaKm - 0.1) : 60;
+    return { min:min, max:max };
+  }
+  // Solo escribe el .value de cada control (min/max son estáticos). Se usa en
+  // init y en Restablecer.
+  function syncControles() {
+    bandas.forEach(function (b) {
+      if (b.hastaKm == null || !ctrls[b.indice]) return;
+      ctrls[b.indice].slider.value = b.hastaKm;
+      ctrls[b.indice].num.value = b.hastaKm;
+    });
+  }
+  function flashAviso(msg) {
+    var el = document.getElementById('ctrlAviso');
+    el.textContent = msg; el.style.opacity = '1';
+    clearTimeout(avisoT);
+    avisoT = setTimeout(function () { el.style.opacity = '0'; }, 2400);
+  }
+  // Modifica ÚNICAMENTE el radio de `indice`. Si el valor cruzaría a la banda
+  // vecina, se detiene en el límite y avisa. No toca ningún otro control.
+  function setRadio(indice, val) {
+    var c = ctrls[indice]; if (!c) return;
+    var b = bandas.find(function (x) { return x.indice === indice; });
+    if (isNaN(val)) { c.slider.value = b.hastaKm; c.num.value = b.hastaKm; return; }
+    val = round1(val);
+    var lm = limites(indice);
+    var aplicado = Math.min(lm.max, Math.max(lm.min, val));
+    if (aplicado !== val) {
+      flashAviso('Banda ' + indice + ': se detiene en ' + aplicado +
+        ' km — no puede cruzar la banda vecina.');
+    }
+    b.hastaKm = aplicado;
+    c.slider.value = aplicado;   // SOLO este control
+    c.num.value = aplicado;
+    document.getElementById('techo').textContent = bandas[bandas.length - 2].hastaKm;
+    redrawCircles(); restyleMarkers(); renderLista(); renderResumen(); updateExport();
+  }
+
+  // ─── Aplicar cambios a mapa + listado + resumen ──────────────────────────
+  function aplicarTodo() {
+    document.getElementById('techo').textContent = bandas[bandas.length - 2].hastaKm;
+    redrawCircles();
+    restyleMarkers();
+    renderLista();
+    renderResumen();
+    updateExport();
+  }
+
+  function buildMap() {
+    map = L.map('map', { scrollWheelZoom:true }).setView([RAW.origen.lat, RAW.origen.lng], 11);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      { maxZoom:19, attribution:'© OpenStreetMap' }).addTo(map);
+    circlesLayer = L.layerGroup().addTo(map);
+    labelsLayer = L.layerGroup().addTo(map);
+
+    L.marker([RAW.origen.lat, RAW.origen.lng], { zIndexOffset:1000, icon: L.divIcon({
+      className:'', html:'<div style="font-size:22px;line-height:22px;filter:drop-shadow(0 1px 2px #000)">📍</div>',
+      iconSize:[22,22], iconAnchor:[11,20] })}).addTo(map).bindPopup('<b>Local Galdi</b><br>Rinconada de Maipú');
+
+    RAW.comunas.forEach(function (c) {
+      if (c.lat == null) return;
+      var m = L.circleMarker([c.lat, c.lng], { radius:7 }).addTo(map);
+      m.on('click', function () { select(c.nombre, 'map'); });
+      markers[c.nombre] = m;
+    });
+  }
+
+  function redrawCircles() {
+    circlesLayer.clearLayers(); labelsLayer.clearLayers();
+    var O = [RAW.origen.lat, RAW.origen.lng];
+    bandas.slice().filter(function (b) { return b.hastaKm != null; }).reverse().forEach(function (b) {
+      // Todas las líneas en un tono oscuro uniforme (contraste sobre OSM). La
+      // distinción entre bandas la dan los marcadores y las etiquetas de precio.
+      L.circle(O, { radius:b.hastaKm * 1000, color:'#1b1b1b', weight:1.5, opacity:.85,
+        fill:false }).addTo(circlesLayer);
+      var latN = RAW.origen.lat + (b.hastaKm / 111.32);
+      L.marker([latN, RAW.origen.lng], { interactive:false, icon: L.divIcon({ className:'',
+        html:'<div class="band-label">' + esc(b.etiqueta) + ' · ' + b.hastaKm + ' km</div>',
+        iconSize:[120,16], iconAnchor:[60,8] })}).addTo(labelsLayer);
+    });
+  }
+
+  function markerBase(c) {
+    var d = derivar(c);
+    return {
+      radius:7,
+      weight: d.conflicto ? 3 : 1,
+      color: d.conflicto ? '#000' : (d.cerca ? '#3949ab' : '#fff'),
+      fillColor: d.banda ? d.banda.color : '#777',
+      fillOpacity:0.95,
+      dashArray: d.cerca && !d.conflicto ? '3 3' : null
+    };
+  }
+  function restyleMarkers() {
+    RAW.comunas.forEach(function (c) {
+      var m = markers[c.nombre]; if (!m) return;
+      var base = markerBase(c);
+      m._base = base;
+      if (c.nombre === selName) {
+        m.setStyle(Object.assign({}, base, { radius:11, weight:4, color:'#d4a853' }));
+        m.bringToFront();
+      } else {
+        m.setStyle(base);
+      }
+      var d = derivar(c);
+      var extra = d.conflicto
+        ? '<br><b style="color:#8e24aa">Conflicto:</b> radio ' + fmt(d.precio) + ' / socias ' + fmt(c.precioSocias)
+        : (c.esComunaSocias ? '<br>socias: ' + fmt(c.precioSocias) : '');
+      m.bindPopup('<b>' + esc(c.nombre) + '</b><br>recta ' + c.recta + ' km · ' +
+        (d.banda ? 'b' + d.banda.indice + ' ' + esc(d.banda.etiqueta) : '—') + extra +
+        (d.cerca ? '<br><i>a ' + round1(d.dist) + ' km de un borde</i>' : '') +
+        (c.comunaDetectadaDistinta ? '<br><i>Geocoding detectó: ' + esc(c.comunaDetectada) + '</i>' : ''));
+    });
+  }
+
+  // ─── Resumen en vivo ─────────────────────────────────────────────────────
+  function renderResumen() {
+    var porBanda = {}, conflictos = [], fuera = 0;
+    RAW.comunas.forEach(function (c) {
+      if (c.recta == null) return;
+      var d = derivar(c);
+      porBanda[d.banda.indice] = (porBanda[d.banda.indice] || 0) + 1;
+      if (d.banda.precio == null) fuera++;
+      if (d.conflicto) conflictos.push({ nombre:c.nombre, precio:d.precio, socias:c.precioSocias });
+    });
+    var html = '<h4>Comunas por banda</h4>';
+    bandas.forEach(function (b) {
+      var n = porBanda[b.indice] || 0;
+      html += '<span class="rband"><span class="dot" style="background:' + b.color + '"></span>b' +
+        b.indice + ' ' + (b.precio == null ? 'fuera' : (b.precio === 0 ? 'gratis' : fmt(b.precio))) +
+        (b.hastaKm != null ? ' ≤' + b.hastaKm : '') + ': <b>' + n + '</b></span>';
+    });
+    html += '<div class="rconf"><b>Conflictos socias ≠ banda: ' + conflictos.length + '</b>';
+    if (conflictos.length) {
+      html += '<br>' + conflictos.map(function (x) {
+        return esc(x.nombre) + ' (' + fmt(x.precio) + ' vs ' + fmt(x.socias) + ')';
+      }).join(' · ');
+    }
+    html += '</div>';
+    if (fuera) html += '<div style="margin-top:.25rem;color:#6a1b9a">Fuera de radio: <b>' + fuera + '</b></div>';
+    document.getElementById('resumen').innerHTML = html;
+  }
+
+  // ─── Listado ─────────────────────────────────────────────────────────────
+  document.getElementById('filtros').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    filtro = b.dataset.f;
+    [].forEach.call(this.querySelectorAll('button'), function (x) {
+      x.setAttribute('aria-pressed', String(x === b)); });
+    renderLista();
+  });
+  document.getElementById('lista').addEventListener('click', function (e) {
+    var row = e.target.closest('.row'); if (!row) return;
+    var name = row.dataset.name, st = estado[name];
+    var act = e.target.closest('button[data-act]');
+    if (act) { st.v = (act.dataset.act === st.v) ? null : act.dataset.act; renderLista(); updateExport(); return; }
+    if (e.target.closest('input, textarea, label')) return;
+    select(name, 'list');
+  });
+  document.getElementById('lista').addEventListener('input', function (e) {
+    var row = e.target.closest('.row'); if (!row) return;
+    var st = estado[row.dataset.name];
+    if (e.target.dataset.field === 'precio') st.precio = e.target.value;
+    if (e.target.dataset.field === 'com') st.com = e.target.value;
+    updateExport();
+  });
+
+  function visibles() {
+    return RAW.comunas.filter(function (c) {
+      var d = derivar(c);
+      if (filtro === 'pendientes') return !estado[c.nombre].v;
+      if (filtro === 'borde') return d.cerca;
+      if (filtro === 'conflicto') return d.conflicto;
+      return true;
+    }).slice().sort(function (a, b) { return (a.recta == null ? 1e9 : a.recta) - (b.recta == null ? 1e9 : b.recta); });
+  }
+  function renderLista() {
+    var total = RAW.comunas.length;
+    var rev = Object.keys(estado).filter(function (k) { return estado[k].v; }).length;
+    document.getElementById('pend').textContent = (total - rev) + ' / ' + total;
+
+    var cont = document.getElementById('lista'); cont.innerHTML = ''; rowsEl = {};
+    visibles().forEach(function (c) {
+      var st = estado[c.nombre], d = derivar(c);
+      var row = document.createElement('div');
+      row.className = 'row' + (d.conflicto ? ' conflicto' : '') +
+        (st.v === 'ok' ? ' resuelta-ok' : st.v === 'mal' ? ' resuelta-mal' : '') +
+        (c.nombre === selName ? ' sel' : '');
+      row.dataset.name = c.nombre;
+      if (!d.conflicto && d.banda) row.style.borderLeftColor = d.banda.color;
+
+      var precioHtml = d.conflicto
+        ? '<span class="tacha">' + fmt(d.precio) + '</span> <span class="socias">' + fmt(c.precioSocias) + '</span>'
+        : fmt(d.precio != null ? d.precio : c.precioSocias);
+
+      var chips = '';
+      if (c.esComunaSocias) chips += '<span class="chip socias">socias</span>';
+      if (d.banda) chips += '<span class="chip banda" style="background:' + d.banda.color + '">b' +
+        d.banda.indice + ' ' + esc(d.banda.etiqueta) + '</span>';
+      if (d.conflicto) chips += '<span class="chip conf">conflicto</span>';
+      if (d.cerca) chips += '<span class="chip borde">borde ±' + round1(d.dist) + '</span>';
+      if (c.comunaDetectadaDistinta) chips += '<span class="chip detect">detect: ' + esc(c.comunaDetectada) + '</span>';
+
+      row.innerHTML =
+        '<div class="r1"><span class="nom">' + esc(c.nombre) + '</span><span class="pr">' + precioHtml + '</span></div>' +
+        '<div class="r2">recta ' + (c.recta == null ? '—' : c.recta + ' km') +
+          (c.geocodeTipo ? ' · ' + esc(String(c.geocodeTipo)).toLowerCase() : '') + '</div>' +
+        '<div class="chips">' + chips + '</div>' +
+        '<div class="acc">' +
+          '<button data-act="ok" class="' + (st.v === 'ok' ? 'on-ok' : '') + '">✓ Correcto</button>' +
+          '<button data-act="mal" class="' + (st.v === 'mal' ? 'on-mal' : '') + '">✗ Incorrecto</button>' +
+        '</div>' +
+        '<div class="corr' + (st.v === 'mal' ? ' open' : '') + '">' +
+          '<label>Precio que debería ser</label>' +
+          '<input type="number" inputmode="numeric" data-field="precio" value="' + esc(st.precio) + '" placeholder="ej: 6000">' +
+          '<label>Comentario (opcional)</label>' +
+          '<textarea data-field="com" rows="2" placeholder="por qué">' + esc(st.com) + '</textarea>' +
+        '</div>';
+      cont.appendChild(row);
+      rowsEl[c.nombre] = row;
+    });
+  }
+
+  // ─── Selección bidireccional ─────────────────────────────────────────────
+  function select(name, from) {
+    if (selName && rowsEl[selName]) rowsEl[selName].classList.remove('sel');
+    if (selName && markers[selName] && markers[selName]._base) markers[selName].setStyle(markers[selName]._base);
+    selName = name;
+    var row = rowsEl[name], m = markers[name], c = RAW.comunas.find(function (x) { return x.nombre === name; });
+    if (row) { row.classList.add('sel'); if (from !== 'list') row.scrollIntoView({ block:'center', behavior:'smooth' }); }
+    if (m && m._base) {
+      m.setStyle(Object.assign({}, m._base, { radius:11, weight:4, color:'#d4a853' }));
+      m.bringToFront();
+      if (from !== 'map' && c && c.lat != null) {
+        map.setView([c.lat, c.lng], Math.max(map.getZoom(), 12), { animate:true });
+        m.openPopup();
+      }
+    }
+  }
+
+  // ─── Exportar ────────────────────────────────────────────────────────────
+  function updateExport() {
+    var n = Object.keys(estado).filter(function (k) { return estado[k].v === 'mal'; }).length;
+    var btn = document.getElementById('exportar');
+    btn.disabled = false; // siempre habilitado: exporta también los radios
+    btn.textContent = n ? 'Exportar (' + n + ' correc.)' : 'Exportar radios';
+  }
+  document.getElementById('exportar').addEventListener('click', function () {
+    var porBanda = {}, conflictos = [];
+    RAW.comunas.forEach(function (c) {
+      if (c.recta == null) return;
+      var d = derivar(c);
+      porBanda[d.banda.indice] = (porBanda[d.banda.indice] || 0) + 1;
+      if (d.conflicto) conflictos.push({ comuna:c.nombre, precioBanda:d.precio, precioSocias:c.precioSocias });
+    });
+    var corr = RAW.comunas.filter(function (c) { return estado[c.nombre].v === 'mal'; })
+      .map(function (c) {
+        var st = estado[c.nombre], d = derivar(c);
+        return {
+          comuna:c.nombre, recta:c.recta,
+          banda: d.banda ? d.banda.etiqueta : null,
+          precioCalculado: d.precio, precioSocias: c.precioSocias,
+          precioPropuesto: st.precio === '' ? null : Number(st.precio),
+          comentario: st.com || ''
+        };
+      });
+    var payload = {
+      exportadoEl: new Date().toISOString(),
+      datosGeneradosEl: RAW.generadoEl || null,
+      modelo: RAW.modelo,
+      bandas: bandas.map(function (b) {
+        return { indice:b.indice, hastaKm:b.hastaKm, precio:b.precio, etiqueta:b.etiqueta };
+      }),
+      techoKm: bandas[bandas.length - 2].hastaKm,
+      resumen: { porBanda:porBanda, conflictos:conflictos },
+      revisadas: Object.keys(estado).filter(function (k) { return estado[k].v; }).length,
+      totalComunas: RAW.comunas.length,
+      correcciones: corr
+    };
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' }));
+    a.download = 'bandas-delivery.json'; a.click(); URL.revokeObjectURL(a.href);
+  });
+})();
+</script>
+</body>
+</html>

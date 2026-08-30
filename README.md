@@ -849,7 +849,94 @@ Regla implementada en `presRecalcLinea`, enganchada al `oninput` de la cantidad:
 
 ---
 
+## Jornada 30-08-2026 — Delivery: modelo final por RADIO EN LÍNEA RECTA
+
+Reemplaza todo lo de la jornada 18-08-2026 (tramos por km driving) y el intento
+intermedio de "comuna primero". **Este es el modelo en `lib/deliveryPricing.ts`.**
+
+### Modelo
+
+- El precio depende **solo de la distancia en línea recta (Haversine)** entre
+  `ORIGEN_GALDI` (`-33.4776144, -70.7521309`) y la coordenada del cliente.
+  Bandas concéntricas de precio plano.
+- **Por qué recta y no ruta:** el local está embolsado en Rinconada de Maipú. El
+  factor de rodeo driving/recta medido va de **1,3×** (rumbo NE por autopista) a
+  **2,9×** (comunas pegadas: Lo Prado, Pudahuel), sin patrón usable. Calibrar por
+  ruta daba precios incoherentes entre vecinas (Cerrillos salía más lejos que Lo
+  Prado; Padre Hurtado a ~49 km siendo limítrofe con Maipú) y gastaba una llamada
+  extra a Distance Matrix por request. La recta es estable, auditable y dibujable.
+
+### Cortes de banda (calibrados sobre mapa el 30-08-2026)
+
+| Hasta (km recta) | Precio |
+|---|---|
+| 0,5 | gratis |
+| 3,8 | $3.000 |
+| 8,5 | $5.000 |
+| 11,5 | $6.000 |
+| 15 | $8.000 |
+| 19 | $10.000 |
+| 25 | $12.000 |
+| 31,1 | $14.000 |
+| > 31,1 | fuera de radio → se cotiza por WhatsApp |
+
+`TECHO_DELIVERY_KM = 31.1`. Todo el Gran Santiago urbano cae bajo el techo
+(Colina, la más lejana de la RM revisada, quedó a ~31 km recta y dentro).
+
+### Cambios de código
+
+- `lib/deliveryPricing.ts` reescrito: `BANDAS_DELIVERY`, `TECHO_DELIVERY_KM`,
+  `distanciaRectaKm()`, `calcularCostoDespacho(destino: {lat,lng})`. Se
+  **eliminaron** `PRECIOS_COMUNA`, `DIRECCIONES_REFERENCIA_COMUNAS`,
+  `CENTROIDES_COMUNAS`, `TRAMOS_DELIVERY`, `TECHO_GLOBAL_KM`, `recargoPorExceso`,
+  `calcularCostoPorKm`. `PRECIOS_COMUNA` y las direcciones de referencia se
+  movieron a `scripts/calibracion-data.mjs` (solo herramientas de validación);
+  los centroides se borraron (en un modelo por radio no juegan ningún rol).
+- `extraerComuna()` y `normalizarComuna()` quedan en `lib/`, pero **ninguna
+  función de precio las llama** — solo se usan para logging y para mostrar la
+  comuna en el pedido.
+- Cloud Function `calcularCostoDelivery`: ahora hace **una sola llamada a Google
+  (Geocoding)**. Se quitó Distance Matrix. Contrato de respuesta:
+  - Éxito: `{ km, costoDelivery, requiereCotizacionManual: false, comuna }` —
+    **`km` ahora es distancia en línea recta**, no de ruta (el número mostrado al
+    cliente es más chico que antes).
+  - Fuera del radio: `{ km, costoDelivery: null, requiereCotizacionManual: true, motivo: 'fuera_de_radio', comuna }`.
+  - No ubicada: HTTP 422 `{ error }`. Infra caída: HTTP 200 `{ km: null, …, motivo: 'error_infraestructura' }` (sin cambios).
+- `scripts/check-delivery-pricing-sync.mjs` actualizado a los nuevos exports
+  (compara `BANDAS_DELIVERY`, `TECHO_DELIVERY_KM`, `distanciaRectaKm`,
+  `calcularCostoDespacho`, `extraerComuna`, `normalizarComuna`).
+
+### Herramienta de validación (queda en el repo, uso puntual)
+
+- `scripts/generar-tabla-validacion.mjs` geocodifica 41 comunas urbanas de la RM
+  y escribe `public/validacion-delivery.json` (recta + coords + banda, sin
+  hornear la clasificación).
+- `public/validacion-delivery.html` — mapa Leaflet/OSM con círculos concéntricos
+  + listado, **sliders para ajustar cada radio en vivo** y reclasificar las 41
+  comunas al instante. Exporta `bandas-delivery.json` con los radios finales.
+  `noindex`. Se sirve con `npm run dev` en `/validacion-delivery.html`.
+- Los cortes de arriba salieron de ese `bandas-delivery.json`.
+
+### Diferencias con la lista por comuna que se habló en mayo (registro, no bug)
+
+El modelo por radio es la política vigente. Estas comunas quedan en una banda
+distinta al precio que se había mencionado el 25-05-2026:
+
+| Comuna | Banda (radio) | Se había dicho |
+|---|---|---|
+| Cerrillos, Estación Central, Pudahuel | $5.000 | $3.000 |
+| Santiago Centro | $5.000 | $6.000 |
+| Providencia | $8.000 | $7.000 |
+| Padre Hurtado | $8.000 | $5.000 |
+| Lo Barnechea | $14.000 | $12.000 |
+
+---
+
 ## Jornada 18-08-2026 — Sistema de delivery por radio de km
+
+> **Superado por la jornada 30-08-2026.** Los tramos por km driving y el "PENDIENTE
+> CRÍTICO — Recalibrar tramos" de esta sección se resolvieron pasando al modelo por
+> radio en línea recta. Se conserva por contexto histórico.
 
 ### Sistema de delivery por radio de km (en producción, tramos pendientes de recalibrar)
 

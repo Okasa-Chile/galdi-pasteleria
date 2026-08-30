@@ -149,11 +149,22 @@ exports.flowConfirmar = (0, https_1.onRequest)({ region: 'us-central1', cors: AL
         res.status(500).json({ error: 'Error interno', detalle: String(err) });
     }
 });
-// ─── Delivery por radio de km ──────────────────────────────────────────────
+// ─── Delivery: RADIO EN LÍNEA RECTA ───────────────────────────────────────────
+//
+// Se geocodifica la dirección (una sola llamada a Google, Geocoding API) para
+// obtener lat/lng. El precio sale de calcularCostoDespacho() en
+// deliveryPricing.ts: distancia Haversine a ORIGEN_GALDI → banda de precio. NO
+// se llama a Distance Matrix — el modelo por ruta se abandonó (ver el comentario
+// de cabecera de deliveryPricing.ts).
+//
+// La comuna se lee de address_components del mismo resultado de Geocoding SOLO
+// para logging y para mostrarla en el pedido — no interviene en el precio.
 //
 // Contrato de respuesta:
-// - Éxito:                  { km, costoDelivery, requiereCotizacionManual: false }
-// - Fuera del radio (>24km): { km, costoDelivery: null, requiereCotizacionManual: true, motivo: 'fuera_de_radio' }
+// - Éxito (dentro del radio): { km, costoDelivery, requiereCotizacionManual: false, comuna }
+//   `km` es la distancia en LÍNEA RECTA (no de ruta). `comuna` puede ser null.
+// - Fuera del radio (>31,1 km): { km, costoDelivery: null, requiereCotizacionManual: true, motivo: 'fuera_de_radio', comuna }
+//   No hay despacho automático; se coordina y cotiza por WhatsApp.
 // - Dirección no ubicada:    HTTP 422 { error }  — culpa del input, bloquea hasta corregir
 // - Falla de infraestructura (red, timeout, cuota, Google caído, etc.):
 //                            HTTP 200 { km: null, costoDelivery: null, requiereCotizacionManual: true, motivo: 'error_infraestructura' }
@@ -163,6 +174,10 @@ exports.flowConfirmar = (0, https_1.onRequest)({ region: 'us-central1', cors: AL
 //   por WhatsApp. Un fallo nuestro de infraestructura no puede bloquear una venta.
 const ERROR_DIRECCION_NO_UBICADA = 'No pudimos ubicar esa dirección, verifica que esté completa (calle, número, comuna).';
 const TIMEOUT_MS = 8000;
+// extraerComuna() vive en ./deliveryPricing. Prioriza
+// administrative_area_level_3 sobre locality — ver el comentario allí, con el
+// caso "Av. Apoquindo 4501" (locality:"Santiago", admin3:"Las Condes"). Solo
+// para logging/recibo; no decide precio.
 function respuestaFallbackInfraestructura(res) {
     res.json({ km: null, costoDelivery: null, requiereCotizacionManual: true, motivo: 'error_infraestructura' });
 }
@@ -175,7 +190,7 @@ function origenPermitido(origin) {
     return !!origin && ALLOWED_ORIGINS.includes(origin);
 }
 exports.calcularCostoDelivery = (0, https_1.onRequest)({ region: 'us-central1', cors: ALLOWED_ORIGINS, invoker: 'public', secrets: ['GOOGLE_MAPS_API_KEY_GALDI'], maxInstances: 5 }, async (req, res) => {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d;
     if (req.method !== 'POST') {
         res.status(405).json({ error: 'Método no permitido' });
         return;
@@ -223,42 +238,21 @@ exports.calcularCostoDelivery = (0, https_1.onRequest)({ region: 'us-central1', 
             return;
         }
         const destino = primerResultado.geometry.location;
-        // b) Distance Matrix: distancia real en auto desde el origen
-        const distUrl = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${deliveryPricing_1.ORIGEN_GALDI.lat},${deliveryPricing_1.ORIGEN_GALDI.lng}&destinations=${destino.lat},${destino.lng}&mode=driving&language=es&key=${apiKey}`;
-        let distData;
-        try {
-            const distRes = await fetch(distUrl, { signal: AbortSignal.timeout(TIMEOUT_MS) });
-            distData = await distRes.json();
-        }
-        catch (fetchErr) {
-            console.error('[calcularCostoDelivery] Error de red en Distance Matrix API:', fetchErr);
-            respuestaFallbackInfraestructura(res);
+        const comuna = (0, deliveryPricing_1.extraerComuna)(primerResultado.address_components);
+        // b) Banda de precio por distancia en LÍNEA RECTA (ver deliveryPricing.ts).
+        //    Sin llamada a Distance Matrix: el modelo por ruta se abandonó.
+        const { km, costo, fueraDeRadio, banda } = (0, deliveryPricing_1.calcularCostoDespacho)(destino);
+        console.log(`[calcularCostoDelivery] km=${km.toFixed(2)} comuna="${comuna !== null && comuna !== void 0 ? comuna : ''}" banda="${banda}" costo=${costo}`);
+        if (fueraDeRadio) {
+            res.json({
+                km, costoDelivery: null, requiereCotizacionManual: true,
+                motivo: 'fuera_de_radio', comuna: comuna !== null && comuna !== void 0 ? comuna : null,
+            });
             return;
         }
-        if (distData.status !== 'OK') {
-            console.error('[calcularCostoDelivery] Distance Matrix status no-OK:', distData.status, distData.error_message);
-            respuestaFallbackInfraestructura(res);
-            return;
-        }
-        const elemento = (_g = (_f = (_e = distData.rows) === null || _e === void 0 ? void 0 : _e[0]) === null || _f === void 0 ? void 0 : _f.elements) === null || _g === void 0 ? void 0 : _g[0];
-        if (!elemento || elemento.status === 'NOT_FOUND' || elemento.status === 'ZERO_RESULTS') {
-            res.status(422).json({ error: ERROR_DIRECCION_NO_UBICADA });
-            return;
-        }
-        if (elemento.status !== 'OK' || !elemento.distance) {
-            console.error('[calcularCostoDelivery] Distance Matrix element status no-OK:', elemento.status);
-            respuestaFallbackInfraestructura(res);
-            return;
-        }
-        const km = elemento.distance.value / 1000;
-        // c) Aplica la tabla de tramos
-        const costoDelivery = (0, deliveryPricing_1.calcularCostoPorKm)(km);
-        // d) Fuera del radio de despacho automático
-        if (costoDelivery === null) {
-            res.json({ km, costoDelivery: null, requiereCotizacionManual: true, motivo: 'fuera_de_radio' });
-            return;
-        }
-        res.json({ km, costoDelivery, requiereCotizacionManual: false });
+        res.json({
+            km, costoDelivery: costo, requiereCotizacionManual: false, comuna: comuna !== null && comuna !== void 0 ? comuna : null,
+        });
     }
     catch (err) {
         console.error('[calcularCostoDelivery] Error inesperado:', err);

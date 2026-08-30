@@ -103,7 +103,7 @@ export default function CalcularDespachoWidget() {
       </div>
 
       <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: '#5a3520', fontStyle: 'italic', marginTop: '0.85rem', marginBottom: 0 }}>
-        Calculado según distancia real desde nuestro local en Maipú.
+        Calculado según distancia al local, en Maipú.
       </p>
 
       {error && (

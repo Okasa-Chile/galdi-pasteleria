@@ -6,6 +6,12 @@
 // Enganchado en: "prebuild" (package.json) y "predeploy" de functions/hosting
 // (firebase.json). Ver también scripts/README-delivery-pricing-sync.md si se
 // necesita correrlo manualmente.
+//
+// Actualizado 30-08-2026 para el modelo RADIO EN LÍNEA RECTA: compara las
+// constantes de datos (ORIGEN_GALDI, pedido mínimo, BANDAS_DELIVERY, techo) y el
+// TEXTO de las funciones de cálculo (Haversine + selección de banda), porque la
+// lógica está duplicada y desincronizarla daría precios distintos entre
+// checkout, /gestion y la landing.
 
 import * as web from '../lib/deliveryPricing.ts';
 import * as fn from '../functions/src/deliveryPricing.ts';
@@ -20,9 +26,29 @@ function compararValor(campo, valorWeb, valorFn) {
   }
 }
 
+// Normaliza espacios para que diferencias de formato no cuenten como divergencia.
+function cuerpoFn(f) {
+  return typeof f === 'function' ? f.toString().replace(/\s+/g, ' ').trim() : String(f);
+}
+function compararFuncion(campo, fWeb, fFn) {
+  const a = cuerpoFn(fWeb);
+  const b = cuerpoFn(fFn);
+  if (a !== b) {
+    diffs.push({ campo: `${campo}()`, web: a, functions: b });
+  }
+}
+
+// ── Constantes de datos ────────────────────────────────────────────────────
 compararValor('ORIGEN_GALDI', web.ORIGEN_GALDI, fn.ORIGEN_GALDI);
 compararValor('PEDIDO_MINIMO_DELIVERY', web.PEDIDO_MINIMO_DELIVERY, fn.PEDIDO_MINIMO_DELIVERY);
-compararValor('TRAMOS_DELIVERY', web.TRAMOS_DELIVERY, fn.TRAMOS_DELIVERY);
+compararValor('BANDAS_DELIVERY', web.BANDAS_DELIVERY, fn.BANDAS_DELIVERY);
+compararValor('TECHO_DELIVERY_KM', web.TECHO_DELIVERY_KM, fn.TECHO_DELIVERY_KM);
+
+// ── Lógica de cálculo ──────────────────────────────────────────────────────
+compararFuncion('distanciaRectaKm', web.distanciaRectaKm, fn.distanciaRectaKm);
+compararFuncion('calcularCostoDespacho', web.calcularCostoDespacho, fn.calcularCostoDespacho);
+compararFuncion('extraerComuna', web.extraerComuna, fn.extraerComuna);
+compararFuncion('normalizarComuna', web.normalizarComuna, fn.normalizarComuna);
 
 if (diffs.length > 0) {
   console.error('\n✗ lib/deliveryPricing.ts y functions/src/deliveryPricing.ts están DESINCRONIZADOS.\n');

@@ -18,11 +18,11 @@ const faqs = [
   },
   {
     q: '¿A qué comunas hacen delivery?',
-    a: 'Hacemos delivery en un radio de hasta 24 km desde nuestro local en Maipú, lo que cubre Cerrillos, Pudahuel, Estación Central, Padre Hurtado, Lo Prado y gran parte del Gran Santiago. Usa la calculadora de esta página para confirmar la cobertura y el costo exacto en tu dirección.',
+    a: 'Hacemos delivery en un radio de hasta 31 km desde nuestro local en Maipú, lo que cubre Cerrillos, Pudahuel, Estación Central, Padre Hurtado, Lo Prado y gran parte del Gran Santiago. Usa la calculadora de esta página para confirmar la cobertura y el costo exacto en tu dirección.',
   },
   {
     q: '¿Cuánto cuesta el despacho?',
-    a: 'El costo se calcula según la distancia real desde nuestro local en Maipú: es gratis hasta 300 metros y desde ahí aumenta por tramos, partiendo en $3.000. Usa la calculadora de esta página para ver el costo exacto en tu dirección. Si estás fuera de nuestro radio de cobertura, coordinamos el despacho por WhatsApp.',
+    a: 'El costo se calcula según la distancia al local, en Maipú: es gratis hasta 500 metros y desde ahí aumenta por tramos, partiendo en $3.000. Usa la calculadora de esta página para ver el costo exacto en tu dirección. Si estás fuera de nuestro radio de cobertura, coordinamos el despacho por WhatsApp.',
   },
   {
     q: '¿Puedo pagar online el delivery?',

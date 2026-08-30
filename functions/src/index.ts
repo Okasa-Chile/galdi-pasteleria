@@ -1,6 +1,6 @@
 import { onRequest } from 'firebase-functions/v2/https';
 import * as crypto from 'crypto';
-import { ORIGEN_GALDI, calcularCostoPorKm } from './deliveryPricing';
+import { calcularCostoDespacho, extraerComuna, type AddressComponent } from './deliveryPricing';
 
 const PLACE_ID = 'ChIJf7l5N6LDYpYR6uNj83Fqd9g';
 
@@ -183,11 +183,22 @@ export const flowConfirmar = onRequest(
   }
 );
 
-// ─── Delivery por radio de km ──────────────────────────────────────────────
+// ─── Delivery: RADIO EN LÍNEA RECTA ───────────────────────────────────────────
+//
+// Se geocodifica la dirección (una sola llamada a Google, Geocoding API) para
+// obtener lat/lng. El precio sale de calcularCostoDespacho() en
+// deliveryPricing.ts: distancia Haversine a ORIGEN_GALDI → banda de precio. NO
+// se llama a Distance Matrix — el modelo por ruta se abandonó (ver el comentario
+// de cabecera de deliveryPricing.ts).
+//
+// La comuna se lee de address_components del mismo resultado de Geocoding SOLO
+// para logging y para mostrarla en el pedido — no interviene en el precio.
 //
 // Contrato de respuesta:
-// - Éxito:                  { km, costoDelivery, requiereCotizacionManual: false }
-// - Fuera del radio (>24km): { km, costoDelivery: null, requiereCotizacionManual: true, motivo: 'fuera_de_radio' }
+// - Éxito (dentro del radio): { km, costoDelivery, requiereCotizacionManual: false, comuna }
+//   `km` es la distancia en LÍNEA RECTA (no de ruta). `comuna` puede ser null.
+// - Fuera del radio (>31,1 km): { km, costoDelivery: null, requiereCotizacionManual: true, motivo: 'fuera_de_radio', comuna }
+//   No hay despacho automático; se coordina y cotiza por WhatsApp.
 // - Dirección no ubicada:    HTTP 422 { error }  — culpa del input, bloquea hasta corregir
 // - Falla de infraestructura (red, timeout, cuota, Google caído, etc.):
 //                            HTTP 200 { km: null, costoDelivery: null, requiereCotizacionManual: true, motivo: 'error_infraestructura' }
@@ -207,19 +218,14 @@ interface GeocodingResponse {
   results: Array<{
     partial_match?: boolean;
     geometry: { location: { lat: number; lng: number } };
+    address_components?: AddressComponent[];
   }>;
 }
 
-interface DistanceMatrixResponse {
-  status: string;
-  error_message?: string;
-  rows: Array<{
-    elements: Array<{
-      status: string;
-      distance?: { value: number };
-    }>;
-  }>;
-}
+// extraerComuna() vive en ./deliveryPricing. Prioriza
+// administrative_area_level_3 sobre locality — ver el comentario allí, con el
+// caso "Av. Apoquindo 4501" (locality:"Santiago", admin3:"Las Condes"). Solo
+// para logging/recibo; no decide precio.
 
 function respuestaFallbackInfraestructura(res: import('express').Response) {
   res.json({ km: null, costoDelivery: null, requiereCotizacionManual: true, motivo: 'error_infraestructura' });
@@ -290,48 +296,26 @@ export const calcularCostoDelivery = onRequest(
       }
 
       const destino = primerResultado.geometry.location;
+      const comuna = extraerComuna(primerResultado.address_components);
 
-      // b) Distance Matrix: distancia real en auto desde el origen
-      const distUrl = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${ORIGEN_GALDI.lat},${ORIGEN_GALDI.lng}&destinations=${destino.lat},${destino.lng}&mode=driving&language=es&key=${apiKey}`;
-      let distData: DistanceMatrixResponse;
-      try {
-        const distRes = await fetch(distUrl, { signal: AbortSignal.timeout(TIMEOUT_MS) });
-        distData = await distRes.json() as DistanceMatrixResponse;
-      } catch (fetchErr) {
-        console.error('[calcularCostoDelivery] Error de red en Distance Matrix API:', fetchErr);
-        respuestaFallbackInfraestructura(res);
+      // b) Banda de precio por distancia en LÍNEA RECTA (ver deliveryPricing.ts).
+      //    Sin llamada a Distance Matrix: el modelo por ruta se abandonó.
+      const { km, costo, fueraDeRadio, banda } = calcularCostoDespacho(destino);
+      console.log(
+        `[calcularCostoDelivery] km=${km.toFixed(2)} comuna="${comuna ?? ''}" banda="${banda}" costo=${costo}`,
+      );
+
+      if (fueraDeRadio) {
+        res.json({
+          km, costoDelivery: null, requiereCotizacionManual: true,
+          motivo: 'fuera_de_radio', comuna: comuna ?? null,
+        });
         return;
       }
 
-      if (distData.status !== 'OK') {
-        console.error('[calcularCostoDelivery] Distance Matrix status no-OK:', distData.status, distData.error_message);
-        respuestaFallbackInfraestructura(res);
-        return;
-      }
-
-      const elemento = distData.rows?.[0]?.elements?.[0];
-      if (!elemento || elemento.status === 'NOT_FOUND' || elemento.status === 'ZERO_RESULTS') {
-        res.status(422).json({ error: ERROR_DIRECCION_NO_UBICADA });
-        return;
-      }
-      if (elemento.status !== 'OK' || !elemento.distance) {
-        console.error('[calcularCostoDelivery] Distance Matrix element status no-OK:', elemento.status);
-        respuestaFallbackInfraestructura(res);
-        return;
-      }
-
-      const km = elemento.distance.value / 1000;
-
-      // c) Aplica la tabla de tramos
-      const costoDelivery = calcularCostoPorKm(km);
-
-      // d) Fuera del radio de despacho automático
-      if (costoDelivery === null) {
-        res.json({ km, costoDelivery: null, requiereCotizacionManual: true, motivo: 'fuera_de_radio' });
-        return;
-      }
-
-      res.json({ km, costoDelivery, requiereCotizacionManual: false });
+      res.json({
+        km, costoDelivery: costo, requiereCotizacionManual: false, comuna: comuna ?? null,
+      });
 
     } catch (err) {
       console.error('[calcularCostoDelivery] Error inesperado:', err);
