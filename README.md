@@ -930,6 +930,28 @@ distinta al precio que se había mencionado el 25-05-2026:
 | Padre Hurtado | $8.000 | $5.000 |
 | Lo Barnechea | $14.000 | $12.000 |
 
+### Cierre de jornada
+
+**Completado:**
+
+- Modelo de delivery reemplazado: de distancia por ruta (Google Distance Matrix) a radio en línea recta (Haversine) desde el local — commit `41fa11f`.
+- Motivo del cambio: el local está embolsado en Rinconada de Maipú (Autopista del Sol + Av. Américo Vespucio), con rodeo variable de 1,3× a 2,9× según rumbo — la distancia por ruta producía incoherencias entre comunas vecinas (ej. Cerrillos medía más lejos que Lo Prado, Padre Hurtado daba 49 km siendo comuna limítrofe con Maipú).
+- Cortes de banda finales: gratis ≤0,5 km · $3.000 ≤3,8 km · $5.000 ≤8,5 km · $6.000 ≤11,5 km · $8.000 ≤15 km · $10.000 ≤19 km · $12.000 ≤25 km · $14.000 ≤31,1 km · fuera de radio >31,1 km (cotizar por WhatsApp).
+- Cloud Function `calcularCostoDelivery` reescrita: ya no llama a Distance Matrix API (una llamada menos a Google por pedido).
+- `extraerComuna()` se mantiene para logging/recibo, ya no decide precio.
+- FAQ de `/delivery-maipu` corregida: radio actualizado a 31 km (antes 24), texto de "distancia real" cambiado a "distancia al local", banda gratis actualizada a 500 m (antes 300 m).
+- Copy de `CalcularDespachoWidget.tsx` corregido con el mismo criterio.
+- Herramienta interna de calibración creada: `public/validacion-delivery.html` (`noindex`) — mapa Leaflet/OSM con círculos concéntricos ajustables, usada para validar las 41 comunas urbanas de la Región Metropolitana antes del deploy.
+- Deploy completo a producción (hosting + functions) — verificado en vivo por Claudio.
+- Verificaciones pre-deploy: build de app, build de functions, sync check, `tsc` — 4/4 OK.
+
+**Pendiente próxima sesión:**
+
+- Pestaña de calibración de despacho dentro de `/gestion` (para que las socias ajusten radios sin depender de la herramienta standalone) — decisión tomada de que las socias pueden simular pero no aplicar directo a producción; exportan JSON y lo envían por WhatsApp/email.
+- Actualizar `firebase-functions` a la versión más reciente (warning no fatal en el último deploy, no bloqueante).
+- Revisar si conviene publicar la tabla completa de bandas en la landing de `/delivery-maipu` (hoy solo dice el radio y el mínimo, no todos los tramos).
+- `git push` de `main` pendiente (el merge de `feat/delivery-radio-recta` ya está en `main` local, falta subir a `origin`).
+
 ---
 
 ## Jornada 18-08-2026 — Sistema de delivery por radio de km
