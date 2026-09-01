@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   // title original: 'Empanadas Artesanales en Maipú · Pino, Napolitana y Más · Galdi',
   title: 'Empanadas por Docena para Fiestas Patrias en Maipú · Galdi',
   // description original: 'Empanadas artesanales hechas a mano en Maipú: pino, napolitana, vegetariana, queso camarón y mariscos. Pedido por docena con delivery. Cotiza por WhatsApp.',
-  description: 'Empanadas artesanales por docena para el 18 de septiembre en Maipú. Precio mayorista sobre 3 docenas: $2.500 c/u. Pedidos para empresas, colegios y eventos. Retiro gratis o delivery.',
+  description: 'Empanadas artesanales por docena para el 18 de septiembre en Maipú. $2.700 por unidad. Pedidos para empresas, colegios y eventos. Retiro gratis o delivery.',
   // keywords original: 'empanadas Maipú, empanadas artesanales Maipú, empanadas a domicilio Maipú, empanadas por docena Maipú',
   keywords: 'empanadas fiestas patrias Maipú, empanadas por docena 18 de septiembre, empanadas mayoristas Maipú, empanadas para empresas fiestas patrias, empanadas artesanales por docena, empanadas 18 de septiembre delivery Maipú',
   /* === FIESTAS PATRIAS 2026 — FIN === */
@@ -23,11 +23,11 @@ const faqs = [
   },
   {
     q: '¿Cuánto cuesta la docena de empanadas para el 18 de septiembre?',
-    a: 'El precio es $2.700 por unidad ($32.400 la docena) para pedidos de 1 a 2 docenas, y baja a $2.500 por unidad ($30.000 la docena) al pedir 3 o más docenas. Los precios incluyen empanadas artesanales recién horneadas.',
+    a: 'El precio es $2.700 por unidad ($32.400 la docena), sin importar la cantidad de docenas que pidas. El precio incluye empanadas artesanales recién horneadas.',
   },
   {
     q: '¿Venden empanadas al por mayor para empresas en Fiestas Patrias?',
-    a: 'Sí. Atendemos pedidos mayoristas de empresas, colegios y organizaciones en Maipú y comunas cercanas para Fiestas Patrias. Desde 3 docenas aplica precio mayorista de $2.500 por unidad, con retiro gratis en Maipú o delivery coordinado. Emitimos boleta o factura.',
+    a: 'Sí. Atendemos pedidos de empresas, colegios y organizaciones en Maipú y comunas cercanas para Fiestas Patrias, a $2.700 por unidad sin importar la cantidad, con retiro gratis en Maipú o delivery coordinado. Emitimos boleta o factura.',
   },
   /* === FIESTAS PATRIAS 2026 — FIN === */
   {
@@ -228,7 +228,7 @@ export default function EmpanadaMaipuPage() {
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(0.85rem, 2vw, 1rem)', color: 'rgba(245,230,211,0.85)', maxWidth: '600px' }}>
               {/* === FIESTAS PATRIAS 2026 — INICIO (revertir después del 18-09) === */}
               {/* original: Hechas a mano con recetas familiares. Pedido por docena con delivery. */}
-              Hechas a mano con recetas familiares. Desde $2.500 por unidad en pedidos de 3 o más docenas.
+              Hechas a mano con recetas familiares. $2.700 por unidad, para cualquier cantidad de docenas.
               {/* === FIESTAS PATRIAS 2026 — FIN === */}
             </p>
           </div>
@@ -247,24 +247,18 @@ export default function EmpanadaMaipuPage() {
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#5a3520', lineHeight: 1.75, marginBottom: '1.75rem' }}>
               Este 18 de septiembre celebra con empanadas artesanales recién horneadas. En Galdi
               preparamos pedidos por docena para tu asado familiar, la celebración de tu oficina o
-              el evento del colegio. Mientras más docenas pides, mejor es el precio por unidad.
+              el evento del colegio.
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem', marginBottom: '1.75rem' }}>
-              <div style={{ background: 'var(--cream)', border: '1px solid rgba(212,168,83,0.3)', borderRadius: '4px', padding: '1.5rem', textAlign: 'center' }}>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.05rem', fontWeight: 400, color: '#1a0f0a', marginBottom: '0.5rem' }}>1 a 2 docenas</h3>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.75rem' }}>
+              <div style={{ background: 'var(--cream)', border: '1px solid rgba(212,168,83,0.3)', borderRadius: '4px', padding: '1.5rem', textAlign: 'center', maxWidth: '320px', width: '100%' }}>
+                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.05rem', fontWeight: 400, color: '#1a0f0a', marginBottom: '0.5rem' }}>Precio único</h3>
                 <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', color: 'var(--terracota)', margin: 0 }}>$2.700</p>
                 <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: '#5a3520', marginTop: '0.25rem' }}>por unidad · $32.400 la docena</p>
-              </div>
-              <div style={{ background: 'var(--cream)', border: '1px solid rgba(212,168,83,0.3)', borderRadius: '4px', padding: '1.5rem', textAlign: 'center' }}>
-                <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '0.5rem' }}>Precio mayorista</p>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.05rem', fontWeight: 400, color: '#1a0f0a', marginBottom: '0.5rem' }}>3 o más docenas</h3>
-                <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', color: 'var(--terracota)', margin: 0 }}>$2.500</p>
-                <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: '#5a3520', marginTop: '0.25rem' }}>por unidad · $30.000 la docena</p>
               </div>
             </div>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '0.9rem' }}>
               {[
-                'Pedidos mayoristas para empresas, colegios y eventos de Fiestas Patrias.',
+                'Pedidos para empresas, colegios y eventos de Fiestas Patrias.',
                 'Combina sabores en tu pedido: pino, napolitana, vegetariana, queso camarón y mariscos.',
                 'Horneadas artesanalmente, sin mezclas industriales.',
                 'Reserva con anticipación: la semana del 18 de septiembre se agota rápido.',
