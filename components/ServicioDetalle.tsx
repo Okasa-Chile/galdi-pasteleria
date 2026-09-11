@@ -11,6 +11,10 @@ import { usePreciosGaldi } from '@/hooks/usePreciosGaldi';
 // Poner en true para reactivar el flujo B2B completo.
 const B2B_ACTIVO = false;
 
+/* === FIESTAS PATRIAS 2026 — SUSPENSIÓN FLOW (revertir después del 18-09) === */
+const FLOW_SUSPENDIDO = true;
+/* === FIN FLAG === */
+
 // ─── Productos por servicio y tab ───────────────────────────────────────────
 
 const productosAlmacenes: Record<string, { nombre: string; nombreVisible?: string; imagen: string; unidad: string; detalle?: string }[]> = {
@@ -1010,9 +1014,11 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
                   </div>
                 )}
                 {/* Botones acción */}
-                <button onClick={() => { irACarrito(); setMostrarResumen(false); }} style={{ width: '100%', background: '#d4a853', border: 'none', color: '#1a0f0a', fontFamily: 'var(--font-sans)', fontSize: '0.82rem', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', borderRadius: '6px', fontWeight: 700, marginBottom: '0.65rem' }}>
-                  Pagar online con Flow →
-                </button>
+                {!FLOW_SUSPENDIDO && (
+                  <button onClick={() => { irACarrito(); setMostrarResumen(false); }} style={{ width: '100%', background: '#d4a853', border: 'none', color: '#1a0f0a', fontFamily: 'var(--font-sans)', fontSize: '0.82rem', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', borderRadius: '6px', fontWeight: 700, marginBottom: '0.65rem' }}>
+                    Pagar online con Flow →
+                  </button>
+                )}
                 <button onClick={() => { enviarWhatsApp(); setMostrarResumen(false); }} style={{ width: '100%', background: 'transparent', border: '1px solid #25D366', color: '#25D366', fontFamily: 'var(--font-sans)', fontSize: '0.78rem', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', borderRadius: '6px' }}>
                   Cotizar por WhatsApp
                 </button>
