@@ -4,7 +4,7 @@ import { businessSchema } from '@/lib/businessSchema';
 
 export const metadata: Metadata = {
   title: 'Tortas para el Día de la Madre en Maipú | Galdi Pastelería',
-  description: 'Tortas artesanales para el Día de la Madre con delivery en Maipú. Torta Amor, 3 Leches y Panqueque. Pastelería artesanal en Maipú, pedidos por WhatsApp +56 9 9099 1011.',
+  description: 'Tortas artesanales para el Día de la Madre con delivery en Maipú: Torta Amor, 3 Leches y Panqueque. Pedidos por WhatsApp +56 9 9099 1011.',
   keywords: 'tortas día de la madre maipú, pastelería día de la madre maipú, tortas personalizadas maipú, delivery tortas maipú, torta para mamá maipú',
   alternates: { canonical: 'https://galdi.cl/dia-de-la-madre' },
   openGraph: {

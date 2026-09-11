@@ -4,7 +4,7 @@ import { businessSchema } from '@/lib/businessSchema';
 
 export const metadata: Metadata = {
   title: 'Tortas para el Día del Padre en Maipú | Galdi Pastelería',
-  description: 'Tortas artesanales para el Día del Padre con delivery en Maipú, Pudahuel, Cerrillos, Estación Central, Padre Hurtado y Santiago. Encarga con al menos 48 horas de anticipación. WhatsApp +56 9 9099 1011.',
+  description: 'Tortas artesanales para el Día del Padre con delivery en Maipú, Pudahuel, Cerrillos y Estación Central. Encarga con 48 horas de anticipación.',
   keywords: 'tortas día del padre maipú, tortas día del padre pudahuel, tortas día del padre cerrillos, tortas día del padre padre hurtado, tortas día del padre estación central, tortas día del padre santiago, delivery tortas sector poniente santiago, pastelería artesanal maipú, torta para papá maipú',
   alternates: { canonical: 'https://galdi.cl/dia-del-padre' },
   openGraph: {

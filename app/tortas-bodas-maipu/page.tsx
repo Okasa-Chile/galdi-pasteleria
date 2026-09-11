@@ -5,7 +5,7 @@ import { businessSchema } from '@/lib/businessSchema';
 
 export const metadata: Metadata = {
   title: 'Torta de Bodas y Novios en Maipú · Diseños a Medida · Galdi',
-  description: 'Torta de bodas y novios personalizada en Maipú: sabores, rellenos y diseños a medida. Degustación previa sin costo al confirmar la cotización. Cotiza tu torta de matrimonio por WhatsApp.',
+  description: 'Torta de bodas y novios personalizada en Maipú: sabores, rellenos y diseños a medida. Degustación sin costo al confirmar tu cotización. Cotiza por WhatsApp.',
   keywords: 'torta bodas Maipú, torta novios Maipú, torta de matrimonio Maipú, torta personalizada bodas Maipú',
   alternates: { canonical: 'https://galdi.cl/tortas-bodas-maipu' },
 };

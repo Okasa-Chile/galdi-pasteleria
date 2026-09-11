@@ -14,7 +14,9 @@ export const revalidate = false;
  *
  * Excluidas a propósito: /carrito y /pago-exitoso (transaccionales),
  * /experimental/* (rutas de desarrollo, con noindex),
- * /distribucion-maipu (redirige a "/", servicio retirado).
+ * /distribucion-maipu (redirige a "/", servicio retirado),
+ * /validar-presupuesto (noindex en su layout: validacion privada por token,
+ * hereda title/description/canonical del layout raiz).
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://galdi.cl';
@@ -35,7 +37,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/coffee-break-maipu', priority: 0.8, changeFrequency: 'monthly' },
     { path: '/dia-de-la-madre', priority: 0.6, changeFrequency: 'monthly' },
     { path: '/dia-del-padre', priority: 0.6, changeFrequency: 'monthly' },
-    { path: '/validar-presupuesto', priority: 0.3, changeFrequency: 'monthly' },
   ];
 
   return rutas.map((r) => ({

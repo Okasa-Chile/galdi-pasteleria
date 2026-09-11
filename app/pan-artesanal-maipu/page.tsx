@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import SeoPage from '@/components/SeoPage';
 import { businessSchema } from '@/lib/businessSchema';
 export const metadata: Metadata = {
-  title: 'Panadería Artesanal Maipú · Pan Amasado, Marraqueta y más · Galdi',
-  description: 'Pan amasado, marraqueta, dobladitas y tortilla con chicharrones hechos a mano en Maipú. Recetas familiares de generación en generación. Pedidos por WhatsApp con delivery.',
+  title: 'Pan Amasado y Marraqueta Artesanal en Maipú · Galdi',
+  description: 'Pan amasado, marraqueta, dobladitas y tortilla con chicharrones hechos a mano en Maipú. Receta familiar de siempre. Pedidos por WhatsApp con delivery.',
   keywords: 'pan artesanal Maipú, panadería Maipú, pan amasado Maipú, distribución pan Maipú',
   alternates: { canonical: 'https://galdi.cl/pan-artesanal-maipu' },
 };
