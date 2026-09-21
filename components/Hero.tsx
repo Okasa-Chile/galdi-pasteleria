@@ -4,32 +4,15 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-// Array original (pre Fiestas Patrias) — restaurar reemplazando el bloque de abajo:
-// const slides = [
-//   { src: '/images/torta-amor-hero.webp', alt: 'Torta Amor — Día de la Madre Galdi Pastelería Maipú' },
-//   { src: '/images/New_Hero_socias.webp', alt: 'Galdi — Pastelería artesanal' },
-//   { src: '/images/SlideshowPanes.webp', alt: 'Pan artesanal Galdi' },
-//   { src: '/images/prod-dulces.webp', alt: 'Dulces artesanales Galdi' },
-//   { src: '/images/prod-pie.webp', alt: 'Pasteles y tartas Galdi' },
-//   { src: '/images/prod-empanada.webp', alt: 'Empanadas artesanales Galdi' },
-//   { src: '/images/Reparto.webp', alt: 'Reparto Galdi en Maipú' },
-// ];
-/* === FIESTAS PATRIAS 2026 — INICIO (revertir después del 18-09) === */
-// Empanadas ponderada 3x (rotación secuencial): las 3 apariciones se
-// distribuyen separadas entre sí para que nunca se repita la misma
-// foto dos veces seguidas al rotar.
-const slides = [
-  { src: '/images/prod-empanada.webp', alt: 'Empanadas artesanales Galdi', href: '/empanadas-maipu' },
+const slides: { src: string; alt: string; href?: string }[] = [
   { src: '/images/torta-amor-hero.webp', alt: 'Torta Amor — Día de la Madre Galdi Pastelería Maipú' },
   { src: '/images/New_Hero_socias.webp', alt: 'Galdi — Pastelería artesanal' },
-  { src: '/images/prod-empanada.webp', alt: 'Empanadas artesanales Galdi', href: '/empanadas-maipu' },
   { src: '/images/SlideshowPanes.webp', alt: 'Pan artesanal Galdi' },
   { src: '/images/prod-dulces.webp', alt: 'Dulces artesanales Galdi' },
-  { src: '/images/prod-empanada.webp', alt: 'Empanadas artesanales Galdi', href: '/empanadas-maipu' },
   { src: '/images/prod-pie.webp', alt: 'Pasteles y tartas Galdi' },
+  { src: '/images/prod-empanada.webp', alt: 'Empanadas artesanales Galdi' },
   { src: '/images/Reparto.webp', alt: 'Reparto Galdi en Maipú' },
 ];
-/* === FIESTAS PATRIAS 2026 — FIN === */
 
 export default function Hero() {
   const [current, setCurrent] = useState(0);
