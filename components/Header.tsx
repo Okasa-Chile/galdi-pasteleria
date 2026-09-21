@@ -150,6 +150,21 @@ export default function Header() {
         }
       `}</style>
 
+      {/* Degradado fijo detrás del header: asegura contraste del nav sobre banners claros, independiente de `scrolled` */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '160px',
+          background: 'linear-gradient(to bottom, rgba(26,15,10,0.55), transparent)',
+          pointerEvents: 'none',
+          zIndex: 498,
+        }}
+      />
+
       <header style={{
         position: 'fixed',
         top: 0,
