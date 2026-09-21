@@ -65,7 +65,8 @@ async function registrarPagoConfirmado(db, serverTs, pago) {
         const ref = db.collection(COLECCION).doc(orden);
         const snap = await ref.get();
         if (snap.exists) {
-            await ref.update({ estado: 'pagado', monto, email, fechaPago: serverTs });
+            // Flow no siempre entrega el email: si no viene, se conserva el guardado al crear el pedido.
+            await ref.update(Object.assign(Object.assign({ estado: 'pagado', monto }, (pago.email ? { email: pago.email } : {})), { fechaPago: serverTs }));
             return snap.data();
         }
         await ref.set({ commerceOrder: orden, monto, email, estado: 'pagado', fecha: serverTs });
