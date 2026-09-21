@@ -51,6 +51,7 @@ export const imagenes: Record<string, string> = {
   'Queso':                     '/images/empanada-queso-frita.webp',
   'Queso Camarón':             '/images/empanada-camaron.webp',
   'Empanada de Mariscos':      '/images/Empanada de Mariscos.webp',
+  'Empanada de Queso en Masa de Milhojas': '/images/empanada-milhojas.webp',
   // Queques
   'Queque de Naranja':         '/images/queque-naranja.webp',
   'Queque Mármol':             '/images/queque-marmol.webp',

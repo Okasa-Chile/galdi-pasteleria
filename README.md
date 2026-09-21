@@ -217,6 +217,7 @@ npm run start   # preview producción local
 - [ ] **REVERSIÓN Fiestas Patrias post 18-09-2026** — buscar comentarios `FIESTAS PATRIAS 2026` en `app/empanadas-maipu/page.tsx` y `components/Hero.tsx` y restaurar los valores/array originales comentados
 - [ ] **Auditoría Bloque 3** (SEO estructural) — ver sección de Auditoría arriba
 - [ ] **Revisar costos Mariscos y Queso Camarón** en /gestion — comparten $850 de materiales con Pino, pero sus insumos (mariscos, camarones) son más caros; el costo no refleja la diferencia real
+- [ ] **Costeo real de Empanada de Queso en Masa de Milhojas** — costo/energia/logistica/mdo copiados como placeholder de Empanada de Queso frita (masa distinta, costo real de hojaldre sin determinar). Ajustar cuando se tenga el costeo real.
 - [ ] **components/Servicios.tsx es código huérfano** — no está importado en ningún lugar del repo (confirmado 04-08-2026), evaluar eliminarlo
 - [ ] **prod-empanada.webp sobredimensionado** — 2400×1792px sin variante responsive (`sizes`), ahora es LCP de la home vía el bloque estacional del Hero; revisar/optimizar si la ponderación se vuelve permanente
 - [ ] **Evaluar cambio de title del home** — se dejó fuera a propósito el 04-08-2026 para poder medir el efecto de la description por separado
@@ -990,3 +991,12 @@ Tres de esas direcciones están en Maipú, donde hoy se cobra $3.000 — el alza
 
 - Prompt de investigación de precios de empanadas de pino para Fiestas Patrias 2026 (Gemini Deep Research) generado, pendiente de ejecutar.
 - Recordatorio vigente: revertir el bloque de Fiestas Patrias en `/empanadas-maipu` después del 18-09-2026.
+
+---
+
+## Jornada 21-09-2026 — Empanada de Queso en Masa de Milhojas
+
+- Imagen procesada en Gemini, convertida a `public/images/empanada-milhojas.webp` (2000×1494, ~92 KB, dentro del rango de las demás empanadas del catálogo: 73–92 KB).
+- Producto creado en `galdi_productos` (id `1790001812148`): `cat: Empanadas`, `unidad: docena`, `precio: 3000`, sin campos de descuento mayorista (mismo patrón que Empanada de Queso frita tras el precio único de `aad0857`).
+- **Costos placeholder:** `costo/energia/logistica/mdo/margen` copiados de Empanada de Queso frita (masa distinta, costo real de hojaldre sin determinar). Pendiente registrado en "Pendientes activos → Técnicos".
+- Catálogo: entrada en `productosDelivery.Empanadas` de `ServicioDetalle.tsx` (`nombreVisible: 'Queso en Milhojas'`) y clave de imagen en `Catalogo.tsx`. El `nombre` debe coincidir exacto con Firestore porque el precio se busca por nombre.

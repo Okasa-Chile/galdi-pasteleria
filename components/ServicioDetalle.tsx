@@ -89,6 +89,7 @@ const productosDelivery: Record<string, { nombre: string; nombreVisible?: string
     { nombre: 'Empanada Napolitana',    nombreVisible: 'Napolitana',    imagen: imagenes['Napolitana'],           unidad: 'docena' },
     { nombre: 'Empanada Vegetariana',   nombreVisible: 'Vegetariana',   imagen: imagenes['Vegetariana'],          unidad: 'docena' },
     { nombre: 'Empanada de Queso',      nombreVisible: 'Queso',         imagen: imagenes['Queso'],                unidad: 'docena' },
+    { nombre: 'Empanada de Queso en Masa de Milhojas', nombreVisible: 'Queso en Milhojas', imagen: imagenes['Empanada de Queso en Masa de Milhojas'], unidad: 'docena' },
     { nombre: 'Empanada Queso Camarón', nombreVisible: 'Queso Camarón', imagen: imagenes['Queso Camarón'],        unidad: 'docena' },
     { nombre: 'Empanada de Mariscos',                                   imagen: imagenes['Empanada de Mariscos'], unidad: 'docena' },
   ],
