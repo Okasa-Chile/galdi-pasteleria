@@ -4,6 +4,7 @@ exports.calcularCostoDelivery = exports.flowConfirmar = exports.flowCrearOrden =
 const https_1 = require("firebase-functions/v2/https");
 const crypto = require("crypto");
 const deliveryPricing_1 = require("./deliveryPricing");
+const pedidos_1 = require("./pedidos");
 const PLACE_ID = 'ChIJf7l5N6LDYpYR6uNj83Fqd9g';
 const ALLOWED_ORIGINS = [
     'https://galdi.cl',
@@ -37,6 +38,13 @@ function firmarFlow(params, secret) {
     const cadena = keys.map(k => `${k}${params[k]}`).join('');
     return crypto.createHmac('sha256', secret).update(cadena).digest('hex');
 }
+async function obtenerDb() {
+    const { initializeApp, getApps } = await Promise.resolve().then(() => require('firebase-admin/app'));
+    if (getApps().length === 0)
+        initializeApp();
+    const { getFirestore, FieldValue } = await Promise.resolve().then(() => require('firebase-admin/firestore'));
+    return { db: getFirestore(), serverTs: FieldValue.serverTimestamp() };
+}
 exports.flowCrearOrden = (0, https_1.onRequest)({ region: 'us-central1', cors: ALLOWED_ORIGINS, invoker: 'public', secrets: ['FLOW_API_KEY', 'FLOW_SECRET_KEY'] }, async (req, res) => {
     var _a, _b;
     if (req.method !== 'POST') {
@@ -51,6 +59,15 @@ exports.flowCrearOrden = (0, https_1.onRequest)({ region: 'us-central1', cors: A
             return;
         }
         const { orden, monto, email, descripcion } = req.body;
+        // Guardar el pedido completo ANTES de crear la orden en Flow. Si falla no
+        // se bloquea la venta: se registra el error y se sigue.
+        try {
+            const { db, serverTs } = await obtenerDb();
+            await (0, pedidos_1.conTimeout)((0, pedidos_1.guardarPedidoPendiente)(db, serverTs, { orden, monto, email, body: req.body }), 4000);
+        }
+        catch (dbErr) {
+            console.error('[flowCrearOrden] Error guardando pedido pendiente (se continúa con Flow):', dbErr);
+        }
         const params = {
             apiKey,
             commerceOrder: orden,
@@ -80,7 +97,7 @@ exports.flowCrearOrden = (0, https_1.onRequest)({ region: 'us-central1', cors: A
     }
 });
 exports.flowConfirmar = (0, https_1.onRequest)({ region: 'us-central1', cors: ALLOWED_ORIGINS, invoker: 'public', secrets: ['FLOW_API_KEY', 'FLOW_SECRET_KEY', 'ZOHO_USER', 'ZOHO_PASS'] }, async (req, res) => {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    var _a, _b, _c, _d, _e, _f;
     try {
         const apiKey = (_a = process.env.FLOW_API_KEY) === null || _a === void 0 ? void 0 : _a.trim();
         const secret = (_b = process.env.FLOW_SECRET_KEY) === null || _b === void 0 ? void 0 : _b.trim();
@@ -99,20 +116,11 @@ exports.flowConfirmar = (0, https_1.onRequest)({ region: 'us-central1', cors: AL
         const pago = await response.json();
         if (pago.status === 2) {
             console.log('✅ Pago confirmado:', pago.commerceOrder, pago.amount, pago.email);
-            // Guardar pedido confirmado en Firestore
+            // Marcar como pagado el pedido guardado en flowCrearOrden (o crearlo si no existe)
+            let pedidoPrevio;
             try {
-                const { initializeApp, getApps } = await Promise.resolve().then(() => require('firebase-admin/app'));
-                if (getApps().length === 0)
-                    initializeApp();
-                const { getFirestore, FieldValue } = await Promise.resolve().then(() => require('firebase-admin/firestore'));
-                const db = getFirestore();
-                await db.collection('galdi_pedidos').add({
-                    commerceOrder: (_c = pago.commerceOrder) !== null && _c !== void 0 ? _c : 'no registrado',
-                    monto: (_d = pago.amount) !== null && _d !== void 0 ? _d : 0,
-                    email: (_e = pago.email) !== null && _e !== void 0 ? _e : 'no registrado',
-                    estado: 'pagado',
-                    fecha: FieldValue.serverTimestamp(),
-                });
+                const { db, serverTs } = await obtenerDb();
+                pedidoPrevio = await (0, pedidos_1.registrarPagoConfirmado)(db, serverTs, pago);
                 console.log('[flowConfirmar] Pedido guardado:', pago.commerceOrder);
             }
             catch (dbErr) {
@@ -129,13 +137,13 @@ exports.flowConfirmar = (0, https_1.onRequest)({ region: 'us-central1', cors: AL
                         pass: process.env.ZOHO_PASS,
                     },
                 });
-                const descripcion = (_f = pago.commerceOrder) !== null && _f !== void 0 ? _f : 'sin referencia';
-                const monto = (_h = (_g = pago.amount) === null || _g === void 0 ? void 0 : _g.toLocaleString('es-CL')) !== null && _h !== void 0 ? _h : '0';
+                const descripcion = (_c = pago.commerceOrder) !== null && _c !== void 0 ? _c : 'sin referencia';
+                const monto = (_e = (_d = pago.amount) === null || _d === void 0 ? void 0 : _d.toLocaleString('es-CL')) !== null && _e !== void 0 ? _e : '0';
                 await transporter.sendMail({
                     from: '"Galdi Pastelería" <ventas@galdi.cl>',
                     to: 'ventas@galdi.cl, ingridgalvezd@gmail.com, jacquelinegalvezd@gmail.com, claudioferrarila@gmail.com',
                     subject: `🛒 Nuevo pedido confirmado — ${descripcion}`,
-                    text: `Se confirmó un nuevo pedido en galdi.cl\n\nOrden: ${descripcion}\nMonto: $${monto} CLP\nEmail cliente: ${(_j = pago.email) !== null && _j !== void 0 ? _j : 'no registrado'}\n\nRevisa el panel en galdi.cl/gestion`,
+                    text: `Se confirmó un nuevo pedido en galdi.cl\n\nOrden: ${descripcion}\nMonto: $${monto} CLP\nEmail cliente: ${(_f = pago.email) !== null && _f !== void 0 ? _f : 'no registrado'}\n${(0, pedidos_1.detalleParaCorreo)(pedidoPrevio)}\nRevisa el panel en galdi.cl/gestion`,
                 });
                 console.log('[flowConfirmar] Email de notificación enviado.');
             }

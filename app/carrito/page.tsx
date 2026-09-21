@@ -168,7 +168,11 @@ export default function CarritoPage() {
       const res = await fetch(FLOW_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orden, monto: total, email, descripcion }),
+        body: JSON.stringify({
+          orden, monto: total, email, descripcion,
+          nombre, telefono, modoEntrega, fechaEntrega, items, total,
+          ...(modoEntrega === 'domicilio' ? { direccion } : {}),
+        }),
       });
       const data = await res.json();
 

@@ -1,6 +1,7 @@
 import { onRequest } from 'firebase-functions/v2/https';
 import * as crypto from 'crypto';
 import { calcularCostoDespacho, extraerComuna, type AddressComponent } from './deliveryPricing';
+import { guardarPedidoPendiente, registrarPagoConfirmado, detalleParaCorreo, conTimeout } from './pedidos';
 
 const PLACE_ID = 'ChIJf7l5N6LDYpYR6uNj83Fqd9g';
 
@@ -48,6 +49,13 @@ function firmarFlow(params: Record<string, string>, secret: string): string {
   return crypto.createHmac('sha256', secret).update(cadena).digest('hex');
 }
 
+async function obtenerDb() {
+  const { initializeApp, getApps } = await import('firebase-admin/app');
+  if (getApps().length === 0) initializeApp();
+  const { getFirestore, FieldValue } = await import('firebase-admin/firestore');
+  return { db: getFirestore(), serverTs: FieldValue.serverTimestamp() };
+}
+
 export const flowCrearOrden = onRequest(
   { region: 'us-central1', cors: ALLOWED_ORIGINS, invoker: 'public', secrets: ['FLOW_API_KEY', 'FLOW_SECRET_KEY'] },
   async (req, res) => {
@@ -64,6 +72,15 @@ export const flowCrearOrden = onRequest(
       }
 
       const { orden, monto, email, descripcion } = req.body;
+
+      // Guardar el pedido completo ANTES de crear la orden en Flow. Si falla no
+      // se bloquea la venta: se registra el error y se sigue.
+      try {
+        const { db, serverTs } = await obtenerDb();
+        await conTimeout(guardarPedidoPendiente(db, serverTs, { orden, monto, email, body: req.body }), 4000);
+      } catch (dbErr) {
+        console.error('[flowCrearOrden] Error guardando pedido pendiente (se continúa con Flow):', dbErr);
+      }
 
       const params: Record<string, string> = {
         apiKey,
@@ -133,19 +150,11 @@ export const flowConfirmar = onRequest(
 
       if (pago.status === 2) {
         console.log('✅ Pago confirmado:', pago.commerceOrder, pago.amount, pago.email);
-        // Guardar pedido confirmado en Firestore
+        // Marcar como pagado el pedido guardado en flowCrearOrden (o crearlo si no existe)
+        let pedidoPrevio: Record<string, unknown> | undefined;
         try {
-          const { initializeApp, getApps } = await import('firebase-admin/app');
-          if (getApps().length === 0) initializeApp();
-          const { getFirestore, FieldValue } = await import('firebase-admin/firestore');
-          const db = getFirestore();
-          await db.collection('galdi_pedidos').add({
-            commerceOrder: pago.commerceOrder ?? 'no registrado',
-            monto:         pago.amount ?? 0,
-            email:         pago.email ?? 'no registrado',
-            estado:        'pagado',
-            fecha:         FieldValue.serverTimestamp(),
-          });
+          const { db, serverTs } = await obtenerDb();
+          pedidoPrevio = await registrarPagoConfirmado(db, serverTs, pago);
           console.log('[flowConfirmar] Pedido guardado:', pago.commerceOrder);
         } catch (dbErr) {
           console.error('[flowConfirmar] Error guardando pedido:', dbErr);
@@ -167,7 +176,7 @@ export const flowConfirmar = onRequest(
             from: '"Galdi Pastelería" <ventas@galdi.cl>',
             to: 'ventas@galdi.cl, ingridgalvezd@gmail.com, jacquelinegalvezd@gmail.com, claudioferrarila@gmail.com',
             subject: `🛒 Nuevo pedido confirmado — ${descripcion}`,
-            text: `Se confirmó un nuevo pedido en galdi.cl\n\nOrden: ${descripcion}\nMonto: $${monto} CLP\nEmail cliente: ${pago.email ?? 'no registrado'}\n\nRevisa el panel en galdi.cl/gestion`,
+            text: `Se confirmó un nuevo pedido en galdi.cl\n\nOrden: ${descripcion}\nMonto: $${monto} CLP\nEmail cliente: ${pago.email ?? 'no registrado'}\n${detalleParaCorreo(pedidoPrevio)}\nRevisa el panel en galdi.cl/gestion`,
           });
           console.log('[flowConfirmar] Email de notificación enviado.');
         } catch (mailErr) {
