@@ -8,10 +8,6 @@ import { PEDIDO_MINIMO_DELIVERY } from '@/lib/deliveryPricing';
 const FLOW_URL = 'https://us-central1-galdi-web.cloudfunctions.net/flowCrearOrden';
 const CALCULAR_DESPACHO_URL = 'https://us-central1-galdi-web.cloudfunctions.net/calcularCostoDelivery';
 
-/* === FIESTAS PATRIAS 2026 — SUSPENSIÓN FLOW (revertir después del 18-09) === */
-const FLOW_SUSPENDIDO = true;
-/* === FIN FLAG === */
-
 interface DespachoOk {
   km: number;
   costoDelivery: number;
@@ -90,23 +86,6 @@ export default function CarritoPage() {
     } catch { /* nada */ }
     setCargando(false);
   }, []);
-
-  /* === FIESTAS PATRIAS 2026 — EARLY RETURN (revertir después del 18-09) === */
-  if (FLOW_SUSPENDIDO) {
-    return (
-      <div style={{ minHeight: '100vh', background: '#F9F3EC', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-        <div style={{ maxWidth: '480px', textAlign: 'center' }}>
-          <p style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.72rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#C9A55A', marginBottom: '1rem' }}>Fiestas Patrias 2026</p>
-          <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.8rem', fontWeight: 300, color: '#1a0f0a', marginBottom: '1rem', lineHeight: 1.3 }}>Pedidos solo por WhatsApp</h1>
-          <p style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.9rem', color: '#5a3520', lineHeight: 1.7, marginBottom: '2rem' }}>Durante Fiestas Patrias estamos recibiendo pedidos exclusivamente por WhatsApp para poder atenderte mejor y coordinar entregas a tiempo.</p>
-          <a href="https://wa.me/56990991011?text=Hola%20Galdi%2C%20quiero%20hacer%20un%20pedido" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#25D366', color: '#fff', padding: '1rem 2.5rem', borderRadius: '6px', fontFamily: 'Jost, sans-serif', fontSize: '0.9rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', textDecoration: 'none', marginBottom: '1.5rem' }}>Pedir por WhatsApp</a>
-          <br />
-          <a href="/productos" style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.78rem', color: '#8a6a4a', letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none' }}>← Volver al catálogo</a>
-        </div>
-      </div>
-    );
-  }
-  /* === FIN EARLY RETURN === */
 
   const subtotal = items.reduce((acc, it) => acc + it.precio * it.cantidad, 0);
   const despacho = modoEntrega === 'domicilio' ? (despachoInfo?.costoDelivery ?? 0) : 0;
