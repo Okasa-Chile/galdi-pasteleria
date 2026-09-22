@@ -26,17 +26,19 @@ const P = {
 
 // ── Subcomponente: Card opción ────────────────────────────────────────────────
 
-function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, priority = false }: {
+function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, priority = false, compactMobile = false }: {
   opcion: { id: string; nombre: string; imagen?: string; icono?: string; desc: string };
   seleccionada: boolean;
   onSelect: () => void;
   deshabilitada?: boolean;
   priority?: boolean;
+  compactMobile?: boolean;
 }) {
   return (
     <button
       onClick={onSelect}
       disabled={deshabilitada && !seleccionada}
+      className={compactMobile ? 'atg-variant-card' : undefined}
       style={{
         background: seleccionada ? `linear-gradient(135deg, ${P.rose}33, ${P.peach}33)` : P.white,
         border: seleccionada ? `2px solid ${P.roseDark}` : `1.5px solid ${P.creamDark}`,
@@ -55,7 +57,7 @@ function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, pri
         opacity: deshabilitada && !seleccionada ? 0.45 : 1,
       }}
     >
-      <div style={{
+      <div className={compactMobile ? 'atg-variant-card-icon' : undefined} style={{
         position: 'relative',
         width: '100%',
         height: 'clamp(160px, 30vw, 260px)',
@@ -66,7 +68,7 @@ function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, pri
         {opcion.imagen ? (
           <Image src={opcion.imagen} alt={opcion.nombre} fill style={{ objectFit: 'cover' }} priority={priority} />
         ) : (
-          <div style={{
+          <div className={compactMobile ? 'atg-variant-card-icon-inner' : undefined} style={{
             width: '100%',
             height: '100%',
             display: 'flex',
@@ -79,7 +81,7 @@ function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, pri
           </div>
         )}
       </div>
-      <div>
+      <div className={compactMobile ? 'atg-variant-card-text' : undefined}>
         <p style={{
           fontFamily: 'var(--font-serif)',
           fontSize: '0.95rem',
@@ -101,7 +103,7 @@ function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, pri
         </p>
       </div>
       {seleccionada && (
-        <span style={{
+        <span className={compactMobile ? 'atg-variant-card-badge' : undefined} style={{
           fontFamily: 'var(--font-sans)',
           fontSize: '0.58rem',
           letterSpacing: '0.12em',
@@ -188,7 +190,8 @@ function TamanioCard({ tamanio, precio, seleccionado, onSelect }: {
 
 // ── Subcomponente: Paso ───────────────────────────────────────────────────────
 
-function Paso({ numero, titulo, subtitulo, completado, activo, children }: {
+function Paso({ id, numero, titulo, subtitulo, completado, activo, children }: {
+  id?: string;
   numero: number;
   titulo: string;
   subtitulo?: string;
@@ -197,7 +200,7 @@ function Paso({ numero, titulo, subtitulo, completado, activo, children }: {
   children: React.ReactNode;
 }) {
   return (
-    <div style={{
+    <div id={id} style={{
       marginBottom: '2.5rem',
       opacity: activo || completado ? 1 : 0.35,
       transition: 'opacity 0.3s ease',
@@ -320,6 +323,20 @@ export default function ArmaTuTorta() {
     setTamanio(null);
   }
 
+  function armarOtraTorta() {
+    if (!window.confirm('¿Quieres borrar esta torta y empezar una nueva? Se perderá la selección actual.')) {
+      return;
+    }
+    setVariante(null);
+    setBase(null);
+    setRellenos([]);
+    setRellenosConf(false);
+    setDecoraciones([]);
+    setDecoConf(false);
+    setTamanio(null);
+    document.getElementById('atg-paso-1')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   function toggleRelleno(id: string) {
     setRellenos(prev =>
       prev.includes(id)
@@ -359,6 +376,13 @@ export default function ArmaTuTorta() {
         position: 'relative',
         overflow: 'hidden',
       }}>
+        <style>{`
+          @media (max-width: 768px) {
+            .atg-flor-esquina {
+              display: none !important;
+            }
+          }
+        `}</style>
         <div style={{
           position: 'absolute',
           top: '-60px',
@@ -385,6 +409,7 @@ export default function ArmaTuTorta() {
           alt=""
           width={180}
           height={180}
+          className="atg-flor-esquina"
           style={{
             position: 'absolute',
             top: '-10px',
@@ -395,61 +420,63 @@ export default function ArmaTuTorta() {
           }}
         />
 
-        <Link href="/" style={{ textDecoration: 'none' }}>
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <Link href="/" style={{ textDecoration: 'none' }}>
+            <p style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: '0.65rem',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              color: P.roseDark,
+              marginBottom: '1rem',
+            }}>
+              Galdi · Maipú
+            </p>
+          </Link>
+          <h1 style={{
+            fontFamily: 'var(--font-serif)',
+            fontSize: 'clamp(2.2rem, 6vw, 3.8rem)',
+            fontWeight: 400,
+            color: P.brown,
+            margin: '0 0 1rem',
+            lineHeight: 1.15,
+            letterSpacing: '0.01em',
+          }}>
+            Arma tu Torta
+          </h1>
           <p style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: '0.65rem',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            color: P.roseDark,
-            marginBottom: '1rem',
+            fontSize: 'clamp(0.82rem, 2vw, 0.95rem)',
+            color: P.brownMid,
+            maxWidth: '480px',
+            margin: '0 auto',
+            lineHeight: 1.75,
           }}>
-            Galdi · Maipú
+            Diseña la torta de tus sueños. Elige cada detalle — la elaboramos con los mismos estándares artesanales que nos definen desde siempre.
           </p>
-        </Link>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)',
-          fontSize: 'clamp(2.2rem, 6vw, 3.8rem)',
-          fontWeight: 400,
-          color: P.brown,
-          margin: '0 0 1rem',
-          lineHeight: 1.15,
-          letterSpacing: '0.01em',
-        }}>
-          Arma tu Torta
-        </h1>
-        <p style={{
-          fontFamily: 'var(--font-sans)',
-          fontSize: 'clamp(0.82rem, 2vw, 0.95rem)',
-          color: P.brownMid,
-          maxWidth: '480px',
-          margin: '0 auto',
-          lineHeight: 1.75,
-        }}>
-          Diseña la torta de tus sueños. Elige cada detalle — la elaboramos con los mismos estándares artesanales que nos definen desde siempre.
-        </p>
-        <p style={{
-          fontFamily: 'var(--font-sans)',
-          fontSize: 'clamp(0.75rem, 1.8vw, 0.85rem)',
-          fontWeight: 600,
-          color: P.roseDark,
-          maxWidth: '480px',
-          margin: '0.75rem auto 0',
-          letterSpacing: '0.01em',
-        }}>
-          🕐 Entrega en 48 horas después de contactarnos
-        </p>
+          <p style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: 'clamp(0.75rem, 1.8vw, 0.85rem)',
+            fontWeight: 600,
+            color: P.roseDark,
+            maxWidth: '480px',
+            margin: '0.75rem auto 0',
+            letterSpacing: '0.01em',
+          }}>
+            🕐 Entrega en 48 horas después de contactarnos
+          </p>
 
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '0.75rem',
-          marginTop: '1.5rem',
-        }}>
-          <div style={{ height: '1px', width: '40px', background: `linear-gradient(to right, transparent, ${P.roseDark})` }} />
-          <span style={{ color: P.roseDark, fontSize: '0.8rem' }}>✿</span>
-          <div style={{ height: '1px', width: '40px', background: `linear-gradient(to left, transparent, ${P.roseDark})` }} />
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.75rem',
+            marginTop: '1.5rem',
+          }}>
+            <div style={{ height: '1px', width: '40px', background: `linear-gradient(to right, transparent, ${P.roseDark})` }} />
+            <span style={{ color: P.roseDark, fontSize: '0.8rem' }}>✿</span>
+            <div style={{ height: '1px', width: '40px', background: `linear-gradient(to left, transparent, ${P.roseDark})` }} />
+          </div>
         </div>
 
         <Image
@@ -457,6 +484,7 @@ export default function ArmaTuTorta() {
           alt=""
           width={160}
           height={160}
+          className="atg-flor-esquina"
           style={{
             position: 'absolute',
             bottom: '-10px',
@@ -472,14 +500,47 @@ export default function ArmaTuTorta() {
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '3rem 5% 6rem' }}>
 
         {/* PASO 1 — Variante */}
-        <Paso numero={1} titulo="Con o sin azúcar añadida" subtitulo="Elige el punto de partida de tu torta" completado={pasoActivo > 1} activo={pasoActivo === 1}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '1.5rem' }}>
+        <Paso id="atg-paso-1" numero={1} titulo="Con o sin azúcar añadida" subtitulo="Elige el punto de partida de tu torta" completado={pasoActivo > 1} activo={pasoActivo === 1}>
+          <style>{`
+            @media (max-width: 768px) {
+              .atg-variant-grid {
+                grid-template-columns: 1fr !important;
+                gap: 0.75rem !important;
+              }
+              .atg-variant-card {
+                position: relative !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                text-align: left !important;
+                padding: 0.85rem 1rem !important;
+                gap: 0.85rem !important;
+              }
+              .atg-variant-card-icon {
+                width: 56px !important;
+                height: 56px !important;
+                flex-shrink: 0;
+              }
+              .atg-variant-card-icon-inner {
+                font-size: 1.8rem !important;
+              }
+              .atg-variant-card-text {
+                flex: 1;
+              }
+              .atg-variant-card-badge {
+                position: absolute;
+                top: 0.4rem;
+                right: 0.4rem;
+              }
+            }
+          `}</style>
+          <div className="atg-variant-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '1.5rem' }}>
             {VARIANTES.map(v => (
               <OpcionCard
                 key={v.id}
                 opcion={v}
                 seleccionada={variante === v.id}
                 onSelect={() => { setVariante(v.id); resetDesdeVariante(); }}
+                compactMobile
               />
             ))}
           </div>
@@ -811,18 +872,25 @@ export default function ArmaTuTorta() {
             </a>
 
             <button
-              onClick={() => { setVariante(null); setBase(null); setRellenos([]); setRellenosConf(false); setDecoraciones([]); setDecoConf(false); setTamanio(null); }}
+              onClick={armarOtraTorta}
               style={{
-                display: 'block',
-                margin: '1.1rem auto 0',
-                background: 'none',
-                border: 'none',
-                color: P.brownLight,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                width: '100%',
+                marginTop: '0.85rem',
+                background: 'transparent',
+                border: `1.5px solid ${P.roseDark}`,
+                color: P.roseDark,
                 fontFamily: 'var(--font-sans)',
-                fontSize: '0.68rem',
-                cursor: 'pointer',
-                textDecoration: 'underline',
+                fontSize: '0.8rem',
+                fontWeight: 600,
                 letterSpacing: '0.05em',
+                padding: '0.85rem',
+                borderRadius: '14px',
+                cursor: 'pointer',
+                boxSizing: 'border-box',
               }}
             >
               ✿ Armar otra torta
