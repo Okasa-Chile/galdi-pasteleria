@@ -395,7 +395,7 @@ contenido con tildes.
 - [ ] Protocolo de fotos de tortas de novia en cocina: fotografiar antes de salir del local, luz natural, fondo neutro fijo, 3 tomas (frontal, detalle, corte), anotar pisos/invitados/sabor/estilo en el momento.
 - [ ] Subir las 3 fotos de tortas de novia a Google Business Profile y crear el producto "Torta de bodas" con enlace a /tortas-bodas-maipu.
 - [ ] Actualizar reviewCount en lib/businessSchema.ts (hoy 72 hardcodeado) con la cifra real de GBP.
-- [ ] Confirmar que el Hero de Fiestas Patrias se revirtió (prod-empanada.webp ya no debe ser LCP del home).
+- [x] Confirmar que el Hero de Fiestas Patrias se revirtió — confirmado 22-09-2026: ya estaba revertido el 21-09 (99b92e9 Hero, bba0c4b /empanadas-maipu). La empanada que sigue en el carrusel es la slide permanente, no la campaña.
 - [ ] Medir el title del home no antes del 20-10-2026, comparando períodos de igual duración en modo Comparar de GSC.
 
 ### Administrativos / Externos
@@ -424,7 +424,7 @@ contenido con tildes.
 
 ## 📋 Historial de jornadas (resumen)
 
-- **22-09-2026** — Arma tu Torta: variante sin azúcar añadida por composición, con nombres explícitos en cards/resumen/WhatsApp y Mantequilla de Maní excluida (4fe91e5, 45c2dcb, 1b9a000) · Documentación de la jornada y Ruyed corregido a registro histórico, no benchmark local (fc6457d, c7954e1) · Evaluación GSC (07-08 al 19-09) y title del home cambiado a "Pastelería Artesanal y Tortas en Maipú | Galdi" (433041d)
+- **22-09-2026** — Arma tu Torta: variante sin azúcar añadida por composición, con nombres explícitos en cards/resumen/WhatsApp y Mantequilla de Maní excluida (4fe91e5, 45c2dcb, 1b9a000) · Documentación de la jornada y Ruyed corregido a registro histórico, no benchmark local (fc6457d, c7954e1) · Evaluación GSC (07-08 al 19-09) y title del home cambiado a "Pastelería Artesanal y Tortas en Maipú | Galdi" (433041d) · Fix del desborde horizontal en móvil: los enlaces del footer sin flex-wrap forzaban ~459 px de ancho y dejaban el menú hamburguesa fuera de pantalla en el home y /productos (05fcf76)
 - **06-08-2026** — Fix GSC "La reseña tiene varias puntuaciones agregadas":
   eliminado aggregateRating duplicado en JSON-LD (mismo @id emitido por
   layout.tsx y por las 11 landings). businessSchema() ahora devuelve solo
