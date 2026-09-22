@@ -84,13 +84,24 @@ intacta como registro histórico; esta entrada la corrige.
   mantenerlo habilitado en el camino sin azúcar.
 - Confirmar si la masa de hojarasca lleva azúcar; si la lleva, requiere
   nombreSinAzucar.
-- Validar las porciones reales por talla y recalibrar
-  RECARGO_SIN_AZUCAR con los gramajes de /gestion.
-- Revisar los recargos de S y M frente a Ruyed (por porción: S +21%,
-  M +9%).
+- Medir las porciones reales que rinde cada talla (S/M/L/XL) con el
+  corte en bloques rectangulares (prioridad alta: afecta a toda la
+  línea de tortas, no solo a la variante sin azúcar).
+- Validar el precio de la línea con azúcar frente a pastelerías de
+  Maipú, por porción, una vez medidas las porciones reales por talla.
+- Recalibrar RECARGO_SIN_AZUCAR con los gramajes de /gestion (prioridad
+  baja: la variante sin azúcar representa ~1 de cada 30 tortas).
 - Crear scripts/verify-arma-tu-torta-precios.mjs (importa
   precioTamanio() y valida la tabla de precios por talla y composición)
-  antes de recalibrar RECARGO_SIN_AZUCAR.
+  antes de recalibrar RECARGO_SIN_AZUCAR (prioridad baja: la variante
+  sin azúcar representa ~1 de cada 30 tortas).
+
+Nota de contexto: Ruyed opera en Providencia y no compite por el mismo
+cliente que Galdi en Maipú. Las comparaciones de precio con Ruyed de
+esta jornada y de la Sesión 15-06-2026 quedan como registro histórico,
+no como benchmark vigente. En Maipú no hay competencia directa en la
+línea sin azúcar; la referencia válida para la línea con azúcar son las
+pastelerías de Maipú.
 
 ---
 

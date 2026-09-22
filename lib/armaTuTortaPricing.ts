@@ -46,10 +46,13 @@ export const TAMANIOS = [
 ];
 
 // Recargo sin azúcar añadida por composición (talla × base / relleno / deco).
-// Estudio de mercado sept-2026: Ruyed, La Colonia, y precios de manjar sin
-// azúcar y alulosa como insumos. El recargo de relleno/decoración se aplica
-// en proporción a cuántos de los elegidos son "intensivos" (encarecen más
-// su versión sin azúcar), no por conteo fijo — ver CHANGELOG.
+// Estudio de mercado sept-2026: Ruyed (Providencia, usado solo como
+// referencia de precio de insumos y de categoría — no es competidor
+// local: no compite por el mismo cliente que Galdi en Maipú), La
+// Colonia, y precios de manjar sin azúcar y alulosa como insumos. El
+// recargo de relleno/decoración se aplica en proporción a cuántos de
+// los elegidos son "intensivos" (encarecen más su versión sin azúcar),
+// no por conteo fijo — ver CHANGELOG.
 export const RECARGO_SIN_AZUCAR: Record<string, { base: number; relleno: number; deco: number }> = {
   S:  { base: 2000, relleno: 1500, deco: 1000 },
   M:  { base: 2500, relleno: 2000, deco: 1500 },
