@@ -30,7 +30,7 @@ export const GALDI_BUSINESS = {
   name: 'Galdi SPA - Pastelería- Panadería - Eventos',
   url: 'https://galdi.cl',
   description:
-    'Pastelería y panadería artesanal en Maipú. Tortas, pan amasado, empanadas y banquetería para eventos. Delivery en Maipú y Gran Santiago.',
+    'Pastelería artesanal en Maipú. Tortas, empanadas y banquetería para eventos. Delivery en Maipú y Gran Santiago.',
   telephone: '+56990991011',
   email: 'ventas@galdi.cl',
   priceRange: '$$',

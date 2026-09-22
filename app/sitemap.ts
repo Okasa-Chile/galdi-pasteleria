@@ -15,6 +15,8 @@ export const revalidate = false;
  * Excluidas a propósito: /carrito y /pago-exitoso (transaccionales),
  * /experimental/* (rutas de desarrollo, con noindex),
  * /distribucion-maipu (redirige a "/", servicio retirado),
+ * /pan-artesanal-maipu (redirige 301 a /productos vía firebase.json,
+ * producto retirado 22-09-2026),
  * /validar-presupuesto (noindex en su layout: validacion privada por token,
  * hereda title/description/canonical del layout raiz).
  */
@@ -29,7 +31,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/tortas-maipu', priority: 0.8, changeFrequency: 'monthly' },
     { path: '/tortas-bodas-maipu', priority: 0.8, changeFrequency: 'monthly' },
     { path: '/empanadas-maipu', priority: 0.8, changeFrequency: 'monthly' },
-    { path: '/pan-artesanal-maipu', priority: 0.5, changeFrequency: 'monthly' },
     { path: '/delivery-maipu', priority: 0.8, changeFrequency: 'monthly' },
     { path: '/matrimonios-maipu', priority: 0.8, changeFrequency: 'monthly' },
     { path: '/coctel-maipu', priority: 0.8, changeFrequency: 'monthly' },

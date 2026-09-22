@@ -13,7 +13,7 @@ const faqs = [
   },
   {
     q: '¿Con cuánta anticipación debo hacer mi pedido?',
-    a: 'Con 48 horas de anticipación es suficiente para la mayoría de nuestros pedidos: tortas personalizadas, pan, empanadas, galletas, kuchen y desayunos. Para tortas de matrimonio o eventos grandes, avísanos con más tiempo: mientras antes nos escribas, mejor podemos coordinar.',
+    a: 'Con 48 horas de anticipación es suficiente para la mayoría de nuestros pedidos: tortas personalizadas, empanadas, galletas, kuchen y desayunos. Para tortas de matrimonio o eventos grandes, avísanos con más tiempo: mientras antes nos escribas, mejor podemos coordinar.',
   },
   {
     q: '¿Pueden adaptarse a restricciones alimentarias?',

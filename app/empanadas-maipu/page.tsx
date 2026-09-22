@@ -5,7 +5,7 @@ import { businessSchema } from '@/lib/businessSchema';
 
 export const metadata: Metadata = {
   title: 'Empanadas Artesanales en Maipú · Pino, Napolitana y Más · Galdi',
-  description: 'Empanadas artesanales hechas a mano en Maipú: pino, napolitana, vegetariana, queso camarón y mariscos. Pedido por docena con delivery. Cotiza por WhatsApp.',
+  description: 'Empanadas artesanales hechas a mano en Maipú: pino, napolitana, vegetariana, queso camarón y mariscos. Pedido mínimo 4 unidades, o por docena para eventos. Cotiza por WhatsApp.',
   keywords: 'empanadas Maipú, empanadas artesanales Maipú, empanadas a domicilio Maipú, empanadas por docena Maipú',
   alternates: { canonical: 'https://galdi.cl/empanadas-maipu' },
 };
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: '¿Cuál es el pedido mínimo de empanadas en Galdi?',
-    a: 'El pedido mínimo es por docena. Puedes combinar distintos sabores dentro de la misma docena según disponibilidad.',
+    a: 'El pedido mínimo es de 4 unidades. Para eventos también puedes pedir por docena, combinando distintos sabores según disponibilidad.',
   },
   {
     q: '¿Qué sabores de empanadas tiene Galdi en Maipú?',
@@ -25,11 +25,7 @@ const faqs = [
   },
   {
     q: '¿Con cuánta anticipación debo pedir empanadas para un evento?',
-    a: 'Para pedidos de pocas docenas, 24 a 48 horas de anticipación son suficientes. Para eventos grandes o fechas patrias, recomendamos reservar con una semana de anticipación.',
-  },
-  {
-    q: '¿Tienen empanadas para abastecer almacenes o negocios?',
-    a: 'Sí, distribuimos empanadas frescas a almacenes y negocios de Maipú de forma regular. Contáctanos por WhatsApp para coordinar volumen y frecuencia de entrega.',
+    a: 'Para pedidos pequeños, 24 a 48 horas de anticipación son suficientes. Para eventos grandes o fechas patrias, recomendamos reservar con una semana de anticipación.',
   },
 ];
 
@@ -39,7 +35,7 @@ const jsonLd = {
     businessSchema({
       url: 'https://galdi.cl/empanadas-maipu',
       description:
-        'Pastelería artesanal en Maipú especializada en empanadas hechas a mano: pino, napolitana, vegetariana, queso camarón y mariscos. Pedido mínimo por docena. Delivery en Maipú y comunas cercanas.',
+        'Pastelería artesanal en Maipú especializada en empanadas hechas a mano: pino, napolitana, vegetariana, queso camarón y mariscos. Pedido mínimo 4 unidades. Delivery en Maipú y comunas cercanas.',
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Empanadas Artesanales',
@@ -150,15 +146,15 @@ const sabores = [
 const ventajas = [
   'Empanadas hechas a mano con recetas familiares, sin mezclas industriales.',
   'Masa artesanal preparada a mano, coordinada según la fecha de entrega.',
-  'Pedido por docena: puedes combinar sabores según tus preferencias.',
+  'Desde 4 unidades, o por docena para eventos: puedes combinar sabores según tus preferencias.',
   'Delivery en Maipú, Cerrillos, Pudahuel, Estación Central, Padre Hurtado y Lo Prado.',
-  'Disponibles para eventos, fechas patrias, almacenes y distribución regular.',
+  'Disponibles para eventos y fechas patrias.',
   'Atención directa con las socias fundadoras: Jacqueline e Ingrid.',
 ];
 
 const pasos = [
   'Contáctanos por WhatsApp (+56 9 9099 1011) o escríbenos a ventas@galdi.cl.',
-  'Cuéntanos los sabores, cantidad de docenas y la fecha de entrega.',
+  'Cuéntanos los sabores, la cantidad (unidades o docenas) y la fecha de entrega.',
   'Te confirmamos disponibilidad y precio dentro de 24 horas hábiles.',
   'Coordinamos el despacho a tu dirección en Maipú y comunas cercanas.',
 ];
@@ -201,7 +197,7 @@ export default function EmpanadaMaipuPage() {
               Empanadas Artesanales en Maipú
             </h1>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(0.85rem, 2vw, 1rem)', color: 'rgba(245,230,211,0.85)', maxWidth: '600px' }}>
-              Hechas a mano con recetas familiares. Pedido por docena con delivery.
+              Hechas a mano con recetas familiares. Mínimo 4 unidades, con delivery.
             </p>
           </div>
         </div>
@@ -213,7 +209,7 @@ export default function EmpanadaMaipuPage() {
             Galdi es una pastelería artesanal ubicada en Pasaje Marcos Echenique 809, Maipú,
             Región Metropolitana. Elabora empanadas hechas a mano con recetas familiares:
             pino, napolitana, vegetariana, queso camarón y mariscos. Pedido mínimo
-            por docena con delivery en Maipú y comunas cercanas.
+            de 4 unidades con delivery en Maipú y comunas cercanas.
           </p>
 
           {/* Qué empanadas ofrece */}
@@ -228,7 +224,7 @@ export default function EmpanadaMaipuPage() {
               En Galdi elaboramos empanadas artesanales con recetas familiares,
               sin mezclas industriales. Cada empanada se prepara a mano y se
               hornea coordinando la fecha de entrega para garantizar frescura y
-              sabor. Puedes combinar distintos sabores dentro de la misma docena
+              sabor. Puedes combinar distintos sabores dentro de tu pedido
               según disponibilidad.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.25rem' }}>
@@ -244,13 +240,13 @@ export default function EmpanadaMaipuPage() {
             </div>
           </section>
 
-          {/* Eventos y almacenes */}
-          <section aria-labelledby="eventos-almacenes" style={{ marginBottom: '3.5rem' }}>
+          {/* Eventos */}
+          <section aria-labelledby="eventos" style={{ marginBottom: '3.5rem' }}>
             <h2
-              id="eventos-almacenes"
+              id="eventos"
               style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 300, color: '#1a0f0a', marginBottom: '1.5rem', paddingBottom: '0.5rem', borderBottom: '1px solid rgba(212,168,83,0.3)' }}
             >
-              Empanadas para eventos y almacenes
+              Empanadas para eventos
             </h2>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '0.9rem' }}>
               {ventajas.map((v, i) => (

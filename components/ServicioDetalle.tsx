@@ -95,11 +95,6 @@ const productosDelivery: Record<string, { nombre: string; nombreVisible?: string
     { nombre: 'Chilenitos',             imagen: imagenes['Chilenitos'],             unidad: 'docena' },
     { nombre: 'Pasteles Rectangulares', imagen: imagenes['Pasteles Rectangulares'], unidad: 'docena' },
   ],
-  'Pan': [
-    { nombre: 'Pan Amasado',               imagen: imagenes['Pan Amasado'],               unidad: 'unidad' },
-    { nombre: 'Tortilla con Chicharrones', imagen: imagenes['Tortilla con Chicharrones'], unidad: 'unidad' },
-    { nombre: 'Ciabatta',                  imagen: imagenes['Pan Amasado'],               unidad: 'unidad' },
-  ],
 };
 
 const eventosData: Record<string, { imagen: string; desc: string }> = {
@@ -162,7 +157,6 @@ function pluralizar(cantidad: number, unidad: string): string {
 
 function getMinimo(tab: string, unidad: string, nombre: string = '', serviceId: string = ''): number {
   if (nombre === 'Tortilla con Chicharrones') return 2;
-  if (tab === 'Pan' && nombre !== 'Tortilla con Chicharrones') return 3;
   if (tab === 'Empanadas' && serviceId === 'delivery') return 4;
   if (unidad === 'docena') return 1;
   if (tab === 'Queques') return 2;
@@ -171,7 +165,6 @@ function getMinimo(tab: string, unidad: string, nombre: string = '', serviceId: 
 
 function getLabelMinimo(tab: string, unidad: string, nombre: string = '', serviceId: string = ''): string {
   if (nombre === 'Tortilla con Chicharrones') return 'mín. 2 un';
-  if (tab === 'Pan' && nombre !== 'Tortilla con Chicharrones') return 'mín. 3 kg';
   if (tab === 'Empanadas' && serviceId === 'delivery') return 'mín. 4 un';
   if (unidad === 'docena') return 'mín. 1 docena';
   if (tab === 'Queques') return 'mín. 2 un';

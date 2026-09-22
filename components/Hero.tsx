@@ -7,7 +7,6 @@ import Link from 'next/link';
 const slides: { src: string; alt: string; href?: string }[] = [
   { src: '/images/torta-amor-hero.webp', alt: 'Torta Amor — Galdi Pastelería Maipú' },
   { src: '/images/New_Hero_socias.webp', alt: 'Galdi — Pastelería artesanal' },
-  { src: '/images/SlideshowPanes.webp', alt: 'Pan artesanal Galdi' },
   { src: '/images/prod-dulces.webp', alt: 'Dulces artesanales Galdi' },
   { src: '/images/prod-pie.webp', alt: 'Pasteles y tartas Galdi' },
   { src: '/images/prod-empanada.webp', alt: 'Empanadas artesanales Galdi' },

@@ -6,7 +6,7 @@ import CalcularDespachoWidget from '@/components/CalcularDespachoWidget';
 
 export const metadata: Metadata = {
   title: 'Delivery de Pasteles y Tortas en Maipú · Galdi',
-  description: 'Delivery de tortas, empanadas y pan artesanal en Maipú y comunas cercanas. Despacho desde $3.000 según distancia. Calcula el tuyo online.',
+  description: 'Delivery de tortas, empanadas y cóctel en Maipú y comunas cercanas. Despacho desde $3.000 según distancia. Calcula el tuyo online.',
   keywords: 'delivery pasteles Maipú, delivery tortas Maipú, despacho pastelería Maipú, delivery dulces Maipú',
   alternates: { canonical: 'https://galdi.cl/delivery-maipu' },
 };
@@ -49,7 +49,7 @@ const jsonLd = {
       // vivo ni queden obsoletos si businessSchema() cambia en el futuro.
       url: 'https://galdi.cl/delivery-maipu',
       description:
-        'Pastelería artesanal en Maipú con delivery de tortas, empanadas, pan artesanal, cumpleaños y cóctel. Despacho según distancia, con opción de pago online.',
+        'Pastelería artesanal en Maipú con delivery de tortas, empanadas, cumpleaños y cóctel. Despacho según distancia, con opción de pago online.',
     }),
     {
       '@type': 'FAQPage',
