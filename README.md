@@ -115,6 +115,7 @@ galdi-nextjs/
 - Seobility Enlazado de la página: **82%** — fixes de enlazado interno desplegados 20-07-2026 (ver Jornada 20-07-2026 abajo), pendiente re-medir
 - Rich Results Test: **3 elementos válidos** (FAQPage, Empresas locales, Organización)
 - Google Search Console: sin errores críticos
+- Reindexación solicitada en GSC el 22-09-2026: home, /tortas-maipu, /arma-tu-torta.
 - Sitemap y robots.txt activos
 - GA4 activo (G-LW81BNRRFP)
 - 10+ landing pages SEO con JSON-LD
@@ -228,8 +229,8 @@ npm run start   # preview producción local
 - [ ] **Costeo real de Empanada de Queso en Masa de Milhojas** — costo/energia/logistica/mdo copiados como placeholder de Empanada de Queso frita (masa distinta, costo real de hojaldre sin determinar). Ajustar cuando se tenga el costeo real.
 - [ ] **components/Servicios.tsx es código huérfano** — no está importado en ningún lugar del repo (confirmado 04-08-2026), evaluar eliminarlo
 - [ ] **prod-empanada.webp sobredimensionado** — 2400×1792px sin variante responsive (`sizes`), ahora es LCP de la home vía el bloque estacional del Hero; revisar/optimizar si la ponderación se vuelve permanente
-- [ ] **Evaluar cambio de title del home** — se dejó fuera a propósito el 04-08-2026 para poder medir el efecto de la description por separado
-- [ ] **Revisar "tortas en maipu"** (posición 11,1, CTR 3%) vs "tortas maipú" (posición 7,0, CTR 10,7%) en Search Console
+- [x] **Evaluar cambio de title del home** — se dejó fuera a propósito el 04-08-2026 para poder medir el efecto de la description por separado. 22-09-2026: title cambiado a "Pastelería Artesanal y Tortas en Maipú | Galdi" (commit `433041d`).
+- [x] **Revisar "tortas en maipu"** (posición 11,1, CTR 3%) vs "tortas maipú" (posición 7,0, CTR 10,7%) en Search Console. 22-09-2026: resuelto. "tortas en maipu" pasó de pos 11,1 / CTR 3% a pos 4,47 / CTR 6,36%. Quien rankea es el home, no /tortas-maipu. Se acepta así; no forzar la página dedicada.
 
 ### Bloque 3 — SEO estructural (diagnóstico 04-08-2026)
 
@@ -252,8 +253,8 @@ npm run start   # preview producción local
   principal es el resultado web, no el Local Pack
 - Descripción del perfil corregida el 04-08 (sin distribución a
   almacenes, comunas alineadas con el sitio)
-- [ ] **PENDIENTE:** configurar Horario especial para feriados,
-  especialmente 18-19 de septiembre
+- [x] **Horario especial para feriados 18-19 de septiembre** — VENCIDO sin ejecutar (revisado 22-09-2026). No hay constancia de que se configurara.
+- [ ] **Configurar Horario especial en Google Business Profile antes de cada feriado relevante** (18-19 de septiembre, Navidad, Año Nuevo, 1 de mayo). Recurrente: revisar con 2 semanas de anticipación. Responsable: Claudio.
 
 **Próximo paso del Bloque 3:**
 - [ ] Revisar GSC → Rendimiento → 3 meses → pestaña PÁGINAS
@@ -386,6 +387,17 @@ incorrecto (ej. "Maipú" → "Maip�"), aunque el dato en disco esté
 de archivo directa en vez de `print()` de Unicode para verificar
 contenido con tildes.
 
+### Pendientes abiertos — cierre 22-09-2026
+
+- [ ] Medir las porciones reales que rinde cada talla de torta (S/M/L/XL) con corte en bloques. Prioridad alta: afecta a toda la línea, no solo a Arma tu Torta. Responsables: cocina y socias.
+- [ ] Avisar a quien atiende WhatsApp que el precio del mensaje de Arma tu Torta es el vigente (recargo sin azúcar añadida calculado por composición).
+- [ ] Bloque "Algunos de nuestros trabajos" en /tortas-bodas-maipu con 3 casos reales (foto + ficha: pisos, invitados, sabor, estilo). Agregar sin reemplazar el contenido que rankea. Imágenes WebP ≤80 KB, carga diferida, alt descriptivo. Estructura como lista de datos para sumar casos sin rediseñar.
+- [ ] Protocolo de fotos de tortas de novia en cocina: fotografiar antes de salir del local, luz natural, fondo neutro fijo, 3 tomas (frontal, detalle, corte), anotar pisos/invitados/sabor/estilo en el momento.
+- [ ] Subir las 3 fotos de tortas de novia a Google Business Profile y crear el producto "Torta de bodas" con enlace a /tortas-bodas-maipu.
+- [ ] Actualizar reviewCount en lib/businessSchema.ts (hoy 72 hardcodeado) con la cifra real de GBP.
+- [ ] Confirmar que el Hero de Fiestas Patrias se revirtió (prod-empanada.webp ya no debe ser LCP del home).
+- [ ] Medir el title del home no antes del 20-10-2026, comparando períodos de igual duración en modo Comparar de GSC.
+
 ### Administrativos / Externos
 - [ ] **Estatuto societario Galdi** — modificación portal RES en curso:
   - Paso 3: subir documentos (acta notaría Repertorio 494 + cert. vigencia)
@@ -412,6 +424,7 @@ contenido con tildes.
 
 ## 📋 Historial de jornadas (resumen)
 
+- **22-09-2026** — Arma tu Torta: variante sin azúcar añadida por composición, con nombres explícitos en cards/resumen/WhatsApp y Mantequilla de Maní excluida (4fe91e5, 45c2dcb, 1b9a000) · Documentación de la jornada y Ruyed corregido a registro histórico, no benchmark local (fc6457d, c7954e1) · Evaluación GSC (07-08 al 19-09) y title del home cambiado a "Pastelería Artesanal y Tortas en Maipú | Galdi" (433041d)
 - **06-08-2026** — Fix GSC "La reseña tiene varias puntuaciones agregadas":
   eliminado aggregateRating duplicado en JSON-LD (mismo @id emitido por
   layout.tsx y por las 11 landings). businessSchema() ahora devuelve solo
