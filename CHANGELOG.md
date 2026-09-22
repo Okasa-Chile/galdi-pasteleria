@@ -5,6 +5,54 @@ proyecto, consultar README.md.
 
 ---
 
+## Jornada 22-09-2026 (continuación) — Evaluación GSC + title del home
+
+**Contexto:** evaluación de Google Search Console del período 07-08 al
+19-09-2026, sobre dos frentes: el title del home y una auditoría de
+`/matrimonios-maipu`.
+
+**Title del home** (`app/layout.tsx`) — cambiado de "Galdi — Pastelería
+Artesanal en Maipú" (37 caracteres) a "Pastelería Artesanal y Tortas en
+Maipú | Galdi" (46 caracteres), aplicado también al `og:title` y al
+`twitter:title`. La `description`, el `og:description` y el
+`twitter:description` **no se tocaron** — la description se cambió el
+04-08-2026 y se está midiendo por separado. Motivo: el title anterior no
+mencionaba "Tortas", pese a que el home ya rankea para "tortas maipu"
+(pos 4,68) y "tortas en maipu" (pos 4,47, CTR 6,36%); el nuevo title
+agrega esa palabra sin sacrificar "Pastelería" ni "Maipú", que sostienen
+"pasteleria maipu" (CTR 4,2%, pos 5,46, objetivo CTR 5,8-8,3%) y "la
+mejor pastelería en maipú" (CTR 10%, pos 2,12).
+
+**Auditoría de `/matrimonios-maipu`** — 950 impresiones, CTR 1,05%, pos
+14,45, con impresiones de consultas ajenas a los servicios de Galdi
+("decoración matrimonio maipú", "invitaciones matrimonio maipú",
+"cotillón maipú", "autos matrimonio maipú", etc., todas con 0 clics). Se
+revisó línea por línea `app/matrimonios-maipu/page.tsx` (metadata,
+JSON-LD, FAQ, servicios, alt de imágenes) buscando esos términos: la
+única coincidencia es "decoración", siempre referida a la decoración de
+la torta de novios, no a decoración de eventos. **No hay contenido que
+acotar** — las impresiones ajenas vienen de que Google asocia
+temáticamente cualquier página bien posicionada para "matrimonio Maipú"
+con la categoría amplia de planificación de bodas, no de coincidencia
+de palabras en la página. Sin cambios en la página; se evalúa solo por
+las consultas de torta de novios, banquetería y cóctel, no por su CTR
+global.
+
+**Otras observaciones de la evaluación (sin acción):**
+- Marca "galdi": pos 4,99 en GSC, pero la búsqueda manual en Santiago
+  (22-09) la muestra primera, seguida de GBP, Facebook e Instagram. El
+  promedio lo arrastran búsquedas de "galdi" con otra intención (hay un
+  resultado de Spotify).
+- "torta bodas maipú": 0 clics web en pos 2,48, pero la búsqueda manual
+  muestra a Galdi primero en el bloque de fichas (GBP) y dos veces en
+  orgánico (`/tortas-bodas-maipu` primero y luego el home). Los clics
+  se van a la ficha de GBP.
+
+**Próxima medición:** no antes de 4 semanas desde el deploy del title,
+comparando períodos de igual duración.
+
+---
+
 ## Jornada 22-09-2026 — Arma tu Torta: variante sin azúcar añadida por composición
 
 **Contexto:** el toggle "sin azúcar" con recargo fijo por talla (Sesión

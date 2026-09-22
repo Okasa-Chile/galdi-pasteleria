@@ -119,6 +119,14 @@ galdi-nextjs/
 - GA4 activo (G-LW81BNRRFP)
 - 10+ landing pages SEO con JSON-LD
 
+#### Línea base de medición — 22-09-2026 (GSC, 07-08 al 19-09-2026)
+- Title del home cambiado el 22-09-2026 de "Galdi — Pastelería Artesanal en Maipú" a "Pastelería Artesanal y Tortas en Maipú | Galdi". La description NO se tocó (vigente desde el 04-08).
+- Consultas a vigilar en el home: "pasteleria maipu" CTR 4,2%, pos 5,46 (objetivo CTR 5,8-8,3%); "la mejor pastelería en maipú" CTR 10%, pos 2,12 (no debe caer); "tortas maipu" pos 4,68; "tortas en maipu" pos 4,47, CTR 6,36%.
+- /matrimonios-maipu: 950 imp, CTR 1,05%, pos 14,45. CTR diluido por consultas de intención ajena ("decoración/invitaciones/cotillón/autos matrimonio maipú") que la página no menciona; se evalúa solo por consultas de torta de novios, banquetería y cóctel, no por su CTR global. Sin intervención.
+- Marca "galdi": pos 4,99 en GSC, pero la búsqueda manual en Santiago (22-09) la muestra primera, seguida de GBP, Facebook e Instagram. El promedio lo arrastran búsquedas de "galdi" con otra intención (hay un resultado de Spotify). Sin acción.
+- "torta bodas maipú": 0 clics web en pos 2,48, pero la búsqueda manual muestra a Galdi primero en el bloque de fichas (GBP) y dos veces en orgánico (/tortas-bodas-maipu primero y luego el home). Los clics se van a la ficha de GBP. Sin acción.
+- Próxima medición del title: no antes de 4 semanas desde el deploy, comparando períodos de igual duración.
+
 ### Google Business Profile
 - Reseñas actuales: **72** (todas ⭐⭐⭐⭐⭐) · Nota promedio: **5.0**
 - Áreas de servicio: Maipú, Cerrillos, Pudahuel
