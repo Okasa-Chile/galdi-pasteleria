@@ -10,9 +10,9 @@ export const VARIANTES = [
 ];
 
 export const BASES = [
-  { id: 'bizcocho',  nombre: 'Bizcocho',  imagen: '/images/arma-tu-torta/base-bizcocho.webp',  desc: 'Miga aireada y esponjosa. Base clásica para toda ocasión.', sinAzucar: true, intensivo: false },
+  { id: 'bizcocho',  nombre: 'Bizcocho',  nombreSinAzucar: 'Bizcocho sin azúcar añadida',  imagen: '/images/arma-tu-torta/base-bizcocho.webp',  desc: 'Miga aireada y esponjosa. Base clásica para toda ocasión.', sinAzucar: true, intensivo: false },
   { id: 'hojarasca', nombre: 'Hojarasca', imagen: '/images/arma-tu-torta/base-hojarasca.webp', desc: 'Capas crocantes y mantequilladas. Carácter y textura propios.', sinAzucar: true, intensivo: false },
-  { id: 'panqueque', nombre: 'Panqueque', imagen: '/images/arma-tu-torta/base-panqueque.webp',  desc: 'Finas láminas delicadas apiladas. Elegancia en cada corte.', sinAzucar: true, intensivo: false },
+  { id: 'panqueque', nombre: 'Panqueque', nombreSinAzucar: 'Panqueque sin azúcar añadida',  imagen: '/images/arma-tu-torta/base-panqueque.webp',  desc: 'Finas láminas delicadas apiladas. Elegancia en cada corte.', sinAzucar: true, intensivo: false },
 ];
 
 export const RELLENOS = [

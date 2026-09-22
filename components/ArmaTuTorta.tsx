@@ -286,12 +286,12 @@ export default function ArmaTuTorta() {
     !tamanio                  ? 5 : 6;
 
   const varianteSeleccionada      = VARIANTES.find(v => v.id === variante);
-  const baseSeleccionada          = BASES.find(b => b.id === base);
+  const baseSeleccionada          = conNombreVariante(BASES.filter(b => b.id === base), sinAzucar)[0];
   const rellenosSeleccionados     = conNombreVariante(RELLENOS.filter(r => rellenos.includes(r.id)), sinAzucar);
   const decoracionesSeleccionadas = conNombreVariante(DECORACIONES.filter(d => decoraciones.includes(d.id)), sinAzucar);
   const tamanioSeleccionado       = TAMANIOS.find(t => t.id === tamanio);
 
-  const basesDisponibles          = BASES.filter(b => !sinAzucar || b.sinAzucar);
+  const basesDisponibles          = conNombreVariante(BASES.filter(b => !sinAzucar || b.sinAzucar), sinAzucar);
   const rellenosDisponibles       = conNombreVariante(RELLENOS.filter(r => !sinAzucar || r.sinAzucar), sinAzucar);
   const decoracionesDisponibles   = conNombreVariante(DECORACIONES.filter(d => !sinAzucar || d.sinAzucar), sinAzucar);
 
