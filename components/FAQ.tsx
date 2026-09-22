@@ -24,8 +24,8 @@ const faqs = [
     a: 'Para eventos con 20 o más personas preparamos una cotización personalizada según el tipo de preparación, la cantidad y la modalidad de entrega (retiro en Maipú o despacho al lugar del evento). Escríbenos con la fecha, el número de invitados y el tipo de servicio que necesitas — coffee break, mesa dulce, cóctel, matrimonio — y te enviamos la propuesta dentro de 24 horas hábiles.',
   },
   {
-    q: '¿Hacen tortas para celíacos o diabéticos?',
-    a: 'Consultamos caso a caso. Para celíacos, evaluamos la preparación según el tipo de torta solicitada, ya que nuestra cocina no es libre de gluten por defecto y existe riesgo de contaminación cruzada — algo que siempre informamos con honestidad. Para personas diabéticas o con restricción de azúcar, podemos preparar versiones con endulzante alternativo en varias de nuestras tortas. Lo importante es que nos cuentes la necesidad con anticipación para ver qué opciones son viables sin comprometer el resultado.',
+    q: '¿Hacen tortas para celíacos o sin azúcar añadida?',
+    a: 'Consultamos caso a caso. Para celíacos, evaluamos la preparación según el tipo de torta solicitada, ya que nuestra cocina no es libre de gluten por defecto y existe riesgo de contaminación cruzada — algo que siempre informamos con honestidad. Para quienes buscan reducir el consumo de azúcar, podemos preparar varias de nuestras tortas como producto sin azúcar añadida, endulzadas con alulosa. Lo importante es que nos cuentes la necesidad con anticipación para ver qué opciones son viables sin comprometer el resultado.',
   },
   {
     q: '¿Puedo ir a buscar el pedido o solo hacen despacho?',

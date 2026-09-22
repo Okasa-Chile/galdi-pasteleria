@@ -28,8 +28,8 @@ const faqs = [
     a: 'Sí, entregamos en Maipú, Cerrillos, Pudahuel y Estación Central. También puedes retirar en nuestro local.',
   },
   {
-    q: '¿Tienen opción sin azúcar?',
-    a: 'Sí, ofrecemos versión con alulosa para quienes buscan reducir el consumo de azúcar, apta para diabéticos y dietas bajas en azúcar.',
+    q: '¿Tienen opción sin azúcar añadida?',
+    a: 'Sí, nuestras tortas Arma tu Torta tienen una variante sin azúcar añadida, endulzada con alulosa, ideal para quienes buscan reducir el consumo de azúcar.',
   },
 ];
 

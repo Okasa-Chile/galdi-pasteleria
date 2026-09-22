@@ -5,6 +5,64 @@ proyecto, consultar README.md.
 
 ---
 
+## Jornada 22-09-2026 — Arma tu Torta: variante sin azúcar añadida por composición
+
+**Contexto:** el toggle "sin azúcar" con recargo fijo por talla (Sesión
+15-06-2026) no reflejaba que unos rellenos/decoraciones encarecen más su
+versión sin azúcar que otros (ej. manjar sin azúcar vs. crema pastelera
+sin azúcar). Se reemplazó por un recargo calculado según la composición
+real elegida.
+
+**Nuevo paso 1 — Variante:**
+- Antes de la base, el cliente elige "Con azúcar" o "Sin azúcar añadida
+  (endulzada con alulosa)". Pasos renumerados: base 2, rellenos 3,
+  decoración 4, tamaño 5, resumen 6
+- `sinAzucar` pasa de estado independiente (toggle en el paso de tamaño)
+  a derivarse de la variante elegida en el paso 1
+- El árbol de bases/rellenos/decoraciones se filtra según la variante:
+  Ganache de Chocolate (relleno), Frutas en Conserva (relleno) y Ganache
+  (decoración) no tienen versión sin azúcar y solo aparecen en el camino
+  con azúcar
+
+**Matriz de disponibilidad:** cada ítem de BASES/RELLENOS/DECORACIONES
+ahora tiene `sinAzucar` (existe versión sin azúcar) e `intensivo`
+(su versión sin azúcar encarece más la torta).
+
+**Recargo sin azúcar añadida por composición** — estudio de mercado
+sept-2026 (Ruyed, La Colonia, precios de manjar sin azúcar y alulosa
+como insumos), reemplaza el recargo fijo `precioSinAzucar` por talla:
+- `RECARGO_SIN_AZUCAR` con componente base + relleno + decoración por
+  talla (S/M/L/XL)
+- El recargo de relleno/decoración se aplica en proporción a cuántos de
+  los elegidos son "intensivos", no por conteo — tres rellenos reparten
+  el mismo volumen, así que un manjar entre tres rellenos pesa 1/3, no
+  lo mismo que ser el único relleno
+- Precio final = precio con azúcar de la talla + recargo, redondeado
+  hacia arriba al múltiplo de $500
+- Cada `TamanioCard` muestra el precio ya calculado con la composición
+  elegida; el resumen añade una línea con el recargo aplicado
+
+**Texto "apto para diabéticos" corregido** — la promesa de aptitud para
+diabéticos (afirmación médica que Galdi no puede respaldar) se reemplazó
+por "producto sin azúcar añadida" en los 3 archivos donde aparecía:
+`components/ArmaTuTorta.tsx` (descripción de la variante), `components/FAQ.tsx`
+(pregunta "¿Hacen tortas para celíacos o diabéticos?" → "...o sin azúcar
+añadida?", respuesta reescrita) y `app/tortas-maipu/page.tsx` (FAQ "¿Tienen
+opción sin azúcar?" → "...sin azúcar añadida?", respuesta reescrita).
+Unificada la mención "sin azúcar" como "sin azúcar añadida" en los textos
+visibles del producto.
+
+**Corrección a la nota de la Sesión 15-06-2026** ("Posicionamiento
+competitivo Arma tu Torta sin azúcar": *vs Ruyed (alulosa, Providencia):
+-10% a -13% más accesibles*): esa comparación enfrentó el precio de la
+talla S (6 a 8 porciones) de Galdi contra la torta de 10 porciones de
+Ruyed — tallas distintas, no comparables directamente. Calculado por
+porción, la tabla de precios de esa sesión estaba **por encima** de
+Ruyed en las cuatro tallas, no por debajo. La nota original queda
+intacta como registro histórico; esta entrada la corrige.
+
+---
+
 ## Jornada 04-08-2026 — Auditoría de credibilidad (Bloque 2) + retiro distribución a almacenes
 
 **Contexto:** cierre del Bloque 2 de la auditoría de credibilidad iniciada

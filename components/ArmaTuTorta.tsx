@@ -3,6 +3,10 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import {
+  VARIANTES, BASES, RELLENOS, DECORACIONES, TAMANIOS,
+  fmtPrecio, precioTamanio,
+} from '@/lib/armaTuTortaPricing';
 
 // ── Paleta ───────────────────────────────────────────────────────────────────
 const P = {
@@ -20,50 +24,10 @@ const P = {
   white:      '#fffaf5',
 };
 
-// ── Datos ────────────────────────────────────────────────────────────────────
-
-const BASES = [
-  { id: 'bizcocho',  nombre: 'Bizcocho',  imagen: '/images/arma-tu-torta/base-bizcocho.webp',  desc: 'Miga aireada y esponjosa. Base clásica para toda ocasión.' },
-  { id: 'hojarasca', nombre: 'Hojarasca', imagen: '/images/arma-tu-torta/base-hojarasca.webp', desc: 'Capas crocantes y mantequilladas. Carácter y textura propios.' },
-  { id: 'panqueque', nombre: 'Panqueque', imagen: '/images/arma-tu-torta/base-panqueque.webp',  desc: 'Finas láminas delicadas apiladas. Elegancia en cada corte.' },
-];
-
-const RELLENOS = [
-  { id: 'manjar',              nombre: 'Manjar',                imagen: '/images/arma-tu-torta/relleno-manjar.webp',              desc: 'Dulce de leche artesanal, denso y caramelizado.' },
-  { id: 'crema-pastelera',     nombre: 'Crema Pastelera',       imagen: '/images/arma-tu-torta/relleno-crema-pastelera.webp',     desc: 'Crema de vainilla sedosa, equilibrada y tradicional.' },
-  { id: 'ganache-chocolate',   nombre: 'Ganache de Chocolate',  imagen: '/images/arma-tu-torta/relleno-ganache-chocolate.webp',   desc: 'Chocolate semi-amargo emulsionado. Intensidad pura.' },
-  { id: 'mermelada-guinda',    nombre: 'Mermelada de Guinda',   imagen: '/images/arma-tu-torta/relleno-mermelada-guinda.webp',    desc: 'Acidez frutal que equilibra los rellenos dulces.' },
-  { id: 'mermelada-frambuesa', nombre: 'Mermelada de Frambuesa',imagen: '/images/arma-tu-torta/relleno-mermelada-frambuesa.webp', desc: 'Frambuesa fresca en conserva, vibrante y aromática.' },
-  { id: 'mermelada-durazno',   nombre: 'Mermelada de Durazno',  imagen: '/images/arma-tu-torta/relleno-mermelada-durazno.webp',   desc: 'Suave y perfumada, ideal para maridajes delicados.' },
-  { id: 'crema-lucuma',        nombre: 'Crema de Lúcuma',       imagen: '/images/arma-tu-torta/relleno-crema-lucuma.webp',        desc: 'Fruta andina transformada en crema noble y singular.' },
-  { id: 'frutas-conserva',     nombre: 'Frutas en Conserva',    imagen: '/images/arma-tu-torta/relleno-frutas-conserva.webp',     desc: 'Piña y durazno en almíbar, jugosos y refrescantes.' },
-  { id: 'mantequilla-mani',    nombre: 'Mantequilla de Maní',   imagen: '/images/arma-tu-torta/relleno-mantequilla-mani.webp',    desc: 'Textura cremosa con notas tostadas. Sorprendente.' },
-  { id: 'crema-diplomatica',   nombre: 'Crema Diplomática',     imagen: '/images/arma-tu-torta/relleno-crema-diplomatica.webp',   desc: 'Pastelera aligerada con chantilly, suave y aterciopelada.' },
-];
-
-const DECORACIONES = [
-  { id: 'merengue',         nombre: 'Merengue',           imagen: '/images/arma-tu-torta/deco-merengue.webp',         desc: 'Picos blancos y livianos. Acabado clásico.' },
-  { id: 'chantilly',        nombre: 'Chantilly',           imagen: '/images/arma-tu-torta/deco-chantilly.webp',        desc: 'Crema batida sedosa y delicada.' },
-  { id: 'ganache',          nombre: 'Ganache',             imagen: '/images/arma-tu-torta/deco-ganache.webp',          desc: 'Cobertura brillante con caída artística.' },
-  { id: 'manjar-deco',      nombre: 'Manjar',              imagen: '/images/arma-tu-torta/deco-manjar.webp',           desc: 'Hilos de dulce de leche. Acabado cálido.' },
-  { id: 'frutas-frescas',   nombre: 'Frutas Frescas',      imagen: '/images/arma-tu-torta/deco-frutas-frescas.webp',   desc: 'Fresas y frambuesas naturales. Frescura y color.' },
-  { id: 'trozos-chocolate', nombre: 'Trozos de Chocolate', imagen: '/images/arma-tu-torta/deco-trozos-chocolate.webp', desc: 'Escamas de chocolate oscuro. Textura y profundidad.' },
-  { id: 'crema-diplomatica-deco', nombre: 'Crema Diplomática', imagen: '/images/arma-tu-torta/deco-crema-diplomatica.webp', desc: 'Rosetones livianos y sedosos, textura delicada.' },
-];
-
-const TAMANIOS = [
-  { id: 'S',  nombre: 'S',  desc: '6 a 8 porciones',   detalle: 'Celebraciones íntimas.',  precio: 22000, precioSinAzucar: 26000 },
-  { id: 'M',  nombre: 'M',  desc: '10 a 12 porciones', detalle: 'Reuniones familiares.',   precio: 30000, precioSinAzucar: 36000 },
-  { id: 'L',  nombre: 'L',  desc: '16 a 20 porciones', detalle: 'Eventos medianos.',       precio: 42000, precioSinAzucar: 52000 },
-  { id: 'XL', nombre: 'XL', desc: '25 a 30 porciones', detalle: 'Grandes celebraciones.',  precio: 55000, precioSinAzucar: 70000 },
-];
-
-const fmtPrecio = (n: number) => '$' + n.toLocaleString('es-CL');
-
 // ── Subcomponente: Card opción ────────────────────────────────────────────────
 
 function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, priority = false }: {
-  opcion: { id: string; nombre: string; imagen: string; desc: string };
+  opcion: { id: string; nombre: string; imagen?: string; icono?: string; desc: string };
   seleccionada: boolean;
   onSelect: () => void;
   deshabilitada?: boolean;
@@ -99,7 +63,21 @@ function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, pri
         overflow: 'hidden',
         border: seleccionada ? `1.5px solid ${P.roseDark}` : `1.5px solid ${P.creamDark}`,
       }}>
-        <Image src={opcion.imagen} alt={opcion.nombre} fill style={{ objectFit: 'cover' }} priority={priority} />
+        {opcion.imagen ? (
+          <Image src={opcion.imagen} alt={opcion.nombre} fill style={{ objectFit: 'cover' }} priority={priority} />
+        ) : (
+          <div style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 'clamp(2.5rem, 6vw, 4rem)',
+            background: `linear-gradient(135deg, ${P.peach}55, ${P.rose}55)`,
+          }}>
+            {opcion.icono}
+          </div>
+        )}
       </div>
       <div>
         <p style={{
@@ -143,8 +121,9 @@ function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, pri
 
 // ── Subcomponente: Card tamaño ────────────────────────────────────────────────
 
-function TamanioCard({ tamanio, seleccionado, onSelect }: {
+function TamanioCard({ tamanio, precio, seleccionado, onSelect }: {
   tamanio: { id: string; nombre: string; desc: string; detalle: string };
+  precio: number;
   seleccionado: boolean;
   onSelect: () => void;
 }) {
@@ -193,6 +172,15 @@ function TamanioCard({ tamanio, seleccionado, onSelect }: {
         opacity: 0.7,
       }}>
         {tamanio.detalle}
+      </p>
+      <p style={{
+        fontFamily: 'var(--font-serif)',
+        fontSize: '1.05rem',
+        color: seleccionado ? P.roseDark : P.brownMid,
+        margin: '0.5rem 0 0',
+        fontWeight: 500,
+      }}>
+        {fmtPrecio(precio)}
       </p>
     </button>
   );
@@ -280,28 +268,57 @@ function Paso({ numero, titulo, subtitulo, completado, activo, children }: {
 // ── Componente principal ──────────────────────────────────────────────────────
 
 export default function ArmaTuTorta() {
+  const [variante, setVariante]                 = useState<string | null>(null);
   const [base, setBase]                         = useState<string | null>(null);
   const [rellenos, setRellenos]                 = useState<string[]>([]);
   const [rellenosConfirmados, setRellenosConf]  = useState(false);
   const [decoraciones, setDecoraciones]         = useState<string[]>([]);
   const [decoracionesConfirmadas, setDecoConf]  = useState(false);
   const [tamanio, setTamanio]                   = useState<string | null>(null);
-  const [sinAzucar, setSinAzucar]               = useState(false);
+
+  const sinAzucar = variante === 'sin-azucar';
 
   const pasoActivo =
-    !base                     ? 1 :
-    !rellenosConfirmados      ? 2 :
-    !decoracionesConfirmadas  ? 3 :
-    !tamanio                  ? 4 : 5;
+    !variante                 ? 1 :
+    !base                     ? 2 :
+    !rellenosConfirmados      ? 3 :
+    !decoracionesConfirmadas  ? 4 :
+    !tamanio                  ? 5 : 6;
 
+  const varianteSeleccionada      = VARIANTES.find(v => v.id === variante);
   const baseSeleccionada          = BASES.find(b => b.id === base);
   const rellenosSeleccionados     = RELLENOS.filter(r => rellenos.includes(r.id));
   const decoracionesSeleccionadas = DECORACIONES.filter(d => decoraciones.includes(d.id));
   const tamanioSeleccionado       = TAMANIOS.find(t => t.id === tamanio);
 
+  const basesDisponibles          = BASES.filter(b => !sinAzucar || b.sinAzucar);
+  const rellenosDisponibles       = RELLENOS.filter(r => !sinAzucar || r.sinAzucar);
+  const decoracionesDisponibles   = DECORACIONES.filter(d => !sinAzucar || d.sinAzucar);
+
   const precioFinal = tamanioSeleccionado
-    ? (sinAzucar ? tamanioSeleccionado.precioSinAzucar : tamanioSeleccionado.precio)
+    ? precioTamanio(tamanioSeleccionado, sinAzucar, rellenosSeleccionados, decoracionesSeleccionadas)
     : 0;
+
+  const recargoSinAzucarAplicado = sinAzucar && tamanioSeleccionado
+    ? precioFinal - tamanioSeleccionado.precio
+    : 0;
+
+  function resetDesdeVariante() {
+    setBase(null);
+    setRellenos([]);
+    setRellenosConf(false);
+    setDecoraciones([]);
+    setDecoConf(false);
+    setTamanio(null);
+  }
+
+  function resetDesdeBase() {
+    setRellenos([]);
+    setRellenosConf(false);
+    setDecoraciones([]);
+    setDecoConf(false);
+    setTamanio(null);
+  }
 
   function toggleRelleno(id: string) {
     setRellenos(prev =>
@@ -321,12 +338,12 @@ export default function ArmaTuTorta() {
 
   const mensajeWsp = encodeURIComponent(
     `Hola Galdi 🎂 Quiero encargar una torta personalizada:\n\n` +
+    `🍬 Variante: ${varianteSeleccionada?.nombre ?? ''}\n` +
     `🍰 Base: ${baseSeleccionada?.nombre ?? ''}\n` +
     `🍯 Relleno: ${rellenosSeleccionados.map(r => r.nombre).join(', ')}\n` +
     `✨ Decoración: ${decoracionesSeleccionadas.map(d => d.nombre).join(', ')}\n` +
-    `📏 Tamaño: ${tamanioSeleccionado?.nombre ?? ''} (${tamanioSeleccionado?.desc ?? ''})\n` +
-    (sinAzucar ? `🌿 Versión sin azúcar (alulosa)\n` : '') +
-    `\n💰 Valor referencial: ${fmtPrecio(precioFinal)}\n\n` +
+    `📏 Tamaño: ${tamanioSeleccionado?.nombre ?? ''} (${tamanioSeleccionado?.desc ?? ''})\n\n` +
+    `💰 Valor referencial: ${fmtPrecio(precioFinal)}\n\n` +
     `¿Me confirman disponibilidad y fecha de entrega?`
   );
 
@@ -454,26 +471,25 @@ export default function ArmaTuTorta() {
       {/* ── Configurador ── */}
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '3rem 5% 6rem' }}>
 
-        {/* PASO 1 — Base */}
-        <Paso numero={1} titulo="Elige tu base" subtitulo="La arquitectura de tu torta" completado={pasoActivo > 1} activo={pasoActivo === 1}>
+        {/* PASO 1 — Variante */}
+        <Paso numero={1} titulo="Con o sin azúcar añadida" subtitulo="Elige el punto de partida de tu torta" completado={pasoActivo > 1} activo={pasoActivo === 1}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '1.5rem' }}>
-            {BASES.map(b => (
+            {VARIANTES.map(v => (
               <OpcionCard
-                key={b.id}
-                opcion={b}
-                seleccionada={base === b.id}
-                onSelect={() => { setBase(b.id); setRellenos([]); setRellenosConf(false); setDecoraciones([]); setDecoConf(false); setTamanio(null); }}
-              priority={b.id === 'panqueque'}
+                key={v.id}
+                opcion={v}
+                seleccionada={variante === v.id}
+                onSelect={() => { setVariante(v.id); resetDesdeVariante(); }}
               />
             ))}
           </div>
         </Paso>
 
-        {pasoActivo > 1 && baseSeleccionada && (
+        {pasoActivo > 1 && varianteSeleccionada && (
           <div style={{ paddingLeft: '54px', marginTop: '-1.25rem', marginBottom: '2rem' }}>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: P.brownLight, margin: 0 }}>
-              Base: <span style={{ color: P.brownMid, fontWeight: 600 }}>{baseSeleccionada.nombre}</span>
-              <button onClick={() => { setBase(null); setRellenos([]); setRellenosConf(false); setDecoraciones([]); setDecoConf(false); setTamanio(null); }}
+              Variante: <span style={{ color: P.brownMid, fontWeight: 600 }}>{varianteSeleccionada.nombre}</span>
+              <button onClick={() => { setVariante(null); resetDesdeVariante(); }}
                 style={{ background: 'none', border: 'none', color: P.roseDark, fontSize: '0.62rem', cursor: 'pointer', marginLeft: '0.6rem', textDecoration: 'underline', fontFamily: 'var(--font-sans)' }}>
                 cambiar
               </button>
@@ -493,10 +509,49 @@ export default function ArmaTuTorta() {
           </div>
         )}
 
-        {/* PASO 2 — Rellenos */}
-        <Paso numero={2} titulo="Elige el relleno" subtitulo="Puedes elegir hasta 3 sabores" completado={pasoActivo > 2} activo={pasoActivo === 2}>
+        {/* PASO 2 — Base */}
+        <Paso numero={2} titulo="Elige tu base" subtitulo="La arquitectura de tu torta" completado={pasoActivo > 2} activo={pasoActivo === 2}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '1.5rem' }}>
+            {basesDisponibles.map(b => (
+              <OpcionCard
+                key={b.id}
+                opcion={b}
+                seleccionada={base === b.id}
+                onSelect={() => { setBase(b.id); resetDesdeBase(); }}
+              priority={b.id === 'panqueque'}
+              />
+            ))}
+          </div>
+        </Paso>
+
+        {pasoActivo > 2 && baseSeleccionada && (
+          <div style={{ paddingLeft: '54px', marginTop: '-1.25rem', marginBottom: '2rem' }}>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: P.brownLight, margin: 0 }}>
+              Base: <span style={{ color: P.brownMid, fontWeight: 600 }}>{baseSeleccionada.nombre}</span>
+              <button onClick={() => { setBase(null); resetDesdeBase(); }}
+                style={{ background: 'none', border: 'none', color: P.roseDark, fontSize: '0.62rem', cursor: 'pointer', marginLeft: '0.6rem', textDecoration: 'underline', fontFamily: 'var(--font-sans)' }}>
+                cambiar
+              </button>
+            </p>
+          </div>
+        )}
+
+        {pasoActivo > 2 && (
+          <div style={{ position: 'relative', margin: '0.5rem 0 2rem', textAlign: 'center' }}>
+            <Image
+              src="/images/arma-tu-torta/flor-separador.webp"
+              alt=""
+              width={320}
+              height={60}
+              style={{ opacity: 0.4, display: 'inline-block' }}
+            />
+          </div>
+        )}
+
+        {/* PASO 3 — Rellenos */}
+        <Paso numero={3} titulo="Elige el relleno" subtitulo="Puedes elegir hasta 3 sabores" completado={pasoActivo > 3} activo={pasoActivo === 3}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '0.75rem' }}>
-            {RELLENOS.map(r => (
+            {rellenosDisponibles.map(r => (
               <OpcionCard
                 key={r.id}
                 opcion={r}
@@ -533,7 +588,7 @@ export default function ArmaTuTorta() {
           </div>
         </Paso>
 
-        {pasoActivo > 2 && rellenosSeleccionados.length > 0 && (
+        {pasoActivo > 3 && rellenosSeleccionados.length > 0 && (
           <div style={{ paddingLeft: '54px', marginTop: '-1.25rem', marginBottom: '2rem' }}>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: P.brownLight, margin: 0 }}>
               Relleno: <span style={{ color: P.brownMid, fontWeight: 600 }}>{rellenosSeleccionados.map(r => r.nombre).join(', ')}</span>
@@ -545,14 +600,14 @@ export default function ArmaTuTorta() {
           </div>
         )}
 
-        {pasoActivo > 2 && (
+        {pasoActivo > 3 && (
           <div style={{ borderTop: `1px solid ${P.creamDark}`, marginBottom: '2.5rem' }} />
         )}
 
-        {/* PASO 3 — Decoraciones */}
-        <Paso numero={3} titulo="Elige la decoración" subtitulo="Puedes elegir hasta 2 opciones" completado={pasoActivo > 3} activo={pasoActivo === 3}>
+        {/* PASO 4 — Decoraciones */}
+        <Paso numero={4} titulo="Elige la decoración" subtitulo="Puedes elegir hasta 2 opciones" completado={pasoActivo > 4} activo={pasoActivo === 4}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '0.75rem' }}>
-            {DECORACIONES.map(d => (
+            {decoracionesDisponibles.map(d => (
               <OpcionCard
                 key={d.id}
                 opcion={d}
@@ -589,7 +644,7 @@ export default function ArmaTuTorta() {
           </div>
         </Paso>
 
-        {pasoActivo > 3 && decoracionesSeleccionadas.length > 0 && (
+        {pasoActivo > 4 && decoracionesSeleccionadas.length > 0 && (
           <div style={{ paddingLeft: '54px', marginTop: '-1.25rem', marginBottom: '2rem' }}>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: P.brownLight, margin: 0 }}>
               Decoración: <span style={{ color: P.brownMid, fontWeight: 600 }}>{decoracionesSeleccionadas.map(d => d.nombre).join(', ')}</span>
@@ -601,17 +656,18 @@ export default function ArmaTuTorta() {
           </div>
         )}
 
-        {pasoActivo > 3 && (
+        {pasoActivo > 4 && (
           <div style={{ borderTop: `1px solid ${P.creamDark}`, marginBottom: '2.5rem' }} />
         )}
 
-        {/* PASO 4 — Tamaño */}
-        <Paso numero={4} titulo="Elige el tamaño" subtitulo="¿Para cuántas personas?" completado={pasoActivo > 4} activo={pasoActivo === 4}>
+        {/* PASO 5 — Tamaño */}
+        <Paso numero={5} titulo="Elige el tamaño" subtitulo="¿Para cuántas personas?" completado={pasoActivo > 5} activo={pasoActivo === 5}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '0.75rem' }}>
             {TAMANIOS.map(t => (
               <TamanioCard
                 key={t.id}
                 tamanio={t}
+                precio={precioTamanio(t, sinAzucar, rellenosSeleccionados, decoracionesSeleccionadas)}
                 seleccionado={tamanio === t.id}
                 onSelect={() => setTamanio(t.id)}
               />
@@ -619,57 +675,12 @@ export default function ArmaTuTorta() {
           </div>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', color: P.brownLight, marginTop: '0.75rem', fontStyle: 'italic' }}>
             * Las porciones son aproximadas y varían según el corte.
+            {sinAzucar && ' El precio ya incluye el recargo sin azúcar añadida según tu relleno y decoración elegidos.'}
           </p>
-
-          {/* Toggle sin azúcar */}
-          <div
-            onClick={() => setSinAzucar(!sinAzucar)}
-            style={{
-              marginTop: '1.25rem',
-              padding: '1rem 1.1rem',
-              borderRadius: '14px',
-              border: sinAzucar ? `2px solid ${P.roseDark}` : `1.5px solid ${P.creamDark}`,
-              background: sinAzucar ? `linear-gradient(135deg, ${P.rose}22, ${P.peach}22)` : P.white,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.85rem',
-              transition: 'all 0.25s ease',
-              boxShadow: sinAzucar ? `0 2px 12px ${P.rose}33` : 'none',
-            }}
-          >
-            <div style={{
-              width: '22px',
-              height: '22px',
-              borderRadius: '6px',
-              border: sinAzucar ? `2px solid ${P.roseDark}` : `1.5px solid ${P.brownLight}`,
-              background: sinAzucar ? P.roseDark : 'transparent',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-              transition: 'all 0.2s ease',
-            }}>
-              {sinAzucar && <span style={{ color: P.white, fontSize: '0.85rem', fontWeight: 700, lineHeight: 1 }}>✓</span>}
-            </div>
-            <div style={{ flex: 1 }}>
-              <p style={{ fontFamily: 'var(--font-serif)', fontSize: '0.95rem', color: P.brown, margin: 0, fontWeight: sinAzucar ? 600 : 400 }}>
-                🌿 Sin azúcar
-                {tamanioSeleccionado && (
-                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: P.roseDark, marginLeft: '0.5rem', fontWeight: 600 }}>
-                    +{fmtPrecio(tamanioSeleccionado.precioSinAzucar - tamanioSeleccionado.precio)}
-                  </span>
-                )}
-              </p>
-              <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: P.brownLight, margin: '0.2rem 0 0', lineHeight: 1.5 }}>
-                Endulzado con alulosa, el endulzante más noble. Apto para diabéticos y dietas bajas en azúcar.
-              </p>
-            </div>
-          </div>
         </Paso>
 
         {/* ── Resumen final ── */}
-        {pasoActivo === 5 && tamanioSeleccionado && (
+        {pasoActivo === 6 && tamanioSeleccionado && (
           <div style={{
             background: `linear-gradient(160deg, ${P.white} 0%, ${P.peach}33 100%)`,
             border: `1.5px solid ${P.rose}`,
@@ -716,6 +727,7 @@ export default function ArmaTuTorta() {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: '0.75rem', marginBottom: '1.75rem' }}>
               {[
+                { label: 'Variante',   valor: varianteSeleccionada?.nombre },
                 { label: 'Base',       valor: baseSeleccionada?.nombre },
                 { label: 'Relleno',    valor: rellenosSeleccionados.map(r => r.nombre).join(' · ') },
                 { label: 'Decoración', valor: decoracionesSeleccionadas.map(d => d.nombre).join(' · ') },
@@ -761,7 +773,7 @@ export default function ArmaTuTorta() {
               </p>
               {sinAzucar && (
                 <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: P.roseDark, margin: '0.5rem 0 0', fontStyle: 'italic' }}>
-                  🌿 Incluye opción sin azúcar (alulosa)
+                  🌿 Incluye recargo sin azúcar añadida: +{fmtPrecio(recargoSinAzucarAplicado)}
                 </p>
               )}
               <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', color: P.brownLight, margin: '0.75rem 0 0', lineHeight: 1.6 }}>
@@ -799,7 +811,7 @@ export default function ArmaTuTorta() {
             </a>
 
             <button
-              onClick={() => { setBase(null); setRellenos([]); setRellenosConf(false); setDecoraciones([]); setDecoConf(false); setTamanio(null); }}
+              onClick={() => { setVariante(null); setBase(null); setRellenos([]); setRellenosConf(false); setDecoraciones([]); setDecoConf(false); setTamanio(null); }}
               style={{
                 display: 'block',
                 margin: '1.1rem auto 0',
