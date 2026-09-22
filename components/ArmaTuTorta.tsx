@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
   VARIANTES, BASES, RELLENOS, DECORACIONES, TAMANIOS,
-  fmtPrecio, precioTamanio,
+  fmtPrecio, precioTamanio, conNombreVariante,
 } from '@/lib/armaTuTortaPricing';
 
 // ── Paleta ───────────────────────────────────────────────────────────────────
@@ -287,13 +287,13 @@ export default function ArmaTuTorta() {
 
   const varianteSeleccionada      = VARIANTES.find(v => v.id === variante);
   const baseSeleccionada          = BASES.find(b => b.id === base);
-  const rellenosSeleccionados     = RELLENOS.filter(r => rellenos.includes(r.id));
-  const decoracionesSeleccionadas = DECORACIONES.filter(d => decoraciones.includes(d.id));
+  const rellenosSeleccionados     = conNombreVariante(RELLENOS.filter(r => rellenos.includes(r.id)), sinAzucar);
+  const decoracionesSeleccionadas = conNombreVariante(DECORACIONES.filter(d => decoraciones.includes(d.id)), sinAzucar);
   const tamanioSeleccionado       = TAMANIOS.find(t => t.id === tamanio);
 
   const basesDisponibles          = BASES.filter(b => !sinAzucar || b.sinAzucar);
-  const rellenosDisponibles       = RELLENOS.filter(r => !sinAzucar || r.sinAzucar);
-  const decoracionesDisponibles   = DECORACIONES.filter(d => !sinAzucar || d.sinAzucar);
+  const rellenosDisponibles       = conNombreVariante(RELLENOS.filter(r => !sinAzucar || r.sinAzucar), sinAzucar);
+  const decoracionesDisponibles   = conNombreVariante(DECORACIONES.filter(d => !sinAzucar || d.sinAzucar), sinAzucar);
 
   const precioFinal = tamanioSeleccionado
     ? precioTamanio(tamanioSeleccionado, sinAzucar, rellenosSeleccionados, decoracionesSeleccionadas)

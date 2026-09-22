@@ -16,26 +16,26 @@ export const BASES = [
 ];
 
 export const RELLENOS = [
-  { id: 'manjar',              nombre: 'Manjar',                imagen: '/images/arma-tu-torta/relleno-manjar.webp',              desc: 'Dulce de leche artesanal, denso y caramelizado.', sinAzucar: true, intensivo: true },
-  { id: 'crema-pastelera',     nombre: 'Crema Pastelera',       imagen: '/images/arma-tu-torta/relleno-crema-pastelera.webp',     desc: 'Crema de vainilla sedosa, equilibrada y tradicional.', sinAzucar: true, intensivo: false },
+  { id: 'manjar',              nombre: 'Manjar',                nombreSinAzucar: 'Manjar sin azúcar añadida',                imagen: '/images/arma-tu-torta/relleno-manjar.webp',              desc: 'Dulce de leche artesanal, denso y caramelizado.', sinAzucar: true, intensivo: true },
+  { id: 'crema-pastelera',     nombre: 'Crema Pastelera',       nombreSinAzucar: 'Crema Pastelera sin azúcar añadida',       imagen: '/images/arma-tu-torta/relleno-crema-pastelera.webp',     desc: 'Crema de vainilla sedosa, equilibrada y tradicional.', sinAzucar: true, intensivo: false },
   { id: 'ganache-chocolate',   nombre: 'Ganache de Chocolate',  imagen: '/images/arma-tu-torta/relleno-ganache-chocolate.webp',   desc: 'Chocolate semi-amargo emulsionado. Intensidad pura.', sinAzucar: false, intensivo: false },
-  { id: 'mermelada-guinda',    nombre: 'Mermelada de Guinda',   imagen: '/images/arma-tu-torta/relleno-mermelada-guinda.webp',    desc: 'Acidez frutal que equilibra los rellenos dulces.', sinAzucar: true, intensivo: true },
-  { id: 'mermelada-frambuesa', nombre: 'Mermelada de Frambuesa',imagen: '/images/arma-tu-torta/relleno-mermelada-frambuesa.webp', desc: 'Frambuesa fresca en conserva, vibrante y aromática.', sinAzucar: true, intensivo: true },
-  { id: 'mermelada-durazno',   nombre: 'Mermelada de Durazno',  imagen: '/images/arma-tu-torta/relleno-mermelada-durazno.webp',   desc: 'Suave y perfumada, ideal para maridajes delicados.', sinAzucar: true, intensivo: true },
-  { id: 'crema-lucuma',        nombre: 'Crema de Lúcuma',       imagen: '/images/arma-tu-torta/relleno-crema-lucuma.webp',        desc: 'Fruta andina transformada en crema noble y singular.', sinAzucar: true, intensivo: false },
+  { id: 'mermelada-guinda',    nombre: 'Mermelada de Guinda',   nombreSinAzucar: 'Mermelada de Guinda sin azúcar añadida',   imagen: '/images/arma-tu-torta/relleno-mermelada-guinda.webp',    desc: 'Acidez frutal que equilibra los rellenos dulces.', sinAzucar: true, intensivo: true },
+  { id: 'mermelada-frambuesa', nombre: 'Mermelada de Frambuesa',nombreSinAzucar: 'Mermelada de Frambuesa sin azúcar añadida',imagen: '/images/arma-tu-torta/relleno-mermelada-frambuesa.webp', desc: 'Frambuesa fresca en conserva, vibrante y aromática.', sinAzucar: true, intensivo: true },
+  { id: 'mermelada-durazno',   nombre: 'Mermelada de Durazno',  nombreSinAzucar: 'Mermelada de Durazno sin azúcar añadida',  imagen: '/images/arma-tu-torta/relleno-mermelada-durazno.webp',   desc: 'Suave y perfumada, ideal para maridajes delicados.', sinAzucar: true, intensivo: true },
+  { id: 'crema-lucuma',        nombre: 'Crema de Lúcuma',       nombreSinAzucar: 'Crema de Lúcuma sin azúcar añadida',       imagen: '/images/arma-tu-torta/relleno-crema-lucuma.webp',        desc: 'Fruta andina transformada en crema noble y singular.', sinAzucar: true, intensivo: false },
   { id: 'frutas-conserva',     nombre: 'Frutas en Conserva',    imagen: '/images/arma-tu-torta/relleno-frutas-conserva.webp',     desc: 'Piña y durazno en almíbar, jugosos y refrescantes.', sinAzucar: false, intensivo: false },
-  { id: 'mantequilla-mani',    nombre: 'Mantequilla de Maní',   imagen: '/images/arma-tu-torta/relleno-mantequilla-mani.webp',    desc: 'Textura cremosa con notas tostadas. Sorprendente.', sinAzucar: true, intensivo: false },
-  { id: 'crema-diplomatica',   nombre: 'Crema Diplomática',     imagen: '/images/arma-tu-torta/relleno-crema-diplomatica.webp',   desc: 'Pastelera aligerada con chantilly, suave y aterciopelada.', sinAzucar: true, intensivo: false },
+  { id: 'mantequilla-mani',    nombre: 'Mantequilla de Maní',   imagen: '/images/arma-tu-torta/relleno-mantequilla-mani.webp',    desc: 'Textura cremosa con notas tostadas. Sorprendente.', sinAzucar: false, intensivo: false },
+  { id: 'crema-diplomatica',   nombre: 'Crema Diplomática',     nombreSinAzucar: 'Crema Diplomática sin azúcar añadida',     imagen: '/images/arma-tu-torta/relleno-crema-diplomatica.webp',   desc: 'Pastelera aligerada con chantilly, suave y aterciopelada.', sinAzucar: true, intensivo: false },
 ];
 
 export const DECORACIONES = [
-  { id: 'merengue',         nombre: 'Merengue',           imagen: '/images/arma-tu-torta/deco-merengue.webp',         desc: 'Picos blancos y livianos. Acabado clásico.', sinAzucar: true, intensivo: true },
-  { id: 'chantilly',        nombre: 'Chantilly',           imagen: '/images/arma-tu-torta/deco-chantilly.webp',        desc: 'Crema batida sedosa y delicada.', sinAzucar: true, intensivo: false },
+  { id: 'merengue',         nombre: 'Merengue',           nombreSinAzucar: 'Merengue sin azúcar añadida',           imagen: '/images/arma-tu-torta/deco-merengue.webp',         desc: 'Picos blancos y livianos. Acabado clásico.', sinAzucar: true, intensivo: true },
+  { id: 'chantilly',        nombre: 'Chantilly',           nombreSinAzucar: 'Chantilly sin azúcar añadida',          imagen: '/images/arma-tu-torta/deco-chantilly.webp',        desc: 'Crema batida sedosa y delicada.', sinAzucar: true, intensivo: false },
   { id: 'ganache',          nombre: 'Ganache',             imagen: '/images/arma-tu-torta/deco-ganache.webp',          desc: 'Cobertura brillante con caída artística.', sinAzucar: false, intensivo: false },
-  { id: 'manjar-deco',      nombre: 'Manjar',              imagen: '/images/arma-tu-torta/deco-manjar.webp',           desc: 'Hilos de dulce de leche. Acabado cálido.', sinAzucar: true, intensivo: true },
+  { id: 'manjar-deco',      nombre: 'Manjar',              nombreSinAzucar: 'Manjar sin azúcar añadida',             imagen: '/images/arma-tu-torta/deco-manjar.webp',           desc: 'Hilos de dulce de leche. Acabado cálido.', sinAzucar: true, intensivo: true },
   { id: 'frutas-frescas',   nombre: 'Frutas Frescas',      imagen: '/images/arma-tu-torta/deco-frutas-frescas.webp',   desc: 'Fresas y frambuesas naturales. Frescura y color.', sinAzucar: true, intensivo: false },
-  { id: 'trozos-chocolate', nombre: 'Trozos de Chocolate', imagen: '/images/arma-tu-torta/deco-trozos-chocolate.webp', desc: 'Escamas de chocolate oscuro. Textura y profundidad.', sinAzucar: true, intensivo: true },
-  { id: 'crema-diplomatica-deco', nombre: 'Crema Diplomática', imagen: '/images/arma-tu-torta/deco-crema-diplomatica.webp', desc: 'Rosetones livianos y sedosos, textura delicada.', sinAzucar: true, intensivo: false },
+  { id: 'trozos-chocolate', nombre: 'Trozos de Chocolate', nombreSinAzucar: 'Trozos de Chocolate sin azúcar añadida',imagen: '/images/arma-tu-torta/deco-trozos-chocolate.webp', desc: 'Escamas de chocolate oscuro. Textura y profundidad.', sinAzucar: true, intensivo: true },
+  { id: 'crema-diplomatica-deco', nombre: 'Crema Diplomática', nombreSinAzucar: 'Crema Diplomática sin azúcar añadida', imagen: '/images/arma-tu-torta/deco-crema-diplomatica.webp', desc: 'Rosetones livianos y sedosos, textura delicada.', sinAzucar: true, intensivo: false },
 ];
 
 export const TAMANIOS = [
@@ -58,6 +58,16 @@ export const RECARGO_SIN_AZUCAR: Record<string, { base: number; relleno: number;
 };
 
 export const fmtPrecio = (n: number) => '$' + n.toLocaleString('es-CL');
+
+// En el camino sin azúcar añadida, los ítems con nombreSinAzucar muestran ese
+// nombre (cards, resumen, mensaje de WhatsApp) en vez del nombre normal.
+export function conNombreVariante<T extends { nombre: string; nombreSinAzucar?: string }>(
+  items: T[],
+  sinAzucar: boolean
+): T[] {
+  if (!sinAzucar) return items;
+  return items.map(item => item.nombreSinAzucar ? { ...item, nombre: item.nombreSinAzucar } : item);
+}
 
 export function calcularRecargoSinAzucar(
   tamanioId: string,
