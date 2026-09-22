@@ -5,6 +5,104 @@ proyecto, consultar README.md.
 
 ---
 
+## Jornada 22-09-2026 (cierre) — Retiro de pan, mínimo de empanadas y fixes de móvil
+
+**Contexto:** cierre de la jornada del 22-09-2026. Se retomaron y cerraron
+cuatro frentes de trabajo, cada uno con su propio commit:
+
+**Fix de desborde horizontal en móvil (05fcf76)** — `.footer-links` sin
+`flex-wrap` forzaba ~459 px de ancho en el layout viewport, arrastrando
+al header `position: fixed` y dejando el menú hamburguesa fuera de
+pantalla en Android/Brave (~390 px). Se agregó `flex-wrap: wrap` al
+footer. Ver también 43b146b (documentación del cierre y alt de
+Hero.tsx sin campaña de Fiestas Patrias).
+
+**Hero: safe-area y contraste (3fdcca0)** — tres fixes visuales del
+Hero: `height: 100vh` reemplazado por `100svh` real en móvil (con
+fallback vía dos declaraciones CSS, ya que `min-height` no activa
+cuando `100svh < 100vh`); puntos del carrusel con más área táctil
+(padding 0.5rem→0.75rem) y separados del borde inferior con
+`calc(2rem + env(safe-area-inset-bottom, 0px))`; hamburguesa con fondo
+semitransparente y líneas más gruesas para verse sobre cualquier slide,
+con la transformación del ícono X recalculada geométricamente
+(traslación pre-rotación de 8/√2 ≈ 5.66px).
+
+**Headers de caché en Firebase Hosting (fd165b7)** — el HTML no tenía
+`Cache-Control`, así que los navegadores cacheaban páginas viejas tras
+cada deploy. Se agregó `no-cache` para `**/*.html`, `/` y las rutas sin
+extensión (`**/!(*.*)`, necesario porque `cleanUrls: true` hace que el
+navegador pida `/gestion` sin `.html`), e `immutable` de un año para
+`/_next/static/**` y las imágenes con hash.
+
+**Arma tu Torta en móvil (77f2a70)** — flores decorativas del hero
+ocultas en `≤768px` (se probó primero con transparencia + tamaño
+reducido, pero se veían parches beige sobre el fondo café oscuro real
+del hero en Brave/Android; se optó por ocultarlas y mantener los
+archivos originales sin cambios en escritorio); tarjetas de variante
+del paso 1 reescritas a layout de fila (ícono 56×56 + texto) para caber
+sin scroll; botón "Armar otra torta" reescrito de texto subrayado a
+botón outline con `window.confirm()` antes de borrar la selección y
+scroll automático de vuelta al paso 1.
+
+**Retiro de pan del sitio y mínimo de empanadas (4a194ad)** — decisión
+de negocio: Galdi ya no vende pan, y el pedido mínimo real de empanadas
+es 4 unidades, no una docena (el `unidad: "docena"` de Firestore para
+los 7 productos de empanadas se corrige aparte, manualmente, desde
+`/gestion`; no se tocó Firestore desde código).
+
+- `/productos`: retirada la pestaña "Pan" de `productosDelivery` en
+  `ServicioDetalle.tsx` (3 productos: Pan Amasado, Tortilla con
+  Chicharrones, Ciabatta) y su regla de mínimo en `getLabelMinimo`. La
+  regla de mínimo de "Tortilla con Chicharrones" (mín. 2 un) se dejó
+  intacta a propósito: sigue viva en `productosAlmacenes['Pan']`, el
+  canal B2B ya inalcanzable (`B2B_ACTIVO = false`); limpiarlo queda
+  para un refactor aparte del canal muerto completo.
+- `/pan-artesanal-maipu` eliminada; `firebase.json` gana un redirect
+  301 hacia `/productos` (con y sin barra final). Sacada del sitemap y
+  del enlace oculto del Footer.
+- Hero: retirada la slide de `SlideshowPanes.webp` (quedan 6). El
+  archivo de imagen no se borró.
+- Metadata sin "pan": `app/layout.tsx` (description, keywords,
+  twitter.description), `app/productos/layout.tsx` (title y
+  description), H1 oculto de `app/productos/page.tsx`,
+  `app/delivery-maipu/page.tsx` (metadata y JSON-LD),
+  `lib/businessSchema.ts` (description del nodo canónico
+  `GALDI_BUSINESS`). El campo `GALDI_BUSINESS.name`
+  ("Galdi SPA - Pastelería- Panadería - Eventos") NO se tocó a
+  propósito: debe coincidir con el nombre de la ficha de Google
+  Business Profile (pendiente registrado en README, sección
+  "Pendientes abiertos").
+- `components/FAQ.tsx`: quitada la mención de "pan" en la respuesta de
+  anticipación de pedidos.
+- No se tocó: pan como ingrediente en `/coctel-maipu` (canapés) y
+  `/coffee-break-maipu` (sándwiches); `components/Catalogo.tsx`
+  (huérfano, sin imports fuera de sí mismo, mismo bug de "docena" para
+  empanadas en su badge — reportado, no corregido); archivos internos
+  de gestión.
+- `/empanadas-maipu`: pedido mínimo reescrito a "4 unidades",
+  conservando la docena como forma válida de compra para eventos en al
+  menos dos lugares visibles (ventaja destacada y FAQ del mínimo).
+  Distribución a almacenes retirada de metadata, ventajas y una FAQ
+  completa (la sección "Empanadas para eventos y almacenes" pasó a
+  "Empanadas para eventos"), porque ese canal se retiró en agosto.
+  Keywords de metadata sin tocar ("empanadas por docena Maipú" se deja
+  porque no afecta ranking).
+- **Description del home** (`app/layout.tsx`): se quitó "y pan
+  artesanal" el mismo día en que se evaluó y cerró la medición de esa
+  description (vigente desde el 04-08-2026, ver README). Como el title
+  del home también cambió hoy (433041d), la próxima medición
+  (20-10-2026) evalúa ambos cambios juntos, no por separado.
+
+**Verificación:** build limpio (`rm -rf .next out` antes de reconstruir,
+porque `next build` con `output: 'export'` no borra automáticamente
+salidas de rutas eliminadas — quedó una carpeta `out/pan-artesanal-maipu`
+de un build anterior que causaba un error de tipos al compilar) ·
+Playwright headless a 390px: `/productos` sin la pestaña "Pan",
+`scrollWidth === clientWidth`; home con Hero de 6 slides · Producción:
+`curl -sI https://galdi.cl/pan-artesanal-maipu` → `301` → `/productos`.
+
+---
+
 ## Jornada 22-09-2026 (continuación) — Evaluación GSC + title del home
 
 **Contexto:** evaluación de Google Search Console del período 07-08 al

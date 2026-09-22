@@ -121,12 +121,12 @@ galdi-nextjs/
 - 10+ landing pages SEO con JSON-LD
 
 #### Línea base de medición — 22-09-2026 (GSC, 07-08 al 19-09-2026)
-- Title del home cambiado el 22-09-2026 de "Galdi — Pastelería Artesanal en Maipú" a "Pastelería Artesanal y Tortas en Maipú | Galdi". La description NO se tocó (vigente desde el 04-08).
+- Title del home cambiado el 22-09-2026 de "Galdi — Pastelería Artesanal en Maipú" a "Pastelería Artesanal y Tortas en Maipú | Galdi" (433041d). La description, vigente desde el 04-08-2026, cumplió sus 4 semanas de medición y fue evaluada el mismo 22-09-2026 (ver arriba); se ajustó ese mismo día (retiro de "y pan artesanal", commit 4a194ad) porque Galdi dejó de vender pan. Como title y description cambian el mismo día, la próxima medición (20-10-2026) evalúa ambos juntos, no por separado.
 - Consultas a vigilar en el home: "pasteleria maipu" CTR 4,2%, pos 5,46 (objetivo CTR 5,8-8,3%); "la mejor pastelería en maipú" CTR 10%, pos 2,12 (no debe caer); "tortas maipu" pos 4,68; "tortas en maipu" pos 4,47, CTR 6,36%.
 - /matrimonios-maipu: 950 imp, CTR 1,05%, pos 14,45. CTR diluido por consultas de intención ajena ("decoración/invitaciones/cotillón/autos matrimonio maipú") que la página no menciona; se evalúa solo por consultas de torta de novios, banquetería y cóctel, no por su CTR global. Sin intervención.
 - Marca "galdi": pos 4,99 en GSC, pero la búsqueda manual en Santiago (22-09) la muestra primera, seguida de GBP, Facebook e Instagram. El promedio lo arrastran búsquedas de "galdi" con otra intención (hay un resultado de Spotify). Sin acción.
 - "torta bodas maipú": 0 clics web en pos 2,48, pero la búsqueda manual muestra a Galdi primero en el bloque de fichas (GBP) y dos veces en orgánico (/tortas-bodas-maipu primero y luego el home). Los clics se van a la ficha de GBP. Sin acción.
-- Próxima medición del title: no antes de 4 semanas desde el deploy, comparando períodos de igual duración.
+- Próxima medición de title + description: no antes de 4 semanas desde el deploy (20-10-2026), comparando períodos de igual duración.
 
 ### Google Business Profile
 - Reseñas actuales: **72** (todas ⭐⭐⭐⭐⭐) · Nota promedio: **5.0**
@@ -396,7 +396,8 @@ contenido con tildes.
 - [ ] Subir las 3 fotos de tortas de novia a Google Business Profile y crear el producto "Torta de bodas" con enlace a /tortas-bodas-maipu.
 - [ ] Actualizar reviewCount en lib/businessSchema.ts (hoy 72 hardcodeado) con la cifra real de GBP.
 - [x] Confirmar que el Hero de Fiestas Patrias se revirtió — confirmado 22-09-2026: ya estaba revertido el 21-09 (99b92e9 Hero, bba0c4b /empanadas-maipu). La empanada que sigue en el carrusel es la slide permanente, no la campaña.
-- [ ] Medir el title del home no antes del 20-10-2026, comparando períodos de igual duración en modo Comparar de GSC.
+- [ ] Medir el title y la description del home no antes del 20-10-2026 (ambos cambiaron el mismo día: title en 433041d, description en 4a194ad), comparando períodos de igual duración en modo Comparar de GSC.
+- [ ] Revisar el nombre de la ficha de Google Business Profile ("Galdi SPA - Pastelería- Panadería - Eventos"): incluye categorías en el nombre (contrario a las directrices de Google) y menciona "Panadería", que ya no se vende. Cambiarlo puede requerir reverificación. Si se cambia, actualizar después GALDI_BUSINESS.name para mantener la coherencia NAP. Responsable: Claudio.
 
 ### Administrativos / Externos
 - [ ] **Estatuto societario Galdi** — modificación portal RES en curso:
@@ -424,7 +425,7 @@ contenido con tildes.
 
 ## 📋 Historial de jornadas (resumen)
 
-- **22-09-2026** — Arma tu Torta: variante sin azúcar añadida por composición, con nombres explícitos en cards/resumen/WhatsApp y Mantequilla de Maní excluida (4fe91e5, 45c2dcb, 1b9a000) · Documentación de la jornada y Ruyed corregido a registro histórico, no benchmark local (fc6457d, c7954e1) · Evaluación GSC (07-08 al 19-09) y title del home cambiado a "Pastelería Artesanal y Tortas en Maipú | Galdi" (433041d) · Fix del desborde horizontal en móvil: los enlaces del footer sin flex-wrap forzaban ~459 px de ancho y dejaban el menú hamburguesa fuera de pantalla en el home y /productos (05fcf76)
+- **22-09-2026** — Arma tu Torta: variante sin azúcar añadida por composición, con nombres explícitos en cards/resumen/WhatsApp y Mantequilla de Maní excluida (4fe91e5, 45c2dcb, 1b9a000) · Documentación de la jornada y Ruyed corregido a registro histórico, no benchmark local (fc6457d, c7954e1) · Evaluación GSC (07-08 al 19-09) y title del home cambiado a "Pastelería Artesanal y Tortas en Maipú | Galdi" (433041d) · Fix del desborde horizontal en móvil: los enlaces del footer sin flex-wrap forzaban ~459 px de ancho y dejaban el menú hamburguesa fuera de pantalla en el home y /productos (05fcf76) · Hero: 100svh real en móvil, puntos del carrusel con más área táctil y respeto al safe-area, hamburguesa legible sobre cualquier slide (3fdcca0) · Headers de caché en Firebase Hosting: HTML sin caché (incluye rutas con cleanUrls sin extensión), estáticos con hash cacheados como immutable (fd165b7) · Arma tu Torta en móvil: flores decorativas ocultas para no tapar el texto del hero, tarjetas del paso 1 compactas sin scroll, botón "Armar otra torta" visible con confirmación y scroll al reiniciar (77f2a70) · Retiro de pan del sitio (Galdi ya no lo vende): pestaña Pan fuera de /productos, página /pan-artesanal-maipu redirigida 301 a /productos, slide del Hero y menciones en metadata/JSON-LD/Footer/FAQ retiradas; pedido mínimo de empanadas actualizado a 4 unidades (antes decía "por docena", que ya no reflejaba el mínimo real) y FAQ/copy de distribución a almacenes eliminada por retiro de ese canal (4a194ad) · Description del home ajustada el mismo día para sacar "y pan artesanal" (incluida en 4a194ad) · Documentación de esta jornada (este commit)
 - **06-08-2026** — Fix GSC "La reseña tiene varias puntuaciones agregadas":
   eliminado aggregateRating duplicado en JSON-LD (mismo @id emitido por
   layout.tsx y por las 11 landings). businessSchema() ahora devuelve solo
