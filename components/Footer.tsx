@@ -34,6 +34,7 @@ export default function Footer() {
         .footer-links {
           display: flex;
           gap: 1.5rem;
+          flex-wrap: wrap;
           list-style: none;
           margin: 0;
           padding: 0;
