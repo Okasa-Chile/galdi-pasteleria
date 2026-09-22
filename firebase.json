@@ -23,6 +23,38 @@
     "rewrites": [
       { "source": "/gestion", "destination": "/gestion/index.html" },
       { "source": "/gestion/**", "destination": "/gestion/index.html" }
+    ],
+    "headers": [
+      {
+        "source": "/_next/static/**",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        ]
+      },
+      {
+        "source": "**/*.@(webp|png|jpg|jpeg|ico|svg|gif)",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=86400" }
+        ]
+      },
+      {
+        "source": "**/*.html",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache" }
+        ]
+      },
+      {
+        "source": "/",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache" }
+        ]
+      },
+      {
+        "source": "**/!(*.*)",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache" }
+        ]
+      }
     ]
   }
 }
