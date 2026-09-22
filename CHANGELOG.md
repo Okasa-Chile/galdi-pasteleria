@@ -20,13 +20,31 @@ real elegida.
 - `sinAzucar` pasa de estado independiente (toggle en el paso de tamaño)
   a derivarse de la variante elegida en el paso 1
 - El árbol de bases/rellenos/decoraciones se filtra según la variante:
-  Ganache de Chocolate (relleno), Frutas en Conserva (relleno) y Ganache
-  (decoración) no tienen versión sin azúcar y solo aparecen en el camino
-  con azúcar
+  Ganache de Chocolate (relleno), Frutas en Conserva (relleno),
+  Mantequilla de Maní (relleno) y Ganache (decoración) no tienen versión
+  sin azúcar y solo aparecen en el camino con azúcar
 
 **Matriz de disponibilidad:** cada ítem de BASES/RELLENOS/DECORACIONES
 ahora tiene `sinAzucar` (existe versión sin azúcar) e `intensivo`
 (su versión sin azúcar encarece más la torta).
+
+**Nombres explícitos en la variante** (commits `45c2dcb`, `1b9a000`) —
+los ítems con `nombreSinAzucar` muestran ese nombre en vez del nombre
+normal cuando la variante es sin azúcar añadida: en las cards de
+selección, en el resumen y en el mensaje de WhatsApp, para que cocina
+no confunda el insumo sin azúcar con el normal al leer el pedido:
+- Bases: Bizcocho y Panqueque tienen nombre explícito ("Bizcocho sin
+  azúcar añadida", "Panqueque sin azúcar añadida"); Hojarasca no lo
+  tiene y muestra su nombre normal en ambos caminos
+- Rellenos: los 7 disponibles en el camino sin azúcar (Manjar, Crema
+  Pastelera, Mermelada de Guinda, Mermelada de Frambuesa, Mermelada de
+  Durazno, Crema de Lúcuma, Crema Diplomática) tienen nombre explícito
+- Decoración: de las 6 disponibles en el camino sin azúcar, Merengue,
+  Chantilly, Manjar, Trozos de Chocolate y Crema Diplomática tienen
+  nombre explícito; Frutas Frescas no lo tiene y conserva su nombre
+  normal
+- Implementado como `conNombreVariante()` en `lib/armaTuTortaPricing.ts`
+  — un único punto que cubre cards, resumen y mensaje de WhatsApp
 
 **Recargo sin azúcar añadida por composición** — estudio de mercado
 sept-2026 (Ruyed, La Colonia, precios de manjar sin azúcar y alulosa
@@ -60,6 +78,19 @@ Ruyed — tallas distintas, no comparables directamente. Calculado por
 porción, la tabla de precios de esa sesión estaba **por encima** de
 Ruyed en las cuatro tallas, no por debajo. La nota original queda
 intacta como registro histórico; esta entrada la corrige.
+
+**Pendientes abiertos:**
+- Confirmar con cocina la estabilidad del merengue con alulosa antes de
+  mantenerlo habilitado en el camino sin azúcar.
+- Confirmar si la masa de hojarasca lleva azúcar; si la lleva, requiere
+  nombreSinAzucar.
+- Validar las porciones reales por talla y recalibrar
+  RECARGO_SIN_AZUCAR con los gramajes de /gestion.
+- Revisar los recargos de S y M frente a Ruyed (por porción: S +21%,
+  M +9%).
+- Crear scripts/verify-arma-tu-torta-precios.mjs (importa
+  precioTamanio() y valida la tabla de precios por talla y composición)
+  antes de recalibrar RECARGO_SIN_AZUCAR.
 
 ---
 

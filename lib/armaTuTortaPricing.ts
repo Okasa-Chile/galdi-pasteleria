@@ -1,8 +1,8 @@
-// Datos y lógica de precios de "Arma tu Torta", compartidos entre el
-// componente (components/ArmaTuTorta.tsx) y el script de verificación
-// (scripts/verify-arma-tu-torta-precios.mjs). Se mantienen en un módulo
-// sin JSX para que el script pueda importar precioTamanio() directamente
-// con `node --experimental-strip-types`, sin reimplementar la fórmula.
+// Datos y lógica de precios de "Arma tu Torta", compartidos con el
+// componente (components/ArmaTuTorta.tsx). Se mantienen en un módulo sin
+// JSX para que un futuro script de verificación pueda importar
+// precioTamanio() directamente con `node --experimental-strip-types`,
+// sin reimplementar la fórmula (ver "Pendientes abiertos" en CHANGELOG.md).
 
 export const VARIANTES = [
   { id: 'con-azucar', nombre: 'Con azúcar', icono: '🍰', desc: 'Nuestra receta clásica, con el dulzor tradicional de Galdi.' },
