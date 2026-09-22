@@ -131,17 +131,24 @@ export default function Header() {
         .menu-toggle {
           display: none;
           flex-direction: column;
+          align-items: center;
+          justify-content: center;
           gap: 5px;
-          background: none;
+          background: rgba(0,0,0,0.35);
           border: none;
+          border-radius: 50%;
           cursor: pointer;
-          padding: 4px;
+          width: 44px;
+          height: 44px;
+          padding: 0;
         }
         .menu-toggle span {
           display: block;
-          width: 24px;
-          height: 1.5px;
+          width: 22px;
+          height: 3px;
           background: var(--cream);
+          opacity: 1;
+          border-radius: 1px;
           transition: all 0.3s ease;
         }
         @media (max-width: 768px) {
@@ -260,9 +267,9 @@ export default function Header() {
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Abrir menú"
           >
-            <span style={{ transform: menuOpen ? 'rotate(45deg) translate(4.5px, 4.5px)' : '' }} />
+            <span style={{ transform: menuOpen ? 'rotate(45deg) translate(5.66px, 5.66px)' : '' }} />
             <span style={{ opacity: menuOpen ? 0 : 1 }} />
-            <span style={{ transform: menuOpen ? 'rotate(-45deg) translate(4.5px, -4.5px)' : '' }} />
+            <span style={{ transform: menuOpen ? 'rotate(-45deg) translate(5.66px, -5.66px)' : '' }} />
           </button>
 
         </div>

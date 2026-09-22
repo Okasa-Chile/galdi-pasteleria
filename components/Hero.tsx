@@ -27,6 +27,10 @@ export default function Hero() {
   return (
     <>
     <style>{`
+      .hero-section {
+        height: 100vh;
+        height: 100svh;
+      }
       @media (max-width: 768px) {
         .hero-socias {
           object-position: center 30% !important;
@@ -34,9 +38,8 @@ export default function Hero() {
         }
       }
     `}</style>
-    <section id="inicio" style={{
+    <section id="inicio" className="hero-section" style={{
       position: 'relative',
-      height: '100vh',
       overflow: 'hidden',
     }}>
       {slides.map((slide, i) => {
@@ -144,7 +147,7 @@ export default function Hero() {
       {/* Dots */}
       <div style={{
         position: 'absolute',
-        bottom: '2rem',
+        bottom: 'calc(2rem + env(safe-area-inset-bottom, 0px))',
         left: '50%',
         transform: 'translateX(-50%)',
         display: 'flex',
@@ -164,7 +167,7 @@ export default function Hero() {
               border: 'none',
               cursor: 'pointer',
               transition: 'var(--transition)',
-              padding: '1rem 0.5rem',
+              padding: '1rem 0.75rem',
               margin: '0 2px',
             }}
           />
