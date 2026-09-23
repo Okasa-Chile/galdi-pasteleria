@@ -707,10 +707,9 @@ async function fsLoad() {
         p.energia   = Number(p.energia)  || 0;
         p.logistica = p.logistica !== undefined ? Number(p.logistica) : 30;
         p.margen    = Number(p.margen)   || 0;
-        p.precioS   = Number(p.precioS)  || 0;
-        p.precioM   = Number(p.precioM)  || 0;
-        p.precioL   = Number(p.precioL)  || 0;
-        p.precioXL  = Number(p.precioXL) || 0;
+        ['precioS','precioM','precioL','precioXL'].forEach(k => {
+          if (p[k] !== undefined) p[k] = Number(p[k]) || 0;
+        });
         return p;
       });
       prods.forEach(p=>{if(!p.precio)p.precio=cpx(p);});
