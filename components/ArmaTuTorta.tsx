@@ -294,7 +294,6 @@ export default function ArmaTuTorta() {
     const previo = pasoPrevioRef.current;
     pasoPrevioRef.current = pasoActivo;
     if (pasoActivo <= previo) return;
-    if (!window.matchMedia('(min-width: 769px)').matches) return;
     const el = document.getElementById(pasoActivo === 6 ? 'atg-resumen' : `atg-paso-${pasoActivo}`);
     if (!el) return;
     const altoHeader = document.querySelector('header')?.getBoundingClientRect().height ?? 0;
