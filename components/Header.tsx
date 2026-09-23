@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const navItems: { label: string; id?: string; href?: string }[] = [
   { label: 'Productos', id: 'productos' },
@@ -15,6 +16,9 @@ const navItems: { label: string; id?: string; href?: string }[] = [
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  // Fuera de "/" no hay hero oscuro bajo el header: parte ya en su estado oscuro (se calcula en el render, sin parpadeo).
+  const pathname = usePathname();
+  const oscuro = scrolled || pathname !== '/';
   const [menuOpen, setMenuOpen] = useState(false);
   const [totalItemsCarrito, setTotalItemsCarrito] = useState(0);
 
@@ -180,10 +184,10 @@ export default function Header() {
         zIndex: 500,
         display: 'flex',
         flexDirection: 'column',
-        background: scrolled ? 'rgba(26,15,10,0.93)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(18px)' : 'none',
-        WebkitBackdropFilter: scrolled ? 'blur(18px)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(212,168,83,0.12)' : '1px solid transparent',
+        background: oscuro ? 'rgba(26,15,10,0.93)' : 'transparent',
+        backdropFilter: oscuro ? 'blur(18px)' : 'none',
+        WebkitBackdropFilter: oscuro ? 'blur(18px)' : 'none',
+        borderBottom: oscuro ? '1px solid rgba(212,168,83,0.12)' : '1px solid transparent',
         transition: 'background var(--transition), border-color var(--transition)',
       }}>
 
