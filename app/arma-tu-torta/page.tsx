@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import ArmaTuTorta from '@/components/ArmaTuTorta';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Arma tu Torta | Galdi Pastelería Artesanal Maipú',
@@ -16,8 +17,11 @@ export const metadata: Metadata = {
 
 export default function ArmaTuTortaPage() {
   return (
-    <main style={{ background: '#fdf6ee', minHeight: '100vh' }}>
-      <ArmaTuTorta />
-    </main>
+    <>
+      <main style={{ background: '#fdf6ee', minHeight: '100vh' }}>
+        <ArmaTuTorta />
+      </main>
+      <Footer />
+    </>
   );
 }

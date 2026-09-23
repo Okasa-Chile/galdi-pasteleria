@@ -390,6 +390,8 @@ export default function ArmaTuTorta() {
         overflow: 'hidden',
       }}>
         <style>{`
+          .atg-hero-link:hover .atg-hero-label,
+          .atg-hero-link:focus-visible .atg-hero-label { text-decoration: underline; }
           @media (max-width: 768px) {
             .atg-flor-esquina {
               display: none !important;
@@ -529,7 +531,7 @@ export default function ArmaTuTorta() {
         />
 
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <Link href="/" style={{ textDecoration: 'none' }}>
+          <Link href="/" className="atg-hero-link" style={{ textDecoration: 'none' }}>
             <p className="atg-hero-label" style={{
               fontFamily: 'var(--font-sans)',
               fontSize: '0.65rem',
@@ -979,6 +981,15 @@ export default function ArmaTuTorta() {
               </svg>
               Consultar precio por WhatsApp
             </a>
+
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '0.75rem' }}>
+              <Link href="/productos" style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: P.brownMid, textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+                Ver catálogo
+              </Link>
+              <Link href="/" style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: P.brownMid, textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+                Volver al inicio
+              </Link>
+            </div>
 
             <button
               onClick={armarOtraTorta}
