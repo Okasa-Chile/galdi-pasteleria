@@ -77,6 +77,48 @@ podía agregarse con precio 0.
 autorización expresa y credenciales válidas, con respaldo JSON previo
 de los documentos afectados.
 
+### Arma tu Torta — encuadre de pasos
+
+Commits: `f3dfec0`, `c718a71`, `b480585`, `2713c3a`, `81285bf`, más la
+limpieza del README en `68ad1f8` y `2be5dc8`. Todo en
+`components/ArmaTuTorta.tsx`, con reglas en `@media` (escritorio ≥769px y
+móvil ≤768px por separado; el layout móvil de `77f2a70` se conservó).
+
+- **Escritorio (`f3dfec0`, `c718a71`, `b480585`):** grillas centradas con
+  `flex-wrap` en los pasos 2–4 (con `auto-fit` la última fila incompleta
+  quedaba pegada a la izquierda); sangría de 54px eliminada; hero
+  compacto (~215px); tarjetas con ilustración de ≤210px (imagen de 120px,
+  nombre en 1 línea, descripción en 2) y 5 columnas; resumen final
+  compacto (corona de 56px, los 5 datos en una fila con `flex-wrap`,
+  precio y botón de WhatsApp visibles en 1280×587).
+- **Móvil (`2713c3a`):** solo reglas agregadas en `@media (max-width:
+  768px)`, sin tocar estilos inline. Sin sangría, hero ~222px, pasos 2–4
+  en 2 columnas (imagen cuadrada `contain`, nombre hasta 2 líneas,
+  descripción en 2), barra "Continuar" `sticky` al fondo (con
+  `safe-area-inset-bottom`; muestra el conteo existente, no el formato
+  "Continuar · 2/3", que exigía tocar el JSX), separadores florales de
+  ≤32px y resumen compacto (corona de 48px, datos en 2 columnas).
+- **Scroll automático (`81285bf`):** al avanzar `pasoActivo` (no en el
+  montaje) el paso nuevo sube al inicio con `scroll-margin-top` de
+  16px, en todas las pantallas. Se quitó el filtro `matchMedia('(min-width:
+  769px)')` que lo limitaba a escritorio.
+- **README (`68ad1f8`, `2be5dc8`):** persistencia de checkout marcada
+  resuelta, pendiente del flag ⚠️ de despacho actualizado, y depuración de
+  pendientes obsoletos (Día del Niño, Auditoría Bloque 3, `prod-empanada.webp`).
+
+**Hechos a registrar:**
+- `/arma-tu-torta` **no monta `<Header>`** (solo `/` y `/productos` lo
+  hacen; el layout raíz es solo `{children}`). Por eso el hero no
+  reserva alto de header y el scroll automático usa 16px de margen.
+- El tag **`pre-movil-att`** (`b480585`) marca el estado previo al ajuste
+  móvil, para volver atrás si hiciera falta.
+- Claudio validó visualmente el resultado en escritorio y en móvil.
+
+**Pendientes** (registrados en el README): unificar el rendimiento de la
+talla M (Arma tu Torta "10 a 12 porciones" vs catálogo "14 a 16
+personas"), revisar el plazo "48 horas después de contactarnos" y decidir
+si la página lleva Header.
+
 ---
 
 ## Jornada 22-09-2026 (cierre) — Retiro de pan, mínimo de empanadas y fixes de móvil
