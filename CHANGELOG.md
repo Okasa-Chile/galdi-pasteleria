@@ -5,6 +5,80 @@ proyecto, consultar README.md.
 
 ---
 
+## Jornada 23-09-2026 — Fix de guardado en /gestion, postbuild y precio por talla
+
+Commits: `7512364`, `0bf99d4`, `847565a`, `f10f72d`, `cf3eacf`. Los
+cambios de código de /gestion y de ServicioDetalle están desplegados en
+Hosting (`galdi-web`).
+
+**Bug de guardado del catálogo en /gestion (7512364)** — Causa: en
+`saveProd`, `p` nunca llevaba `id` al editar un producto existente (solo
+la rama de creación asignaba `p.id`), así que
+`fsSaveProd(p.id ? p : prods[prods.length-1])` caía siempre en el
+`else` y escribía el ÚLTIMO producto del arreglo, no el editado. Como
+`getDocs` devuelve por ID de documento, el último es `9` (Kuchen
+Sureño): toda edición reescribía Kuchen Sureño (mismo contenido, solo
+cambiaba su `updateTime`) y el producto editado nunca llegaba a
+Firestore. La pantalla mostraba el valor nuevo porque el arreglo local
+sí se modificaba, y `fsSaveProd` tragaba el error sin avisar. Bug
+presente desde `4d6a155` (27-03-2026); explica por qué la corrección
+docena→unidad de agosto no persistió (`galdi_productos/9` con
+`updateTime` 04-08 coincide con esa sesión). Fix: la edición guarda
+`prods[i]` con su `id` (búsqueda por `String(id)`, válida con id number
+o string), conserva `precio` y ya no lo recalcula, la creación sigue
+asignando precio con `cpx`, las 9 categorías están en el `<select>`,
+fallbacks con `??`, aviso visible si falla el guardado y bloqueo de
+guardar/eliminar en modo respaldo (`DEFAULTS`).
+
+**Validación (solo lectura, contra
+`backups/galdi_productos-2026-09-22.json`)** — Tras editar las 7
+empanadas, se comparó `galdi_productos` en vivo campo por campo: solo
+cambió `unidad` (docena → unidad); precio 2700 (Milhojas 3000); Kuchen
+Sureño sin diferencias reales (solo cambia el orden de claves de
+`costosTalla`). Todos los `value` de `m-uni` y `m-cat` calzan con los
+del backup. Única diferencia inesperada: `precioS/M/L/XL: 0` aparecido
+en Empanada de Queso y Milhojas (ver `f10f72d`).
+
+**Copia de /gestion automatizada (0bf99d4, 847565a)** —
+`scripts/copiar-gestion.mjs` copia `public/gestion/index.html` a
+`out/gestion/index.html` y `_src/gestion-index.html`, enganchado como
+`postbuild` en `package.json` (reemplaza el `cp` manual previo al
+deploy). Verificado: las 3 copias con el mismo SHA256 tras
+`npm run build`. El README mantiene la advertencia de comprobar que
+`out/gestion/index.html` exista antes de deployar. En `847565a` la
+sección "Sistema de delivery por radio de km" (18-08) quedó marcada
+como histórica: el modelo vigente es Haversine + bandas y su
+"PENDIENTE CRÍTICO — Recalibrar tramos" no aplica.
+
+**fsLoad sin `precioX` en 0 (f10f72d)** — La carga normalizaba
+`precioS/M/L/XL = Number(x) || 0` aunque el campo no existiera y el
+spread de `saveProd` lo persistía como 0. Ahora solo se convierten si
+el campo existe. Pendiente: los `precioS/M/L/XL = 0` ya escritos en
+Empanada de Queso (`1785880969439`) y Milhojas (`1790001812148`) siguen
+en Firestore; borrarlos con `deleteField()` (solo esos 4 campos, con
+respaldo previo de los 2 docs) quedó sin ejecutar por falta de permiso.
+Son inertes: `usePreciosGaldi` ya trata 0 como ausente.
+
+**ServicioDetalle (cf3eacf)** — (1) Barra de tabs: `overflowY: 'hidden'`
+en los dos contenedores (sticky de `pageMode` y overlay); `overflow-x:
+auto` fuerza `overflow-y: auto` y el `::after` de `.svc-tab` al hover
+generaba scroll vertical interno. (2) Precio por talla: el selector
+muestra solo tallas con precio > 0 en Firestore; antes eran fijas por
+pestaña (Queques S/M, Pasteles S/M/L, Tortas S/M/L y XL solo en
+Panqueque y Chocolate). Sin fallback al precio base cuando falta
+`precioX` (antes el carrito cobraba el base y el total 0). Helper único
+`precioTallaDe`; `agregar()` rechaza ítems con precio resuelto 0 o
+inexistente. (3) Arma tu Torta (sin doc en Firestore) salió del carrito:
+su tarjeta ahora tiene un enlace "Diseñar" a `/arma-tu-torta`; antes
+podía agregarse con precio 0.
+
+**Regla nueva:** nunca probar escrituras en Firestore sin credenciales
+(ni con PATCH/REST anónimo "de prueba"). Las escrituras solo con
+autorización expresa y credenciales válidas, con respaldo JSON previo
+de los documentos afectados.
+
+---
+
 ## Jornada 22-09-2026 (cierre) — Retiro de pan, mínimo de empanadas y fixes de móvil
 
 **Contexto:** cierre de la jornada del 22-09-2026. Se retomaron y cerraron

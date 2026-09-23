@@ -223,7 +223,7 @@ npm run start   # preview producción local
 - [ ] **Bug persistencia checkout** — `flowCrearOrden` solo pasa 4 campos, revisar qué falta persistir
 - [ ] **PENDIENTE** — Los pedidos con despacho no calculado (error de infraestructura de Google Maps) se marcan con prefijo ⚠️ únicamente en la descripción enviada a Flow, porque `flowConfirmar` no persiste el detalle completo del pedido en Firestore. Esto depende de que alguien lea la descripción en el panel de Flow. Cuando se resuelva la persistencia completa del pedido en Firestore, migrar este flag a un campo propio en `galdi_pedidos`.
 - [ ] **Campaña Día del Niño** (09-08-2026)
-- [ ] **REVERSIÓN Fiestas Patrias post 18-09-2026** — buscar comentarios `FIESTAS PATRIAS 2026` en `app/empanadas-maipu/page.tsx` y `components/Hero.tsx` y restaurar los valores/array originales comentados
+- [ ] **Limpiar `precioS/M/L/XL = 0` en Firestore** — Empanada de Queso (`1785880969439`) y Milhojas (`1790001812148`); `deleteField()` solo de esos 4 campos, con respaldo JSON previo. Inertes (el hook trata 0 como ausente). Requiere autorización y credenciales.
 - [ ] **Auditoría Bloque 3** (SEO estructural) — ver sección de Auditoría arriba
 - [ ] **Revisar costos Mariscos y Queso Camarón** en /gestion — comparten $850 de materiales con Pino, pero sus insumos (mariscos, camarones) son más caros; el costo no refleja la diferencia real
 - [ ] **Costeo real de Empanada de Queso en Masa de Milhojas** — costo/energia/logistica/mdo copiados como placeholder de Empanada de Queso frita (masa distinta, costo real de hojaldre sin determinar). Ajustar cuando se tenga el costeo real.
