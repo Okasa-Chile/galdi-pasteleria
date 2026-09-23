@@ -117,7 +117,57 @@ móvil ≤768px por separado; el layout móvil de `77f2a70` se conservó).
 **Pendientes** (registrados en el README): unificar el rendimiento de la
 talla M (Arma tu Torta "10 a 12 porciones" vs catálogo "14 a 16
 personas"), revisar el plazo "48 horas después de contactarnos" y decidir
-si la página lleva Header.
+si la página lleva Header (decidido, ver "Navegación").
+
+### Navegación
+
+Commits posteriores a `81285bf`: `eed0197`, `4b9516b`, `ba382fb`,
+`e3a38d8`, `6fc30a3`, `70ac7a6`, `ac8955e`, `9d0cc02` (más `033bf5e`, solo
+documentación). Tags de retorno: `pre-tarjetas-talla`, `pre-salidas-att`
+y `pre-header-solido`.
+
+- **Tarjetas del catálogo delivery (`eed0197`,
+  `components/ServicioDetalle.tsx`):** el aviso "Elige un tamaño primero"
+  (sin flecha) ya no se muestra por defecto: aparece solo al tocar el
+  botón sin talla elegida y desaparece al elegir una. El botón sin talla
+  va atenuado (opacidad 0.45, `cursor: not-allowed`, `aria-disabled` sin
+  `disabled`, para que el clic siga disparando el aviso). La etiqueta de
+  mínimo se oculta cuando el mínimo es 1 unidad (se mantienen "mín. 4 un"
+  en empanadas y "mín. 2 un" en queques; "mín. 1 docena" de Dulces se
+  conserva) y "Arma tu Torta" no lleva etiqueta. Sin cambios en la lógica
+  de precios, `agregar()` ni `precioTallaDe` (`cf3eacf`).
+- **Header oscuro fuera de "/" (`ba382fb`):** en `/productos` el Header
+  transparente (texto crema) quedaba sobre la franja crema del body,
+  encima del bloque oscuro. Ahora `oscuro = scrolled || pathname !== '/'`,
+  calculado en el render con `usePathname` (sin efecto, sin parpadeo; el
+  HTML prerenderizado ya sale oscuro). En "/" no cambia.
+- **`scrolled` al montar (`e3a38d8`):** se fija con `window.scrollY > 55`
+  al montar, además del listener, para recargas a mitad de página en "/".
+- **Anclas absolutas (`6fc30a3` Header, `ac8955e` Footer):** los enlaces
+  a secciones de la home pasaron de `#seccion` a `/#seccion` (logo,
+  Productos, Servicios y Eventos, Nuestra Historia, Dudas Frecuentes,
+  Contacto y Delivery; en el Footer, Productos, Servicios, Nosotras y el
+  logo). En "/" siguen desplazando sin recargar; desde otras rutas llevan
+  a la home en esa sección. En `6fc30a3` el logo del Header muestra el
+  foco solo con `:focus-visible` (teclado), no tras clic de mouse.
+- **"Arma tu Torta" del menú (`70ac7a6`):** pasó de `/#arma-tu-torta` a
+  la página `/arma-tu-torta` (escritorio y hamburguesa).
+- **Salidas en `/arma-tu-torta` (`4b9516b`):** bajo el botón de WhatsApp
+  del resumen, dos enlaces secundarios de texto ("Ver catálogo" →
+  `/productos`, "Volver al inicio" → `/`); `<Footer />` montado al final
+  de la página; "GALDI · MAIPÚ" del hero (ya era enlace a `/`) suma
+  subrayado al pasar el mouse o enfocar.
+- **CTA de `/tortas-maipu` (`9d0cc02`):** "Ver todas las tortas" pasó de
+  `/?servicio=delivery&tab=Tortas` a `/productos`. El deep link
+  `?servicio=delivery` quedó obsoleto (era la única ocurrencia en el
+  repo). Los `?servicio=eventos` siguen funcionando y no se tocaron.
+
+**Decisión:** las landings (`tortas-maipu`, `tortas-bodas-maipu`,
+`empanadas-maipu`, `matrimonios-maipu`, `coctel-maipu`, `cumpleanos-maipu`,
+`coffee-break-maipu`, `delivery-maipu`, `dia-del-padre`, `dia-de-la-madre`
+y `arma-tu-torta`) **no llevan Header**, porque tienen salidas propias
+(logo a `/`, `<nav>` de servicios relacionados, CTA y "← Volver a
+Galdi"). Solo `/` y `/productos` montan Header.
 
 ---
 
