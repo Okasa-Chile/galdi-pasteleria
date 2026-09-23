@@ -5,7 +5,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { imagenes } from './Catalogo';
-import { usePreciosGaldi } from '@/hooks/usePreciosGaldi';
+import { usePreciosGaldi, type PrecioProducto } from '@/hooks/usePreciosGaldi';
+
+type Talla = 'S' | 'M' | 'L' | 'XL';
+
+function precioTallaDe(p: PrecioProducto | undefined, t: Talla): number {
+  const v = t === 'S' ? p?.precioS : t === 'M' ? p?.precioM : t === 'L' ? p?.precioL : p?.precioXL;
+  return typeof v === 'number' && v > 0 ? v : 0;
+}
 
 // Distribución a almacenes desactivada (decisión 04-08-2026).
 // Poner en true para reactivar el flujo B2B completo.
@@ -200,7 +207,7 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
     id === 'delivery' ? tabsDelivery  :
     tabsEventos;
 
-  const { precios } = usePreciosGaldi();
+  const { precios, loading: cargandoPrecios } = usePreciosGaldi();
 
   const [activeTab, setActiveTab] = useState(initialTab ?? tabs[0]);
   const [carrito, setCarrito]     = useState<Carrito>({});
@@ -229,7 +236,7 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
       const prod = todosLosProductos.find(p => p.nombre === nomProd);
       const precioInfo = precios[nomProd];
       const precio = tallaProd
-        ? (precioInfo?.[`precio${tallaProd}` as keyof typeof precioInfo] as number ?? precioInfo?.precio ?? 0)
+        ? precioTallaDe(precioInfo, tallaProd)
         : (precioInfo?.precio ?? 0);
       const esEmpanadasDelivery = productosDelivery['Empanadas']?.some(p => p.nombre === nomProd) && id === 'delivery';
       const unidad = esEmpanadasDelivery ? 'unidad' : (prod?.unidad ?? 'un');
@@ -279,6 +286,11 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
   // Carrito helpers
   function agregar(nombre: string, tab: string, unidad: string, carritoKey?: string) {
     const key = carritoKey ?? nombre;
+    const [nomBase, tallaKey] = key.split(' · ');
+    const precioResuelto = tallaKey
+      ? precioTallaDe(precios[nomBase], tallaKey as Talla)
+      : (precios[nomBase]?.precio ?? 0);
+    if (!(precioResuelto > 0)) return;
     const min = getMinimo(tab, unidad, nombre, id);
     setCarrito(prev => ({
       ...prev,
@@ -318,9 +330,7 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
     const talla = partes[1] as 'S' | 'M' | 'L' | 'XL' | undefined;
     const p = precios[nomProd];
     if (!p) return sum;
-    const precio = talla
-      ? (talla === 'S' ? p.precioS : talla === 'M' ? p.precioM : talla === 'L' ? p.precioL : p.precioXL) ?? 0
-      : p.precio;
+    const precio = talla ? precioTallaDe(p, talla) : p.precio;
     return sum + precio * cantidad;
   }, 0);
 
@@ -642,7 +652,7 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
             <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.2rem, 3vw, 2rem)', fontWeight: 300, color: 'var(--cream)' }}>{nombre}</span>
             <button onClick={() => { onClose(); document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' }); }} style={{ background: 'rgba(26,15,10,0.4)', backdropFilter: 'blur(6px)', border: '1px solid rgba(245,230,211,0.25)', color: 'var(--cream)', width: '2.2rem', height: '2.2rem', borderRadius: '50%', fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
           </div>
-          <div style={{ display: 'flex', borderBottom: '1px solid rgba(245,230,211,0.15)', overflowX: 'auto', scrollbarWidth: 'none', paddingLeft: '5%' }}>
+          <div style={{ display: 'flex', borderBottom: '1px solid rgba(245,230,211,0.15)', overflowX: 'auto', overflowY: 'hidden', scrollbarWidth: 'none', paddingLeft: '5%' }}>
             {tabs.map(t => (
               <button key={t} onClick={() => setActiveTab(t)} className={`svc-tab${t === activeTab ? ' active' : ''}`}>{t}</button>
             ))}
@@ -666,6 +676,7 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
           display: 'flex',
           borderBottom: '1px solid rgba(245,230,211,0.15)',
           overflowX: 'auto',
+          overflowY: 'hidden',
           scrollbarWidth: 'none',
           msOverflowStyle: 'none' as React.CSSProperties['msOverflowStyle'],
           paddingLeft: '5%',
@@ -765,6 +776,16 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
               const min = getMinimo(activeTab, prod.unidad, prod.nombre, id);
               const label = getLabelMinimo(activeTab, prod.unidad, prod.nombre, id);
               const esArmaTuTorta = prod.nombre === 'Arma tu Torta';
+              const pInfo = precios[prod.nombre];
+              const tallasBase: Talla[] =
+                activeTab === 'Queques' ? ['S', 'M']
+                : activeTab === 'Pasteles' ? ['S', 'M', 'L']
+                : ['S', 'M', 'L', ...(prod.nombre === 'Torta Panqueque' || prod.nombre === 'Torta de Chocolate' ? ['XL' as const] : [])];
+              const tallasDisp = esTorta ? tallasBase.filter(t => precioTallaDe(pInfo, t) > 0) : [];
+              const precioResuelto = esTorta
+                ? (tallaSeleccionada ? precioTallaDe(pInfo, tallaSeleccionada) : 0)
+                : (pInfo?.precio ?? 0);
+              const sinPrecio = esTorta ? tallasDisp.length === 0 : !(precioResuelto > 0);
               const card = (
                 <div key={prod.nombre} className="svc-prod-card">
                   {/* Imagen */}
@@ -796,15 +817,9 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
                         </p>
                       )}
                     </div>
-                    {esTorta && (
+                    {esTorta && tallasDisp.length > 0 && (
                       <div style={{ display: 'flex', gap: '4px', flexShrink: 0, marginTop: '1px', position: 'relative', zIndex: 1 }}>
-                        {(() => {
-                          let tallas: ('S'|'M'|'L'|'XL')[];
-                          if (activeTab === 'Queques') tallas = ['S', 'M'];
-                          else if (activeTab === 'Pasteles') tallas = ['S', 'M', 'L'];
-                          else tallas = ['S', 'M', 'L', ...(prod.nombre === 'Torta Panqueque' || prod.nombre === 'Torta de Chocolate' ? ['XL' as const] : [])];
-                          return tallas;
-                        })().map(t => (
+                        {tallasDisp.map(t => (
                           <button
                             key={t}
                             className={`talla-btn${tallaSeleccionada === t ? ' sel' : ''}`}
@@ -882,12 +897,24 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
                   })()}
                   {/* Botón agregar / contador */}
                   <div style={{ position: 'relative', zIndex: 1 }}>
-                    {esTorta && !tallaSeleccionada ? (
+                    {cargandoPrecios ? (
+                      <button className="svc-btn-add" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+                        Cargando…
+                      </button>
+                    ) : esArmaTuTorta ? (
+                      <Link href="/arma-tu-torta" className="svc-btn-add" style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}>
+                        Diseñar
+                      </Link>
+                    ) : sinPrecio ? (
+                      <button className="svc-btn-add" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+                        No disponible
+                      </button>
+                    ) : esTorta && !tallaSeleccionada ? (
                       <button className="svc-btn-add" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
                         Elige tamaño
                       </button>
                     ) : enCarrito === 0 ? (
-                      <button className="svc-btn-add" onClick={() => agregar(carritoKey, activeTab, prod.unidad)}><span style={{fontSize:'1rem'}}>🛒</span> AGREGAR</button>
+                      <button className="svc-btn-add" disabled={!(precioResuelto > 0)} onClick={() => agregar(carritoKey, activeTab, prod.unidad)}><span style={{fontSize:'1rem'}}>🛒</span> AGREGAR</button>
                     ) : (
                       <div className="svc-counter">
                         <button onClick={() => quitar(carritoKey, activeTab, prod.unidad)}>−</button>
@@ -897,7 +924,7 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
                     )}
                   </div>
                   {/* Texto personas — solo tortas en delivery */}
-                  {esTorta && (
+                  {esTorta && tallasDisp.length > 0 && (
                     <div className="talla-personas" style={{ color: tallaSeleccionada ? 'rgba(201,165,90,0.8)' : 'rgba(220,100,100,0.8)' }}>
                       {tallaSeleccionada ? DESC_TALLA[tallaSeleccionada] : '← Elige un tamaño primero'}
                     </div>
@@ -949,8 +976,8 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
                     const esEmpanadasDelivery = productosDelivery['Empanadas']?.some(p => p.nombre === nomProd) && id === 'delivery';
                     const unidad = esEmpanadasDelivery ? 'unidad' : (prod?.unidad ?? 'un');
                     const precioInfo = precios[nomProd];
-                    const precioUnit = tallaProd && precioInfo
-                      ? (precioInfo[`precio${tallaProd}` as 'precioS'|'precioM'|'precioL'|'precioXL'] ?? precioInfo.precio ?? 0)
+                    const precioUnit = tallaProd
+                      ? precioTallaDe(precioInfo, tallaProd)
                       : (precioInfo?.precio ?? 0);
                     const subtotal = precioUnit * cantidad;
                     return (
