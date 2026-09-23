@@ -53,6 +53,8 @@ export default function Header() {
   return (
     <>
       <style>{`
+        .header-logo:focus:not(:focus-visible) { outline: none; }
+        .header-logo:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 2px; }
         .header-nav-link {
           color: var(--cream);
           text-decoration: none;
@@ -205,7 +207,7 @@ export default function Header() {
         }}>
 
           {/* Logo */}
-          <a href="#inicio" style={{ lineHeight: 0 }}>
+          <a href="/#inicio" className="header-logo" style={{ lineHeight: 0 }}>
             <Image
               src="/images/Nuevologo.webp"
               alt="Galdi — Pastelería Artesanal"
@@ -228,7 +230,7 @@ export default function Header() {
             {navItems.map((item) => (
               <a
                 key={item.href ?? item.id}
-                href={item.href ?? `#${item.id}`}
+                href={item.href ?? `/#${item.id}`}
                 className="header-nav-link"
               >
                 {item.label}
@@ -300,7 +302,7 @@ export default function Header() {
           {navItems.map((item) => (
             <a
               key={item.href ?? item.id}
-              href={item.href ?? `#${item.id}`}
+              href={item.href ?? `/#${item.id}`}
               onClick={() => setMenuOpen(false)}
               className="header-nav-link"
               style={{ fontSize: '1rem' }}
