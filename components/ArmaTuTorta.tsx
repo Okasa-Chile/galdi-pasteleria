@@ -412,6 +412,29 @@ export default function ArmaTuTorta() {
             .atg-paso-body { padding-left: 0 !important; }
             .atg-resumen-paso { padding-left: 0 !important; text-align: center; }
             .atg-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 220px)) !important; justify-content: center; }
+            .atg-res { padding: 1.25rem 1.5rem !important; }
+            .atg-res-corona { margin-bottom: 0.4rem !important; }
+            .atg-res-corona img { height: 56px !important; width: auto !important; }
+            .atg-res-titulo { margin-bottom: 0.75rem !important; }
+            .atg-res-label { margin: 0 0 0.3rem !important; }
+            .atg-res-h3 { font-size: 1.5rem !important; line-height: 1.2 !important; }
+            .atg-res-orn { margin-top: 0.4rem !important; }
+            .atg-res-datos { display: flex !important; flex-wrap: wrap; justify-content: center; gap: 0.5rem !important; margin-bottom: 0.75rem !important; }
+            .atg-res-item { flex: 1 1 0; min-width: 120px; padding: 0.55rem 0.7rem !important; border-radius: 10px !important; overflow-wrap: break-word; }
+            .atg-res-item:nth-child(2) { flex-grow: 1.2; }
+            .atg-res-item:nth-child(3) { flex-grow: 2.4; }
+            .atg-res-item:nth-child(4) { flex-grow: 1.6; }
+            .atg-res-item-label { margin: 0 0 0.2rem !important; }
+            .atg-res-item-valor { font-size: 0.8rem !important; }
+            .atg-res-nota { padding: 0.5rem 0.8rem !important; margin-bottom: 0.75rem !important; }
+            .atg-res-nota p { line-height: 1.45 !important; }
+            .atg-res-precio { padding: 0.6rem 1rem !important; margin-bottom: 0.75rem !important; }
+            .atg-res-precio-label { margin: 0 0 0.25rem !important; }
+            .atg-res-monto { font-size: 2.2rem !important; }
+            .atg-res-recargo { margin-top: 0.3rem !important; }
+            .atg-res-disc { margin-top: 0.4rem !important; line-height: 1.5 !important; }
+            .atg-res-wsp { padding: 0.75rem !important; }
+            .atg-res-otra { margin-top: 0.6rem !important; padding: 0.6rem !important; }
             .atg-card { position: relative; }
             .atg-grid-ilus { display: flex !important; flex-wrap: wrap; justify-content: center; gap: 0.6rem !important; max-width: 948px; margin-left: auto; margin-right: auto; }
             .atg-grid-ilus .atg-card { flex: 0 0 180px; width: 180px; }
@@ -785,7 +808,7 @@ export default function ArmaTuTorta() {
 
         {/* ── Resumen final ── */}
         {pasoActivo === 6 && tamanioSeleccionado && (
-          <div id="atg-resumen" style={{
+          <div id="atg-resumen" className="atg-res" style={{
             background: `linear-gradient(160deg, ${P.white} 0%, ${P.peach}33 100%)`,
             border: `1.5px solid ${P.rose}`,
             borderRadius: '20px',
@@ -805,7 +828,7 @@ export default function ArmaTuTorta() {
               pointerEvents: 'none',
             }} />
 
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
+            <div className="atg-res-corona" style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
               <Image
                 src="/images/arma-tu-torta/flor-corona.webp"
                 alt=""
@@ -815,21 +838,21 @@ export default function ArmaTuTorta() {
               />
             </div>
 
-            <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
-              <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.6rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: P.roseDark, margin: '0 0 0.5rem' }}>
+            <div className="atg-res-titulo" style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
+              <p className="atg-res-label" style={{ fontFamily: 'var(--font-sans)', fontSize: '0.6rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: P.roseDark, margin: '0 0 0.5rem' }}>
                 Tu torta
               </p>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 400, color: P.brown, margin: 0 }}>
+              <h3 className="atg-res-h3" style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 400, color: P.brown, margin: 0 }}>
                 Una creación artesanal única
               </h3>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginTop: '0.75rem' }}>
+              <div className="atg-res-orn" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginTop: '0.75rem' }}>
                 <div style={{ height: '1px', width: '30px', background: `linear-gradient(to right, transparent, ${P.roseDark})` }} />
                 <span style={{ color: P.roseDark, fontSize: '0.7rem' }}>✿</span>
                 <div style={{ height: '1px', width: '30px', background: `linear-gradient(to left, transparent, ${P.roseDark})` }} />
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: '0.75rem', marginBottom: '1.75rem' }}>
+            <div className="atg-res-datos" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: '0.75rem', marginBottom: '1.75rem' }}>
               {[
                 { label: 'Variante',   valor: varianteSeleccionada?.nombre },
                 { label: 'Base',       valor: baseSeleccionada?.nombre },
@@ -837,31 +860,31 @@ export default function ArmaTuTorta() {
                 { label: 'Decoración', valor: decoracionesSeleccionadas.map(d => d.nombre).join(' · ') },
                 { label: 'Tamaño',     valor: `${tamanioSeleccionado.nombre} · ${tamanioSeleccionado.desc}` },
               ].map(item => (
-                <div key={item.label} style={{
+                <div key={item.label} className="atg-res-item" style={{
                   background: P.white,
                   border: `1px solid ${P.creamDark}`,
                   borderRadius: '12px',
                   padding: '0.85rem 1rem',
                   boxShadow: '0 2px 6px rgba(61,32,16,0.05)',
                 }}>
-                  <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: P.roseDark, margin: '0 0 0.3rem' }}>
+                  <p className="atg-res-item-label" style={{ fontFamily: 'var(--font-sans)', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: P.roseDark, margin: '0 0 0.3rem' }}>
                     {item.label}
                   </p>
-                  <p style={{ fontFamily: 'var(--font-serif)', fontSize: '0.95rem', fontWeight: 400, color: P.brown, margin: 0, lineHeight: 1.3 }}>
+                  <p className="atg-res-item-valor" style={{ fontFamily: 'var(--font-serif)', fontSize: '0.95rem', fontWeight: 400, color: P.brown, margin: 0, lineHeight: 1.3 }}>
                     {item.valor}
                   </p>
                 </div>
               ))}
             </div>
 
-            <div style={{ background: `${P.peach}33`, border: `1px solid ${P.peachDark}44`, borderRadius: '10px', padding: '0.85rem 1rem', marginBottom: '1.75rem' }}>
+            <div className="atg-res-nota" style={{ background: `${P.peach}33`, border: `1px solid ${P.peachDark}44`, borderRadius: '10px', padding: '0.85rem 1rem', marginBottom: '1.75rem' }}>
               <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.68rem', color: P.brownMid, margin: 0, lineHeight: 1.65, fontStyle: 'italic' }}>
                 🌸 Nota técnica: recomendamos un corte en bloques rectangulares para apreciar las capas de relleno y asegurar la estabilidad de cada porción.
               </p>
             </div>
 
             {/* Bloque precio destacado */}
-            <div style={{
+            <div className="atg-res-precio" style={{
               background: `linear-gradient(135deg, ${P.rose}22, ${P.peach}22)`,
               border: `1.5px solid ${P.roseDark}55`,
               borderRadius: '14px',
@@ -869,18 +892,18 @@ export default function ArmaTuTorta() {
               textAlign: 'center',
               marginBottom: '1.5rem',
             }}>
-              <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: P.roseDark, margin: '0 0 0.5rem', fontWeight: 600 }}>
+              <p className="atg-res-precio-label" style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: P.roseDark, margin: '0 0 0.5rem', fontWeight: 600 }}>
                 Valor total
               </p>
-              <p style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2rem, 6vw, 2.8rem)', fontWeight: 500, color: P.brown, margin: 0, lineHeight: 1.1, letterSpacing: '0.01em' }}>
+              <p className="atg-res-monto" style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2rem, 6vw, 2.8rem)', fontWeight: 500, color: P.brown, margin: 0, lineHeight: 1.1, letterSpacing: '0.01em' }}>
                 {fmtPrecio(precioFinal)}
               </p>
               {sinAzucar && (
-                <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: P.roseDark, margin: '0.5rem 0 0', fontStyle: 'italic' }}>
+                <p className="atg-res-recargo" style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: P.roseDark, margin: '0.5rem 0 0', fontStyle: 'italic' }}>
                   🌿 Incluye recargo sin azúcar añadida: +{fmtPrecio(recargoSinAzucarAplicado)}
                 </p>
               )}
-              <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', color: P.brownLight, margin: '0.75rem 0 0', lineHeight: 1.6 }}>
+              <p className="atg-res-disc" style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', color: P.brownLight, margin: '0.75rem 0 0', lineHeight: 1.6 }}>
                 Precio referencial. Combinaciones premium pueden tener un pequeño ajuste — te lo confirmamos por WhatsApp.
               </p>
             </div>
@@ -889,6 +912,7 @@ export default function ArmaTuTorta() {
               href={`https://wa.me/56990991011?text=${mensajeWsp}`}
               target="_blank"
               rel="noopener noreferrer"
+              className="atg-res-wsp"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -916,6 +940,7 @@ export default function ArmaTuTorta() {
 
             <button
               onClick={armarOtraTorta}
+              className="atg-res-otra"
               style={{
                 display: 'flex',
                 alignItems: 'center',
