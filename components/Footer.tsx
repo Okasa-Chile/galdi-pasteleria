@@ -4,9 +4,9 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 const links = [
-  { label: 'Productos',  href: '#productos' },
-  { label: 'Servicios',  href: '#servicios' },
-  { label: 'Nosotras',   href: '#nosotras' },
+  { label: 'Productos',  href: '/#productos' },
+  { label: 'Servicios',  href: '/#servicios' },
+  { label: 'Nosotras',   href: '/#nosotras' },
   { label: 'WhatsApp',   href: 'https://wa.me/56990991011' },
   { label: 'Acceso interno', href: '/gestion' },
 ];
@@ -61,7 +61,7 @@ export default function Footer() {
       <div className="footer-inner">
 
         {/* Logo */}
-        <a href="#inicio" style={{ display: 'inline-block', opacity: 0.65 }}>
+        <a href="/#inicio" style={{ display: 'inline-block', opacity: 0.65 }}>
           <Image
             src="/images/Nuevologo.webp"
             alt="Galdi"
