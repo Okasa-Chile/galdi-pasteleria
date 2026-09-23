@@ -6,6 +6,7 @@
     "dev": "next dev",
     "prebuild": "npm run check:delivery-pricing",
     "build": "next build",
+    "postbuild": "node scripts/copiar-gestion.mjs",
     "start": "next start",
     "lint": "eslint",
     "check:delivery-pricing": "node --experimental-strip-types --no-warnings scripts/check-delivery-pricing-sync.mjs"

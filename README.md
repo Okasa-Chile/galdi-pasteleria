@@ -37,17 +37,17 @@
 **CRÍTICO:** Dos apps conviven en el mismo repositorio:
 
 1. **Next.js (SPA pública)** → compilada como static export a `out/` → Firebase Hosting sirve `out/`
-2. **`/gestion` (vanilla HTML/JS)** → vive en `public/gestion/index.html` → se copia manualmente a `out/gestion/index.html` antes de cada deploy → Firebase Hosting lo sirve vía rewrite
+2. **`/gestion` (vanilla HTML/JS)** → vive en `public/gestion/index.html` → `npm run build` lo copia automáticamente (hook `postbuild`, `scripts/copiar-gestion.mjs`) a `out/gestion/index.html` y a `_src/gestion-index.html` → Firebase Hosting lo sirve vía rewrite
 
-⚠️ Antes de cada deploy ejecutar obligatoriamente:
+⚠️ Antes de cada deploy verificar que `out/gestion/index.html` exista (lo genera el `postbuild`; si el build falló o se saltó, la copia no ocurre):
 ```
-cp public/gestion/index.html out/gestion/index.html
+ls out/gestion/index.html
 ```
 
 ### Deploy pattern Galdi
 ```
-npm run build
-cp public/gestion/index.html out/gestion/index.html
+npm run build            # incluye postbuild: copia /gestion a out/ y _src/
+ls out/gestion/index.html   # verificar antes de deployar
 firebase deploy --only hosting
 git add . && git commit -m "mensaje" && git push
 ```
