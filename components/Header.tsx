@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 
 const navItems: { label: string; id?: string; href?: string }[] = [
   { label: 'Productos', id: 'productos' },
-  { label: 'Arma tu Torta', id: 'arma-tu-torta' },
+  { label: 'Arma tu Torta', href: '/arma-tu-torta' },
   { label: 'Servicios y Eventos', id: 'servicios' },
   { label: 'Nuestra Historia', id: 'nosotras' },
   { label: 'Dudas Frecuentes', id: 'preguntas-frecuentes' },
