@@ -317,7 +317,7 @@ export default function TortasMaipuPage() {
           {/* CTAs */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center', marginBottom: '3rem' }}>
             <Link
-              href="/?servicio=delivery&tab=Tortas"
+              href="/productos"
               style={{ background: 'var(--terracota)', color: 'var(--cream)', padding: '1rem 2.5rem', fontFamily: 'var(--font-sans)', fontSize: '0.85rem', letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none', border: '1px solid var(--terracota)' }}
             >
               Ver todas las tortas
