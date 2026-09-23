@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -38,7 +38,7 @@ function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, pri
     <button
       onClick={onSelect}
       disabled={deshabilitada && !seleccionada}
-      className={compactMobile ? 'atg-variant-card' : undefined}
+      className={`atg-card ${opcion.imagen ? 'atg-card-img' : 'atg-card-emoji'}${compactMobile ? ' atg-variant-card' : ''}`}
       style={{
         background: seleccionada ? `linear-gradient(135deg, ${P.rose}33, ${P.peach}33)` : P.white,
         border: seleccionada ? `2px solid ${P.roseDark}` : `1.5px solid ${P.creamDark}`,
@@ -57,7 +57,7 @@ function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, pri
         opacity: deshabilitada && !seleccionada ? 0.45 : 1,
       }}
     >
-      <div className={compactMobile ? 'atg-variant-card-icon' : undefined} style={{
+      <div className={`atg-card-media${compactMobile ? ' atg-variant-card-icon' : ''}`} style={{
         position: 'relative',
         width: '100%',
         height: 'clamp(160px, 30vw, 260px)',
@@ -200,12 +200,12 @@ function Paso({ id, numero, titulo, subtitulo, completado, activo, children }: {
   children: React.ReactNode;
 }) {
   return (
-    <div id={id} style={{
+    <div id={id ?? `atg-paso-${numero}`} style={{
       marginBottom: '2.5rem',
       opacity: activo || completado ? 1 : 0.35,
       transition: 'opacity 0.3s ease',
     }}>
-      <div style={{
+      <div className="atg-paso-head" style={{
         display: 'flex',
         alignItems: 'center',
         gap: '1rem',
@@ -260,7 +260,7 @@ function Paso({ id, numero, titulo, subtitulo, completado, activo, children }: {
         </div>
       </div>
       {activo && (
-        <div style={{ paddingLeft: '54px' }}>
+        <div className="atg-paso-body" style={{ paddingLeft: '54px' }}>
           {children}
         </div>
       )}
@@ -287,6 +287,19 @@ export default function ArmaTuTorta() {
     !rellenosConfirmados      ? 3 :
     !decoracionesConfirmadas  ? 4 :
     !tamanio                  ? 5 : 6;
+
+  const pasoPrevioRef = useRef(pasoActivo);
+  useEffect(() => {
+    const previo = pasoPrevioRef.current;
+    pasoPrevioRef.current = pasoActivo;
+    if (pasoActivo <= previo) return;
+    if (!window.matchMedia('(min-width: 769px)').matches) return;
+    const el = document.getElementById(pasoActivo === 6 ? 'atg-resumen' : `atg-paso-${pasoActivo}`);
+    if (!el) return;
+    const altoHeader = document.querySelector('header')?.getBoundingClientRect().height ?? 0;
+    el.style.scrollMarginTop = `${altoHeader + 16}px`;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [pasoActivo]);
 
   const varianteSeleccionada      = VARIANTES.find(v => v.id === variante);
   const baseSeleccionada          = conNombreVariante(BASES.filter(b => b.id === base), sinAzucar)[0];
@@ -368,7 +381,7 @@ export default function ArmaTuTorta() {
     <div style={{ background: P.cream, minHeight: '100vh', fontFamily: 'var(--font-sans)' }}>
 
       {/* ── Hero ── */}
-      <div style={{
+      <div className="atg-hero" style={{
         background: `linear-gradient(160deg, ${P.white} 0%, ${P.peach}44 50%, ${P.rose}22 100%)`,
         padding: 'clamp(4rem, 10vh, 7rem) 5% 3rem',
         textAlign: 'center',
@@ -381,6 +394,24 @@ export default function ArmaTuTorta() {
             .atg-flor-esquina {
               display: none !important;
             }
+          }
+          @media (min-width: 769px) {
+            .atg-hero { padding: 5.25rem 5% 1.25rem !important; }
+            .atg-hero-label { margin-bottom: 0.4rem !important; }
+            .atg-hero-h1 { font-size: 2.6rem !important; margin: 0 0 0.4rem !important; line-height: 1.1 !important; }
+            .atg-hero-p { max-width: 760px !important; font-size: 0.9rem !important; line-height: 1.5 !important; }
+            .atg-hero-p2 { max-width: 760px !important; margin-top: 0.4rem !important; }
+            .atg-hero-orn { margin-top: 0.6rem !important; }
+            .atg-config { padding-top: 1.5rem !important; }
+            .atg-paso-head { justify-content: center; }
+            .atg-paso-head > div:last-child { text-align: center; }
+            .atg-paso-body { padding-left: 0 !important; }
+            .atg-resumen-paso { padding-left: 0 !important; text-align: center; }
+            .atg-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 220px)) !important; justify-content: center; }
+            .atg-card-img .atg-card-media { height: auto !important; aspect-ratio: 1 / 1; }
+            .atg-card-emoji { padding: 0.6rem 0.75rem !important; gap: 0.4rem !important; }
+            .atg-card-emoji .atg-card-media { height: 56px !important; }
+            .atg-card-emoji .atg-card-media > div { font-size: 2rem !important; }
           }
         `}</style>
         <div style={{
@@ -422,7 +453,7 @@ export default function ArmaTuTorta() {
 
         <div style={{ position: 'relative', zIndex: 1 }}>
           <Link href="/" style={{ textDecoration: 'none' }}>
-            <p style={{
+            <p className="atg-hero-label" style={{
               fontFamily: 'var(--font-sans)',
               fontSize: '0.65rem',
               letterSpacing: '0.2em',
@@ -433,7 +464,7 @@ export default function ArmaTuTorta() {
               Galdi · Maipú
             </p>
           </Link>
-          <h1 style={{
+          <h1 className="atg-hero-h1" style={{
             fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(2.2rem, 6vw, 3.8rem)',
             fontWeight: 400,
@@ -444,7 +475,7 @@ export default function ArmaTuTorta() {
           }}>
             Arma tu Torta
           </h1>
-          <p style={{
+          <p className="atg-hero-p" style={{
             fontFamily: 'var(--font-sans)',
             fontSize: 'clamp(0.82rem, 2vw, 0.95rem)',
             color: P.brownMid,
@@ -454,7 +485,7 @@ export default function ArmaTuTorta() {
           }}>
             Diseña la torta de tus sueños. Elige cada detalle — la elaboramos con los mismos estándares artesanales que nos definen desde siempre.
           </p>
-          <p style={{
+          <p className="atg-hero-p2" style={{
             fontFamily: 'var(--font-sans)',
             fontSize: 'clamp(0.75rem, 1.8vw, 0.85rem)',
             fontWeight: 600,
@@ -466,7 +497,7 @@ export default function ArmaTuTorta() {
             🕐 Entrega en 48 horas después de contactarnos
           </p>
 
-          <div style={{
+          <div className="atg-hero-orn" style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -497,7 +528,7 @@ export default function ArmaTuTorta() {
       </div>
 
       {/* ── Configurador ── */}
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '3rem 5% 6rem' }}>
+      <div className="atg-config" style={{ maxWidth: '900px', margin: '0 auto', padding: '3rem 5% 6rem' }}>
 
         {/* PASO 1 — Variante */}
         <Paso id="atg-paso-1" numero={1} titulo="Con o sin azúcar añadida" subtitulo="Elige el punto de partida de tu torta" completado={pasoActivo > 1} activo={pasoActivo === 1}>
@@ -533,7 +564,7 @@ export default function ArmaTuTorta() {
               }
             }
           `}</style>
-          <div className="atg-variant-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '1.5rem' }}>
+          <div className="atg-variant-grid atg-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '1.5rem' }}>
             {VARIANTES.map(v => (
               <OpcionCard
                 key={v.id}
@@ -547,7 +578,7 @@ export default function ArmaTuTorta() {
         </Paso>
 
         {pasoActivo > 1 && varianteSeleccionada && (
-          <div style={{ paddingLeft: '54px', marginTop: '-1.25rem', marginBottom: '2rem' }}>
+          <div className="atg-resumen-paso" style={{ paddingLeft: '54px', marginTop: '-1.25rem', marginBottom: '2rem' }}>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: P.brownLight, margin: 0 }}>
               Variante: <span style={{ color: P.brownMid, fontWeight: 600 }}>{varianteSeleccionada.nombre}</span>
               <button onClick={() => { setVariante(null); resetDesdeVariante(); }}
@@ -572,7 +603,7 @@ export default function ArmaTuTorta() {
 
         {/* PASO 2 — Base */}
         <Paso numero={2} titulo="Elige tu base" subtitulo="La arquitectura de tu torta" completado={pasoActivo > 2} activo={pasoActivo === 2}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '1.5rem' }}>
+          <div className="atg-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '1.5rem' }}>
             {basesDisponibles.map(b => (
               <OpcionCard
                 key={b.id}
@@ -586,7 +617,7 @@ export default function ArmaTuTorta() {
         </Paso>
 
         {pasoActivo > 2 && baseSeleccionada && (
-          <div style={{ paddingLeft: '54px', marginTop: '-1.25rem', marginBottom: '2rem' }}>
+          <div className="atg-resumen-paso" style={{ paddingLeft: '54px', marginTop: '-1.25rem', marginBottom: '2rem' }}>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: P.brownLight, margin: 0 }}>
               Base: <span style={{ color: P.brownMid, fontWeight: 600 }}>{baseSeleccionada.nombre}</span>
               <button onClick={() => { setBase(null); resetDesdeBase(); }}
@@ -611,7 +642,7 @@ export default function ArmaTuTorta() {
 
         {/* PASO 3 — Rellenos */}
         <Paso numero={3} titulo="Elige el relleno" subtitulo="Puedes elegir hasta 3 sabores" completado={pasoActivo > 3} activo={pasoActivo === 3}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '0.75rem' }}>
+          <div className="atg-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '0.75rem' }}>
             {rellenosDisponibles.map(r => (
               <OpcionCard
                 key={r.id}
@@ -650,7 +681,7 @@ export default function ArmaTuTorta() {
         </Paso>
 
         {pasoActivo > 3 && rellenosSeleccionados.length > 0 && (
-          <div style={{ paddingLeft: '54px', marginTop: '-1.25rem', marginBottom: '2rem' }}>
+          <div className="atg-resumen-paso" style={{ paddingLeft: '54px', marginTop: '-1.25rem', marginBottom: '2rem' }}>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: P.brownLight, margin: 0 }}>
               Relleno: <span style={{ color: P.brownMid, fontWeight: 600 }}>{rellenosSeleccionados.map(r => r.nombre).join(', ')}</span>
               <button onClick={() => { setRellenos([]); setRellenosConf(false); setDecoraciones([]); setDecoConf(false); setTamanio(null); }}
@@ -667,7 +698,7 @@ export default function ArmaTuTorta() {
 
         {/* PASO 4 — Decoraciones */}
         <Paso numero={4} titulo="Elige la decoración" subtitulo="Puedes elegir hasta 2 opciones" completado={pasoActivo > 4} activo={pasoActivo === 4}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '0.75rem' }}>
+          <div className="atg-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '0.75rem' }}>
             {decoracionesDisponibles.map(d => (
               <OpcionCard
                 key={d.id}
@@ -706,7 +737,7 @@ export default function ArmaTuTorta() {
         </Paso>
 
         {pasoActivo > 4 && decoracionesSeleccionadas.length > 0 && (
-          <div style={{ paddingLeft: '54px', marginTop: '-1.25rem', marginBottom: '2rem' }}>
+          <div className="atg-resumen-paso" style={{ paddingLeft: '54px', marginTop: '-1.25rem', marginBottom: '2rem' }}>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: P.brownLight, margin: 0 }}>
               Decoración: <span style={{ color: P.brownMid, fontWeight: 600 }}>{decoracionesSeleccionadas.map(d => d.nombre).join(', ')}</span>
               <button onClick={() => { setDecoraciones([]); setDecoConf(false); setTamanio(null); }}
@@ -723,7 +754,7 @@ export default function ArmaTuTorta() {
 
         {/* PASO 5 — Tamaño */}
         <Paso numero={5} titulo="Elige el tamaño" subtitulo="¿Para cuántas personas?" completado={pasoActivo > 5} activo={pasoActivo === 5}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '0.75rem' }}>
+          <div className="atg-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '0.75rem' }}>
             {TAMANIOS.map(t => (
               <TamanioCard
                 key={t.id}
@@ -742,7 +773,7 @@ export default function ArmaTuTorta() {
 
         {/* ── Resumen final ── */}
         {pasoActivo === 6 && tamanioSeleccionado && (
-          <div style={{
+          <div id="atg-resumen" style={{
             background: `linear-gradient(160deg, ${P.white} 0%, ${P.peach}33 100%)`,
             border: `1.5px solid ${P.rose}`,
             borderRadius: '20px',
