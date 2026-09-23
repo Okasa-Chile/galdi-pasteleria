@@ -977,13 +977,15 @@ distinta al precio que se había mencionado el 25-05-2026:
 
 ---
 
-## Jornada 18-08-2026 — Sistema de delivery por radio de km
+## Jornada 18-08-2026 — Sistema de delivery por radio de km (HISTÓRICO)
 
-> **Superado por la jornada 30-08-2026.** Los tramos por km driving y el "PENDIENTE
-> CRÍTICO — Recalibrar tramos" de esta sección se resolvieron pasando al modelo por
-> radio en línea recta. Se conserva por contexto histórico.
+> **HISTÓRICO — no describe el sistema actual.** Superado por la jornada 30-08-2026.
+> El modelo vigente es **distancia en línea recta (Haversine) + bandas concéntricas**
+> (ver `functions/src/index.ts` y `lib/deliveryPricing.ts`); ya no se usa Distance
+> Matrix ni tramos por km driving. El "PENDIENTE CRÍTICO — Recalibrar tramos" de esta
+> sección no aplica al modelo actual. Se conserva solo por contexto.
 
-### Sistema de delivery por radio de km (en producción, tramos pendientes de recalibrar)
+### Sistema de delivery por radio de km — tramos driving (histórico, reemplazado)
 
 - `lib/deliveryPricing.ts` es la fuente única de verdad: `ORIGEN_GALDI = { lat: -33.4776144, lng: -70.7521309 }`, `PEDIDO_MINIMO_DELIVERY = 15000`, tabla de 10 tramos.
 - Cloud Function `calcularCostoDelivery` (región `us-central1`, misma que `flowCrearOrden`/`flowConfirmar`): Geocoding API → Distance Matrix API → aplica la tabla de tramos. API key desde Secret Manager (`GOOGLE_MAPS_API_KEY_GALDI`). Distingue `fuera_de_radio` (>24 km, bloquea el pago automático) de `error_infraestructura` (timeout/cuota/caída de la API: responde HTTP 200 y permite avanzar el pedido igual, marcado con prefijo ⚠️ en la descripción que llega a Flow, para no bloquear ventas por una caída de Google).
@@ -991,9 +993,9 @@ distinta al precio que se había mencionado el 25-05-2026:
 - Integrado en 3 puntos del sitio: checkout (`app/carrito`), `/gestion` (Tab 5), y un widget en `/delivery-maipu`. El cálculo corre solo al hacer clic en el botón correspondiente, nunca mientras el usuario tipea la dirección (evita gastar cuota de API en cada tecla).
 - Código postal de Galdi corregido a `9293891` (el `9260057` registrado el 03-08-2026 era erróneo).
 
-### PENDIENTE CRÍTICO — Recalibrar tramos
+### (HISTÓRICO, no aplica al modelo actual) Recalibrar tramos driving
 
-Los montos actuales son inviables comercialmente. Prueba con 13 direcciones reales (McDonald's de la Región Metropolitana, verificadas vía Places API):
+Los montos de entonces son inviables comercialmente. Prueba con 13 direcciones reales (McDonald's de la Región Metropolitana, verificadas vía Places API):
 
 | Dirección | Distancia | Tramo actual |
 |---|---|---|
