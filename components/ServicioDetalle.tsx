@@ -212,6 +212,7 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
   const [activeTab, setActiveTab] = useState(initialTab ?? tabs[0]);
   const [carrito, setCarrito]     = useState<Carrito>({});
   const [tallaActiva, setTallaActiva] = useState<Record<string, 'S'|'M'|'L'|'XL'>>({});
+  const [avisoTalla, setAvisoTalla] = useState<Record<string, boolean>>({});
   const [eventoImg, setEventoImg] = useState(eventosData[tabs[0]]?.imagen ?? imagen);
   const [mostrarResumen, setMostrarResumen] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
@@ -776,6 +777,7 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
               const min = getMinimo(activeTab, prod.unidad, prod.nombre, id);
               const label = getLabelMinimo(activeTab, prod.unidad, prod.nombre, id);
               const esArmaTuTorta = prod.nombre === 'Arma tu Torta';
+              const mostrarLabelMinimo = !esArmaTuTorta && !(min === 1 && prod.unidad !== 'docena');
               const pInfo = precios[prod.nombre];
               const tallasBase: Talla[] =
                 activeTab === 'Queques' ? ['S', 'M']
@@ -804,7 +806,9 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
                       ) : (
                         <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: 'var(--cream)', fontWeight: 500, margin: 0, lineHeight: 1.3 }}>{prod.nombreVisible ?? prod.nombre}</p>
                       )}
-                      <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.6rem', color: 'rgba(212,168,83,0.7)', margin: '0.15rem 0 0', letterSpacing: '0.05em' }}>{label}</p>
+                      {mostrarLabelMinimo && (
+                        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.6rem', color: 'rgba(212,168,83,0.7)', margin: '0.15rem 0 0', letterSpacing: '0.05em' }}>{label}</p>
+                      )}
                       {prod.detalle && (
                         <p style={{
                           fontFamily: 'var(--font-sans)',
@@ -832,6 +836,7 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
                               }
                               return { ...prev, [prod.nombre]: t as 'S'|'M'|'L'|'XL' };
                             })}
+                            onClickCapture={() => setAvisoTalla(prev => ({ ...prev, [prod.nombre]: false }))}
                           >{t}</button>
                         ))}
                       </div>
@@ -910,7 +915,12 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
                         No disponible
                       </button>
                     ) : esTorta && !tallaSeleccionada ? (
-                      <button className="svc-btn-add" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+                      <button
+                        className="svc-btn-add"
+                        aria-disabled="true"
+                        onClick={() => setAvisoTalla(prev => ({ ...prev, [prod.nombre]: true }))}
+                        style={{ opacity: 0.45, cursor: 'not-allowed' }}
+                      >
                         Elige tamaño
                       </button>
                     ) : enCarrito === 0 ? (
@@ -925,8 +935,8 @@ export default function ServicioDetalle({ id: idProp, nombre, imagen, initialTab
                   </div>
                   {/* Texto personas — solo tortas en delivery */}
                   {esTorta && tallasDisp.length > 0 && (
-                    <div className="talla-personas" style={{ color: tallaSeleccionada ? 'rgba(201,165,90,0.8)' : 'rgba(220,100,100,0.8)' }}>
-                      {tallaSeleccionada ? DESC_TALLA[tallaSeleccionada] : '← Elige un tamaño primero'}
+                    <div className="talla-personas" role="status" style={{ color: tallaSeleccionada ? 'rgba(201,165,90,0.8)' : 'rgba(220,100,100,0.8)' }}>
+                      {tallaSeleccionada ? DESC_TALLA[tallaSeleccionada] : (avisoTalla[prod.nombre] ? 'Elige un tamaño primero' : '')}
                     </div>
                   )}
                 </div>
