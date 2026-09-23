@@ -594,6 +594,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
             <option value="Dulces & Alfajores">🍪 Dulces & Alfajores</option>
             <option value="Queques & Muffins">🥐 Queques & Muffins</option>
             <option value="Empanadas">🥟 Empanadas</option>
+            <option value="Cóctel Salado">🧂 Cóctel Salado</option>
+            <option value="Cóctel Dulce">🍬 Cóctel Dulce</option>
+            <option value="Tablas">🧀 Tablas</option>
           </select>
         </div>
         <div><label>Tipo</label>
@@ -690,6 +693,7 @@ let prods=[];
 let ventas=[];
 let catActiva='Pan Artesanal';
 let sel=null;
+let modoRespaldo=false;   // true si fsLoad() no pudo leer Firestore y usó DEFAULTS
 
 // ── FIRESTORE ─────────────────────────────────────────────────────────────
 async function fsLoad() {
@@ -710,15 +714,18 @@ async function fsLoad() {
         return p;
       });
       prods.forEach(p=>{if(!p.precio)p.precio=cpx(p);});
+      modoRespaldo=false;
       setSyncBadge('sync-prods','✓ Sincronizado con la nube','ok');
     } else {
       prods = DEFAULTS.map(p=>({...p,precio:cpx(p)}));
+      modoRespaldo=true;
     }
     const snapV = await getDocs(collection(db,'galdi_ventas'));
     ventas = snapV.docs.map(d=>d.data());
     setSyncBadge('sync-ventas','✓ Ventas sincronizadas','ok');
   } catch(e) {
     prods = DEFAULTS.map(p=>({...p,precio:cpx(p)}));
+    modoRespaldo=true;
     setSyncBadge('sync-prods','⚠ Sin conexión — datos locales','err');
     console.error('Firestore error:',e);
   }
@@ -733,7 +740,11 @@ async function fsSaveAllProds() {
 async function fsSaveProd(p) {
   try {
     await setDoc(doc(db,'galdi_productos',String(p.id)),p);
-  } catch(e){console.error(e);}
+    setSyncBadge('sync-prods','✓ Guardado en la nube','ok');
+  } catch(e) {
+    setSyncBadge('sync-prods','⚠ Error al guardar: '+e.message,'err');
+    console.error(e);
+  }
 }
 
 async function fsDeleteProd(id) {
@@ -2547,34 +2558,53 @@ window.abrirModal = (id) => {
 };
 
 window.saveProd = async () => {
+  if (modoRespaldo) {
+    alert('Sin conexión con la base: no se puede guardar. Recarga la página.');
+    return;
+  }
   const id=document.getElementById('m-id').value;
-  const existing = id ? prods.find(x=>x.id===+id) : null;
+  const existing = id ? prods.find(x=>String(x.id)===String(id)) : null;
   const p = {
     nombre: document.getElementById('m-nom').value.trim(),
     cat: document.getElementById('m-cat').value,
     tipo: document.getElementById('m-tipo').value,
     unidad: document.getElementById('m-uni').value,
     combate: document.getElementById('m-comb').value.trim(),
-    costo: document.getElementById('m-cost') ? (+document.getElementById('m-cost').value||0) : (existing?.costo||0),
-    energia: document.getElementById('m-en') ? (+document.getElementById('m-en').value||0) : (existing?.energia||0),
-    logistica: document.getElementById('m-log') ? (+document.getElementById('m-log').value||30) : (existing?.logistica||30),
-    mdo: document.getElementById('m-mdo') ? (+document.getElementById('m-mdo').value||0) : (existing?.mdo||0),
-    margen: document.getElementById('m-mrg') ? (+document.getElementById('m-mrg').value||0) : (existing?.margen||20),
-    costosTalla: existing?.costosTalla || null,
+    costo: document.getElementById('m-cost') ? (+document.getElementById('m-cost').value ?? 0) : (existing?.costo ?? 0),
+    energia: document.getElementById('m-en') ? (+document.getElementById('m-en').value ?? 0) : (existing?.energia ?? 0),
+    logistica: document.getElementById('m-log') ? (+document.getElementById('m-log').value ?? 30) : (existing?.logistica ?? 30),
+    mdo: document.getElementById('m-mdo') ? (+document.getElementById('m-mdo').value ?? 0) : (existing?.mdo ?? 0),
+    margen: document.getElementById('m-mrg') ? (+document.getElementById('m-mrg').value ?? 0) : (existing?.margen ?? 20),
+    costosTalla: existing?.costosTalla ?? null,
   };
   if(!p.nombre){alert('Ingresa el nombre del producto');return;}
-  p.precio=cpx(p);
-  if(id){const i=prods.findIndex(x=>x.id===+id);prods[i]={...prods[i],...p};}
-  else{p.id=Date.now();prods.push(p);catActiva=p.cat;}
-  await fsSaveProd(p.id?p:prods[prods.length-1]);
+  if(id){
+    const i=prods.findIndex(x=>String(x.id)===String(id));
+    if(i===-1){ alert('No se encontró el producto. Recarga la página.'); return; }
+    prods[i]={...prods[i],...p,id:+id,precio:prods[i].precio};
+    await fsSaveProd(prods[i]);
+  } else {
+    p.id=Date.now();
+    p.precio=cpx(p);
+    prods.push(p);
+    catActiva=p.cat;
+    await fsSaveProd(p);
+  }
   renderCats();renderT();document.getElementById('modal').classList.remove('open');
 };
 
 window.elimProd = async () => {
-  const id=+document.getElementById('m-id').value;
+  if (modoRespaldo) {
+    alert('Sin conexión con la base: no se puede eliminar. Recarga la página.');
+    return;
+  }
+  const id=document.getElementById('m-id').value;
   if(!confirm('¿Eliminar este producto?'))return;
-  prods=prods.filter(p=>p.id!==id);
-  await fsDeleteProd(id);
+  const i=prods.findIndex(x=>String(x.id)===String(id));
+  if(i===-1){ alert('No se encontró el producto. Recarga la página.'); return; }
+  const idReal=prods[i].id;
+  prods=prods.filter(p=>String(p.id)!==String(id));
+  await fsDeleteProd(idReal);
   renderCats();renderT();document.getElementById('modal').classList.remove('open');
 };
 
