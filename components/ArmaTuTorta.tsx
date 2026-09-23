@@ -38,6 +38,7 @@ function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, pri
     <button
       onClick={onSelect}
       disabled={deshabilitada && !seleccionada}
+      title={`${opcion.nombre} — ${opcion.desc}`}
       className={`atg-card ${opcion.imagen ? 'atg-card-img' : 'atg-card-emoji'}${compactMobile ? ' atg-variant-card' : ''}`}
       style={{
         background: seleccionada ? `linear-gradient(135deg, ${P.rose}33, ${P.peach}33)` : P.white,
@@ -66,7 +67,7 @@ function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, pri
         border: seleccionada ? `1.5px solid ${P.roseDark}` : `1.5px solid ${P.creamDark}`,
       }}>
         {opcion.imagen ? (
-          <Image src={opcion.imagen} alt={opcion.nombre} fill style={{ objectFit: 'cover' }} priority={priority} />
+          <Image src={opcion.imagen} alt={opcion.nombre} fill sizes="(min-width: 769px) 120px, 100vw" style={{ objectFit: 'cover' }} priority={priority} />
         ) : (
           <div className={compactMobile ? 'atg-variant-card-icon-inner' : undefined} style={{
             width: '100%',
@@ -81,8 +82,8 @@ function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, pri
           </div>
         )}
       </div>
-      <div className={compactMobile ? 'atg-variant-card-text' : undefined}>
-        <p style={{
+      <div className={`atg-card-text${compactMobile ? ' atg-variant-card-text' : ''}`}>
+        <p className="atg-card-nombre" style={{
           fontFamily: 'var(--font-serif)',
           fontSize: '0.95rem',
           fontWeight: 400,
@@ -92,7 +93,7 @@ function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, pri
         }}>
           {opcion.nombre}
         </p>
-        <p style={{
+        <p className="atg-card-desc" style={{
           fontFamily: 'var(--font-sans)',
           fontSize: '0.65rem',
           color: P.brownLight,
@@ -103,7 +104,7 @@ function OpcionCard({ opcion, seleccionada, onSelect, deshabilitada = false, pri
         </p>
       </div>
       {seleccionada && (
-        <span className={compactMobile ? 'atg-variant-card-badge' : undefined} style={{
+        <span className={`atg-card-badge${compactMobile ? ' atg-variant-card-badge' : ''}`} style={{
           fontFamily: 'var(--font-sans)',
           fontSize: '0.58rem',
           letterSpacing: '0.12em',
@@ -205,7 +206,7 @@ function Paso({ id, numero, titulo, subtitulo, completado, activo, children }: {
       opacity: activo || completado ? 1 : 0.35,
       transition: 'opacity 0.3s ease',
     }}>
-      <div className="atg-paso-head" style={{
+      <div className={`atg-paso-head${activo ? ' atg-paso-head-activo' : ''}`} style={{
         display: 'flex',
         alignItems: 'center',
         gap: '1rem',
@@ -396,19 +397,30 @@ export default function ArmaTuTorta() {
             }
           }
           @media (min-width: 769px) {
-            .atg-hero { padding: 5.25rem 5% 1.25rem !important; }
+            .atg-hero { padding: 2rem 5% 1.25rem !important; }
             .atg-hero-label { margin-bottom: 0.4rem !important; }
             .atg-hero-h1 { font-size: 2.6rem !important; margin: 0 0 0.4rem !important; line-height: 1.1 !important; }
             .atg-hero-p { max-width: 760px !important; font-size: 0.9rem !important; line-height: 1.5 !important; }
             .atg-hero-p2 { max-width: 760px !important; margin-top: 0.4rem !important; }
             .atg-hero-orn { margin-top: 0.6rem !important; }
-            .atg-config { padding-top: 1.5rem !important; }
+            .atg-config { max-width: 1100px !important; padding-top: 1.5rem !important; }
             .atg-paso-head { justify-content: center; }
+            .atg-paso-head::after { content: ''; width: 38px; flex-shrink: 0; }
+            .atg-paso-head-activo { margin-bottom: 0.5rem !important; }
             .atg-paso-head > div:last-child { text-align: center; }
+            .atg-continuar-fila { margin-top: 0.6rem !important; }
             .atg-paso-body { padding-left: 0 !important; }
             .atg-resumen-paso { padding-left: 0 !important; text-align: center; }
             .atg-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 220px)) !important; justify-content: center; }
-            .atg-card-img .atg-card-media { height: auto !important; aspect-ratio: 1 / 1; }
+            .atg-card { position: relative; }
+            .atg-grid-ilus { display: flex !important; flex-wrap: wrap; justify-content: center; gap: 0.6rem !important; max-width: 948px; margin-left: auto; margin-right: auto; }
+            .atg-grid-ilus .atg-card { flex: 0 0 180px; width: 180px; }
+            .atg-card-img { padding: 0.4rem !important; gap: 0.3rem !important; border-radius: 12px !important; }
+            .atg-card-img .atg-card-media { width: 120px !important; height: 120px !important; flex-shrink: 0; }
+            .atg-card-img .atg-card-text { width: 100%; min-width: 0; }
+            .atg-card-img .atg-card-nombre { font-size: 0.85rem !important; line-height: 1.2 !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .atg-card-img .atg-card-desc { font-size: 0.62rem !important; line-height: 1.3 !important; margin-top: 0.15rem !important; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+            .atg-card-img .atg-card-badge { position: absolute; top: 0.5rem; right: 0.5rem; background: ${P.white} !important; }
             .atg-card-emoji { padding: 0.6rem 0.75rem !important; gap: 0.4rem !important; }
             .atg-card-emoji .atg-card-media { height: 56px !important; }
             .atg-card-emoji .atg-card-media > div { font-size: 2rem !important; }
@@ -603,7 +615,7 @@ export default function ArmaTuTorta() {
 
         {/* PASO 2 — Base */}
         <Paso numero={2} titulo="Elige tu base" subtitulo="La arquitectura de tu torta" completado={pasoActivo > 2} activo={pasoActivo === 2}>
-          <div className="atg-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '1.5rem' }}>
+          <div className="atg-grid-ilus" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '1.5rem' }}>
             {basesDisponibles.map(b => (
               <OpcionCard
                 key={b.id}
@@ -642,7 +654,7 @@ export default function ArmaTuTorta() {
 
         {/* PASO 3 — Rellenos */}
         <Paso numero={3} titulo="Elige el relleno" subtitulo="Puedes elegir hasta 3 sabores" completado={pasoActivo > 3} activo={pasoActivo === 3}>
-          <div className="atg-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '0.75rem' }}>
+          <div className="atg-grid-ilus" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '0.75rem' }}>
             {rellenosDisponibles.map(r => (
               <OpcionCard
                 key={r.id}
@@ -653,7 +665,7 @@ export default function ArmaTuTorta() {
               />
             ))}
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem' }}>
+          <div className="atg-continuar-fila" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem' }}>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.68rem', color: P.brownLight, margin: 0 }}>
               <span style={{ color: rellenos.length === 3 ? P.roseDark : P.gold, fontWeight: 600 }}>{rellenos.length}/3</span> sabores elegidos
               {rellenos.length === 3 && <span style={{ color: P.roseDark }}> — máximo alcanzado</span>}
@@ -698,7 +710,7 @@ export default function ArmaTuTorta() {
 
         {/* PASO 4 — Decoraciones */}
         <Paso numero={4} titulo="Elige la decoración" subtitulo="Puedes elegir hasta 2 opciones" completado={pasoActivo > 4} activo={pasoActivo === 4}>
-          <div className="atg-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '0.75rem' }}>
+          <div className="atg-grid-ilus" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '0.75rem' }}>
             {decoracionesDisponibles.map(d => (
               <OpcionCard
                 key={d.id}
@@ -709,7 +721,7 @@ export default function ArmaTuTorta() {
               />
             ))}
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem' }}>
+          <div className="atg-continuar-fila" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem' }}>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.68rem', color: P.brownLight, margin: 0 }}>
               <span style={{ color: decoraciones.length === 2 ? P.roseDark : P.gold, fontWeight: 600 }}>{decoraciones.length}/2</span> elegidas
               {decoraciones.length === 2 && <span style={{ color: P.roseDark }}> — máximo alcanzado</span>}
