@@ -220,8 +220,8 @@ npm run start   # preview producción local
 - [ ] **Integración WhatsApp → /gestion** — pedidos entrantes con estado pendiente/confirmado/entregado (futuro)
 - [ ] **QR en PDF usando SVG en vez de canvas**
 - [ ] **Agenda de clientes en /gestion**
-- [ ] **Bug persistencia checkout** — `flowCrearOrden` solo pasa 4 campos, revisar qué falta persistir
-- [ ] **PENDIENTE** — Los pedidos con despacho no calculado (error de infraestructura de Google Maps) se marcan con prefijo ⚠️ únicamente en la descripción enviada a Flow, porque `flowConfirmar` no persiste el detalle completo del pedido en Firestore. Esto depende de que alguien lea la descripción en el panel de Flow. Cuando se resuelva la persistencia completa del pedido en Firestore, migrar este flag a un campo propio en `galdi_pedidos`.
+- [x] **Bug persistencia checkout** — resuelto en código (`5b5e830`, `e8068f4`, 21-09-2026): `functions/src/pedidos.ts` guarda el pedido completo en `galdi_pedidos/{orden}` (nombre, teléfono, dirección, modo y fecha de entrega, items, monto, email) al crear la orden y lo marca `pagado` con `fechaPago` en `flowConfirmar`. Falta confirmarlo con el primer pedido real pagado (revisar `galdi_pedidos/{orden}`).
+- [ ] **PENDIENTE** — Los pedidos con despacho no calculado (error de infraestructura de Google Maps) se marcan con prefijo ⚠️ únicamente en la descripción enviada a Flow. `galdi_pedidos` ya guarda el pedido completo, pero `extraerDatosPedido` no incluye `despachoSinCalcular`/`despachoInfo`, así que el flag sigue viviendo solo en la descripción de Flow. Falta migrarlo a un campo propio en `galdi_pedidos` (enviarlo desde `app/carrito` y agregarlo a `DatosPedido`).
 - [ ] **Campaña Día del Niño** (09-08-2026)
 - [ ] **Limpiar `precioS/M/L/XL = 0` en Firestore** — Empanada de Queso (`1785880969439`) y Milhojas (`1790001812148`); `deleteField()` solo de esos 4 campos, con respaldo JSON previo. Inertes (el hook trata 0 como ausente). Requiere autorización y credenciales.
 - [ ] **Auditoría Bloque 3** (SEO estructural) — ver sección de Auditoría arriba
