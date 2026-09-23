@@ -222,13 +222,12 @@ npm run start   # preview producción local
 - [ ] **Agenda de clientes en /gestion**
 - [x] **Bug persistencia checkout** — resuelto en código (`5b5e830`, `e8068f4`, 21-09-2026): `functions/src/pedidos.ts` guarda el pedido completo en `galdi_pedidos/{orden}` (nombre, teléfono, dirección, modo y fecha de entrega, items, monto, email) al crear la orden y lo marca `pagado` con `fechaPago` en `flowConfirmar`. Falta confirmarlo con el primer pedido real pagado (revisar `galdi_pedidos/{orden}`).
 - [ ] **PENDIENTE** — Los pedidos con despacho no calculado (error de infraestructura de Google Maps) se marcan con prefijo ⚠️ únicamente en la descripción enviada a Flow. `galdi_pedidos` ya guarda el pedido completo, pero `extraerDatosPedido` no incluye `despachoSinCalcular`/`despachoInfo`, así que el flag sigue viviendo solo en la descripción de Flow. Falta migrarlo a un campo propio en `galdi_pedidos` (enviarlo desde `app/carrito` y agregarlo a `DatosPedido`).
-- [ ] **Campaña Día del Niño** (09-08-2026)
 - [ ] **Limpiar `precioS/M/L/XL = 0` en Firestore** — Empanada de Queso (`1785880969439`) y Milhojas (`1790001812148`); `deleteField()` solo de esos 4 campos, con respaldo JSON previo. Inertes (el hook trata 0 como ausente). Requiere autorización y credenciales.
-- [ ] **Auditoría Bloque 3** (SEO estructural) — ver sección de Auditoría arriba
+- [x] **Auditoría Bloque 3** (SEO estructural) — cerrado 06-08-2026 (ver "Bloque 3 — CERRADO 06-08-2026")
 - [ ] **Revisar costos Mariscos y Queso Camarón** en /gestion — comparten $850 de materiales con Pino, pero sus insumos (mariscos, camarones) son más caros; el costo no refleja la diferencia real
 - [ ] **Costeo real de Empanada de Queso en Masa de Milhojas** — costo/energia/logistica/mdo copiados como placeholder de Empanada de Queso frita (masa distinta, costo real de hojaldre sin determinar). Ajustar cuando se tenga el costeo real.
 - [ ] **components/Servicios.tsx es código huérfano** — no está importado en ningún lugar del repo (confirmado 04-08-2026), evaluar eliminarlo
-- [ ] **prod-empanada.webp sobredimensionado** — 2400×1792px sin variante responsive (`sizes`), ahora es LCP de la home vía el bloque estacional del Hero; revisar/optimizar si la ponderación se vuelve permanente
+- [ ] **prod-empanada.webp sobredimensionado** — 2400×1792px sin variante responsive (`sizes`), es una slide permanente del Hero (`components/Hero.tsx`, el bloque estacional de Fiestas Patrias ya se revirtió) y puede ser el LCP de la home; revisar/optimizar (variante responsive con `sizes`)
 - [x] **Evaluar cambio de title del home** — se dejó fuera a propósito el 04-08-2026 para poder medir el efecto de la description por separado. 22-09-2026: title cambiado a "Pastelería Artesanal y Tortas en Maipú | Galdi" (commit `433041d`).
 - [x] **Revisar "tortas en maipu"** (posición 11,1, CTR 3%) vs "tortas maipú" (posición 7,0, CTR 10,7%) en Search Console. 22-09-2026: resuelto. "tortas en maipu" pasó de pos 11,1 / CTR 3% a pos 4,47 / CTR 6,36%. Quien rankea es el home, no /tortas-maipu. Se acepta así; no forzar la página dedicada.
 
