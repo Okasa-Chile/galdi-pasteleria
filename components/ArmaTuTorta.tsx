@@ -396,6 +396,49 @@ export default function ArmaTuTorta() {
               display: none !important;
             }
           }
+          @media (max-width: 768px) {
+            .atg-hero { padding: 1.5rem 5% 1rem !important; }
+            .atg-hero-label { margin-bottom: 0.5rem !important; }
+            .atg-hero-h1 { margin: 0 0 0.5rem !important; }
+            .atg-hero-p { line-height: 1.5 !important; }
+            .atg-hero-p2 { margin-top: 0.5rem !important; }
+            .atg-hero-orn { margin-top: 0.75rem !important; }
+            .atg-config { padding-top: 1.25rem !important; }
+            [id^="atg-paso-"] { margin-bottom: 1.25rem !important; }
+            .atg-paso-body { padding-left: 0 !important; }
+            .atg-resumen-paso { padding-left: 0 !important; }
+            div:has(> img[src*="flor-separador"]) { margin: 0.25rem 0 1rem !important; }
+            img[src*="flor-separador"] { height: 32px !important; width: auto !important; }
+            .atg-grid-ilus { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 0.6rem !important; }
+            .atg-card-img { position: relative; padding: 0.5rem 0.4rem !important; gap: 0.4rem !important; }
+            .atg-card-img .atg-card-media { height: auto !important; aspect-ratio: 1 / 1; }
+            .atg-card-img .atg-card-media img { object-fit: contain !important; }
+            .atg-card-img .atg-card-text { width: 100%; min-width: 0; }
+            .atg-card-img .atg-card-nombre { font-size: 0.82rem !important; line-height: 1.2 !important; }
+            .atg-card-img .atg-card-desc { font-size: 0.58rem !important; line-height: 1.3 !important; margin-top: 0.15rem !important; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+            .atg-card-img .atg-card-badge { position: absolute; top: 0.35rem; right: 0.35rem; background: ${P.white} !important; }
+            .atg-continuar-fila:has(button) { position: sticky; bottom: 0; z-index: 20; background: ${P.cream}; border-top: 1px solid ${P.creamDark}; margin: 0.6rem -5vw 0 !important; padding: 0.55rem 5vw calc(0.55rem + env(safe-area-inset-bottom)) !important; box-shadow: 0 -4px 12px rgba(61,32,16,0.08); }
+            .atg-res { padding: 1rem !important; }
+            .atg-res-corona { margin-bottom: 0.3rem !important; }
+            .atg-res-corona img { height: 48px !important; width: auto !important; }
+            .atg-res-titulo { margin-bottom: 0.75rem !important; }
+            .atg-res-label { margin: 0 0 0.3rem !important; }
+            .atg-res-h3 { font-size: 1.25rem !important; line-height: 1.2 !important; }
+            .atg-res-orn { margin-top: 0.4rem !important; }
+            .atg-res-datos { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 0.5rem !important; margin-bottom: 0.75rem !important; }
+            .atg-res-item { padding: 0.5rem 0.6rem !important; border-radius: 10px !important; overflow-wrap: break-word; }
+            .atg-res-item:nth-child(n+3) { grid-column: 1 / -1; }
+            .atg-res-item-label { margin: 0 0 0.2rem !important; }
+            .atg-res-item-valor { font-size: 0.8rem !important; }
+            .atg-res-nota { padding: 0.5rem 0.7rem !important; margin-bottom: 0.75rem !important; }
+            .atg-res-nota p { line-height: 1.45 !important; }
+            .atg-res-precio { padding: 0.6rem 0.8rem !important; margin-bottom: 0.75rem !important; }
+            .atg-res-precio-label { margin: 0 0 0.25rem !important; }
+            .atg-res-recargo { margin-top: 0.3rem !important; }
+            .atg-res-disc { margin-top: 0.4rem !important; line-height: 1.5 !important; }
+            .atg-res-wsp { padding: 0.75rem !important; }
+            .atg-res-otra { margin-top: 0.6rem !important; padding: 0.6rem !important; }
+          }
           @media (min-width: 769px) {
             .atg-hero { padding: 2rem 5% 1.25rem !important; }
             .atg-hero-label { margin-bottom: 0.4rem !important; }
