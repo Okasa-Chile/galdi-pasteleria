@@ -89,6 +89,79 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
 .sync-badge.ok{color:#4a7c59;}
 .sync-badge.err{color:#9b3a2a;}
 .pres-linea{cursor:grab;}.pres-linea:last-child{border-bottom:none;}.pres-linea.drag-over-top{border-top:2px solid var(--gold2) !important;}.pres-linea.drag-over-bot{border-bottom:2px solid var(--gold2) !important;}
+/* AGENDA */
+:root{--ag-pendiente:#9b3a2a;--ag-pendiente-bg:#f5e6e6;--ag-separado:#a87418;--ag-separado-bg:#fdf3e0;--ag-confirmado:#4a7c59;--ag-confirmado-bg:#e6f1ea;--ag-entregado:#7d7d7d;--ag-entregado-bg:#ececec;--ag-cancelado:#b0aaa2;--ag-cancelado-bg:#f3f0ec;}
+.est-pendiente{--c:var(--ag-pendiente);--bg:var(--ag-pendiente-bg);}
+.est-separado{--c:var(--ag-separado);--bg:var(--ag-separado-bg);}
+.est-confirmado{--c:var(--ag-confirmado);--bg:var(--ag-confirmado-bg);}
+.est-entregado{--c:var(--ag-entregado);--bg:var(--ag-entregado-bg);}
+.est-cancelado{--c:var(--ag-cancelado);--bg:var(--ag-cancelado-bg);}
+.ag-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+.ag-nav{display:flex;align-items:center;gap:8px;}
+.ag-mes{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--brown);min-width:180px;text-align:center;text-transform:capitalize;}
+.ag-resumen{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px;}
+.ag-estados{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+.ag-pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:3px 10px;border-radius:12px;color:var(--c);background:var(--bg);border:1px solid var(--c);}
+.ag-pill b{font-weight:600;}
+.ag-alert{background:#f5e6e6;border:1px solid #e4b8b8;color:#9b3a2a;border-radius:6px;padding:10px 12px;font-size:12px;margin-bottom:12px;}
+.ag-cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;}
+.ag-dow{text-align:center;font-size:10px;letter-spacing:.12em;color:var(--muted);padding:4px 0;}
+.ag-dia{background:#fff;border:1px solid var(--border);border-radius:6px;min-height:96px;padding:4px;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:0;overflow:hidden;}
+.ag-dia:hover{border-color:var(--gold);}
+.ag-dia.vacio{background:transparent;border-color:transparent;cursor:default;}
+.ag-dia.hoy{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold);}
+.ag-dia-num{font-size:11px;font-weight:600;color:var(--muted);}
+.ag-dia.hoy .ag-dia-num{color:var(--gold2);}
+.ag-mas{font-size:10px;color:var(--gold2);font-weight:600;padding:0 2px;}
+.ag-item svg{display:block;flex:none;}
+.ag-item.cal{display:flex;align-items:center;gap:3px;font-size:10px;line-height:1.25;padding:2px 3px;border-radius:4px;color:var(--c);background:var(--bg);border-left:3px solid var(--c);min-width:0;white-space:nowrap;overflow:hidden;}
+.ag-item.cal .ag-h{font-weight:600;}
+.ag-item.cal .ag-c{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;color:var(--brown);}
+.ag-item.cal .ag-t{font-weight:600;opacity:.8;}
+.est-cancelado .ag-c,.est-cancelado .ag-monto{text-decoration:line-through;}
+.ag-dia-hdr{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+.ag-dia-hdr h3{margin-bottom:0 !important;text-transform:capitalize;}
+.ag-hgrupo{margin-bottom:16px;}
+.ag-hora-tit{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--gold2);border-bottom:1px solid var(--border);padding-bottom:4px;margin-bottom:8px;}
+.ag-cupo{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:10px;background:var(--sand);color:var(--muted);}
+.ag-cupo.completo{background:var(--ag-pendiente);color:#fff;}
+.ag-item.dia{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--border);border-left:4px solid var(--c);border-radius:8px;padding:10px 12px;margin-bottom:8px;}
+.ag-item.dia .ag-ico{color:var(--gold2);padding-top:1px;}
+.ag-body{flex:1;min-width:0;}
+.ag-l1{font-size:14px;color:var(--brown);}
+.ag-l1 .ag-h{font-weight:600;color:var(--gold2);margin-right:6px;}
+.ag-l1 .ag-c{font-weight:600;}
+.ag-l2{font-size:11px;color:var(--muted);margin-top:2px;}
+.ag-badge{background:var(--sand);color:var(--brown);font-size:10px;font-weight:600;padding:1px 7px;border-radius:9px;}
+.ag-det{font-size:12px;color:var(--brown);margin-top:5px;white-space:pre-wrap;word-break:break-word;}
+.ag-der{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none;}
+.ag-estado{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--c);background:var(--bg);border:1px solid var(--c);border-radius:10px;padding:2px 8px;}
+.ag-monto{font-size:13px;font-weight:600;color:var(--brown);}
+.ag-saldo{font-size:11px;color:var(--muted);}
+.ag-overlay{padding:12px;}
+.ag-form input[type=time],.ag-form input[type=tel],.ag-form input[type=email],.ag-form textarea{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:6px;font-family:'Jost',sans-serif;font-size:13px;color:var(--brown);background:var(--cream);}
+.ag-form textarea{resize:vertical;min-height:64px;}
+.ag-campos{display:flex;flex-direction:column;gap:12px;}
+.ag-cat-wrap{display:flex;align-items:center;gap:8px;}
+.ag-cat-ico{width:24px;height:24px;flex:none;color:var(--gold2);display:flex;align-items:center;justify-content:center;}
+.ag-saldo-lbl{font-size:12px;color:var(--muted);margin-top:4px;}
+.ag-err{display:none;background:#f5e6e6;border:1px solid #e4b8b8;color:#9b3a2a;border-radius:6px;padding:10px 12px;font-size:12.5px;}
+.ag-err ul{margin:6px 0 0 18px;}
+.ag-err strong{display:block;}
+@media(max-width:1100px){.tabs{overflow-x:auto;}.tab{white-space:nowrap;flex:none;}}
+@media(max-width:600px){
+  .ag-resumen{grid-template-columns:1fr 1fr;}
+  .ag-mes{font-size:20px;min-width:0;flex:1;}
+  .ag-dia{min-height:66px;padding:2px;}
+  .ag-dia-num{font-size:10px;padding-left:2px;}
+  .ag-item.cal{flex-direction:column;gap:0;padding:2px 0;border-left:none;justify-content:center;font-size:9px;}
+  .ag-item.cal .ag-c,.ag-item.cal .ag-t{display:none;}
+  .ag-mas-txt{display:none;}
+  .ag-item.dia{flex-wrap:wrap;}
+  .ag-item.dia .ag-der{flex-direction:row;width:100%;justify-content:space-between;align-items:center;flex-wrap:wrap;}
+  .ag-overlay{padding:8px;}
+  .ag-overlay .modal{padding:18px;}
+}
 @media(max-width:600px){.grid-2,.grid-3,.resumen-grid{grid-template-columns:1fr;}.panel{padding:16px;}.tab{padding:10px 12px;font-size:10px;}#pres-header-lineas{display:none !important;}.pres-linea{grid-template-columns:1fr 1fr !important;grid-template-rows:auto auto auto !important;}}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -120,6 +193,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
     <div class="tab" onclick="showTab('ventas',this)">4 · Registro de Ventas</div>
     <div class="tab" onclick="showTab('presupuestos',this)">5 · Presupuestos</div>
     <div class="tab" onclick="showTab('precios',this)">6 · Lista de Precios</div>
+    <div class="tab" onclick="showTab('agenda',this)">7 · Agenda</div>
   </div>
 
   <!-- TAB 1 -->
@@ -576,6 +650,26 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
     </div>
   </div>
 
+  <!-- TAB 7 -->
+  <div id="tab-agenda" class="panel">
+    <div class="ag-top">
+      <div class="ag-nav">
+        <button class="btn btn-sm btn-gray" onclick="agNavMes(-1)" aria-label="Mes anterior">◀</button>
+        <div class="ag-mes" id="ag-mes-nombre"></div>
+        <button class="btn btn-sm btn-gray" onclick="agNavMes(1)" aria-label="Mes siguiente">▶</button>
+        <button class="btn btn-sm btn-gray" onclick="agHoy()">Hoy</button>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="sync-badge" id="sync-agenda" style="margin-bottom:0;"></span>
+        <button class="btn btn-sm" onclick="agAbrirModal(null)">+ Nuevo</button>
+      </div>
+    </div>
+    <div class="ag-alert" id="ag-load-err" style="display:none;"></div>
+    <div class="ag-resumen" id="ag-resumen"></div>
+    <div class="ag-estados" id="ag-estados"></div>
+    <div class="ag-cal" id="ag-cal"></div>
+  </div>
+
 </div>
 
 <!-- MODAL -->
@@ -634,10 +728,86 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
   </div>
 </div>
 
+<!-- Modal Agenda: vista del día -->
+<div class="modal-overlay ag-overlay" id="modal-agenda-dia" onclick="if(event.target.id==='modal-agenda-dia')agCerrarDia()">
+  <div class="modal" style="max-width:640px;">
+    <div class="ag-dia-hdr">
+      <h3 id="ag-dia-tit"></h3>
+      <button class="btn btn-sm" onclick="agAbrirModal(null, agFechaDiaAbierto())">+ Nuevo en este día</button>
+    </div>
+    <div id="ag-dia-body"></div>
+    <div style="text-align:right;margin-top:14px;">
+      <button class="btn btn-sm btn-gray" onclick="agCerrarDia()">✕ Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Agenda: crear / editar -->
+<div class="modal-overlay ag-overlay" id="modal-agenda">
+  <div class="modal ag-form" style="max-width:620px;">
+    <h3 id="ag-tit">Nuevo registro</h3>
+    <div class="ag-campos">
+      <div class="grid-2">
+        <div><label for="ag-tipo">Tipo *</label>
+          <select id="ag-tipo" onchange="agOnTipo()">
+            <option value="Pedido">Pedido</option>
+            <option value="Evento">Evento</option>
+          </select>
+        </div>
+        <div><label for="ag-categoria">Categoría *</label>
+          <div class="ag-cat-wrap">
+            <span class="ag-cat-ico" id="ag-cat-ico"></span>
+            <select id="ag-categoria" onchange="agOnCategoria()" style="flex:1;min-width:0;"></select>
+          </div>
+        </div>
+      </div>
+      <div><label for="ag-cliente">Cliente *</label><input type="text" id="ag-cliente" maxlength="120" autocomplete="off"></div>
+      <div class="grid-2">
+        <div><label for="ag-telefono">Teléfono</label><input type="tel" id="ag-telefono" maxlength="30" autocomplete="off"></div>
+        <div><label for="ag-email">Email</label><input type="email" id="ag-email" maxlength="120" autocomplete="off"></div>
+      </div>
+      <div><label for="ag-detalle">Detalle</label><textarea id="ag-detalle" rows="3" maxlength="2000" placeholder="Productos, cantidades, sabor, tamaño, número de personas…"></textarea></div>
+      <div class="grid-2">
+        <div><label for="ag-fecha">Fecha *</label><input type="date" id="ag-fecha" oninput="agLimpiarError()" onchange="agLimpiarError()"></div>
+        <div><label for="ag-hora">Hora de entrega / inicio *</label><input type="time" id="ag-hora" step="900" oninput="agLimpiarError()" onchange="agLimpiarError()"></div>
+        <div id="ag-w-horafin" style="display:none;"><label for="ag-horafin">Hora de término</label><input type="time" id="ag-horafin" step="900"></div>
+      </div>
+      <div class="grid-2">
+        <div><label for="ag-modalidad">Modalidad</label>
+          <select id="ag-modalidad" onchange="agToggleCampos()">
+            <option value="Retiro">Retiro</option>
+            <option value="Despacho">Despacho</option>
+          </select>
+        </div>
+        <div><label for="ag-canal">Canal</label><select id="ag-canal"></select></div>
+      </div>
+      <div class="grid-2" id="ag-w-dir" style="display:none;">
+        <div><label for="ag-direccion">Dirección</label><input type="text" id="ag-direccion" maxlength="200" autocomplete="off"></div>
+        <div><label for="ag-comuna">Comuna</label><input type="text" id="ag-comuna" maxlength="80" autocomplete="off"></div>
+      </div>
+      <div class="grid-2">
+        <div><label for="ag-total">Total ($)</label><input type="number" id="ag-total" min="0" step="1" inputmode="numeric" oninput="agActualizarSaldo()"></div>
+        <div><label for="ag-pago">Pago recibido ($)</label><input type="number" id="ag-pago" min="0" step="1" inputmode="numeric" oninput="agActualizarSaldo()"></div>
+      </div>
+      <div class="ag-saldo-lbl" id="ag-saldo-lbl" style="margin-top:-6px;"></div>
+      <div class="grid-2">
+        <div><label for="ag-estado">Estado</label><select id="ag-estado" onchange="agLimpiarError()"></select></div>
+        <div><label for="ag-ref">Ref. presupuesto</label><input type="text" id="ag-ref" maxlength="20" placeholder="COT-G082" autocomplete="off"></div>
+      </div>
+      <div><label for="ag-notas">Notas</label><textarea id="ag-notas" rows="2" maxlength="2000"></textarea></div>
+      <div class="ag-err" id="ag-err" role="alert"></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end;flex-wrap:wrap;">
+      <button class="btn btn-sm btn-gray" onclick="agCerrarModal()">Cancelar</button>
+      <button class="btn btn-sm" id="ag-btn-guardar" onclick="agGuardar()">Guardar</button>
+    </div>
+  </div>
+</div>
+
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
 import { getAuth, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
-import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, updateDoc, deleteDoc, query, orderBy, serverTimestamp, limit } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, limit } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
 
 // ── CONFIG ────────────────────────────────────────────────────────────────
 const AUTORIZADOS = ['contacto@okasa.cl','ventas@galdi.cl','iaclaudioferrari@gmail.com','ingridgalvezd@gmail.com','jacquelinegalvezd@gmail.com'];
@@ -808,6 +978,7 @@ window.showTab = (id,el) => {
   if(id==='simulador')calcMeta();
   if(id==='presupuestos'){cargarNumeroPres();cargarHistorialPresupuestos();}
   if(id==='precios')renderPrecios();
+  if(id==='agenda')agInit();
 };
 
 // ── TAB 6: LISTA DE PRECIOS ──────────────────────────────────────────────
@@ -2916,6 +3087,447 @@ window.renderC = () => {
     <td><strong>${fmt(c.monto)}</strong></td>
     <td><span style="cursor:pointer;color:var(--muted);font-size:18px;" onclick="delCompra(${c.id})">×</span></td>
   </tr>`).join('');
+};
+
+// ── TAB 7: AGENDA ─────────────────────────────────────────────────────────
+// Colección galdi_agendamientos: pedidos y eventos con horario (ver README → "Agenda").
+// Cupo: máx. 3 pedidos por fecha + hora exacta. LIMITACIÓN CONOCIDA (no resuelta): la validación
+// es del lado del cliente; dos guardados simultáneos al mismo segundo podrían superar el cupo.
+const AG_COL = 'galdi_agendamientos';
+
+// AG-PURE-START — sin DOM ni Firestore (se prueba aparte con un script temporal)
+const AG_CUPO_MAX = 3;
+const AG_TIPOS = ['Pedido', 'Evento'];
+const AG_MODALIDADES = ['Retiro', 'Despacho'];
+const AG_ESTADOS = ['pendiente', 'separado', 'confirmado', 'entregado', 'cancelado'];
+const AG_ESTADO_LABEL = { pendiente: 'Pendiente', separado: 'Separado', confirmado: 'Confirmado', entregado: 'Entregado', cancelado: 'Cancelado' };
+const AG_CANALES = ['WhatsApp', 'Web', 'Presencial', 'Teléfono', 'Instagram'];
+
+// Categorías: en Firestore va SOLO el slug ASCII; la etiqueta es solo de UI.
+// Correspondencia con galdi_productos (campo cat), sin solapamiento:
+//   tortas    → Tortas
+//   pasteles  → Pasteles & Tartas (Kuchen de Nuez, Banofee, Tartaletas, Pie de Limón Merengado, Kuchen Sureño)
+//   dulces    → Dulces & Alfajores (Alfajores de Manjar, Alfajores de Chocolate, Chilenitos, Berlines, Pasteles Rectangulares)
+//   queques   → Queques & Muffins (Queque de Naranja, Queque Mármol, Queque Tradicional, Muffins)
+//   empanadas → Empanadas
+//   coctel    → Cóctel Salado + Cóctel Dulce + Tablas
+//   evento, otro → sin equivalente en el catálogo. Pan Artesanal queda fuera (Galdi ya no lo vende).
+const AG_CATEGORIAS = ['tortas', 'pasteles', 'dulces', 'queques', 'empanadas', 'coctel', 'evento', 'otro'];
+const ETIQUETAS_CATEGORIA = {
+  tortas: 'Tortas', pasteles: 'Pasteles y Tartas', dulces: 'Dulces y Alfajores', queques: 'Queques y Muffins',
+  empanadas: 'Empanadas', coctel: 'Cóctel y Coffee Break', evento: 'Evento', otro: 'Otro'
+};
+const ICONOS_CATEGORIA = {
+  tortas:    '<rect x="4" y="15" width="16" height="6" rx="1"/><rect x="7" y="9" width="10" height="6" rx="1"/><path d="M12 9V5"/>',
+  pasteles:  '<path d="M3 18h18V8z"/><path d="M11 18l10-5.6"/>',
+  dulces:    '<rect x="3" y="6" width="18" height="4.5" rx="2.25"/><rect x="3" y="13.5" width="18" height="4.5" rx="2.25"/>',
+  queques:   '<path d="M3 19v-8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8z"/><path d="M3 13h18"/>',
+  empanadas: '<path d="M3 18a9 8 0 0 1 18 0z"/><path d="M6 15.5h12"/>',
+  coctel:    '<path d="M5 4h14l-7 8z"/><path d="M12 12v7M8 20h8"/>',
+  evento:    '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+  otro:      '<path d="M3 8l9-5 9 5v9l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v9"/>'
+};
+
+function iconoCategoria(cat, px) {
+  return '<svg width="' + px + '" height="' + px + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+    + 'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + (ICONOS_CATEGORIA[cat] || ICONOS_CATEGORIA.otro) + '</svg>';
+}
+function agEsc(v) {
+  return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+// Slug desconocido (o ausente) → "otro"
+function agCategoriaValida(c) { return AG_CATEGORIAS.includes(c) ? c : 'otro'; }
+function agEstadoValido(e) { return AG_ESTADOS.includes(e) ? e : 'pendiente'; }
+function agNum(v) { const n = Number(v); return Number.isFinite(n) ? n : 0; }
+function agSaldo(r) { return agNum(r.total) - agNum(r.pagoRecibido); }   // siempre calculado, nunca guardado
+function agFmtFecha(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+  return m ? m[3] + '/' + m[2] + '/' + m[1] : String(iso || '');
+}
+function agFechaValida(f) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(f || '');
+  if (!m) return false;
+  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+  return d.getUTCFullYear() === +m[1] && d.getUTCMonth() === +m[2] - 1 && d.getUTCDate() === +m[3];
+}
+// "HH:MM" en tramos de 15 min (el input type=time no siempre respeta step en móviles)
+function agHoraValida(h) {
+  const m = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(h || '');
+  return !!m && Number(m[2]) % 15 === 0;
+}
+function agRangoMes(anio, mes) {
+  const p = n => String(n).padStart(2, '0');
+  return { desde: anio + '-' + p(mes + 1) + '-01', hasta: anio + '-' + p(mes + 1) + '-31' };
+}
+function agOrdenar(regs) {
+  return regs.slice().sort((a, b) =>
+    String(a.hora || '').localeCompare(String(b.hora || ''))
+    || String(a.creadoEn || '').localeCompare(String(b.creadoEn || ''))
+    || String(a.cliente || '').localeCompare(String(b.cliente || '')));
+}
+function agPorDia(regs) {
+  const porDia = {};
+  regs.forEach(r => { (porDia[r.fecha] = porDia[r.fecha] || []).push(r); });
+  Object.keys(porDia).forEach(k => { porDia[k] = agOrdenar(porDia[k]); });
+  return porDia;
+}
+
+// ── Cupo: cuenta SOLO tipo === 'Pedido' y estado !== 'cancelado' (la categoría no interviene) ──
+function agOcupaCupo(r) { return r.tipo === 'Pedido' && r.estado !== 'cancelado'; }
+function agPedidosEnHorario(regs, fecha, hora, idExcluir) {
+  return regs.filter(r => r.fecha === fecha && r.hora === hora && agOcupaCupo(r) && r.id !== idExcluir);
+}
+// Al editar solo se evalúa si cambió fecha, hora, tipo o estado; al crear, siempre.
+function agCambiaCupo(orig, nuevo) {
+  if (!orig) return true;
+  return orig.fecha !== nuevo.fecha || orig.hora !== nuevo.hora || orig.tipo !== nuevo.tipo || orig.estado !== nuevo.estado;
+}
+function agRequiereVerificarCupo(orig, nuevo) { return agOcupaCupo(nuevo) && agCambiaCupo(orig, nuevo); }
+function agGruposHora(regsDia) {
+  const grupos = [], idx = {};
+  agOrdenar(regsDia).forEach(r => {
+    if (!(r.hora in idx)) { idx[r.hora] = grupos.length; grupos.push({ hora: r.hora, items: [] }); }
+    grupos[idx[r.hora]].items.push(r);
+  });
+  grupos.forEach(x => { x.pedidos = x.items.filter(agOcupaCupo).length; x.completo = x.pedidos >= AG_CUPO_MAX; });
+  return grupos;
+}
+
+// Resumen del mes. Los cancelados NO suman a cantidad, total, cobrado ni saldo (solo a su contador).
+function agResumenMes(regs) {
+  const r = { cantidad: 0, total: 0, cobrado: 0, saldo: 0, estados: { pendiente: 0, separado: 0, confirmado: 0, entregado: 0, cancelado: 0 } };
+  regs.forEach(x => {
+    const e = agEstadoValido(x.estado);
+    r.estados[e] += 1;
+    if (e === 'cancelado') return;
+    r.cantidad += 1;
+    r.total += agNum(x.total);
+    r.cobrado += agNum(x.pagoRecibido);
+  });
+  r.saldo = r.total - r.cobrado;
+  return r;
+}
+
+// Validación del formulario (valores crudos). Devuelve la lista de errores.
+function agValidar(f) {
+  const e = [];
+  if (!AG_TIPOS.includes(f.tipo)) e.push('Elige el tipo (Pedido o Evento).');
+  if (!AG_CATEGORIAS.includes(f.categoria)) e.push('Elige una categoría.');
+  if (!String(f.cliente || '').trim()) e.push('El cliente es obligatorio.');
+  if (!agFechaValida(f.fecha)) e.push('La fecha es obligatoria.');
+  if (!agHoraValida(f.hora)) e.push('La hora es obligatoria y va en tramos de 15 minutos (:00, :15, :30, :45).');
+  if (f.tipo === 'Evento' && f.horaFin) {
+    if (!agHoraValida(f.horaFin)) e.push('La hora de término va en tramos de 15 minutos.');
+    else if (agHoraValida(f.hora) && f.horaFin <= f.hora) e.push('La hora de término debe ser posterior a la de inicio.');
+  }
+  if (!AG_MODALIDADES.includes(f.modalidad)) e.push('Elige la modalidad.');
+  if (!AG_ESTADOS.includes(f.estado)) e.push('Elige el estado.');
+  if (!AG_CANALES.includes(f.canal)) e.push('Elige el canal.');
+  ['total', 'pagoRecibido'].forEach(k => {
+    const s0 = String(f[k] ?? '').trim();
+    if (s0 !== '' && (!Number.isFinite(Number(s0)) || Number(s0) < 0)) e.push((k === 'total' ? 'El total' : 'El pago recibido') + ' debe ser un número mayor o igual a 0.');
+  });
+  if (!/^(COT-G\d{3,})?$/.test(String(f.refPresupuesto || '').trim().toUpperCase())) e.push('La referencia de presupuesto debe verse como COT-G082 (o quedar vacía).');
+  return e;
+}
+// Documento a guardar. horaFin solo en Evento; dirección/comuna solo en Despacho; saldo NUNCA se guarda.
+function agConstruirDoc(f, orig, email, ahoraISO) {
+  const esEvento = f.tipo === 'Evento', esDesp = f.modalidad === 'Despacho';
+  const d = {
+    tipo: f.tipo, categoria: f.categoria, cliente: f.cliente.trim(), telefono: f.telefono.trim(), email: f.email.trim(),
+    detalle: f.detalle.trim(), fecha: f.fecha, hora: f.hora, horaFin: esEvento ? (f.horaFin || '') : '',
+    modalidad: f.modalidad, direccion: esDesp ? f.direccion.trim() : '', comuna: esDesp ? f.comuna.trim() : '',
+    total: agNum(f.total), pagoRecibido: agNum(f.pagoRecibido), estado: f.estado, canal: f.canal,
+    refPresupuesto: String(f.refPresupuesto || '').trim().toUpperCase(), notas: f.notas.trim()
+  };
+  if (orig) {
+    d.creadoEn = orig.creadoEn || ahoraISO; d.creadoPor = orig.creadoPor || email;
+    d.actualizadoEn = ahoraISO; d.actualizadoPor = email;
+  } else {
+    d.creadoEn = ahoraISO; d.creadoPor = email;
+  }
+  return d;
+}
+
+// Único renderer por registro: lo usan el calendario (ctx 'cal') y la vista del día (ctx 'dia').
+function agRenderItem(r, ctx) {
+  const cat = agCategoriaValida(r.categoria);
+  const est = agEstadoValido(r.estado);
+  if (ctx === 'cal') {
+    const tip = r.hora + ' · ' + r.cliente + ' · ' + ETIQUETAS_CATEGORIA[cat] + ' · ' + r.tipo;
+    return '<div class="ag-item cal est-' + est + '" title="' + agEsc(tip) + '">'
+      + iconoCategoria(cat, 14)
+      + '<span class="ag-h">' + agEsc(r.hora) + '</span>'
+      + '<span class="ag-c">' + agEsc(r.cliente) + '</span>'
+      + '<span class="ag-t">' + (r.tipo === 'Evento' ? 'E' : 'P') + '</span></div>';
+  }
+  const saldo = agSaldo(r);
+  const horas = agEsc(r.hora) + (r.tipo === 'Evento' && r.horaFin ? '–' + agEsc(r.horaFin) : '');
+  const lugar = r.modalidad === 'Despacho'
+    ? 'Despacho' + ([r.direccion, r.comuna].filter(Boolean).length ? ': ' + [r.direccion, r.comuna].filter(Boolean).join(', ') : '')
+    : 'Retiro';
+  const l2 = [ETIQUETAS_CATEGORIA[cat], '<span class="ag-badge">' + agEsc(r.tipo) + '</span>', agEsc(lugar)];
+  if (r.canal) l2.push(agEsc(r.canal));
+  const extra = [];
+  if (r.telefono) extra.push(agEsc(r.telefono));
+  if (r.refPresupuesto) extra.push('Ref. ' + agEsc(r.refPresupuesto));
+  return '<div class="ag-item dia est-' + est + '">'
+    + '<div class="ag-ico">' + iconoCategoria(cat, 20) + '</div>'
+    + '<div class="ag-body">'
+    +   '<div class="ag-l1"><span class="ag-h">' + horas + '</span><span class="ag-c">' + agEsc(r.cliente) + '</span></div>'
+    +   '<div class="ag-l2">' + l2.map((x, i) => i === 0 ? agEsc(x) : x).join(' · ') + '</div>'
+    +   (extra.length ? '<div class="ag-l2">' + extra.join(' · ') + '</div>' : '')
+    +   (r.detalle ? '<div class="ag-det">' + agEsc(r.detalle) + '</div>' : '')
+    + '</div>'
+    + '<div class="ag-der">'
+    +   '<span class="ag-estado">' + AG_ESTADO_LABEL[est] + '</span>'
+    +   '<div class="ag-monto">' + fmt(agNum(r.total)) + '</div>'
+    +   (est !== 'cancelado' ? '<div class="ag-saldo">' + (saldo > 0 ? 'Saldo ' + fmt(saldo) : (agNum(r.total) > 0 ? 'Pagado' : '')) + '</div>' : '')
+    +   '<button class="btn btn-xs btn-gray" onclick="agAbrirModal(\'' + agEsc(r.id) + '\')">Editar</button>'
+    + '</div></div>';
+}
+// AG-PURE-END
+
+// ── Estado de la pestaña ──
+let agMes = null;            // { anio, mes(0-11) }
+let agRegistros = [];        // registros del mes visible
+let agDiaAbierto = null;     // 'YYYY-MM-DD' con la vista del día abierta
+let agEditando = null;       // registro en edición (null = nuevo)
+let agGuardando = false;
+let agSeq = 0;               // descarta respuestas de cargas viejas al navegar rápido
+const AG_MQ = window.matchMedia('(max-width:600px)');
+AG_MQ.addEventListener('change', () => {
+  if (agMes && document.getElementById('tab-agenda').classList.contains('active')) agRenderCalendario();
+});
+
+const agEl = id => document.getElementById(id);
+const agP2 = n => String(n).padStart(2, '0');
+function agEmail() { return auth.currentUser?.email || ''; }
+window.agFechaDiaAbierto = () => agDiaAbierto;
+
+// ── Firestore ──
+async function agCargarMes() {
+  const { desde, hasta } = agRangoMes(agMes.anio, agMes.mes);
+  const snap = await getDocs(query(collection(db, AG_COL), where('fecha', '>=', desde), where('fecha', '<=', hasta), orderBy('fecha')));
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+// Cupo: consulta a Firestore en el momento de guardar (no usa la memoria). Solo filtra por fecha;
+// hora, tipo y estado se resuelven en JS sobre el resultado (sin índices compuestos).
+async function agVerificarCupo(fecha, hora, idExcluir) {
+  const snap = await getDocs(query(collection(db, AG_COL), where('fecha', '==', fecha)));
+  const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  return agPedidosEnHorario(docs, fecha, hora, idExcluir);
+}
+
+// ── Pestaña ──
+function agPoblarSelects() {
+  const cat = agEl('ag-categoria');
+  if (cat.options.length) return;
+  cat.innerHTML = '<option value="">— Elige categoría —</option>'
+    + AG_CATEGORIAS.map(c => '<option value="' + c + '">' + agEsc(ETIQUETAS_CATEGORIA[c]) + '</option>').join('');
+  agEl('ag-estado').innerHTML = AG_ESTADOS.map(e => '<option value="' + e + '">' + AG_ESTADO_LABEL[e] + '</option>').join('');
+  agEl('ag-canal').innerHTML = AG_CANALES.map(c => '<option value="' + c + '">' + agEsc(c) + '</option>').join('');
+}
+window.agInit = async () => {
+  if (!agMes) { const h = new Date(); agMes = { anio: h.getFullYear(), mes: h.getMonth() }; }
+  agPoblarSelects();
+  await agRecargar();
+};
+async function agRecargar() {
+  const seq = ++agSeq;
+  agEl('ag-mes-nombre').textContent = new Date(agMes.anio, agMes.mes, 1).toLocaleDateString('es-CL', { month: 'long', year: 'numeric' });
+  setSyncBadge('sync-agenda', 'Cargando…', '');
+  const aviso = agEl('ag-load-err');
+  try {
+    const regs = await agCargarMes();
+    if (seq !== agSeq) return;
+    agRegistros = regs;
+    aviso.style.display = 'none';
+    setSyncBadge('sync-agenda', '✓ Agenda sincronizada', 'ok');
+  } catch (e) {
+    if (seq !== agSeq) return;
+    console.error('Agenda:', e);
+    agRegistros = [];
+    aviso.textContent = e && e.code === 'permission-denied'
+      ? 'Sin permiso para leer la agenda. Verifica que las reglas de Firestore incluyan galdi_agendamientos y que tu cuenta esté autorizada.'
+      : 'No se pudo cargar la agenda. Revisa tu conexión e inténtalo de nuevo.';
+    aviso.style.display = 'block';
+    setSyncBadge('sync-agenda', '⚠ Error al cargar', 'err');
+  }
+  agRender();
+}
+function agRender() {
+  agRenderResumen();
+  agRenderCalendario();
+  if (agDiaAbierto) agRenderDia();
+}
+window.agNavMes = async d => {
+  let m = agMes.mes + d, a = agMes.anio;
+  if (m < 0) { m = 11; a--; } else if (m > 11) { m = 0; a++; }
+  agMes = { anio: a, mes: m };
+  agCerrarDia();
+  await agRecargar();
+};
+window.agHoy = async () => {
+  const h = new Date();
+  agMes = { anio: h.getFullYear(), mes: h.getMonth() };
+  agCerrarDia();
+  await agRecargar();
+};
+
+function agRenderResumen() {
+  const r = agResumenMes(agRegistros);
+  const card = (num, lbl) => '<div class="resumen-card"><div class="num">' + num + '</div><div class="lbl">' + lbl + '</div></div>';
+  agEl('ag-resumen').innerHTML = card(r.cantidad, 'Registros')
+    + card(fmt(r.total), 'Total') + card(fmt(r.cobrado), 'Cobrado') + card(fmt(r.saldo), 'Saldo');
+  agEl('ag-estados').innerHTML = AG_ESTADOS.map(e =>
+    '<span class="ag-pill est-' + e + '"><b>' + r.estados[e] + '</b> ' + AG_ESTADO_LABEL[e] + '</span>').join('');
+}
+function agRenderCalendario() {
+  const { anio, mes } = agMes;
+  const porDia = agPorDia(agRegistros);
+  const offset = (new Date(anio, mes, 1).getDay() + 6) % 7;   // semana parte en lunes
+  const diasMes = new Date(anio, mes + 1, 0).getDate();
+  const h = new Date();
+  const hoyISO = h.getFullYear() + '-' + agP2(h.getMonth() + 1) + '-' + agP2(h.getDate());
+  const maxVis = AG_MQ.matches ? 2 : 3;
+  let html = ['LU', 'MA', 'MI', 'JU', 'VI', 'SÁ', 'DO'].map(d => '<div class="ag-dow">' + d + '</div>').join('');
+  for (let i = 0; i < offset; i++) html += '<div class="ag-dia vacio"></div>';
+  for (let dia = 1; dia <= diasMes; dia++) {
+    const iso = anio + '-' + agP2(mes + 1) + '-' + agP2(dia);
+    const regs = porDia[iso] || [];
+    const vis = regs.slice(0, maxVis);
+    const mas = regs.length - vis.length;
+    html += '<div class="ag-dia' + (iso === hoyISO ? ' hoy' : '') + '" role="button" tabindex="0" onclick="agAbrirDia(\'' + iso + '\')"'
+      + ' onkeydown="if(event.key===\'Enter\')agAbrirDia(\'' + iso + '\')">'
+      + '<div class="ag-dia-num">' + dia + '</div>'
+      + vis.map(r => agRenderItem(r, 'cal')).join('')
+      + (mas > 0 ? '<div class="ag-mas">+' + mas + '<span class="ag-mas-txt"> más</span></div>' : '')
+      + '</div>';
+  }
+  agEl('ag-cal').innerHTML = html;
+}
+
+// ── Vista del día ──
+window.agAbrirDia = iso => { agDiaAbierto = iso; agRenderDia(); agEl('modal-agenda-dia').classList.add('open'); };
+window.agCerrarDia = () => { agDiaAbierto = null; agEl('modal-agenda-dia').classList.remove('open'); };
+function agRenderDia() {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(agDiaAbierto || '');
+  agEl('ag-dia-tit').textContent = m
+    ? new Date(+m[1], +m[2] - 1, +m[3]).toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+    : agDiaAbierto;
+  const regs = agRegistros.filter(r => r.fecha === agDiaAbierto);
+  if (!regs.length) { agEl('ag-dia-body').innerHTML = '<p style="color:var(--muted);font-size:13px;padding:8px 0;">No hay registros este día.</p>'; return; }
+  agEl('ag-dia-body').innerHTML = agGruposHora(regs).map(gr => {
+    const cupo = gr.completo
+      ? '<span class="ag-cupo completo">Completo · ' + gr.pedidos + '/' + AG_CUPO_MAX + ' pedidos</span>'
+      : (gr.pedidos ? '<span class="ag-cupo">' + gr.pedidos + '/' + AG_CUPO_MAX + ' pedidos</span>' : '');
+    return '<div class="ag-hgrupo"><div class="ag-hora-tit">' + agEsc(gr.hora) + ' ' + cupo + '</div>'
+      + gr.items.map(r => agRenderItem(r, 'dia')).join('') + '</div>';
+  }).join('');
+}
+
+// ── Modal crear / editar ──
+function agLeerForm() {
+  const v = id => agEl('ag-' + id).value;
+  return {
+    tipo: v('tipo'), categoria: v('categoria'), cliente: v('cliente'), telefono: v('telefono'), email: v('email'),
+    detalle: v('detalle'), fecha: v('fecha'), hora: v('hora'), horaFin: v('horafin'), modalidad: v('modalidad'),
+    direccion: v('direccion'), comuna: v('comuna'), total: v('total'), pagoRecibido: v('pago'),
+    estado: v('estado'), canal: v('canal'), refPresupuesto: v('ref'), notas: v('notas')
+  };
+}
+window.agToggleCampos = () => {
+  agEl('ag-w-horafin').style.display = agEl('ag-tipo').value === 'Evento' ? 'block' : 'none';
+  agEl('ag-w-dir').style.display = agEl('ag-modalidad').value === 'Despacho' ? 'grid' : 'none';
+};
+window.agActualizarIconoCat = () => {
+  const c = agEl('ag-categoria').value;
+  agEl('ag-cat-ico').innerHTML = c ? iconoCategoria(c, 20) : '';
+};
+window.agOnCategoria = () => { agActualizarIconoCat(); };
+// Única ayuda de UI: tipo Evento preselecciona categoría "evento" solo si aún no se eligió una.
+window.agOnTipo = () => {
+  agLimpiarError();
+  agToggleCampos();
+  const c = agEl('ag-categoria');
+  if (agEl('ag-tipo').value === 'Evento' && !c.value) { c.value = 'evento'; agActualizarIconoCat(); }
+};
+window.agActualizarSaldo = () => {
+  const total = agNum(agEl('ag-total').value), pago = agNum(agEl('ag-pago').value);
+  agEl('ag-saldo-lbl').textContent = 'Saldo: ' + fmt(total - pago);
+};
+window.agLimpiarError = () => { const b = agEl('ag-err'); b.style.display = 'none'; b.innerHTML = ''; };
+function agMostrarErrores(lista) {
+  const b = agEl('ag-err');
+  b.innerHTML = '<ul style="margin-left:18px;">' + lista.map(x => '<li>' + agEsc(x) + '</li>').join('') + '</ul>';
+  b.style.display = 'block';
+  b.scrollIntoView({ block: 'nearest' });
+}
+function agMostrarCupoLleno(fecha, hora, ocupados) {
+  const b = agEl('ag-err');
+  const filas = agOrdenar(ocupados).map(r => '<li>' + agEsc(r.hora) + ' · ' + agEsc(r.cliente) + ' · ' + agEsc(r.modalidad) + '</li>').join('');
+  b.innerHTML = '<strong>Horario completo: ya hay ' + ocupados.length + ' pedidos a las ' + agEsc(hora) + ' del ' + agEsc(agFmtFecha(fecha)) + '</strong><ul>' + filas + '</ul>';
+  b.style.display = 'block';
+  b.scrollIntoView({ block: 'nearest' });
+}
+window.agAbrirModal = (id, fechaPre) => {
+  const r = id ? (agRegistros.find(x => x.id === id) || null) : null;
+  if (id && !r) return;
+  agEditando = r;
+  const set = (k, val) => { agEl('ag-' + k).value = val ?? ''; };
+  agEl('ag-tit').textContent = r ? 'Editar registro' : 'Nuevo registro';
+  set('tipo', r ? r.tipo : 'Pedido');
+  set('categoria', r ? agCategoriaValida(r.categoria) : '');
+  set('cliente', r?.cliente); set('telefono', r?.telefono); set('email', r?.email); set('detalle', r?.detalle);
+  const h = new Date();
+  const hoyISO = h.getFullYear() + '-' + agP2(h.getMonth() + 1) + '-' + agP2(h.getDate());
+  const primeroISO = agMes.anio + '-' + agP2(agMes.mes + 1) + '-01';
+  set('fecha', r ? r.fecha : (fechaPre || (hoyISO.slice(0, 7) === primeroISO.slice(0, 7) ? hoyISO : primeroISO)));
+  set('hora', r?.hora); set('horafin', r?.horaFin);
+  set('modalidad', r ? r.modalidad : 'Retiro');
+  set('direccion', r?.direccion); set('comuna', r?.comuna);
+  set('total', r ? agNum(r.total) : 0); set('pago', r ? agNum(r.pagoRecibido) : 0);
+  set('estado', r ? agEstadoValido(r.estado) : 'pendiente');
+  set('canal', r && AG_CANALES.includes(r.canal) ? r.canal : 'WhatsApp');
+  set('ref', r?.refPresupuesto); set('notas', r?.notas);
+  agToggleCampos(); agActualizarIconoCat(); agActualizarSaldo(); agLimpiarError();
+  agEl('modal-agenda').classList.add('open');
+};
+window.agCerrarModal = () => {
+  agEl('modal-agenda').classList.remove('open');
+  agEditando = null;
+  agLimpiarError();
+};
+window.agGuardar = async () => {
+  if (agGuardando) return;
+  agLimpiarError();
+  const f = agLeerForm();
+  const errores = agValidar(f);
+  if (errores.length) { agMostrarErrores(errores); return; }
+  const datos = agConstruirDoc(f, agEditando, agEmail(), new Date().toISOString());
+  const btn = agEl('ag-btn-guardar');
+  agGuardando = true; btn.disabled = true; btn.textContent = 'Guardando…';
+  try {
+    if (agRequiereVerificarCupo(agEditando, datos)) {
+      const ocupados = await agVerificarCupo(datos.fecha, datos.hora, agEditando?.id);
+      if (ocupados.length >= AG_CUPO_MAX) { agMostrarCupoLleno(datos.fecha, datos.hora, ocupados); return; }
+    }
+    if (agEditando) await updateDoc(doc(db, AG_COL, agEditando.id), datos);
+    else await addDoc(collection(db, AG_COL), datos);
+    const [a, m] = datos.fecha.split('-');
+    const cambiaMes = agMes.anio !== +a || agMes.mes !== +m - 1;
+    agMes = { anio: +a, mes: +m - 1 };
+    agCerrarModal();
+    if (cambiaMes) agCerrarDia();
+    await agRecargar();
+  } catch (e) {
+    console.error('Agenda: error al guardar', e);
+    agMostrarErrores(['No se pudo guardar. Revisa tu conexión e inténtalo de nuevo.']);
+  } finally {
+    agGuardando = false; btn.disabled = false; btn.textContent = 'Guardar';
+  }
 };
 
 // ── HELPERS ───────────────────────────────────────────────────────────────
