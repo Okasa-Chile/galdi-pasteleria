@@ -30,6 +30,11 @@ service cloud.firestore {
       allow read, write: if esAutorizado();
     }
 
+    // Agenda Galdi (pedidos y eventos con horario): solo usuarios autorizados
+    match /galdi_agendamientos/{docId} {
+      allow read, write: if esAutorizado();
+    }
+
     // Presupuestos Galdi: lectura pública por token, escritura solo autorizados
     match /galdi_presupuestos/{docId} {
       allow read: if true;
