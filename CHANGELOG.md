@@ -5,6 +5,28 @@ proyecto, consultar README.md.
 
 ---
 
+## Jornada 28-09-2026 — Agenda en /gestion (Tab 7)
+
+Pestaña `7 · Agenda` en `public/gestion/index.html`: calendario mensual
+de pedidos y eventos con horario, réplica adaptada del Tab Agenda de
+Okasa. Colección nueva `galdi_agendamientos`; regla en
+`firestore.rules` con el mismo criterio que `galdi_ventas`
+(`esAutorizado()`).
+
+- Cada casilla lista TODOS los registros del día ordenados por hora
+  (Okasa indexaba un solo registro por casilla); "+N más" abre la vista
+  del día, que agrupa por hora y marca los horarios completos.
+- Categoría por slug (`tortas`, `pasteles`, `dulces`, `queques`,
+  `empanadas`, `coctel`, `evento`, `otro`) con ícono SVG inline
+  (`ICONOS_CATEGORIA`). Independiente de `tipo`.
+- Cupo de 3 pedidos por horario, validado al guardar contra Firestore.
+  Limitación conocida sin resolver: validación del lado del cliente
+  (ver README → Agenda).
+- Un único renderer (`agRenderItem`) alimenta calendario y vista del día.
+- Tira de pestañas con scroll horizontal en pantallas ≤1100 px.
+
+---
+
 ## Jornada 23-09-2026 — Fix de guardado en /gestion, postbuild y precio por talla
 
 Commits: `7512364`, `0bf99d4`, `847565a`, `f10f72d`, `cf3eacf`. Los

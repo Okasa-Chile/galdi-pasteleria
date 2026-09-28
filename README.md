@@ -145,6 +145,7 @@ galdi-nextjs/
 | Tab 3 | ✅ | Registro de compras/insumos |
 | Tab 4 | ✅ | Registro de ventas |
 | Tab 5 | ✅ | Presupuestos con QR de validación + /validar-presupuesto · precio mayorista automático de empanadas |
+| Tab 7 | 🛠️ | Agenda: calendario mensual de pedidos y eventos con horario (ver sección "Agenda" abajo) |
 
 ### Características clave
 - Correlativo presupuestos: COT-G105+
@@ -158,6 +159,15 @@ galdi-nextjs/
 - El QR aparece en ambas rutas de impresión (vista previa tras guardar, y reimpresión desde historial). En la ruta del formulario, `guardarPresupuesto` captura el token recién generado y llama a `vistaPreviaPresupuesto(token)` ANTES de limpiar el formulario, porque esa función lee todo desde el DOM.
 - Presupuestos históricos sin campo `token` se imprimen sin el bloque QR, sin error (comportamiento defensivo).
 - Precio mayorista de empanadas: desde 36 unidades (3 docenas) el precio unitario baja automáticamente de $2.700 a $2.500. Excluidos por costo de insumos: "Empanada de Mariscos" y "Empanada Queso Camarón". La exclusión es por nombre EXACTO — "Empanada de Queso" y "Empanada Queso Camarón" son productos distintos, un match por substring rompería la regla.
+
+### Agenda (Tab 7 de /gestion)
+- Colección `galdi_agendamientos` (NO confundir con `galdi_pedidos`, que son los pedidos web pagados con Flow). Acceso: mismos emails autorizados de /gestion (lectura y escritura), regla `esAutorizado()` en `firestore.rules`. Nada público. Sin roles.
+- Campos: `tipo` (`Pedido`|`Evento`), `categoria` (slug ASCII: `tortas`, `pasteles`, `dulces`, `queques`, `empanadas`, `coctel`, `evento`, `otro`), `cliente`, `telefono`, `email`, `detalle`, `fecha` (`YYYY-MM-DD`, se muestra DD/MM/YYYY), `hora` (`HH:MM`, tramos de 15 min), `horaFin` (solo Evento), `modalidad` (`Retiro`|`Despacho`), `direccion`/`comuna` (solo Despacho), `total`, `pagoRecibido`, `estado` (`pendiente`|`separado`|`confirmado`|`entregado`|`cancelado`), `canal`, `refPresupuesto` (`COT-GXXX` o vacío), `notas`, `creadoEn`/`creadoPor`, `actualizadoEn`/`actualizadoPor`. El saldo NO se guarda: siempre `total − pagoRecibido`.
+- `tipo` gobierna la lógica (cupo y `horaFin`); `categoria` solo la clasificación (ícono y etiqueta). Son independientes: ninguno se deriva del otro al guardar. Un slug de categoría desconocido se muestra como "Otro".
+- **Cupo: máximo 3 pedidos por horario.** Cuentan los registros `tipo = Pedido`, `estado != cancelado`, misma `fecha` y misma `hora` exacta. Los `Evento` no cuentan (sea cual sea su categoría); un `Pedido` cuenta aunque su categoría sea `evento` o `coctel`. El chequeo se hace al guardar con una consulta a Firestore (`where('fecha','==',fecha)`; hora, tipo y estado se resuelven en JS, sin índices compuestos), excluyendo al propio registro al editar. Al editar solo se evalúa si cambió fecha, hora, tipo o estado.
+- **Limitación conocida (NO resuelta):** la validación del cupo es del lado del cliente. Dos guardados simultáneos al mismo segundo podrían superar el cupo de 3. Solucionarlo exigiría una transacción o una Cloud Function.
+- Los cancelados no suman a cantidad, total, cobrado ni saldo del resumen mensual (solo a su contador por estado).
+- Los registros de prueba llevan `cliente` que empieza con `PRUEBA CC` y fecha en 2027; se borran con un script admin temporal.
 
 ---
 
