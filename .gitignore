@@ -88,3 +88,7 @@ C*.log
 .zencoder/
 skills/
 skills-lock.json
+
+# Locales / caché
+.firebase/
+.claude/settings.local.json
