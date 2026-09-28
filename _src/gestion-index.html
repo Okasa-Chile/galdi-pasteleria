@@ -98,7 +98,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
 .est-cancelado{--c:var(--ag-cancelado);--bg:var(--ag-cancelado-bg);}
 .ag-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
 .ag-nav{display:flex;align-items:center;gap:8px;}
-.ag-mes{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--brown);min-width:180px;text-align:center;text-transform:capitalize;}
+.ag-mes{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--brown);min-width:180px;text-align:center;}
 .ag-resumen{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px;}
 .ag-estados{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
 .ag-pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:3px 10px;border-radius:12px;color:var(--c);background:var(--bg);border:1px solid var(--c);}
@@ -120,7 +120,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
 .ag-item.cal .ag-t{font-weight:600;opacity:.8;}
 .est-cancelado .ag-c,.est-cancelado .ag-monto{text-decoration:line-through;}
 .ag-dia-hdr{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
-.ag-dia-hdr h3{margin-bottom:0 !important;text-transform:capitalize;}
+.ag-dia-hdr h3{margin-bottom:0 !important;}
 .ag-hgrupo{margin-bottom:16px;}
 .ag-hora-tit{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--gold2);border-bottom:1px solid var(--border);padding-bottom:4px;margin-bottom:8px;}
 .ag-cupo{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:10px;background:var(--sand);color:var(--muted);}
@@ -161,6 +161,25 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
   .ag-item.dia .ag-der{flex-direction:row;width:100%;justify-content:space-between;align-items:center;flex-wrap:wrap;}
   .ag-overlay{padding:8px;}
   .ag-overlay .modal{padding:18px;}
+}
+/* Agenda ajustada a la pantalla (SOLO escritorio ≥601 px; el móvil no cambia).
+   --ag-offset = alto fijo sobre el calendario, medido con las reglas de arriba:
+   topbar 66 (12+40+12 + borde 2) + pestañas 45 (13+16+13 + borde 2 + borde 1) + panel 16 arriba y 12 abajo
+   + barra del mes 37 (29 + 8) + fila de resumen 47 (39 + 8) + fila LU-DO 18 + 6 separaciones de 3 px = 259,
+   más 11 px de holgura = 270. Alto de casilla = (alto de ventana − offset) / 6, entre 70 y 130 px.
+   Si cambia el alto del header, las pestañas o el resumen, ajustar SOLO esta variable (JS la lee de aquí). */
+@media(min-width:601px){
+  #tab-agenda.panel{--ag-offset:270px;max-width:1600px;padding:16px 24px 12px;}
+  #tab-agenda .ag-top{margin-bottom:8px;}
+  #tab-agenda .ag-fila-resumen{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:8px;}
+  #tab-agenda .ag-resumen{display:flex;gap:8px;margin:0;}
+  #tab-agenda .resumen-card{padding:4px 14px;min-width:96px;}
+  #tab-agenda .resumen-card .num{font-size:16px;line-height:18px;}
+  #tab-agenda .resumen-card .lbl{font-size:9px;line-height:11px;margin-top:0;}
+  #tab-agenda .ag-estados{margin:0;gap:6px;}
+  #tab-agenda .ag-pill{padding:2px 9px;line-height:16px;}
+  #tab-agenda .ag-dow{padding:0;height:18px;line-height:18px;}
+  #tab-agenda .ag-dia{height:clamp(70px,calc((100vh - var(--ag-offset)) / 6),130px);min-height:0;}
 }
 @media(max-width:600px){.grid-2,.grid-3,.resumen-grid{grid-template-columns:1fr;}.panel{padding:16px;}.tab{padding:10px 12px;font-size:10px;}#pres-header-lineas{display:none !important;}.pres-linea{grid-template-columns:1fr 1fr !important;grid-template-rows:auto auto auto !important;}}
 </style>
@@ -665,8 +684,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
       </div>
     </div>
     <div class="ag-alert" id="ag-load-err" style="display:none;"></div>
-    <div class="ag-resumen" id="ag-resumen"></div>
-    <div class="ag-estados" id="ag-estados"></div>
+    <div class="ag-fila-resumen">
+      <div class="ag-resumen" id="ag-resumen"></div>
+      <div class="ag-estados" id="ag-estados"></div>
+    </div>
     <div class="ag-cal" id="ag-cal"></div>
   </div>
 
@@ -3156,6 +3177,16 @@ function agHoraValida(h) {
   const m = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(h || '');
   return !!m && Number(m[2]) % 15 === 0;
 }
+// Solo la primera letra en mayúscula ("septiembre de 2026" → "Septiembre de 2026")
+function agCapitalizar(s) { s = String(s || ''); return s.charAt(0).toUpperCase() + s.slice(1); }
+// Cuántos chips caben en una casilla de alto cellH (px). Si no caben todos, se reserva una línea para "+N más".
+// Medidas del CSS: chip 18 + separación 2, día+relleno+borde 28, línea "+N más" 17.
+const AG_CHIP_H = 20, AG_CASILLA_FIJO = 28, AG_MAS_H = 17;
+function agChipsQueCaben(total, cellH) {
+  const libre = cellH - AG_CASILLA_FIJO;
+  if (total * AG_CHIP_H <= libre) return total;
+  return Math.max(1, Math.floor((libre - AG_MAS_H) / AG_CHIP_H));
+}
 function agRangoMes(anio, mes) {
   const p = n => String(n).padStart(2, '0');
   return { desde: anio + '-' + p(mes + 1) + '-01', hasta: anio + '-' + p(mes + 1) + '-31' };
@@ -3303,6 +3334,17 @@ AG_MQ.addEventListener('change', () => {
 
 const agEl = id => document.getElementById(id);
 const agP2 = n => String(n).padStart(2, '0');
+// Alto de casilla en escritorio: misma fórmula que el CSS (clamp 70–130 de (100vh − --ag-offset) / 6)
+function agAltoCasilla() {
+  const off = parseFloat(getComputedStyle(agEl('tab-agenda')).getPropertyValue('--ag-offset')) || 270;
+  return Math.min(130, Math.max(70, (window.innerHeight - off) / 6));
+}
+let agResizeT = null;
+window.addEventListener('resize', () => {
+  if (!agMes || !agEl('tab-agenda').classList.contains('active')) return;
+  clearTimeout(agResizeT);
+  agResizeT = setTimeout(agRenderCalendario, 120);
+});
 function agEmail() { return auth.currentUser?.email || ''; }
 window.agFechaDiaAbierto = () => agDiaAbierto;
 
@@ -3336,7 +3378,7 @@ window.agInit = async () => {
 };
 async function agRecargar() {
   const seq = ++agSeq;
-  agEl('ag-mes-nombre').textContent = new Date(agMes.anio, agMes.mes, 1).toLocaleDateString('es-CL', { month: 'long', year: 'numeric' });
+  agEl('ag-mes-nombre').textContent = agCapitalizar(new Date(agMes.anio, agMes.mes, 1).toLocaleDateString('es-CL', { month: 'long', year: 'numeric' }));
   setSyncBadge('sync-agenda', 'Cargando…', '');
   const aviso = agEl('ag-load-err');
   try {
@@ -3391,13 +3433,13 @@ function agRenderCalendario() {
   const diasMes = new Date(anio, mes + 1, 0).getDate();
   const h = new Date();
   const hoyISO = h.getFullYear() + '-' + agP2(h.getMonth() + 1) + '-' + agP2(h.getDate());
-  const maxVis = AG_MQ.matches ? 2 : 3;
+  const cellH = AG_MQ.matches ? 0 : agAltoCasilla();
   let html = ['LU', 'MA', 'MI', 'JU', 'VI', 'SÁ', 'DO'].map(d => '<div class="ag-dow">' + d + '</div>').join('');
   for (let i = 0; i < offset; i++) html += '<div class="ag-dia vacio"></div>';
   for (let dia = 1; dia <= diasMes; dia++) {
     const iso = anio + '-' + agP2(mes + 1) + '-' + agP2(dia);
     const regs = porDia[iso] || [];
-    const vis = regs.slice(0, maxVis);
+    const vis = regs.slice(0, AG_MQ.matches ? 2 : agChipsQueCaben(regs.length, cellH));
     const mas = regs.length - vis.length;
     html += '<div class="ag-dia' + (iso === hoyISO ? ' hoy' : '') + '" role="button" tabindex="0" onclick="agAbrirDia(\'' + iso + '\')"'
       + ' onkeydown="if(event.key===\'Enter\')agAbrirDia(\'' + iso + '\')">'
@@ -3415,7 +3457,7 @@ window.agCerrarDia = () => { agDiaAbierto = null; agEl('modal-agenda-dia').class
 function agRenderDia() {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(agDiaAbierto || '');
   agEl('ag-dia-tit').textContent = m
-    ? new Date(+m[1], +m[2] - 1, +m[3]).toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+    ? agCapitalizar(new Date(+m[1], +m[2] - 1, +m[3]).toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }))
     : agDiaAbierto;
   const regs = agRegistros.filter(r => r.fecha === agDiaAbierto);
   if (!regs.length) { agEl('ag-dia-body').innerHTML = '<p style="color:var(--muted);font-size:13px;padding:8px 0;">No hay registros este día.</p>'; return; }
