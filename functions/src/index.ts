@@ -12,28 +12,94 @@ const ALLOWED_ORIGINS = [
   'http://localhost:3000',
 ];
 
+// Caché diario de reseñas en Firestore (galdi_cache/resenas). La función escribe con el Admin SDK,
+// por eso no requiere cambios en firestore.rules. Solo se consulta a Google si el caché no existe
+// o tiene 24 h o más; si Google falla se sirve el último caché disponible, aunque esté vencido.
+const RESENAS_CACHE_COLECCION = 'galdi_cache';
+const RESENAS_CACHE_DOC = 'resenas';
+const RESENAS_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+
+type ResenaCache = { resenas: unknown[]; actualizadoEn: number };
+
+async function consultarResenasGoogle(apiKey: string): Promise<unknown[]> {
+  const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${PLACE_ID}&fields=reviews&language=es&key=${apiKey}`;
+  const response = await conTimeout(fetch(url), 10000);
+  if (!response.ok) throw new Error(`Places respondió HTTP ${response.status}`);
+  const data = (await response.json()) as {
+    status?: string;
+    result?: { reviews?: unknown[] };
+  };
+  // Places devuelve HTTP 200 con status de error (REQUEST_DENIED, OVER_QUERY_LIMIT, ...).
+  if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
+    throw new Error(`Places respondió status ${data.status ?? 'desconocido'}`);
+  }
+  return (data.result?.reviews ?? []).slice(0, 5);
+}
+
 export const placesReviews = onRequest(
-  { region: 'us-central1', cors: ALLOWED_ORIGINS, invoker: 'public' },
+  { region: 'us-central1', cors: ALLOWED_ORIGINS, invoker: 'public', secrets: ['PLACES_API_KEY'] },
   async (req, res) => {
-    res.set('Cache-Control', 'public, max-age=86400');
+    let cache: ResenaCache | null = null;
+    let docRef: FirebaseFirestore.DocumentReference | null = null;
+    let serverTs: unknown = null;
 
     try {
-      const apiKey = process.env.PLACES_API_KEY;
-      if (!apiKey) {
-        res.status(500).json({ error: 'API key not configured' });
+      const { db, serverTs: ts } = await obtenerDb();
+      serverTs = ts;
+      docRef = db.collection(RESENAS_CACHE_COLECCION).doc(RESENAS_CACHE_DOC);
+      const snap = await conTimeout(docRef.get(), 8000);
+      if (snap.exists) {
+        const d = snap.data() as { resenas?: unknown[]; actualizadoEn?: { toMillis(): number } };
+        if (Array.isArray(d.resenas) && d.actualizadoEn) {
+          cache = { resenas: d.resenas, actualizadoEn: d.actualizadoEn.toMillis() };
+        }
+      }
+    } catch (err) {
+      console.error('[placesReviews] no se pudo leer el caché de Firestore:', (err as Error).message);
+    }
+
+    if (cache && Date.now() - cache.actualizadoEn < RESENAS_CACHE_TTL_MS) {
+      const edadH = ((Date.now() - cache.actualizadoEn) / 3600000).toFixed(1);
+      console.log(`[placesReviews] CACHE HIT: sirve desde Firestore (edad ${edadH} h), sin consultar a Google`);
+      res.set('Cache-Control', 'public, max-age=86400');
+      res.json(cache.resenas);
+      return;
+    }
+
+    const apiKey = process.env.PLACES_API_KEY?.trim();
+    if (!apiKey) {
+      console.error('[placesReviews] PLACES_API_KEY no configurada');
+      if (cache) {
+        console.warn('[placesReviews] sirve caché vencido por falta de API key');
+        res.set('Cache-Control', 'public, max-age=3600');
+        res.json(cache.resenas);
         return;
       }
+      res.status(500).json({ error: 'API key not configured' });
+      return;
+    }
 
-      const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${PLACE_ID}&fields=reviews&language=es&key=${apiKey}`;
-      const response = await fetch(url);
-      const data = await response.json() as {
-        result?: { reviews?: Array<{ rating: number }> };
-      };
-
-      const resenas = (data.result?.reviews ?? []).slice(0, 5);
-
+    try {
+      const resenas = await consultarResenasGoogle(apiKey);
+      console.log(`[placesReviews] CACHE ${cache ? 'VENCIDO' : 'AUSENTE'}: consultó a Google (${resenas.length} reseñas) y actualizó galdi_cache/resenas`);
+      if (docRef) {
+        try {
+          await docRef.set({ resenas, actualizadoEn: serverTs, fuente: 'places-api' });
+        } catch (err) {
+          console.error('[placesReviews] no se pudo guardar el caché:', (err as Error).message);
+        }
+      }
+      res.set('Cache-Control', 'public, max-age=86400');
       res.json(resenas);
-    } catch {
+    } catch (err) {
+      console.error('[placesReviews] falló la consulta a Google:', (err as Error).message);
+      if (cache) {
+        const edadH = ((Date.now() - cache.actualizadoEn) / 3600000).toFixed(1);
+        console.warn(`[placesReviews] sirve el último caché disponible (edad ${edadH} h)`);
+        res.set('Cache-Control', 'public, max-age=3600');
+        res.json(cache.resenas);
+        return;
+      }
       res.status(500).json({ error: 'Error fetching reviews' });
     }
   }
