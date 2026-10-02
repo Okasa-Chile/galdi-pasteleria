@@ -1,5 +1,5 @@
 # AI_CONTEXT — Proyecto Galdi Pastelería
-> Registro de trabajo asistido por IA · Actualizado: 4 agosto 2026
+> Registro de trabajo asistido por IA · Actualizado: 1 octubre 2026
 
 ---
 
@@ -429,6 +429,7 @@ contenido con tildes.
 - [ ] Subir las 3 fotos de tortas de novia a Google Business Profile y crear el producto "Torta de bodas" con enlace a /tortas-bodas-maipu.
 - [ ] Actualizar reviewCount en lib/businessSchema.ts (hoy 72 hardcodeado) con la cifra real de GBP.
 - [x] Confirmar que el Hero de Fiestas Patrias se revirtió — confirmado 22-09-2026: ya estaba revertido el 21-09 (99b92e9 Hero, bba0c4b /empanadas-maipu). La empanada que sigue en el carrusel es la slide permanente, no la campaña.
+- [x] API key de Places expuesta en `CHANGELOG.md` público (repo público) — RESUELTO 01-10-2026: key rotada y la anterior eliminada, la nueva en Secret Manager (`PLACES_API_KEY`), `placesReviews` con caché diario en `galdi_cache/resenas` y límites de cuota diarios aplicados (Places 5/día, Geocoding 200/día). Commits `1c38376` y `b374d31`. Detalle en la sección "Caché diario de reseñas y límites de cuota de Google". El historial de git conserva la key vieja a propósito (ya revocada; no se reescribe el historial).
 - [ ] Medir el title y la description del home no antes del 20-10-2026 (ambos cambiaron el mismo día: title en 433041d, description en 4a194ad), comparando períodos de igual duración en modo Comparar de GSC.
 - [ ] Revisar el nombre de la ficha de Google Business Profile ("Galdi SPA - Pastelería- Panadería - Eventos"): incluye categorías en el nombre (contrario a las directrices de Google) y menciona "Panadería", que ya no se vende. Cambiarlo puede requerir reverificación. Si se cambia, actualizar después GALDI_BUSINESS.name para mantener la coherencia NAP. Responsable: Claudio.
 
@@ -577,9 +578,7 @@ Cambios aplicados (todos marcados con comentarios
 | 1 a 2 docenas | $2.700 | $32.400 |
 | 3 o más docenas | $2.500 | $30.000 |
 
-⚠️ REVERSIÓN PENDIENTE después del 18-09-2026: buscar todos los comentarios
-`FIESTAS PATRIAS 2026` en app/empanadas-maipu/page.tsx y restaurar los valores
-originales comentados.
+✅ Reversión ejecutada (confirmada 22-09-2026: 99b92e9 Hero, bba0c4b /empanadas-maipu). El bloque ya no está en producción.
 
 ### Auditoría del sitio — Bloque 1 y 4 (datos duros + consistencia técnica)
 
@@ -696,7 +695,6 @@ media y pestaña PÁGINAS filtrada por la consulta.
 
 ### Pendientes de calendario
 
-- 18-09-2026: revertir bloque Fiestas Patrias en `empanadas-maipu` y `Hero`.
 - 2-4 semanas: medir efecto de los fixes de enlazado en GSC.
 
 ---
@@ -1047,7 +1045,6 @@ Tres de esas direcciones están en Maipú, donde hoy se cobra $3.000 — el alza
 ### Adicional
 
 - Prompt de investigación de precios de empanadas de pino para Fiestas Patrias 2026 (Gemini Deep Research) generado, pendiente de ejecutar.
-- Recordatorio vigente: revertir el bloque de Fiestas Patrias en `/empanadas-maipu` después del 18-09-2026.
 
 ---
 
