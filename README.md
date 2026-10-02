@@ -60,6 +60,27 @@ git add . && git commit -m "mensaje" && git push
 | galdi_ventas | Solo autorizados | Registro de ventas |
 | galdi_compras | Solo autorizados | Registro de compras/insumos |
 | galdi_presupuestos | Escritura: autorizados / Lectura: pública | Vista de presupuesto vía token |
+| galdi_cache | Solo Admin SDK (Cloud Functions) | Caché diario de reseñas de Google: documento `resenas` (ver sección siguiente) |
+
+### Caché diario de reseñas y límites de cuota de Google (01-10-2026)
+
+**Reseñas (`placesReviews`)**
+- La función guarda las reseñas en Firestore, `galdi_cache/resenas` (campos `resenas`, `actualizadoEn`, `fuente`), y las sirve desde ahí mientras tengan menos de 24 h. Solo consulta a Google (Places API, Place Details) si el caché no existe o está vencido.
+- Si la consulta a Google falla (red, `REQUEST_DENIED`, `OVER_QUERY_LIMIT`, cuota), sirve el último caché disponible aunque esté vencido; solo responde 500 si no hay caché alguno.
+- Escribe con el Admin SDK, por eso `firestore.rules` no tiene ni necesita reglas para `galdi_cache`.
+- Cómo comprobarlo: Cloud Logging del servicio `placesreviews` muestra `CACHE HIT` (sirve desde Firestore, sin llamar a Google), `CACHE AUSENTE` / `CACHE VENCIDO` (consultó a Google y actualizó el caché) y, ante una caída de Google, `sirve el último caché disponible`.
+- La API key vive en Secret Manager como `PLACES_API_KEY` (la función declara `secrets: ['PLACES_API_KEY']`). Ya no existe `PLACES_API_KEY` en `functions/.env`. Key de origen: `places-reviews-server` (restringida a `places-backend.googleapis.com`). La key anterior se rotó y eliminó el 01-10-2026.
+
+**Límites de cuota diarios (aplicados el 01-10-2026, proyecto `galdi-web`)**
+
+| API | Métrica | Límite diario |
+|---|---|---|
+| Places (`places-backend.googleapis.com`) | `billable_default` y `billable_reviewswidget`, por proyecto | 5 solicitudes/día |
+| Geocoding (`geocoding-backend.googleapis.com`) | `geocode_address_requests` y `billable_default`, por proyecto | 200 solicitudes/día |
+
+- Criterio del límite de Geocoding: `calcularCostoDelivery` hace 1 llamada a Geocoding por cálculo; en el último mes revisable en Cloud Logging hubo como máximo 3 POST en un día (6 en total), muy por debajo de 200.
+- Se aplicaron como overrides de cuota por consumidor (Service Usage API, `consumerOverrides` sobre el límite `/d/project`), no como presupuesto de facturación. Para revisarlos o cambiarlos: consola de Google Cloud → IAM y administración → Cuotas y límites del sistema, filtrar por el servicio.
+- Efecto colateral a tener en cuenta: los scripts `scripts/calibrar-delivery.mjs` y `scripts/generar-tabla-validacion.mjs` también geocodifican con la key de Geocoding; si se corren en lote pueden agotar el límite de 200/día.
 
 ### Auth Firebase — emails autorizados
 - contacto@okasa.cl

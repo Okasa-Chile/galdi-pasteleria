@@ -873,7 +873,7 @@ Fix aplicado en `public/gestion/index.html`:
 - Place ID Galdi: `ChIJf7l5N6LDYpYR6uNj83Fqd9g` (actualizado — el anterior estaba vencido)
 - Firebase plan actualizado a Blaze (requerido para Cloud Functions)
 - Places API habilitada en proyecto galdi-web
-- API Key servidor (sin restricción de referer): `AIzaSyBhM3t8G0NeXX8JiC0CEfsDcOExwQFFXh4`
+- API Key servidor (sin restricción de referer): (rotada 01-10-2026, ahora en Secret Manager)
 - Reseñas integradas dentro del `<section>` de Nosotras.tsx
 
 ### Cloud Functions Flow (01-06-2026)
