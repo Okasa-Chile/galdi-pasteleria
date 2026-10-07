@@ -82,7 +82,7 @@ export default function Footer() {
           lineHeight: 1.7,
         }}>
           © 2026 Galdi · Pastelería Artesanal · Las Palmas, Maipú<br />
-          Gozo en cada bocado
+          El sabor de lo hecho con cariño
         </p>
 
         {/* Links */}

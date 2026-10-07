@@ -5,6 +5,21 @@ proyecto, consultar README.md.
 
 ---
 
+## Jornada 07-10-2026 — Slogan vigente en el footer
+
+Footer (`components/Footer.tsx`): el slogan antiguo "Gozo en cada bocado"
+se reemplaza por "El sabor de lo hecho con cariño" (el del logo y el de
+`components/Nosotras.tsx`). Era la única ocurrencia en el repo; solo
+cambia el texto, sin tocar estilos. Commit: "Footer: slogan vigente 'El
+sabor de lo hecho con cariño'".
+
+Pendiente:
+
+- Revisar archivos sin seguimiento en la raíz (docs/, flyer/, reportes
+  .txt, png): decidir versionar o .gitignore.
+
+---
+
 ## Jornada 28-09-2026 — Agenda en /gestion (Tab 7)
 
 Pestaña `7 · Agenda` en `public/gestion/index.html`: calendario mensual
