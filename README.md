@@ -188,6 +188,7 @@ galdi-nextjs/
 - **Cupo: máximo 3 pedidos por horario.** Cuentan los registros `tipo = Pedido`, `estado != cancelado`, misma `fecha` y misma `hora` exacta. Los `Evento` no cuentan (sea cual sea su categoría); un `Pedido` cuenta aunque su categoría sea `evento` o `coctel`. El chequeo se hace al guardar con una consulta a Firestore (`where('fecha','==',fecha)`; hora, tipo y estado se resuelven en JS, sin índices compuestos), excluyendo al propio registro al editar. Al editar solo se evalúa si cambió fecha, hora, tipo o estado.
 - **Limitación conocida (NO resuelta):** la validación del cupo es del lado del cliente. Dos guardados simultáneos al mismo segundo podrían superar el cupo de 3. Solucionarlo exigiría una transacción o una Cloud Function.
 - Los cancelados no suman a cantidad, total, cobrado ni saldo del resumen mensual (solo a su contador por estado).
+- **Eliminar (desde 18-11-2026):** los registros se pueden eliminar desde el modal de edición (botón Eliminar, solo visible al editar un registro existente), siempre con un cuadro de confirmación propio de la página. El borrado es definitivo (`deleteDoc`, sin papelera ni registro de quién borró). Para anular un pedido conservando el historial se usa el estado Cancelado.
 - Los registros de prueba llevan `cliente` que empieza con `PRUEBA CC` y fecha en 2027; se borran con un script admin temporal.
 
 ---

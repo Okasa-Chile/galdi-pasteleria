@@ -5,6 +5,18 @@ proyecto, consultar README.md.
 
 ---
 
+## Jornada 18-11-2026 — Agenda: eliminar agendamiento con confirmación
+
+`public/gestion/index.html`: el modal de edición de la Agenda (Tab 7) tiene
+un botón Eliminar (solo al editar un registro existente) que abre un modal
+propio de confirmación con resumen del registro, aviso si hay pago recibido
+y borrado definitivo con `deleteDoc` sobre `galdi_agendamientos`. Escape y
+clic de fondo cancelan solo la confirmación; Guardar y Eliminar se
+bloquean entre sí mientras uno está en curso. Sin cambios en reglas de
+Firestore. Commit: "Agenda /gestion: eliminar agendamiento con confirmación".
+
+---
+
 ## Jornada 07-10-2026 — Slogan vigente en el footer
 
 Footer (`components/Footer.tsx`): el slogan antiguo "Gozo en cada bocado"

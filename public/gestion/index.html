@@ -819,8 +819,24 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
       <div class="ag-err" id="ag-err" role="alert"></div>
     </div>
     <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end;flex-wrap:wrap;">
+      <button class="btn btn-sm btn-red" id="ag-btn-eliminar" style="display:none;margin-right:auto;" aria-label="Eliminar este agendamiento" onclick="agPedirEliminar()">Eliminar</button>
       <button class="btn btn-sm btn-gray" onclick="agCerrarModal()">Cancelar</button>
       <button class="btn btn-sm" id="ag-btn-guardar" onclick="agGuardar()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Agenda: confirmar eliminación -->
+<div class="modal-overlay ag-overlay" id="modal-agenda-eliminar" style="z-index:250;" role="dialog" aria-modal="true" aria-labelledby="ag-elim-tit" onclick="if(event.target.id==='modal-agenda-eliminar')agCancelarEliminar()">
+  <div class="modal" style="max-width:460px;">
+    <h3 id="ag-elim-tit">¿Eliminar este agendamiento?</h3>
+    <div id="ag-elim-resumen" style="font-size:13px;line-height:1.6;margin:10px 0;"></div>
+    <div id="ag-elim-pago" style="display:none;background:#fff4d6;border:1px solid #e0c36a;color:#5c4400;border-radius:6px;padding:10px 12px;font-size:12.5px;font-weight:600;margin-bottom:10px;"></div>
+    <p style="font-size:12.5px;margin-bottom:10px;">Esta acción no se puede deshacer. Si el pedido solo se anuló, considera cambiar su estado a Cancelado para conservar el historial.</p>
+    <div class="ag-err" id="ag-elim-err" role="alert"></div>
+    <div style="display:flex;gap:10px;margin-top:16px;justify-content:flex-end;flex-wrap:wrap;">
+      <button class="btn btn-sm btn-gray" id="ag-btn-cancelar-eliminar" onclick="agCancelarEliminar()">Cancelar</button>
+      <button class="btn btn-sm btn-red" id="ag-btn-confirmar-eliminar" onclick="agConfirmarEliminar()">Sí, eliminar</button>
     </div>
   </div>
 </div>
@@ -3326,6 +3342,7 @@ let agRegistros = [];        // registros del mes visible
 let agDiaAbierto = null;     // 'YYYY-MM-DD' con la vista del día abierta
 let agEditando = null;       // registro en edición (null = nuevo)
 let agGuardando = false;
+let agEliminando = false;
 let agSeq = 0;               // descarta respuestas de cargas viejas al navegar rápido
 const AG_MQ = window.matchMedia('(max-width:600px)');
 AG_MQ.addEventListener('change', () => {
@@ -3535,6 +3552,7 @@ window.agAbrirModal = (id, fechaPre) => {
   set('canal', r && AG_CANALES.includes(r.canal) ? r.canal : 'WhatsApp');
   set('ref', r?.refPresupuesto); set('notas', r?.notas);
   agToggleCampos(); agActualizarIconoCat(); agActualizarSaldo(); agLimpiarError();
+  agEl('ag-btn-eliminar').style.display = r ? '' : 'none';
   agEl('modal-agenda').classList.add('open');
 };
 window.agCerrarModal = () => {
@@ -3551,6 +3569,7 @@ window.agGuardar = async () => {
   const datos = agConstruirDoc(f, agEditando, agEmail(), new Date().toISOString());
   const btn = agEl('ag-btn-guardar');
   agGuardando = true; btn.disabled = true; btn.textContent = 'Guardando…';
+  agEl('ag-btn-eliminar').disabled = true;
   try {
     if (agRequiereVerificarCupo(agEditando, datos)) {
       const ocupados = await agVerificarCupo(datos.fecha, datos.hora, agEditando?.id);
@@ -3569,8 +3588,68 @@ window.agGuardar = async () => {
     agMostrarErrores(['No se pudo guardar. Revisa tu conexión e inténtalo de nuevo.']);
   } finally {
     agGuardando = false; btn.disabled = false; btn.textContent = 'Guardar';
+    agEl('ag-btn-eliminar').disabled = false;
   }
 };
+
+// ── Eliminar agendamiento (borrado definitivo, siempre con confirmación propia) ──
+window.agPedirEliminar = () => {
+  const r = agEditando;
+  if (!r || agGuardando) return;
+  const fila = (k, v) => '<div><strong>' + k + ':</strong> ' + agEsc(v) + '</div>';
+  const horas = r.tipo === 'Evento' && r.horaFin ? (r.hora || '') + ' – ' + r.horaFin : (r.hora || '');
+  agEl('ag-elim-resumen').innerHTML =
+    fila('Cliente', r.cliente || '')
+    + fila('Tipo', (r.tipo || '') + ' · ' + (ETIQUETAS_CATEGORIA[agCategoriaValida(r.categoria)] || ''))
+    + fila('Fecha', agFmtFecha(r.fecha))
+    + fila('Hora', horas)
+    + fila('Estado', AG_ESTADO_LABEL[agEstadoValido(r.estado)])
+    + fila('Total', fmt(agNum(r.total)));
+  const pago = agNum(r.pagoRecibido);
+  const aviso = agEl('ag-elim-pago');
+  if (pago > 0) {
+    aviso.textContent = 'Este registro tiene un pago recibido de ' + fmt(pago) + '. Al eliminarlo, ese pago deja de aparecer en el resumen del mes.';
+    aviso.style.display = 'block';
+  } else { aviso.textContent = ''; aviso.style.display = 'none'; }
+  const err = agEl('ag-elim-err'); err.style.display = 'none'; err.textContent = '';
+  agEl('modal-agenda-eliminar').classList.add('open');
+  agEl('ag-btn-cancelar-eliminar').focus();
+};
+window.agCancelarEliminar = () => {
+  if (agEliminando) return;
+  agEl('modal-agenda-eliminar').classList.remove('open');
+  agEl('ag-btn-eliminar').focus();
+};
+window.agConfirmarEliminar = async () => {
+  if (agEliminando || !agEditando) return;
+  const btn = agEl('ag-btn-confirmar-eliminar');
+  const err = agEl('ag-elim-err');
+  err.style.display = 'none'; err.textContent = '';
+  agEliminando = true; btn.disabled = true; btn.textContent = 'Eliminando…';
+  agEl('ag-btn-guardar').disabled = true;
+  try {
+    await deleteDoc(doc(db, AG_COL, agEditando.id));
+    agEl('modal-agenda-eliminar').classList.remove('open');
+    agCerrarModal();
+    await agRecargar();
+  } catch (e) {
+    console.error('Agenda: error al eliminar', e);
+    err.textContent = e && e.code === 'permission-denied'
+      ? 'No tienes permiso para eliminar este registro.'
+      : 'No se pudo eliminar. Revisa tu conexión e inténtalo de nuevo.';
+    err.style.display = 'block';
+  } finally {
+    agEliminando = false; btn.disabled = false; btn.textContent = 'Sí, eliminar';
+    agEl('ag-btn-guardar').disabled = false;
+  }
+};
+// Escape cierra solo el modal de confirmación (capturado antes que cualquier otro manejador)
+document.addEventListener('keydown', ev => {
+  if (ev.key !== 'Escape') return;
+  if (!agEl('modal-agenda-eliminar').classList.contains('open')) return;
+  ev.stopImmediatePropagation(); ev.preventDefault();
+  agCancelarEliminar();
+}, true);
 
 // ── HELPERS ───────────────────────────────────────────────────────────────
 function g(id){return document.getElementById(id)?.value||0;}
